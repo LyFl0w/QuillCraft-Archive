@@ -9,7 +9,7 @@ To join this project, you must have a GitHub account.
 ## How to install it on IntelliJ
 This project uses Maven 3 and its shade plugin in its snapshot (3.3.+) which uses Java 16.
 
-- Install [Maven 3](https://maven.apache.org/download.cgi) / [Tuto Youtube](https://youtu.be/RfCWg5ay5B0?t=221) Obligatory
+- (not to do, because IntelliJ already updated it) Install [Maven 3](https://maven.apache.org/download.cgi) / [Tuto Youtube](https://youtu.be/RfCWg5ay5B0?t=221) Obligatory
 - Copy the https link on the "code" button
 - In IntelliJ, select `New > Project from Version Control...`
 - Paste the link in the URL section 
