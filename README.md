@@ -25,3 +25,6 @@ git clone https://github.com/apache/maven-shade-plugin.git
 cd maven-shade-plugin
 mvn clean install
 ```
+### How to build the Plugin ?
+To build the plugin, you must use the Maven interface and select `clean and install` in your module.  
+You will find your builds in the "QuillCraftProjectOutPut" folder in your Workspace.
