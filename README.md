@@ -4,6 +4,7 @@ The core of all QuillCraft Minecraft servers
 ## First of all, configure your GitHub account correctly in IntelliJ
 To join this project, you must have a GitHub account.
 - You can link your GitHub account in IntelliJ by going to `Settings > Version Control > GitHub`
+- Link your email (the same as your GitHub account) to the sender of the code in IntelliJ by writing in the terminal `git config --global user.email <email@example.com>`
 
 ## How to install it on IntelliJ
 This project uses Maven 3 and its shade plugin in its snapshot (3.3.+) which uses Java 16.
