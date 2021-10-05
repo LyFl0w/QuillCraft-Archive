@@ -1,4 +1,4 @@
-name: net.quillcraft.lobby.QuillCraftLobby
+name: QuillCraftLobby
 version: 1.0
 author: LyFlow
 main: net.quillcraft.lobby.QuillCraftLobby
@@ -17,4 +17,4 @@ commands:
     permission: quillcraftlobby.setlobby
     permission-message: Unknown command. Type "/help" for help.
   npc:
-    usage: §c/npc <add> <displayName> (<skinname>) or /npc <remove> <name> <reference> or /net.quillcraft.lobby.npc <list>
+    usage: §c/npc <add> <displayName> (<skinname>) or /npc <remove> <name> <reference> or /npc <list>

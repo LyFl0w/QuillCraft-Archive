@@ -1,6 +1,6 @@
 #Dev By LyFlow
 
-#For set spawn, use set lobby net.quillcraft.lobby.command
+#For set spawn, use set lobby command
 spawn:
   #world: is default word of your server ! Don't touch that !
   x:
