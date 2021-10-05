@@ -1,5 +1,5 @@
 # QuillCraft Core Plugin 
-The core of all QuillCraft Minecraft servers
+The 2nd core of the lobby servers
 
 ## First of all, configure your GitHub account correctly in IntelliJ
 To join this project, you must have a GitHub account.
@@ -13,7 +13,7 @@ This project uses Maven 3 and its shade plugin in its snapshot (3.3.+) which use
 - Copy the https link on the "code" button
 - In IntelliJ, select `New > Project from Version Control...`
 - Paste the link in the URL section 
-- Don't forget to add `\QuillCraftCore` in your directory
+- Don't forget to add `\QuillCraftLobby` in your directory
 
 
 ### If you want to try your code
