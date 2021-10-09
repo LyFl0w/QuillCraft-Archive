@@ -1,5 +1,5 @@
 # QuillCraft Core Plugin 
-The 2nd core of the lobby servers
+The core of the servers
 
 ## First of all, configure your GitHub account correctly in IntelliJ
 To join this project, you must have a GitHub account.
