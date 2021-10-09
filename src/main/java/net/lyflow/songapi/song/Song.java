@@ -20,7 +20,6 @@ public class Song {
         this.description = description;
         this.author = author;
         this.delay = Math.round(20/speed);
-
     }
 
     public HashMap<Integer, Layer> getLayerHashMap(){
