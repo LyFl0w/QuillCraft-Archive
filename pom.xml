@@ -51,7 +51,7 @@
                                     <exclude>com.fasterxml.jackson:*</exclude>
                                 </excludes>
                             </artifactSet>
-                            <outputFile>../../QuillCraftProjectOutPut/${project.artifactId}-${project.version}.jar</outputFile>
+                            <outputFile>../QuillCraftProjectOutPut/${project.artifactId}-${project.version}.jar</outputFile>
                         </configuration>
                     </execution>
                 </executions>
