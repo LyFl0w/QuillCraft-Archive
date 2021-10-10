@@ -11,8 +11,9 @@ import org.bukkit.inventory.meta.*;
 import javax.annotation.Nonnull;
 import java.util.Arrays;
 import java.util.List;
+import java.util.Objects;
 
-public record ItemBuilder(ItemStack itemStack) {
+public record ItemBuilder(@Nonnull ItemStack itemStack) implements Cloneable{
 
     public ItemBuilder(final Material material){
         this(material, 1);
@@ -36,23 +37,24 @@ public record ItemBuilder(ItemStack itemStack) {
         this.itemStack = itemStack;
     }
 
-    public ItemBuilder clone(){
-        return new ItemBuilder(itemStack);
+    @Override
+    protected ItemBuilder clone() throws CloneNotSupportedException{
+        return (ItemBuilder) super.clone();
     }
 
     public String getName(){
-        return itemStack.getItemMeta().getDisplayName();
+        return getItemMeta().getDisplayName();
     }
 
     public ItemBuilder setDamage(final int damage){
-        final Damageable im = (Damageable)itemStack.getItemMeta();
+        final Damageable im = (Damageable)getItemMeta();
         im.setDamage(damage);
-        itemStack.setItemMeta(im);
+        itemStack.setItemMeta((ItemMeta) im);
         return this;
     }
 
     public ItemBuilder setName(final String name){
-        final ItemMeta im = itemStack.getItemMeta();
+        final ItemMeta im = getItemMeta();
         im.setDisplayName(name);
         itemStack.setItemMeta(im);
         return this;
@@ -69,21 +71,21 @@ public record ItemBuilder(ItemStack itemStack) {
     }
 
     public ItemBuilder setSkullOwner(final OfflinePlayer offlinePlayer){
-        final SkullMeta im = (SkullMeta) itemStack.getItemMeta();
+        final SkullMeta im = (SkullMeta) getItemMeta();
         im.setOwningPlayer(offlinePlayer);
         itemStack.setItemMeta(im);
         return this;
     }
 
     public ItemBuilder addEnchant(final Enchantment ench, final int level){
-        final ItemMeta im = itemStack.getItemMeta();
+        final ItemMeta im = getItemMeta();
         im.addEnchant(ench, level, true);
         itemStack.setItemMeta(im);
         return this;
     }
 
     public ItemBuilder setLore(final List<String> lore){
-        final ItemMeta im = itemStack.getItemMeta();
+        final ItemMeta im = getItemMeta();
         im.setLore(lore);
         itemStack.setItemMeta(im);
         return this;
@@ -94,28 +96,28 @@ public record ItemBuilder(ItemStack itemStack) {
     }
 
     public ItemBuilder addItemFlags(ItemFlag... itemFlags){
-        final ItemMeta im = itemStack.getItemMeta();
+        final ItemMeta im = getItemMeta();
         im.addItemFlags(itemFlags);
         itemStack.setItemMeta(im);
         return this;
     }
 
     public ItemBuilder addTextPage(final int page, final String text){
-        final BookMeta bm = (BookMeta) itemStack.getItemMeta();
+        final BookMeta bm = (BookMeta) getItemMeta();
         bm.setPage(page, bm.getPage(page) + text);
         itemStack.setItemMeta(bm);
         return this;
     }
 
     public ItemBuilder setUnbreakable(){
-        final ItemMeta im = itemStack.getItemMeta();
+        final ItemMeta im = getItemMeta();
         im.setUnbreakable(true);
         itemStack.setItemMeta(im);
         return this;
     }
 
     public ItemBuilder setLeatherArmorColor(final Color color){
-        final LeatherArmorMeta im = (LeatherArmorMeta) itemStack.getItemMeta();
+        final LeatherArmorMeta im = (LeatherArmorMeta) getItemMeta();
         im.setColor(color);
         itemStack.setItemMeta(im);
         return this;
@@ -132,5 +134,9 @@ public record ItemBuilder(ItemStack itemStack) {
         return itemStack;
     }
 
+    @Nonnull
+    private ItemMeta getItemMeta(){
+        return Objects.requireNonNull(itemStack.getItemMeta());
+    }
 
 }

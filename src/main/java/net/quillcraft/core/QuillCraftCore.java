@@ -14,11 +14,9 @@ public class QuillCraftCore extends JavaPlugin {
 
     private static QuillCraftCore INSTANCE;
     //private static ProtocolManager protocolManager;
-
     @Override
     public void onEnable(){
         INSTANCE = this;
-        //protocolManager = ProtocolLibrary.getProtocolManager();
 
         DataManager.initAllData();
         LanguageManager.initAllLanguage(this);
@@ -30,10 +28,6 @@ public class QuillCraftCore extends JavaPlugin {
     public void onDisable(){
         DataManager.closeAllData();
     }
-
-    //public static ProtocolManager getProtocolManager(){
-      //  return protocolManager;
-    //}
 
     public static QuillCraftCore getInstance(){
         return INSTANCE;
