@@ -47,7 +47,7 @@ public record ItemBuilder(ItemStack itemStack) {
     public ItemBuilder setDamage(final int damage){
         final Damageable im = (Damageable)itemStack.getItemMeta();
         im.setDamage(damage);
-        itemStack.setItemMeta(im);
+        itemStack.setItemMeta((ItemMeta) im);
         return this;
     }
 
