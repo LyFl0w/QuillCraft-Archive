@@ -15,6 +15,7 @@ public class FlightSpeed implements CommandExecutor {
             if(args.length == 1){
                 try{
                     player.setFlySpeed(args[0].isBlank() ? 0.1f : Float.parseFloat(args[0]));
+                    return true;
                 }catch(NumberFormatException exception){
                     player.sendMessage("§cPlease enter a valid number");
                     return false;
