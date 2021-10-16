@@ -109,7 +109,7 @@
         </dependency>
 
         <dependency>
-            <groupId>net.lyflow.sqlrequest</groupId>
+            <groupId>net.lyflow</groupId>
             <artifactId>SQLRequest</artifactId>
             <version>1.0</version>
         </dependency>
