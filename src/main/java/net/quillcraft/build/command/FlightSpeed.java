@@ -15,7 +15,7 @@ public class FlightSpeed implements CommandExecutor {
             try{
                 final float speed = args.length == 0 || args[0].isBlank() ? 0.1f : Float.parseFloat(args[0])/10;
                 if(speed > 1){
-                    player.sendMessage("§c"+speed*10+"is too high to fly");
+                    player.sendMessage("§c"+speed*10+" is too high to fly");
                     return true;
                 }
                 player.setFlySpeed(speed);
