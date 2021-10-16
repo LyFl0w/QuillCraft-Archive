@@ -13,7 +13,7 @@ public class FlightSpeed implements CommandExecutor {
     public boolean onCommand(@Nonnull CommandSender commandSender, @Nonnull Command command, @Nonnull String label, @Nonnull String[] args){
         if(commandSender instanceof final Player player && args.length <= 1){
             try{
-                final float speed = args[0].isBlank() ? 0.1f : Float.parseFloat(args[0])/10;
+                final float speed = args.length == 0 || args[0].isBlank() ? 0.1f : Float.parseFloat(args[0])/10;
                 player.setFlySpeed(speed);
                 player.sendMessage("§2Your flight speed is : §b"+Math.round(speed*10));
                 return true;
