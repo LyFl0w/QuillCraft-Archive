@@ -13,6 +13,13 @@
         <project.reporting.outputEncoding>UTF-8</project.reporting.outputEncoding>
     </properties>
 
+    <pluginRepositories>
+        <pluginRepository>
+            <id>apache.snapshots</id>
+            <url>https://repository.apache.org/snapshots/</url>
+        </pluginRepository>
+    </pluginRepositories>
+
     <build>
         <plugins>
             <plugin>
@@ -109,9 +116,9 @@
         </dependency>
 
         <dependency>
-            <groupId>net.lyflow.sqlrequest</groupId>
+            <groupId>net.lyflow</groupId>
             <artifactId>SQLRequest</artifactId>
-            <version>1.0-SNAPSHOT</version>
+            <version>1.0</version>
         </dependency>
 
         <dependency>
