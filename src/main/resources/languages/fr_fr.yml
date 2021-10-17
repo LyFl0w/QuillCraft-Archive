@@ -15,3 +15,8 @@ party:
   accept_your_self: "[§9Party§f] §cVous ne pouvez pas vous accepter vous même"
   invite_your_self: "[§9Party§f] §cVous ne pouvez pas vous ajouter vous même"
   no_party: "[§9Party§f] §cVous n'avez pas de parti"
+
+friend:
+
+  invite_your_self: "Vous ne pouvez pas vous ajouter vous même"
+  remove_your_self: "Vous ne pouvez pas vous supprimer de vos amis"
