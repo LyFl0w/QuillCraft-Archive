@@ -21,7 +21,6 @@ public class MessageMessage extends Message {
         this.redissonClient = RedisManager.MESSAGE_DATA.getRedisAccess().getRedissonClient();
     }
 
-
     @Override
     protected void onPluginMessageRepPlayer(ProxiedPlayer player, String sub, ByteArrayDataInput in){
         if(sub.equals("Message")){

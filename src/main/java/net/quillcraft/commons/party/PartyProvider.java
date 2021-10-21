@@ -1,7 +1,7 @@
 package net.quillcraft.commons.party;
 
-import net.md_5.bungee.BungeeCord;
 import net.md_5.bungee.api.ChatColor;
+import net.md_5.bungee.api.ProxyServer;
 import net.md_5.bungee.api.chat.ClickEvent;
 import net.md_5.bungee.api.chat.ComponentBuilder;
 import net.md_5.bungee.api.chat.HoverEvent;
@@ -38,7 +38,7 @@ public class PartyProvider {
     private String keyParty;
 
     public PartyProvider(Account account){
-        this.player = BungeeCord.getInstance().getPlayer(account.getUUID());
+        this.player = ProxyServer.getInstance().getPlayer(account.getUUID());
         this.partyUUID = account.getPartyUUID();
         this.redissonClient = RedisManager.PARTY_DATA.getRedisAccess().getRedissonClient();
 

@@ -1,6 +1,6 @@
 package net.quillcraft.bungee.manager;
 
-import net.md_5.bungee.BungeeCord;
+import net.md_5.bungee.api.ProxyServer;
 import net.quillcraft.bungee.data.management.redis.RedisManager;
 import net.quillcraft.bungee.data.management.sql.DatabaseManager;
 
@@ -12,7 +12,7 @@ public class DataManager {
             DatabaseManager.initAllDatabaseConnections();
         }catch(Exception e){
             e.printStackTrace();
-            BungeeCord.getInstance().stop();
+            ProxyServer.getInstance().stop();
         }
     }
 

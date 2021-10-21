@@ -1,7 +1,7 @@
 package net.quillcraft.commons.party;
 
 import net.lyflow.sqlrequest.SQLRequest;
-import net.md_5.bungee.BungeeCord;
+import net.md_5.bungee.api.ProxyServer;
 import net.md_5.bungee.api.connection.ProxiedPlayer;
 import net.quillcraft.bungee.data.management.sql.table.SQLTablesManager;
 import net.quillcraft.bungee.manager.ProfileSerializationManager;
@@ -49,7 +49,7 @@ public class Party {
     }
 
     public ProxiedPlayer getOwner(){
-        return BungeeCord.getInstance().getPlayer(ownerUUID);
+        return ProxyServer.getInstance().getPlayer(ownerUUID);
     }
 
     public UUID getOwnerUUID(){
@@ -76,7 +76,7 @@ public class Party {
 
     public List<ProxiedPlayer> getFollowers(){
         final List<ProxiedPlayer> followersList = new ArrayList<>();
-        followersUUID.stream().parallel().forEach(playerUUID -> followersList.add(BungeeCord.getInstance().getPlayer(playerUUID)));
+        followersUUID.stream().parallel().forEach(playerUUID -> followersList.add(ProxyServer.getInstance().getPlayer(playerUUID)));
         return followersList;
     }
 
@@ -168,8 +168,8 @@ public class Party {
     }
 
     public List<UUID> getOnlineFollowersUUID(){
-        final BungeeCord bungeeCord = BungeeCord.getInstance();
-        return getFollowersUUID().stream().parallel().filter(uuid -> bungeeCord.getPlayer(uuid)!=null).toList();
+        final ProxyServer proxyServer = ProxyServer.getInstance();
+        return getFollowersUUID().stream().parallel().filter(uuid -> proxyServer.getPlayer(uuid)!=null).toList();
     }
 
     public List<ProxiedPlayer> getOnlineFollowers(){
@@ -177,7 +177,7 @@ public class Party {
     }
 
     public List<UUID> getOfflineFollowersUUID(){
-        final BungeeCord bungeeCord = BungeeCord.getInstance();
-        return getFollowersUUID().stream().parallel().filter(uuid -> bungeeCord.getPlayer(uuid) == null).toList();
+        final ProxyServer proxyServer = ProxyServer.getInstance();
+        return getFollowersUUID().stream().parallel().filter(uuid -> proxyServer.getPlayer(uuid) == null).toList();
     }
 }
