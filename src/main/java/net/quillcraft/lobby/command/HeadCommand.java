@@ -21,10 +21,15 @@ public class HeadCommand implements CommandExecutor {
             if(args.length == 1){
                 final Block block = player.getWorld().getBlockAt(player.getLocation());
                 if(block.getType() == Material.AIR){
+                    final StringBuilder pathBuilder = new StringBuilder(player.getWorld().getName());
                     FileConfiguration headConfiguration = ConfigurationManager.HEAD.getConfiguration();
-                    headConfiguration.set("world.0.x",player.getLocation().getBlockX());
-                    headConfiguration.set("world.0.y",player.getLocation().getBlockY());
-                    headConfiguration.set("world.0.z",player.getLocation().getBlockZ());
+                    pathBuilder.append(".")
+                            .append(headConfiguration.getConfigurationSection(pathBuilder.toString())
+                            .getKeys(false)).append(".");
+
+                    headConfiguration.set(pathBuilder+"x", player.getLocation().getBlockX());
+                    headConfiguration.set(pathBuilder+"y", player.getLocation().getBlockY());
+                    headConfiguration.set(pathBuilder+"z", player.getLocation().getBlockZ());
                     ConfigurationManager.HEAD.saveFile();
 
                     block.setType(Material.PLAYER_HEAD);

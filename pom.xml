@@ -117,21 +117,21 @@
         </dependency>
 
         <dependency>
-            <groupId>net.lyflow.sqlrequest</groupId>
+            <groupId>net.lyflow</groupId>
             <artifactId>SQLRequest</artifactId>
             <version>1.0</version>
             <scope>provided</scope>
         </dependency>
 
         <dependency>
-            <groupId>net.quillcraft.core</groupId>
+            <groupId>net.quillcraft</groupId>
             <artifactId>QuillCraftCore</artifactId>
             <version>1.0</version>
             <scope>provided</scope>
         </dependency>
 
         <dependency>
-            <groupId>net.lyflow.songapi</groupId>
+            <groupId>net.lyflow</groupId>
             <artifactId>SongAPI</artifactId>
             <version>1.0</version>
         </dependency>
