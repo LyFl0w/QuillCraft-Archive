@@ -18,3 +18,7 @@ commands:
     permission-message: Unknown command. Type "/help" for help.
   npc:
     usage: §c/npc <add> <displayName> (<skinname>) or /npc <remove> <name> <reference> or /npc <list>
+  head:
+    description: Cette commande permet de créer une tete interractive
+    permission: quillcraftlobby.head
+    usage: §c/head <head-id>
