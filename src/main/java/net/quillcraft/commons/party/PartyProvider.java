@@ -7,17 +7,19 @@ import net.md_5.bungee.api.chat.ComponentBuilder;
 import net.md_5.bungee.api.chat.HoverEvent;
 import net.md_5.bungee.api.chat.TextComponent;
 import net.md_5.bungee.api.connection.ProxiedPlayer;
+
 import net.quillcraft.bungee.data.management.redis.RedisManager;
 import net.quillcraft.bungee.data.management.sql.DatabaseAccess;
 import net.quillcraft.bungee.data.management.sql.DatabaseManager;
 import net.quillcraft.bungee.manager.LanguageManager;
-import net.quillcraft.bungee.manager.ProfileSerializationManager;
+import net.quillcraft.bungee.serialization.ProfileSerializationUtils;
 import net.quillcraft.bungee.text.Text;
 import net.quillcraft.bungee.text.TextList;
 import net.quillcraft.commons.account.Account;
 import net.quillcraft.commons.account.AccountProvider;
 import net.quillcraft.commons.exception.AccountNotFoundException;
 import net.quillcraft.commons.exception.PartyNotFoundException;
+
 import org.redisson.api.RBucket;
 import org.redisson.api.RSet;
 import org.redisson.api.RedissonClient;
@@ -155,16 +157,8 @@ public class PartyProvider {
 
                 final UUID ownerUUID = UUID.fromString(resultSet.getString("owneruuid"));
                 final String ownerName = resultSet.getString("ownername");
-                final List<UUID> followersUUID = new ProfileSerializationManager().deserializePartyFollowers(resultSet.getString("followersuuid"));
-                final List<String> followersNames = new ProfileSerializationManager().deserializePartyMembersNames(resultSet.getString("followersnames"));
-
-                for(UUID uuid : followersUUID){
-                    System.out.println(uuid+" uuid list");
-                }
-
-                for(String name : followersNames){
-                    System.out.println(name+" name list");
-                }
+                final List<UUID> followersUUID = new ProfileSerializationUtils.ListUUID().deserialize(resultSet.getString("followersuuid"));
+                final List<String> followersNames = new ProfileSerializationUtils.ListString().deserialize(resultSet.getString("followersnames"));
 
                 connection.close();
 
@@ -198,9 +192,8 @@ public class PartyProvider {
             preparedStatement.setString(1, party.getPartyUUID().toString());
             preparedStatement.setString(2, player.getUniqueId().toString());
             preparedStatement.setString(3, player.getName());
-
-            preparedStatement.setString(4, new ProfileSerializationManager().serialize(party.getFollowersUUID()));
-            preparedStatement.setString(5, new ProfileSerializationManager().serialize(party.getFollowersNames()));
+            preparedStatement.setString(4, new ProfileSerializationUtils.ListUUID().serialize(party.getFollowersUUID()));
+            preparedStatement.setString(5, new ProfileSerializationUtils.ListString().serialize(party.getFollowersNames()));
 
             preparedStatement.execute();
 

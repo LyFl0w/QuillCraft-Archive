@@ -4,7 +4,8 @@ import net.lyflow.sqlrequest.SQLRequest;
 import net.md_5.bungee.api.ProxyServer;
 import net.md_5.bungee.api.connection.ProxiedPlayer;
 import net.quillcraft.bungee.data.management.sql.table.SQLTablesManager;
-import net.quillcraft.bungee.manager.ProfileSerializationManager;
+import net.quillcraft.bungee.serialization.ProfileSerializationUtils;
+import reactor.util.annotation.Nullable;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -76,7 +77,8 @@ public class Party {
 
     public List<ProxiedPlayer> getFollowers(){
         final List<ProxiedPlayer> followersList = new ArrayList<>();
-        followersUUID.stream().parallel().forEach(playerUUID -> followersList.add(ProxyServer.getInstance().getPlayer(playerUUID)));
+        followersUUID.stream().parallel().
+                forEach(playerUUID -> followersList.add(ProxyServer.getInstance().getPlayer(playerUUID)));
         return followersList;
     }
 
@@ -89,29 +91,29 @@ public class Party {
     public void addPlayer(ProxiedPlayer player){
         followersUUID.add(player.getUniqueId());
         followersNames.add(player.getName());
-        getSQLRequest().addData("followersuuid", new ProfileSerializationManager().serialize(followersUUID));
-        getSQLRequest().addData("followersnames", new ProfileSerializationManager().serialize(followersNames));
+        getSQLRequest().addData("followersuuid", new ProfileSerializationUtils.ListUUID().serialize(followersUUID));
+        getSQLRequest().addData("followersnames", new ProfileSerializationUtils.ListString().serialize(followersNames));
     }
 
     public void removePlayer(UUID uuid){
         followersUUID.remove(uuid);
         followersNames.remove(getNameByUUIDInFollowersList(uuid));
-        getSQLRequest().addData("followersuuid", new ProfileSerializationManager().serialize(followersUUID));
-        getSQLRequest().addData("followersnames", new ProfileSerializationManager().serialize(followersNames));
+        getSQLRequest().addData("followersuuid", new ProfileSerializationUtils.ListUUID().serialize(followersUUID));
+        getSQLRequest().addData("followersnames", new ProfileSerializationUtils.ListString().serialize(followersNames));
     }
 
     public void removePlayer(String name){
         followersUUID.remove(getUUIDByNameInFollowersList(name));
         followersNames.remove(name);
-        getSQLRequest().addData("followersuuid", new ProfileSerializationManager().serialize(followersUUID));
-        getSQLRequest().addData("followersnames", new ProfileSerializationManager().serialize(followersNames));
+        getSQLRequest().addData("followersuuid", new ProfileSerializationUtils.ListUUID().serialize(followersUUID));
+        getSQLRequest().addData("followersnames", new ProfileSerializationUtils.ListString().serialize(followersNames));
     }
 
     public void removePlayer(ProxiedPlayer player){
         followersUUID.remove(player.getUniqueId());
         followersNames.remove(player.getName());
-        getSQLRequest().addData("followersuuid", new ProfileSerializationManager().serialize(followersUUID));
-        getSQLRequest().addData("followersnames", new ProfileSerializationManager().serialize(followersNames));
+        getSQLRequest().addData("followersuuid", new ProfileSerializationUtils.ListUUID().serialize(followersUUID));
+        getSQLRequest().addData("followersnames", new ProfileSerializationUtils.ListString().serialize(followersNames));
     }
 
     public void setOwner(String name, UUID uuid){
@@ -131,8 +133,8 @@ public class Party {
 
         getSQLRequest().addData("owneruuid", ownerUUID);
         getSQLRequest().addData("ownername", ownerName);
-        getSQLRequest().addData("followersuuid", new ProfileSerializationManager().serialize(followersUUID));
-        getSQLRequest().addData("followersnames", new ProfileSerializationManager().serialize(followersNames));
+        getSQLRequest().addData("followersuuid", new ProfileSerializationUtils.ListUUID().serialize(followersUUID));
+        getSQLRequest().addData("followersnames", new ProfileSerializationUtils.ListString().serialize(followersNames));
     }
 
     public void setOwner(String name){
@@ -143,23 +145,23 @@ public class Party {
         setOwner(getNameByUUIDInFollowersList(uuid), uuid);
     }
 
+    @Nullable
     public UUID getUUIDByNameInFollowersList(String name){
-        for(int i = 0; i < followersNames.size(); i++){
+        for(int i = 0; i < followersNames.size(); i++)
             if(name.equalsIgnoreCase(followersNames.get(i))) return followersUUID.get(i);
-        }
+
         return null;
     }
 
+    @Nullable
     public String getNameByUUIDInFollowersList(UUID uuid){
-        for(int i = 0; i < followersUUID.size(); i++){
-            if(uuid.equals(followersUUID.get(i))){
-                return followersNames.get(i);
-            }
-        }
+        for(int i = 0; i < followersUUID.size(); i++)
+            if(uuid.equals(followersUUID.get(i))) return followersNames.get(i);
+
         return null;
     }
 
-    public SQLRequest getSQLRequest(){
+    protected SQLRequest getSQLRequest(){
         return sqlRequest;
     }
 
@@ -169,15 +171,20 @@ public class Party {
 
     public List<UUID> getOnlineFollowersUUID(){
         final ProxyServer proxyServer = ProxyServer.getInstance();
-        return getFollowersUUID().stream().parallel().filter(uuid -> proxyServer.getPlayer(uuid)!=null).toList();
-    }
-
-    public List<ProxiedPlayer> getOnlineFollowers(){
-        return getFollowers().stream().parallel().filter(Objects::nonNull).toList();
+        return getFollowersUUID().stream().parallel().filter(uuid -> proxyServer.getPlayer(uuid)!=null)
+                .toList();
     }
 
     public List<UUID> getOfflineFollowersUUID(){
         final ProxyServer proxyServer = ProxyServer.getInstance();
         return getFollowersUUID().stream().parallel().filter(uuid -> proxyServer.getPlayer(uuid) == null).toList();
+    }
+
+    public List<String> getOfflineFollowersName(){
+        final List<String> followersNameList = new ArrayList<>();
+        getOfflineFollowersUUID().stream().parallel().
+                forEach(uuid -> followersNameList.add(getNameByUUIDInFollowersList(uuid)));
+
+        return followersNameList;
     }
 }
