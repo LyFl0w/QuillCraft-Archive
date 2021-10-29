@@ -1,6 +1,7 @@
 package net.quillcraft.bungee.messages;
 
 import com.google.common.io.ByteArrayDataInput;
+
 import net.md_5.bungee.api.ProxyServer;
 import net.md_5.bungee.api.chat.TextComponent;
 import net.md_5.bungee.api.connection.ProxiedPlayer;
@@ -18,7 +19,6 @@ import net.quillcraft.commons.party.PartyProvider;
 import java.security.SecureRandom;
 import java.util.List;
 import java.util.UUID;
-
 
 public class MessageParty extends Message{
 
@@ -146,30 +146,33 @@ public class MessageParty extends Message{
 
             if(sub.equals("List")){
                 final Party party = partyProvider.getParty();
-                final StringBuilder message = new StringBuilder(languageManager.getMessage(Text.PARTY_PLAYERS_DEFAULT_MESSAGE)+"\n"+languageManager.getMessage(Text.PARTY_PLAYERS_MEMBERS_MESSAGE).replace("%NUMBER%", Integer.toString(party.getPlayers().size())));
+                final StringBuilder startMessage = new StringBuilder(languageManager.getMessage(Text.PARTY_PLAYERS_DEFAULT_MESSAGE)
+                        +"\n"+languageManager.getMessage(Text.PARTY_PLAYERS_MEMBERS_MESSAGE)
+                        .replace("%NUMBER%", Integer.toString(party.getPlayers().size())));
                 final ProxiedPlayer owner = proxy.getPlayer(party.getOwnerUUID());
+
                 final String textOnline = languageManager.getMessage(Text.PARTY_PLAYERS_ONLINE);
                 final String textOffline = languageManager.getMessage(Text.PARTY_PLAYERS_OFFLINE);
-                message.append("§f\n[").append(languageManager.getMessage(Text.PARTY_PLAYERS_OWNER)).append("\\");
-                if(owner == null){
-                    message.append(textOffline).append("] ");
-                }else{
-                    message.append(textOnline).append("] ");
-                }
-                message.append("§b").append(party.getOwnerName()).append("§f");
 
-                party.getFollowersNames().forEach(name -> {
-                    final ProxiedPlayer proxiedPlayer = proxy.getPlayer(name);
-                    message.append("\n");
-                    if(proxiedPlayer == null){
-                        message.append("[").append(textOffline).append("] ");
-                    }else{
-                        message.append("[").append(textOnline).append("] ");
-                    }
-                    message.append("§b").append(name).append("§f");
+                final StringBuilder ownerPartMessage = new StringBuilder("§f\n[")
+                        .append(languageManager.getMessage(Text.PARTY_PLAYERS_OWNER))
+                        .append("\\").append((owner == null) ? textOffline : textOnline).append("] ").append("§b")
+                        .append(party.getOwnerName()).append("§f");
+
+                final StringBuilder messageBuilder = new StringBuilder();
+
+                party.getOnlineFollowersUUID().forEach(uuid -> {
+                    final ProxiedPlayer proxiedPlayer = proxy.getPlayer(uuid);
+                    messageBuilder.append("\n").append("[").append(textOnline).append("] ")
+                            .append("§b").append(proxiedPlayer.getName()).append("§f");
                 });
 
-                player.sendMessage(new TextComponent(message.toString()));
+                party.getOfflineFollowersName().forEach(name -> messageBuilder.append("\n").append("[")
+                        .append(textOffline).append("] ").append("§b").append(name).append("§f"));
+
+                player.sendMessage(new TextComponent(startMessage + ((owner == null)
+                        ? messageBuilder + ownerPartMessage.toString()
+                        : ownerPartMessage + messageBuilder.toString())));
                 return;
             }
 
