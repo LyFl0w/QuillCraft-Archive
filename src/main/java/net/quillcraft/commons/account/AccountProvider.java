@@ -3,14 +3,17 @@ package net.quillcraft.commons.account;
 import net.md_5.bungee.api.connection.ProxiedPlayer;
 import net.quillcraft.bungee.data.management.redis.RedisManager;
 import net.quillcraft.bungee.data.management.sql.DatabaseManager;
-import net.quillcraft.bungee.manager.ProfileSerializationManager;
+import net.quillcraft.bungee.serialization.ProfileSerializationAccount;
 import net.quillcraft.commons.exception.AccountNotFoundException;
+
+import net.quillcraft.commons.friend.FriendProvider;
 import org.redisson.api.RBucket;
 import org.redisson.api.RSet;
 import org.redisson.api.RedissonClient;
 
 import java.sql.*;
 import java.util.HashMap;
+import java.util.List;
 import java.util.UUID;
 import java.util.concurrent.TimeUnit;
 
@@ -18,24 +21,19 @@ public class AccountProvider {
 
     private final String keyAccount;
     private final RedissonClient redissonClient;
-    private final ProxiedPlayer player;
     private final UUID uuid;
 
     public AccountProvider(UUID uuid){
-        this.player = null;
         this.uuid = uuid;
         this.redissonClient = RedisManager.PLAYER_DATA.getRedisAccess().getRedissonClient();
         this.keyAccount = "account:"+uuid.toString();
     }
 
     public AccountProvider(ProxiedPlayer player){
-        this.player = player;
-        this.uuid = player.getUniqueId();
-        this.redissonClient = RedisManager.PLAYER_DATA.getRedisAccess().getRedissonClient();
-        this.keyAccount = "account:"+uuid.toString();
+        this(player.getUniqueId());
     }
 
-    public final Account getAccount() throws AccountNotFoundException{
+    public Account getAccount() throws AccountNotFoundException{
         Account account = getAccountFromRedis();
 
         if(account == null){
@@ -82,23 +80,18 @@ public class AccountProvider {
             if(resultSet.next()){
                 final int id = resultSet.getInt("id");
                 final String partyUUID = resultSet.getString("partyuuid");
-                final int quillCoins = resultSet.getInt("quillcoins");
+                final int quillCoin = resultSet.getInt("quillcoin");
                 final byte rankID = resultSet.getByte("rankid");
                 final Account.Visibility visibility = Account.Visibility.valueOf(resultSet.getString("visibility"));
-                final HashMap<Account.Particles, Boolean> particules = new ProfileSerializationManager().deserializeParticle(resultSet.getString("jsonparticles"));
+                final HashMap<Account.Particles, Boolean> particule = new ProfileSerializationAccount.Particle().deserialize(resultSet.getString("jsonparticles"));
                 final String languageISO = resultSet.getString("language");
 
                 connection.close();
-                Account account;
-                account = new Account(id, uuid, quillCoins, rankID, visibility, particules, languageISO);
-                if(partyUUID != null){
-                    account = new Account(id, uuid, UUID.fromString(partyUUID), quillCoins, rankID, visibility, particules, languageISO);
-                }
-
-                return account;
+                return new Account(id, uuid, ((partyUUID != null) ? UUID.fromString(partyUUID) : null),
+                        quillCoin, rankID, visibility, particule, languageISO);
             }else{
                 connection.close();
-                return createNewAccount(player);
+                return createNewAccount();
             }
 
         }catch(SQLException e){
@@ -117,17 +110,16 @@ public class AccountProvider {
         }
     }
 
-    private Account createNewAccount(final ProxiedPlayer player) throws SQLException{
-        final Account account = new Account(player);
+    private Account createNewAccount() throws SQLException{
+        final Account account = new Account(uuid);
         final Connection connection = DatabaseManager.MINECRAFT_SERVER.getDatabaseAccess().getConnection();
-        //TODO:GET ID FIRT OF ALL !!!!
+        //TODO:GET ID FIRST OF ALL !!!!
         final PreparedStatement preparedStatement = connection.prepareStatement("INSERT INTO playerdata (uuid, quillcoins, jsonparticles) VALUES (?, ?, ?)",
                 Statement.RETURN_GENERATED_KEYS);
 
         preparedStatement.setString(1, uuid.toString());
-        preparedStatement.setInt(2, account.getQuillCoins());
-        preparedStatement.setString(3, new ProfileSerializationManager().serialize(account.getParticles()));
-
+        preparedStatement.setInt(2, account.getQuillCoin());
+        preparedStatement.setString(3, new ProfileSerializationAccount.Particle().serialize(account.getParticles()));
         final int row = preparedStatement.executeUpdate();
         final ResultSet resultSet = preparedStatement.getGeneratedKeys();
         //TODO:GET ID
