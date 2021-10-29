@@ -21,6 +21,10 @@ public enum RedisManager {
             getDataConfig().getString("redis.message.user.name"), getDataConfig().getString("redis.message.user.password"),
             getDataConfig().getInt("redis.message.database_number"), getDataConfig().getInt("redis.message.port")))),
 
+    FRIEND_DATA(new RedisAccess(new RedisCredential(getDataConfig().getString("redis.friend.host"),
+            getDataConfig().getString("redis.friend.user.name"), getDataConfig().getString("redis.friend.user.password"),
+            getDataConfig().getInt("redis.friend.database_number"), getDataConfig().getInt("redis.friend.port")))),
+
     RANK_DATA(new RedisAccess(new RedisCredential(getDataConfig().getString("redis.rankdata.host"),
             getDataConfig().getString("redis.rankdata.user.name"), getDataConfig().getString("redis.rankdata.user.password"),
             getDataConfig().getInt("redis.rankdata.database_number"), getDataConfig().getInt("redis.rankdata.port"))));
