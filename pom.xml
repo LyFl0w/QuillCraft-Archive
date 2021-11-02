@@ -23,15 +23,19 @@
     </repositories>
 
     <build>
+        <pluginManagement>
+            <plugins>
+                <plugin>
+                    <groupId>org.apache.maven.plugins</groupId>
+                    <artifactId>maven-compiler-plugin</artifactId>
+                    <configuration>
+                        <source>16</source>
+                        <target>16</target>
+                    </configuration>
+                </plugin>
+            </plugins>
+        </pluginManagement>
         <plugins>
-            <plugin>
-                <groupId>org.apache.maven.plugins</groupId>
-                <artifactId>maven-compiler-plugin</artifactId>
-                <configuration>
-                    <source>16</source>
-                    <target>16</target>
-                </configuration>
-            </plugin>
             <plugin>
                 <groupId>org.apache.maven.plugins</groupId>
                 <artifactId>maven-shade-plugin</artifactId>
@@ -43,14 +47,6 @@
                             <goal>shade</goal>
                         </goals>
                         <configuration>
-                            <artifactSet>
-                                <excludes>
-                                    <exclude>org.redisson:*</exclude>
-                                    <exclude>net.quillcraft.core:*</exclude>
-                                    <exclude>com.zaxxer.hikari:*</exclude>
-                                    <exclude>com.fasterxml.jackson:*</exclude>
-                                </excludes>
-                            </artifactSet>
                             <outputFile>../QuillCraftProjectOutPut/${project.artifactId}-${project.version}.jar</outputFile>
                         </configuration>
                     </execution>
@@ -150,5 +146,7 @@
             <scope>provided</scope>
         </dependency>
     </dependencies>
+
+
 
 </project>
