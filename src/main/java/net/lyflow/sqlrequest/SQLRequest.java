@@ -9,9 +9,12 @@ import java.util.concurrent.atomic.AtomicInteger;
 
 public class SQLRequest implements Cloneable{
 
-    private final String keyColumn, table;
-    private final Object key;
-    private final HashMap<String, Object> data;
+    private String keyColumn, table;
+    private Object key;
+    private HashMap<String, Object> data;
+
+    //Default Constructor (for Redis to construct instance)
+    public SQLRequest(){}
 
     public SQLRequest(String table, String keyColumn, Object key){
         this.keyColumn = keyColumn;
