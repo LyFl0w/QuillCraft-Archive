@@ -39,6 +39,8 @@ public class HeadCommand implements CommandExecutor {
                         final FileConfiguration headConfiguration = ConfigurationManager.HEAD.getConfiguration();
                         final ConfigurationSection configurationSection = headConfiguration.getConfigurationSection(worldName);
 
+
+                        //Save head in config file
                         pathBuilder.append(".").append(configurationSection == null ? 0 : configurationSection.getKeys(false).size()).append(".");
 
                         headConfiguration.set(pathBuilder+"x", player.getLocation().getBlockX());
@@ -47,8 +49,10 @@ public class HeadCommand implements CommandExecutor {
                         headConfiguration.set(pathBuilder+"yaw", headYaw);
                         ConfigurationManager.HEAD.saveFile();
 
+                        //Place head
                         block.setType(Material.PLAYER_HEAD);
 
+                        //Rotation
                         final Skull thisSkull = (Skull) player.getWorld().getBlockAt(player.getLocation()).getState();
                         final Rotatable skullRotation = (Rotatable) thisSkull.getBlockData();
                         skullRotation.setRotation(blockFaces[headYaw]);
