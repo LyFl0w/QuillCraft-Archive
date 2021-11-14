@@ -19,6 +19,7 @@ import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
 import org.bukkit.event.block.Action;
 import org.bukkit.event.player.PlayerInteractEvent;
+import org.bukkit.inventory.EquipmentSlot;
 import org.bukkit.inventory.ItemStack;
 
 import java.util.Objects;
@@ -30,7 +31,7 @@ public class PlayerInteractListener implements Listener {
         final Player player = event.getPlayer();
         final Action action = event.getAction();
 
-
+        if(event.getHand() == EquipmentSlot.OFF_HAND) {return;}
 
         if(action == Action.RIGHT_CLICK_BLOCK){
             final Block clickedBlock = event.getClickedBlock();
