@@ -24,7 +24,7 @@ public class PlayerInteractListener implements Listener {
         final Player player = event.getPlayer();
         final Action action = event.getAction();
 
-        if(ActualAction.hasLeft(action)){
+        if(ActualAction.hasRight(action)){
             final ItemStack item = event.getItem();
 
             if(item == null) return;
@@ -64,7 +64,7 @@ public class PlayerInteractListener implements Listener {
                 }
             }
         }
-        //Anti Spamm door
+        //TODO : Anti Spamm door
         if(action == Action.LEFT_CLICK_BLOCK){
             final Block block = event.getClickedBlock();
             if(block.getBlockData() instanceof Door door && door.isOpen()){
