@@ -4,7 +4,8 @@ public enum SQLTablesManager {
 
     PLAYER_DATA("playerdata", "uuid"),
     RANK_DATA("rankdata", "rankid"),
-    PARTY_DATA("partydata", "partyuuid");
+    PARTY_DATA("partydata", "partyuuid"),
+    FRIEND_DATA("frienddata","uuid");
 
     private final String table, keyColumn;
 
