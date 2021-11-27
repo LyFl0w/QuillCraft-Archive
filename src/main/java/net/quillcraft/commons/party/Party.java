@@ -20,6 +20,7 @@ public class Party {
     private List<String> followersNames;
     private String ownerName;
 
+    // For Redis
     public Party(){}
 
     public Party(ProxiedPlayer player){

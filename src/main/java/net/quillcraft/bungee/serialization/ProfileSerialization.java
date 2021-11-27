@@ -2,11 +2,8 @@ package net.quillcraft.bungee.serialization;
 
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
-import net.quillcraft.commons.account.Account;
 import reactor.util.annotation.NonNull;
 import reactor.util.annotation.Nullable;
-
-import java.util.*;
 
 public abstract class ProfileSerialization {
 

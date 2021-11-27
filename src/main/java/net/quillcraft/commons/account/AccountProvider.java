@@ -6,14 +6,12 @@ import net.quillcraft.bungee.data.management.sql.DatabaseManager;
 import net.quillcraft.bungee.serialization.ProfileSerializationAccount;
 import net.quillcraft.commons.exception.AccountNotFoundException;
 
-import net.quillcraft.commons.friend.FriendProvider;
 import org.redisson.api.RBucket;
 import org.redisson.api.RSet;
 import org.redisson.api.RedissonClient;
 
 import java.sql.*;
 import java.util.HashMap;
-import java.util.List;
 import java.util.UUID;
 import java.util.concurrent.TimeUnit;
 
@@ -91,7 +89,7 @@ public class AccountProvider {
                         quillCoin, rankID, visibility, particule, languageISO);
             }else{
                 connection.close();
-                return createNewAccount();
+                return createAccountInDatabase();
             }
 
         }catch(SQLException e){
@@ -110,7 +108,7 @@ public class AccountProvider {
         }
     }
 
-    private Account createNewAccount() throws SQLException{
+    private Account createAccountInDatabase() throws SQLException{
         final Account account = new Account(uuid);
         final Connection connection = DatabaseManager.MINECRAFT_SERVER.getDatabaseAccess().getConnection();
         //TODO:GET ID FIRST OF ALL !!!!
