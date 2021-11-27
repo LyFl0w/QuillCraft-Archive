@@ -230,12 +230,10 @@ public class PartyProvider {
     }
 
     public boolean hasInvited(ProxiedPlayer targetPlayer){
-        System.out.println("partyAdd:"+partyUUID.toString()+":"+targetPlayer.getUniqueId().toString()+" = KEY");
-        System.out.println(redissonClient.getSet("partyAdd:"+partyUUID.toString()+":"+targetPlayer.getUniqueId().toString()).isExists()+" = exist ?");
         return redissonClient.getSet("partyAdd:"+partyUUID.toString()+":"+targetPlayer.getUniqueId().toString()).delete();
     }
 
-    public boolean sendInviteRequest(ProxiedPlayer targetPlayer, Account targetAccount, String senderName){
+    public boolean sendInviteRequest(ProxiedPlayer targetPlayer, Account targetAccount){
         final RSet<Integer> inviteBucket = redissonClient.getSet("partyAdd:"+partyUUID.toString()+":"+targetPlayer.getUniqueId().toString());
         if(inviteBucket.isExists()) return false;
 
@@ -243,7 +241,7 @@ public class PartyProvider {
         inviteBucket.expire(3, TimeUnit.MINUTES);
 
         final LanguageManager languageManager = LanguageManager.getLanguage(targetAccount);
-        final TextComponent textComponent = new TextComponent(languageManager.getMessage(Text.PARTY_INVITATION_RECEIVED).replace("%PLAYER%", senderName));
+        final TextComponent textComponent = new TextComponent(languageManager.getMessage(Text.PARTY_INVITATION_RECEIVED).replace("%PLAYER%", player.getName()));
         textComponent.setHoverEvent(new HoverEvent(HoverEvent.Action.SHOW_TEXT,
                 new net.md_5.bungee.api.chat.hover.content.Text(new ComponentBuilder(languageManager.getMessage(Text.PARTY_HOVER_INVITATION_RECEIVED)).create())));
         textComponent.setClickEvent(new ClickEvent(ClickEvent.Action.RUN_COMMAND, "/party accept "+player.getName()));
