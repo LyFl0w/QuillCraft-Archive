@@ -146,9 +146,6 @@ public class MessageParty extends Message{
 
             if(sub.equals("List")){
                 final Party party = partyProvider.getParty();
-                final StringBuilder startMessage = new StringBuilder(languageManager.getMessage(Text.PARTY_PLAYERS_DEFAULT_MESSAGE)
-                        +"\n"+languageManager.getMessage(Text.PARTY_PLAYERS_MEMBERS_MESSAGE)
-                        .replace("%NUMBER%", Integer.toString(party.getPlayers().size())));
                 final ProxiedPlayer owner = proxy.getPlayer(party.getOwnerUUID());
 
                 final String textOnline = languageManager.getMessage(Text.PARTY_PLAYERS_ONLINE);
@@ -156,29 +153,28 @@ public class MessageParty extends Message{
 
                 final StringBuilder ownerPartMessage = new StringBuilder("§f\n[")
                         .append(languageManager.getMessage(Text.PARTY_PLAYERS_OWNER))
-                        .append("\\").append((owner == null) ? textOffline : textOnline).append("] ").append("§b")
+                        .append("\\").append((owner == null) ? textOffline : textOnline).append("] §b")
                         .append(party.getOwnerName()).append("§f");
 
                 final StringBuilder messageBuilder = new StringBuilder();
 
                 party.getOnlineFollowersUUID().forEach(uuid -> {
                     final ProxiedPlayer proxiedPlayer = proxy.getPlayer(uuid);
-                    messageBuilder.append("\n").append("[").append(textOnline).append("] ")
+                    messageBuilder.append("\n[").append(textOnline).append("] ")
                             .append("§b").append(proxiedPlayer.getName()).append("§f");
                 });
 
-                party.getOfflineFollowersName().forEach(name -> messageBuilder.append("\n").append("[")
-                        .append(textOffline).append("] ").append("§b").append(name).append("§f"));
+                party.getOfflineFollowersName().forEach(name -> messageBuilder.append("\n[")
+                        .append(textOffline).append("] §b").append(name).append("§f"));
 
-                player.sendMessage(new TextComponent(startMessage + ((owner == null)
-                        ? messageBuilder + ownerPartMessage.toString()
-                        : ownerPartMessage + messageBuilder.toString())));
+                player.sendMessage(new TextComponent(languageManager.getMessage(Text.PARTY_PLAYERS_DEFAULT_MESSAGE)+"\n"
+                        + languageManager.getMessage(Text.PARTY_PLAYERS_MEMBERS_MESSAGE).replace("%NUMBER%", Integer.toString(party.getPlayers().size()))
+                        + ((owner == null) ? messageBuilder + ownerPartMessage.toString() : ownerPartMessage + messageBuilder.toString())));
                 return;
-            }
+             }
 
             if(sub.equals("Accept")){
                 try{
-                    //TODO: VERIF SI LE NOM DU JOUEUR SELECTIONNE EST CONNECTE SINON CHERCHER DANS UNE BDD PREALABLEMENT FAITE
                     final String targetName = in.readUTF();
                     final ProxiedPlayer targetPlayer = proxy.getPlayer(targetName);
 
@@ -247,7 +243,7 @@ public class MessageParty extends Message{
                     accountProvider.updateAccount(account);
                 }
 
-                if(partyProvider.sendInviteRequest(targetPlayer, targetAccount, player.getDisplayName())){
+                if(partyProvider.sendInviteRequest(targetPlayer, targetAccount)){
                     player.sendMessage(new TextComponent(languageManager.getMessage(Text.PARTY_INVITATION_SEND).replace("%PLAYER%", targetPlayer.getDisplayName())));
                 }else{
                     //TODO : METTRE EN ANGLAIS
