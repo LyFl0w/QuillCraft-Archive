@@ -5,6 +5,7 @@ import net.md_5.bungee.api.ProxyServer;
 import net.md_5.bungee.api.connection.ProxiedPlayer;
 import net.quillcraft.bungee.data.management.sql.table.SQLTablesManager;
 import net.quillcraft.bungee.serialization.ProfileSerializationUtils;
+import net.quillcraft.bungee.utils.StringUtils;
 import reactor.util.annotation.Nullable;
 
 import java.util.ArrayList;
@@ -55,7 +56,6 @@ public class Friend{
         return null;
     }
 
-
     public List<ProxiedPlayer> getOnlineFriends(){
         return getFriends().stream().parallel().filter(Objects::nonNull).toList();
     }
@@ -86,5 +86,23 @@ public class Friend{
         getSQLRequest().addData("friendsName", new ProfileSerializationUtils.ListString().serialize(friendsName));
     }
 
+    @Nullable
+    public UUID getUUIDByFriendName(String name){
+        final int index = StringUtils.indexOfStringIngoreCase(name, friendsName);
+        return index == -1 ? null : friendsUUID.get(index);
+    }
 
+    @Nullable
+    public String getNameByFriendUUID(UUID uuid){
+        final int index = friendsUUID.indexOf(uuid);
+        return index == -1 ? null : friendsName.get(index);
+    }
+
+    public void removeFriend(UUID uuid){
+        final int index = friendsUUID.indexOf(uuid);
+        friendsName.remove(index);
+        friendsUUID.remove(index);
+        getSQLRequest().addData("friendsUUID", new ProfileSerializationUtils.ListUUID().serialize(friendsUUID));
+        getSQLRequest().addData("friendsName", new ProfileSerializationUtils.ListString().serialize(friendsName));
+    }
 }
