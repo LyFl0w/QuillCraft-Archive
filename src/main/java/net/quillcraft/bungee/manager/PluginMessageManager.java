@@ -5,32 +5,70 @@ import net.md_5.bungee.api.event.PluginMessageEvent;
 import net.md_5.bungee.api.plugin.Listener;
 import net.md_5.bungee.event.EventHandler;
 import net.quillcraft.bungee.QuillCraftBungee;
+import net.quillcraft.bungee.messages.Message;
 import net.quillcraft.bungee.messages.MessageFriend;
 import net.quillcraft.bungee.messages.MessageMessage;
 import net.quillcraft.bungee.messages.MessageParty;
 
+import java.lang.reflect.InvocationTargetException;
 import java.util.Arrays;
+import java.util.Objects;
 
 public class PluginMessageManager implements Listener {
 
     private final ProxyServer proxy;
 
-    public PluginMessageManager(QuillCraftBungee quillCraftBungee, String... channels){
+    public PluginMessageManager(QuillCraftBungee quillCraftBungee){
         this.proxy = quillCraftBungee.getProxy();
-        initMessageListener(channels);
+        initMessageListener();
     }
 
+    //Relay data
     @EventHandler
     public void onPluginMessage(PluginMessageEvent event){
-        switch(event.getTag()){
-            case "quillcraft:party" -> new MessageParty(proxy, event);
-            case "quillcraft:message" -> new MessageMessage(proxy, event);
-            case "quillcraft:friend" -> new MessageFriend(proxy, event);
+        try{
+            Channels.relayMessageData(event.getTag(), proxy, event);
+        }catch(Exception e){
+            e.printStackTrace();
         }
     }
 
-    private void initMessageListener(String... channels){
-        Arrays.stream(channels).parallel().forEach(proxy::registerChannel);
+    //Open Channel to communicate with Spigot Servers
+    private void initMessageListener(){
+        Arrays.stream(Channels.values()).parallel().forEach(channel -> proxy.registerChannel(channel.getChannel()));
+    }
+
+    private enum Channels{
+
+        PARTY("quillcraft:party", MessageParty.class),
+        MESSAGE("quillcraft:message", MessageMessage.class),
+        FRIEND("quillcraft:friend", MessageFriend.class);
+
+        private final String channel;
+        private final Class<? extends Message> aClass;
+        Channels(String channel, Class<? extends Message> aClass){
+            this.channel = channel;
+            this.aClass = aClass;
+        }
+
+        public String getChannel(){
+            return channel;
+        }
+
+        public Class<? extends Message> getaClass(){
+            return aClass;
+        }
+
+        public static void relayMessageData(String channel, ProxyServer proxy, PluginMessageEvent event) throws Exception {
+            if(!channel.startsWith("quillcraft:")) return;
+            for(Channels channels : values()){
+                if(channels.getChannel().equals(channel)){
+                    channels.getaClass().getConstructor(ProxyServer.class, PluginMessageEvent.class).newInstance(proxy, event);
+                    return;
+                }
+            }
+            System.out.println("§cRelay was not done properly ! (target_channel : "+channel+")");
+        }
     }
 
 }
