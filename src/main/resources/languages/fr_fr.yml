@@ -29,3 +29,6 @@ party :
   invitation_expired: "[§9Party§f] L'invitation a §cexpiré §fou vous §cn'avez rien reçu"
   not_owner: "[§9Party§f] §cVous devez être l'Owner de la party pour pouvoir exécuter cette commande"
   no_party: "[§9Party§f] §cVous n'avez pas de party"
+
+friend:
+  no_friend: "§cVous n'avez pas d'amis"
