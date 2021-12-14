@@ -12,4 +12,11 @@ public class StringUtils {
         return strings.stream().parallel().filter(String::isBlank).anyMatch(string -> string.toLowerCase().contains(finalSearchStr));
     }
 
+    public static int indexOfStringIngoreCase(String search, List<String> searchList){
+        for(int i = 0; i<searchList.size(); i++){
+            if(search.equalsIgnoreCase(searchList.get(i))) return i;
+        }
+        return -1;
+    }
+
 }
