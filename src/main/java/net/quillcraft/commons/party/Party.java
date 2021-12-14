@@ -5,6 +5,7 @@ import net.md_5.bungee.api.ProxyServer;
 import net.md_5.bungee.api.connection.ProxiedPlayer;
 import net.quillcraft.bungee.data.management.sql.table.SQLTablesManager;
 import net.quillcraft.bungee.serialization.ProfileSerializationUtils;
+import net.quillcraft.bungee.utils.StringUtils;
 import reactor.util.annotation.Nullable;
 
 import java.util.ArrayList;
@@ -98,13 +99,13 @@ public class Party {
 
     public void removePlayer(UUID uuid){
         followersUUID.remove(uuid);
-        followersNames.remove(getNameByUUIDInFollowersList(uuid));
+        followersNames.remove(getNameByFollowerUUID(uuid));
         getSQLRequest().addData("followersuuid", new ProfileSerializationUtils.ListUUID().serialize(followersUUID));
         getSQLRequest().addData("followersnames", new ProfileSerializationUtils.ListString().serialize(followersNames));
     }
 
     public void removePlayer(String name){
-        followersUUID.remove(getUUIDByNameInFollowersList(name));
+        followersUUID.remove(getUUIDByFollowerName(name));
         followersNames.remove(name);
         getSQLRequest().addData("followersuuid", new ProfileSerializationUtils.ListUUID().serialize(followersUUID));
         getSQLRequest().addData("followersnames", new ProfileSerializationUtils.ListString().serialize(followersNames));
@@ -139,27 +140,34 @@ public class Party {
     }
 
     public void setOwner(String name){
-        setOwner(name, getUUIDByNameInFollowersList(name));
+        setOwner(name, getUUIDByFollowerName(name));
     }
 
     public void setOwner(UUID uuid){
-        setOwner(getNameByUUIDInFollowersList(uuid), uuid);
+        setOwner(getNameByFollowerUUID(uuid), uuid);
     }
 
     @Nullable
-    public UUID getUUIDByNameInFollowersList(String name){
+    public UUID getUUIDByFollowerName(String name){
+        final int index = StringUtils.indexOfStringIngoreCase(name, followersNames);
+        return index == -1 ? null : followersUUID.get(index);
+
+        /* OLD version
         for(int i = 0; i < followersNames.size(); i++)
             if(name.equalsIgnoreCase(followersNames.get(i))) return followersUUID.get(i);
 
-        return null;
+        return null;*/
     }
 
     @Nullable
-    public String getNameByUUIDInFollowersList(UUID uuid){
+    public String getNameByFollowerUUID(UUID uuid){
+        final int index = followersUUID.indexOf(uuid);
+        return index == -1 ? null : followersNames.get(index);
+        /* OLD version
         for(int i = 0; i < followersUUID.size(); i++)
             if(uuid.equals(followersUUID.get(i))) return followersNames.get(i);
 
-        return null;
+        return null;*/
     }
 
     protected SQLRequest getSQLRequest(){
@@ -184,7 +192,7 @@ public class Party {
     public List<String> getOfflineFollowersName(){
         final List<String> followersNameList = new ArrayList<>();
         getOfflineFollowersUUID().stream().parallel().
-                forEach(uuid -> followersNameList.add(getNameByUUIDInFollowersList(uuid)));
+                forEach(uuid -> followersNameList.add(getNameByFollowerUUID(uuid)));
 
         return followersNameList;
     }
