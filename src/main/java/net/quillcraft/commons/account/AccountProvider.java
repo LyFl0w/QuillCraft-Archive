@@ -6,6 +6,7 @@ import net.quillcraft.bungee.data.management.sql.DatabaseManager;
 import net.quillcraft.bungee.serialization.ProfileSerializationAccount;
 import net.quillcraft.commons.exception.AccountNotFoundException;
 
+import net.quillcraft.commons.friend.FriendProvider;
 import org.redisson.api.RBucket;
 import org.redisson.api.RSet;
 import org.redisson.api.RedissonClient;
@@ -78,7 +79,7 @@ public class AccountProvider {
             if(resultSet.next()){
                 final int id = resultSet.getInt("id");
                 final String partyUUID = resultSet.getString("partyuuid");
-                final int quillCoin = resultSet.getInt("quillcoin");
+                final int quillCoin = resultSet.getInt("quillcoins");
                 final byte rankID = resultSet.getByte("rankid");
                 final Account.Visibility visibility = Account.Visibility.valueOf(resultSet.getString("visibility"));
                 final HashMap<Account.Particles, Boolean> particule = new ProfileSerializationAccount.Particle().deserialize(resultSet.getString("jsonparticles"));
