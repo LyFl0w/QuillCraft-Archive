@@ -52,7 +52,7 @@ public class MessageParty extends Message{
                     player.sendMessage(new TextComponent(languageManager.getMessage(Text.PARTY_PLAYER_NOT_IN_YOUR_PARTY).replace("%PLAYER%", targetName)));
                     return;
                 }
-                final UUID targetUUID = party.getUUIDByNameInFollowersList(targetName);
+                final UUID targetUUID = party.getUUIDByFollowerName(targetName);
 
                 party.addPlayer(player);
                 party.setOwner(targetUUID);
@@ -72,7 +72,7 @@ public class MessageParty extends Message{
                     player.sendMessage(new TextComponent(languageManager.getMessage(Text.PARTY_PLAYER_NOT_IN_YOUR_PARTY)));
                     return;
                 }
-                final UUID targetUUID = party.getUUIDByNameInFollowersList(targetName);
+                final UUID targetUUID = party.getUUIDByFollowerName(targetName);
                 final AccountProvider targetAccountProvider = new AccountProvider(targetUUID);
                 final Account targetAccount = targetAccountProvider.getAccount();
 
