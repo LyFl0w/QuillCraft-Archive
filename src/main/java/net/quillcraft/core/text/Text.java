@@ -14,6 +14,8 @@ public enum Text {
 
     FRIEND_INVITE_YOUR_SELF("friend.invite_your_self"),
     FRIEND_REMOVE_YOUR_SELF("friend.remove_your_self"),
+    FRIEND_ACCEPT_YOUR_SELF("friend.accept_your_self"),
+    FRIEND_DENY_YOUR_SELF("friend.deny_your_self"),
 
     SPAM("core.spam");
 
