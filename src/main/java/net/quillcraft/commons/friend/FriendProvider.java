@@ -48,16 +48,14 @@ public class FriendProvider {
         this(QuillCraftBungee.getInstance().getProxy().getPlayer(uuid));
     }
 
-    public FriendProvider(Account account) {
-        this(account.getUUID());
-    }
-
     public Friend getFriends() throws FriendNotFoundException{
         Friend friends = getFriendsFromRedis();
 
         if (friends == null) {
             friends = getFriendsFromDatabase();
             sendFriendsToRedis(friends);
+        }else{
+            redissonClient.getBucket(keyFriends).clearExpire();
         }
 
         return friends;
@@ -85,7 +83,7 @@ public class FriendProvider {
     private Friend getFriendsFromDatabase() throws FriendNotFoundException{
         try {
             final Connection connection = DatabaseManager.MINECRAFT_SERVER.getDatabaseAccess().getConnection();
-            final PreparedStatement preparedStatement = connection.prepareStatement("SELECT * FROM friend WHERE uuid = ?");
+            final PreparedStatement preparedStatement = connection.prepareStatement("SELECT * FROM frienddata WHERE uuid = ?");
 
             preparedStatement.setString(1, uuid.toString());
             preparedStatement.executeQuery();
@@ -163,4 +161,7 @@ public class FriendProvider {
         return true;
     }
 
+    public void expireRedis(){
+        redissonClient.getBucket(keyFriends).expire(6, TimeUnit.HOURS);
+    }
 }
