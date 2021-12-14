@@ -9,6 +9,7 @@ import net.quillcraft.commons.account.Account;
 import net.quillcraft.commons.account.AccountProvider;
 import net.quillcraft.commons.exception.AccountNotFoundException;
 import net.quillcraft.commons.exception.PartyNotFoundException;
+import net.quillcraft.commons.friend.FriendProvider;
 import net.quillcraft.commons.party.PartyProvider;
 
 public class DisconnectListener implements Listener {
@@ -17,6 +18,8 @@ public class DisconnectListener implements Listener {
     public void onPlayerDisconnect(PlayerDisconnectEvent event){
         final ProxiedPlayer player = event.getPlayer();
         final AccountProvider accountProvider = new AccountProvider(player);
+
+        new FriendProvider(player).expireRedis();
         try{
             final Account account = accountProvider.getAccount();
             if(account.hasParty()){
@@ -27,10 +30,11 @@ public class DisconnectListener implements Listener {
                     partyProvider.expireRedis();
                 }
             }
-            accountProvider.expireRedis();
         }catch(AccountNotFoundException | PartyNotFoundException e){
             e.printStackTrace();
         }
+        accountProvider.expireRedis();
+
     }
 
 }
