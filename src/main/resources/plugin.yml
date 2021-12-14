@@ -15,7 +15,7 @@ commands:
     usage: §c/r <message>
     aliases: [rep, reponse]
   friend:
-    usage: §c/friend <add/remove> <player> or /friend <list>
+    usage: §c/friend <add/remove/accept/deny> <player> or /friend <list>
     aliases: [f, friends]
   lang:
     usage: §c/lang <language>
