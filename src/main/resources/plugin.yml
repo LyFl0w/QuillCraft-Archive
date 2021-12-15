@@ -5,4 +5,4 @@ main: net.quillcraft.bungee.QuillCraftBungee
 prefix: Bungee
 description: Plugin dedicated to the QuillCraf Bungee
 website: https://quillcraft.fr
-api-version: 1.17
+api-version: 1.18
