@@ -4,19 +4,19 @@ import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.SQLException;
 import java.util.HashMap;
+import java.util.List;
 import java.util.UUID;
 import java.util.concurrent.atomic.AtomicInteger;
 
 public class SQLRequest implements Cloneable{
 
-    private String keyColumn, table;
-    private Object key;
+    private String key, keyColumn, table;
     private HashMap<String, Object> data;
 
     //Default Constructor (for Redis to construct instance)
     public SQLRequest(){}
 
-    public SQLRequest(String table, String keyColumn, Object key){
+    public SQLRequest(String table, String keyColumn, String key){
         this.keyColumn = keyColumn;
         this.key = key;
         this.table = table;
@@ -56,6 +56,10 @@ public class SQLRequest implements Cloneable{
         return preparedStatement;
     }
 
+    public HashMap<String, Object> getCloneData(){
+        return (HashMap<String, Object>) data.clone();
+    }
+
     private String buildUpdateRequest(){
         final StringBuilder request = new StringBuilder().append("UPDATE ").append(table).append(" SET");
 
@@ -78,9 +82,8 @@ public class SQLRequest implements Cloneable{
             final AtomicInteger i = new AtomicInteger(0);
             data.values().forEach(value -> {
                 try{
-                    int iAff = i.incrementAndGet();
+                    final int iAff = i.incrementAndGet();
                     preparedStatement.setObject(iAff, value);
-                    System.out.println(iAff+" = i, "+value+" = entry\n");
                 }catch(SQLException exception){
                     exception.printStackTrace();
                 }

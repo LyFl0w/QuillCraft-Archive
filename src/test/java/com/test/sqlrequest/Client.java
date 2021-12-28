@@ -15,7 +15,7 @@ public class Client {
         this.age = age;
 
         final SQLTablesManager sqlTablesManager = SQLTablesManager.PERSONAL_DATA;
-        this.sqlRequest = new SQLRequest(sqlTablesManager.getTable(), sqlTablesManager.getKeyColumn(), id);
+        this.sqlRequest = new SQLRequest(sqlTablesManager.getTable(), sqlTablesManager.getKeyColumn(), Integer.toString(id));
     }
 
     public void setName(String name){
