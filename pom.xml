@@ -60,6 +60,12 @@
 
     <dependencies>
         <dependency>
+            <groupId>net.quillcraft</groupId>
+            <artifactId>QuillCraftCore</artifactId>
+            <version>1.0</version>
+        </dependency>
+
+        <dependency>
             <groupId>org.spigotmc</groupId>
             <artifactId>spigot</artifactId>
             <version>1.18.1-R0.1-SNAPSHOT</version>
