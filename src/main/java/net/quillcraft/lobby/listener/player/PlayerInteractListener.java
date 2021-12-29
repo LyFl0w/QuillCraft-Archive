@@ -61,7 +61,7 @@ public class PlayerInteractListener implements Listener {
 
                             final Gson gson = new GsonBuilder().serializeNulls().create();
                             if(resultSet.next()){ // Si il y a des données (headlist == null ou headlist = [0, 1, ...])
-                                String headlist = resultSet.getString("headlist");
+                                String headlist = resultSet.getString("headlist"); //Récupère la variable JSON ou null stocké dans la bdd
                                 List<Integer> list = new ArrayList<>();
                                 if(headlist != null) list = gson.fromJson(headlist, new TypeToken<ArrayList<Integer>>(){}.getType()); // Deserialise string to list
 
@@ -70,7 +70,7 @@ public class PlayerInteractListener implements Listener {
                                     final PreparedStatement preparedStatement =  connection.prepareStatement("UPDATE headfinder SET headlist = ? WHERE uuid = ?"); // Précontruction d'une requète SQL
                                     preparedStatement.setObject(1, gson.toJson(list)); // Finilisation de la requête / Serialise List<Integer> to String (-> Json)
                                     preparedStatement.setObject(2, uuid); // Finilisation de la requête
-                                    preparedStatement.executeUpdate();    //Mise à jour de la liste dans la base de donnée
+                                    preparedStatement.executeUpdate();    //Mise à jour de la liste dans la bdd
                                 }else{
                                     player.sendMessage("Tête déja trouvé");
                                 }
