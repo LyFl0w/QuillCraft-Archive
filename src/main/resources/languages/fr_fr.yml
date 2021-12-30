@@ -18,7 +18,7 @@ party:
 
 friend:
 
-  invite_your_self: "§cVous ne pouvez pas vous ajouter dans vos amis"
-  remove_your_self: "§cVous ne pouvez pas vous supprimer de vos amis"
-  accept_your_self: "§cVous ne pouvez pas vous accepter dans vos amis"
-  deny_your_self: "§cVous ne pouvez pas vous refuser de vos amis"
+  invite_your_self: "§6[Ami] §fVous §cne pouvez pas §fvous ajouter dans vos amis"
+  remove_your_self: "§6[Ami] §fVous §cne pouvez pas §fvous supprimer de vos amis"
+  accept_your_self: "§6[Ami] §fVous §cne pouvez pas §faccepter votre demande d'ami"
+  deny_your_self: "§6[Ami] §fVous §cne pouvez pas §frefuser votre demande d'ami"
