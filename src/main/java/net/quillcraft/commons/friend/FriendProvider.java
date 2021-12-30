@@ -5,18 +5,15 @@ import net.md_5.bungee.api.chat.ComponentBuilder;
 import net.md_5.bungee.api.chat.HoverEvent;
 import net.md_5.bungee.api.chat.TextComponent;
 import net.md_5.bungee.api.connection.ProxiedPlayer;
-import net.quillcraft.bungee.QuillCraftBungee;
 import net.quillcraft.bungee.data.management.redis.RedisManager;
 import net.quillcraft.bungee.data.management.sql.DatabaseManager;
+import net.quillcraft.bungee.data.management.sql.table.SQLTablesManager;
 import net.quillcraft.bungee.manager.LanguageManager;
 import net.quillcraft.bungee.serialization.ProfileSerializationUtils;
 import net.quillcraft.bungee.text.Text;
 import net.quillcraft.commons.account.Account;
 
-import net.quillcraft.commons.account.AccountProvider;
-import net.quillcraft.commons.exception.AccountNotFoundException;
 import net.quillcraft.commons.exception.FriendNotFoundException;
-import net.quillcraft.commons.party.Party;
 import org.redisson.api.RBucket;
 import org.redisson.api.RSet;
 import org.redisson.api.RedissonClient;
@@ -36,16 +33,22 @@ public class FriendProvider {
     private final RedissonClient redissonClient;
     private final UUID uuid;
     private final ProxiedPlayer player;
+    private final SQLTablesManager sqlTablesManager;
 
     public FriendProvider(ProxiedPlayer player) {
         this.player = player;
         this.uuid = player.getUniqueId();
-        this.redissonClient = RedisManager.FRIEND_DATA.getRedisAccess().getRedissonClient();
+        this.redissonClient = RedisManager.FRIEND.getRedisAccess().getRedissonClient();
         this.keyFriends = "friends:" + uuid.toString();
+        this.sqlTablesManager = SQLTablesManager.FRIEND;
     }
 
     public FriendProvider(UUID uuid) {
-        this(QuillCraftBungee.getInstance().getProxy().getPlayer(uuid));
+        this.player = null;
+        this.uuid = uuid;
+        this.redissonClient = RedisManager.FRIEND.getRedisAccess().getRedissonClient();
+        this.keyFriends = "friends:" + uuid.toString();
+        this.sqlTablesManager = SQLTablesManager.FRIEND;
     }
 
     public Friend getFriends() throws FriendNotFoundException{
@@ -65,7 +68,7 @@ public class FriendProvider {
         redissonClient.getBucket(keyFriends).set(friends);
     }
 
-    private void updatePartyDatabase(PreparedStatement updateRequest){
+    private void updateFriendDatabase(PreparedStatement updateRequest){
         try{
             updateRequest.executeUpdate();
             updateRequest.getConnection().close();
@@ -83,7 +86,7 @@ public class FriendProvider {
     private Friend getFriendsFromDatabase() throws FriendNotFoundException{
         try {
             final Connection connection = DatabaseManager.MINECRAFT_SERVER.getDatabaseAccess().getConnection();
-            final PreparedStatement preparedStatement = connection.prepareStatement("SELECT * FROM frienddata WHERE uuid = ?");
+            final PreparedStatement preparedStatement = connection.prepareStatement("SELECT * FROM "+sqlTablesManager.getTable()+" WHERE "+sqlTablesManager.getKeyColumn()+" = ?");
 
             preparedStatement.setString(1, uuid.toString());
             preparedStatement.executeQuery();
@@ -92,9 +95,9 @@ public class FriendProvider {
 
             if (resultSet.next()) {
                 final List<UUID> friendsUUID = new ProfileSerializationUtils.ListUUID().
-                        deserialize(resultSet.getString("friendsUUID"));
+                        deserialize(resultSet.getString("friends_uuid"));
                 final List<String> friendsName = new ProfileSerializationUtils.ListString().
-                        deserialize(resultSet.getString("friendsName"));
+                        deserialize(resultSet.getString("friends_name"));
                 connection.close();
 
                 return new Friend(uuid, friendsUUID, friendsName);
@@ -103,10 +106,8 @@ public class FriendProvider {
                 return createFriendInDatabase();
             }
         } catch (Exception exception) {
-            exception.printStackTrace();
+            throw new FriendNotFoundException(uuid);
         }
-
-        throw new FriendNotFoundException(uuid);
     }
 
     public void updateFriends(Friend friend){
@@ -117,7 +118,7 @@ public class FriendProvider {
             exception.printStackTrace();
         }
         sendFriendsToRedis(friend);
-        updatePartyDatabase(updateRequest);
+        updateFriendDatabase(updateRequest);
     }
 
 
@@ -125,7 +126,7 @@ public class FriendProvider {
         final Friend friend = new Friend(uuid);
         try{
             final Connection connection = DatabaseManager.MINECRAFT_SERVER.getDatabaseAccess().getConnection();
-            final PreparedStatement preparedStatement = connection.prepareStatement("INSERT INTO frienddata (uuid, friendsUUID, friendsName) VALUES (?,?,?)");
+            final PreparedStatement preparedStatement = connection.prepareStatement("INSERT INTO "+sqlTablesManager.getTable()+" (uuid, friends_uuid, friends_name) VALUES (?, ?, ?)");
 
             preparedStatement.setString(1, uuid.toString());
             preparedStatement.setString(2, new ProfileSerializationUtils.ListUUID().serialize(friend.getFriendsUUID()));
@@ -145,17 +146,18 @@ public class FriendProvider {
     }
 
     public boolean sendAddRequest(ProxiedPlayer targetPlayer, Account targetAccount){
-        final RSet<Integer> inviteBucket = redissonClient.getSet("friendAddd:"+uuid.toString()+":"+targetPlayer.getUniqueId().toString());
+        final RSet<Integer> inviteBucket = redissonClient.getSet("friendAdd:"+uuid.toString()+":"+targetPlayer.getUniqueId().toString());
         if(inviteBucket.isExists()) return false;
 
         inviteBucket.add(0);
         inviteBucket.expire(3, TimeUnit.MINUTES);
 
+        final String playerName = player.getName();
         final LanguageManager languageManager = LanguageManager.getLanguage(targetAccount);
-        final TextComponent textComponent = new TextComponent("Vous avez recu une demande d'ami de %PLAYER%".replace("%PLAYER%", player.getName()));
+        final TextComponent textComponent = languageManager.getMessageComponentReplace(Text.FRIEND_RECEIVED_REQUEST, "%PLAYER%", playerName);
         textComponent.setHoverEvent(new HoverEvent(HoverEvent.Action.SHOW_TEXT,
-                new net.md_5.bungee.api.chat.hover.content.Text(new ComponentBuilder("Cliquer pour accepter la demande d'ami").create())));
-        textComponent.setClickEvent(new ClickEvent(ClickEvent.Action.RUN_COMMAND, "/party accept "+player.getName()));
+                new net.md_5.bungee.api.chat.hover.content.Text(new ComponentBuilder(languageManager.getMessage(Text.FRIEND_HOVER_REQUEST)).create())));
+        textComponent.setClickEvent(new ClickEvent(ClickEvent.Action.RUN_COMMAND, "/friend accept "+playerName));
 
         targetPlayer.sendMessage(textComponent);
         return true;

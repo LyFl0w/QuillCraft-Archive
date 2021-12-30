@@ -9,25 +9,25 @@ public enum RedisManager {
             getDataConfig().getString("redis.text.user.name"), getDataConfig().getString("redis.text.user.password"),
             getDataConfig().getInt("redis.text.database_number"), getDataConfig().getInt("redis.text.port")))),
 
-    PLAYER_DATA(new RedisAccess(new RedisCredential(getDataConfig().getString("redis.playerdata.host"),
-            getDataConfig().getString("redis.playerdata.user.name"), getDataConfig().getString("redis.playerdata.user.password"),
-            getDataConfig().getInt("redis.playerdata.database_number"), getDataConfig().getInt("redis.playerdata.port")))),
+    ACCOUNT(new RedisAccess(new RedisCredential(getDataConfig().getString("redis.account.host"),
+            getDataConfig().getString("redis.account.user.name"), getDataConfig().getString("redis.account.user.password"),
+            getDataConfig().getInt("redis.account.database_number"), getDataConfig().getInt("redis.account.port")))),
 
-    PARTY_DATA(new RedisAccess(new RedisCredential(getDataConfig().getString("redis.partydata.host"),
-            getDataConfig().getString("redis.partydata.user.name"), getDataConfig().getString("redis.partydata.user.password"),
-            getDataConfig().getInt("redis.partydata.database_number"), getDataConfig().getInt("redis.partydata.port")))),
+    PARTY(new RedisAccess(new RedisCredential(getDataConfig().getString("redis.party.host"),
+            getDataConfig().getString("redis.party.user.name"), getDataConfig().getString("redis.party.user.password"),
+            getDataConfig().getInt("redis.party.database_number"), getDataConfig().getInt("redis.party.port")))),
 
-    MESSAGE_DATA(new RedisAccess(new RedisCredential(getDataConfig().getString("redis.message.host"),
+    MESSAGE(new RedisAccess(new RedisCredential(getDataConfig().getString("redis.message.host"),
             getDataConfig().getString("redis.message.user.name"), getDataConfig().getString("redis.message.user.password"),
             getDataConfig().getInt("redis.message.database_number"), getDataConfig().getInt("redis.message.port")))),
 
-    FRIEND_DATA(new RedisAccess(new RedisCredential(getDataConfig().getString("redis.friend.host"),
+    FRIEND(new RedisAccess(new RedisCredential(getDataConfig().getString("redis.friend.host"),
             getDataConfig().getString("redis.friend.user.name"), getDataConfig().getString("redis.friend.user.password"),
             getDataConfig().getInt("redis.friend.database_number"), getDataConfig().getInt("redis.friend.port")))),
 
-    RANK_DATA(new RedisAccess(new RedisCredential(getDataConfig().getString("redis.rankdata.host"),
-            getDataConfig().getString("redis.rankdata.user.name"), getDataConfig().getString("redis.rankdata.user.password"),
-            getDataConfig().getInt("redis.rankdata.database_number"), getDataConfig().getInt("redis.rankdata.port"))));
+    RANK(new RedisAccess(new RedisCredential(getDataConfig().getString("redis.rank.host"),
+            getDataConfig().getString("redis.rank.user.name"), getDataConfig().getString("redis.rank.user.password"),
+            getDataConfig().getInt("redis.rank.database_number"), getDataConfig().getInt("redis.rank.port"))));
 
     private final RedisAccess redisAccess;
     RedisManager(RedisAccess redisAccess){

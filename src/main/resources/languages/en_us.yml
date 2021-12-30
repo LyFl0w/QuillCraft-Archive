@@ -17,15 +17,36 @@ party:
   player_is_already_in_your_party: "[§9Party§f] §b%PLAYER% §cis already in your party"
   player_is_already_in_another_party: "[§9Party§f] §b%PLAYER% §cis already in another party"
   delete: "[§9Party§f] Your partie has been §cdeleted"
-  players:
-    default_message: "[§9Party§f] The players in your party are :"
-    members_message: "Party Members : %NUMBER%"
-    owner: "Owner"
-    online: "Online"
-    offline: "Offline"
+  members_list: "[§9Party§f] The players in your party are :\nParty Members : %COUNT%"
   invitation_send: "[§9Party§f] You have §esent §fa party invitation to §b%PLAYER%"
   invitation_received: "[§9Party§f] §b%PLAYER% §fhas §esent §fyou a party invitation"
   hover_invitation_received: "§eClick here §fto accept the request"
   invitation_expired: "[§9Party§f] The invitation has §cexpired §for you have §cnot received anything"
   not_owner: "[§9Party§f] §cYou must be the owner of the party to be able to execute this command"
   no_party: "[§9Party§f] §cYou don't have a party"
+
+status:
+
+  owner: "Owner"
+  online: "Online"
+  offline: "Offline"
+
+friend:
+
+  join_server: "§6[Friend] §b%PLAYER% §fis §econnected"
+  left_server: "§6[Friend] §b%PLAYER% §fis §cdisconnected"
+  no_friends: "§6[Friend] §cYou have no friends"
+  friends_list: "§6[Friend] §fYou friends are :\nAmis : %COUNT%"
+  send_request: "§6[Ami] §fYou have §esent §fa friend request to §b%PLAYER%"
+  received_request: "§6[Ami] §fYou have §ereceived §fa friend request from §f%PLAYER%"
+  no_received_request: "§6[Ami] §fYou §chave not §freceived a friend request from §b%PLAYER% §for their friend request has §cexpired"
+  player_is_offline: "6[Friend] §b%PLAYER% §cis not §fconnected"
+  player_already_received_request: "§6[Ami] §b%PLAYER% §chas already received your friend request"
+  player_is_already_your_friend: "§6[Ami] §b%PLAYER% §fis §ealready §fyour friend"
+  player_is_not_your_friend: "§6[Ami] §b%PLAYER% §cis not §fyour friend"
+  player_deleted_from_his_friend: "§6[Ami] §b%PLAYER% §fhas §cdeleted §fyou from their friends"
+  player_accept_your_request: "§6[Ami] §b%PLAYER% §fhas §eaccepted §fyour friend request"
+  player_accept_request: "§6[Ami] §fYou has §eaccepted §b%PLAYER%'s §ffriend request"
+  friend_deleted: "§6[Ami] §b%PLAYER% §fhas been §eremoved §ffrom your friends"
+  declined_request: "§6[Ami] §fYou §erefused §b%PLAYER%'s §ffriend request"
+  hover_request: "§eClick here §fto accept the friend request"

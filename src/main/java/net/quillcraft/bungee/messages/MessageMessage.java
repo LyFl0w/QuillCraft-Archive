@@ -18,7 +18,7 @@ public class MessageMessage extends Message {
 
     public MessageMessage(ProxyServer proxy, PluginMessageEvent event){
         super(proxy, event);
-        this.redissonClient = RedisManager.MESSAGE_DATA.getRedisAccess().getRedissonClient();
+        this.redissonClient = RedisManager.MESSAGE.getRedisAccess().getRedissonClient();
     }
 
     @Override

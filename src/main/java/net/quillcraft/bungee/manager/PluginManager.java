@@ -27,7 +27,7 @@ public class PluginManager {
     private void registerListeners(){
         pluginManager.registerListener(quillCraftBungee, new PostLoginListener(quillCraftBungee));
         pluginManager.registerListener(quillCraftBungee, new ChatListener());
-        pluginManager.registerListener(quillCraftBungee, new DisconnectListener());
+        pluginManager.registerListener(quillCraftBungee, new DisconnectListener(quillCraftBungee));
 
         pluginManager.registerListener(quillCraftBungee, new ProxyPingListener());
 

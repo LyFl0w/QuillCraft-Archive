@@ -1,5 +1,5 @@
 mysql:
-  minecraft_server:
+  minecraft_data:
     host: "127.0.0.1"
     user:
       name: "username"
@@ -16,14 +16,14 @@ redis:
       password: "password"
     database_number: 5
     port: 6379 #default
-  playerdata:
+  account:
     host: "127.0.0.1"
     user:
       name: "username"
       password: "password"
     database_number: 4
     port: 6379 #default
-  partydata:
+  party:
     host: "127.0.0.1"
     user:
       name: "username"
@@ -44,7 +44,7 @@ redis:
       password: "password"
     database_number: 2
     port: 6379
-  rankdata:
+  rank:
     host: "127.0.0.1"
     user:
       name: "username"

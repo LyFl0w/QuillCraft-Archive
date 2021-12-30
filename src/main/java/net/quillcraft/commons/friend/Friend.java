@@ -29,10 +29,9 @@ public class Friend{
     public Friend(UUID uuid, List<UUID> friendsUUID, List<String> friendsName){
         this.friendsUUID = friendsUUID;
         this.friendsName = friendsName;
-        final SQLTablesManager sqlTablesManager = SQLTablesManager.FRIEND_DATA;
-        this.sqlRequest = new SQLRequest(sqlTablesManager.getTable(), sqlTablesManager.getKeyColumn(), uuid);
+        final SQLTablesManager sqlTablesManager = SQLTablesManager.FRIEND;
+        this.sqlRequest = new SQLRequest(sqlTablesManager.getTable(), sqlTablesManager.getKeyColumn(), uuid.toString());
     }
-
 
     public List<String> getFriendsName(){
         return friendsName;
@@ -82,8 +81,14 @@ public class Friend{
     public void addPlayer(ProxiedPlayer targetPlayer){
         friendsName.add(targetPlayer.getName());
         friendsUUID.add(targetPlayer.getUniqueId());
-        getSQLRequest().addData("friendsUUID", new ProfileSerializationUtils.ListUUID().serialize(friendsUUID));
-        getSQLRequest().addData("friendsName", new ProfileSerializationUtils.ListString().serialize(friendsName));
+        updateFriendData();
+    }
+
+    public void removePlayer(UUID uuid){
+        final int index = friendsUUID.indexOf(uuid);
+        friendsName.remove(index);
+        friendsUUID.remove(index);
+        updateFriendData();
     }
 
     @Nullable
@@ -98,11 +103,8 @@ public class Friend{
         return index == -1 ? null : friendsName.get(index);
     }
 
-    public void removeFriend(UUID uuid){
-        final int index = friendsUUID.indexOf(uuid);
-        friendsName.remove(index);
-        friendsUUID.remove(index);
-        getSQLRequest().addData("friendsUUID", new ProfileSerializationUtils.ListUUID().serialize(friendsUUID));
-        getSQLRequest().addData("friendsName", new ProfileSerializationUtils.ListString().serialize(friendsName));
+    private void updateFriendData(){
+        getSQLRequest().addData("friends_uuid", new ProfileSerializationUtils.ListUUID().serialize(friendsUUID));
+        getSQLRequest().addData("friends_name", new ProfileSerializationUtils.ListString().serialize(friendsName));
     }
 }

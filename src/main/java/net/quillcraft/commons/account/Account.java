@@ -44,7 +44,7 @@ public class Account {
         this.visibility = visibility;
         this.particles = particles;
         this.languageISO = languageISO;
-        final SQLTablesManager sqlTablesManager = SQLTablesManager.PLAYER_DATA;
+        final SQLTablesManager sqlTablesManager = SQLTablesManager.PLAYER_ACCOUNT;
         this.sqlRequest = new SQLRequest(sqlTablesManager.getTable(), sqlTablesManager.getKeyColumn(), uuid.toString());
     }
 
@@ -86,7 +86,7 @@ public class Account {
 
     public void setPartyUUID(UUID partyUUID){
         this.partyUUID = partyUUID;
-        getSQLRequest().addData("partyuuid", getPartyUUID());
+        getSQLRequest().addData("party_uuid", getPartyUUID());
     }
 
     public void setQuillCoin(int quillCoin){
@@ -96,7 +96,7 @@ public class Account {
 
     public void setRankID(byte rankID){
         this.rankID = rankID;
-        getSQLRequest().addData("rankid", rankID);
+        getSQLRequest().addData("rank_id", rankID);
     }
 
     public void setVisibility(Visibility visibility){
@@ -106,7 +106,7 @@ public class Account {
 
     public void setParticle(HashMap<Particles, Boolean> particles){
         this.particles = particles;
-        getSQLRequest().addData("jsonparticles", new ProfileSerializationAccount.Particle().serialize(getParticles()));
+        getSQLRequest().addData("json_particles", new ProfileSerializationAccount.Particle().serialize(getParticles()));
     }
 
     protected void setId(int id) {

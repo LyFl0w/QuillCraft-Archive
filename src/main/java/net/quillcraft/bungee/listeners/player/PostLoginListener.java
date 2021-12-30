@@ -17,14 +17,18 @@ import net.quillcraft.commons.exception.PartyNotFoundException;
 import net.quillcraft.commons.friend.FriendProvider;
 import net.quillcraft.commons.party.PartyProvider;
 
-public record PostLoginListener(QuillCraftBungee quillCraftBungee) implements Listener {
+public class PostLoginListener implements Listener {
+
+    private final QuillCraftBungee quillCraftBungee;
+    public PostLoginListener(QuillCraftBungee quillCraftBungee){
+        this.quillCraftBungee = quillCraftBungee;
+    }
 
     @EventHandler
     public void onPostLogin(PostLoginEvent event){
         final ProxiedPlayer player = event.getPlayer();
 
         final TaskScheduler taskScheduler = quillCraftBungee.getProxy().getScheduler();
-
 
         taskScheduler.runAsync(quillCraftBungee, () -> {
             try{
@@ -34,16 +38,18 @@ public record PostLoginListener(QuillCraftBungee quillCraftBungee) implements Li
                             players.sendMessage(new TextComponent(LanguageManager.getLanguage(players).getMessage(Text.PARTY_JOIN_SERVER)
                                     .replace("%PLAYER%", player.getName()))));
                 }
-            }catch(AccountNotFoundException | PartyNotFoundException e){
-                e.printStackTrace();
+            }catch(AccountNotFoundException | PartyNotFoundException exception){
+                exception.printStackTrace();
             }
         });
 
         taskScheduler.runAsync(quillCraftBungee, () -> {
             try{
-                new FriendProvider(player).getFriends().getOnlineFriends().stream().parallel().forEach(friends -> friends.sendMessage(new TextComponent("Le joueur "+player.getName()+" c'est connecté")));
-            }catch(FriendNotFoundException e){
-                e.printStackTrace();
+                new FriendProvider(player).getFriends().getOnlineFriends().stream().parallel().forEach(onlineFriend ->
+                        onlineFriend.sendMessage(new TextComponent(LanguageManager.getLanguage(onlineFriend)
+                                .getMessage(Text.FRIEND_JOIN_SERVER).replace("%PLAYER%", player.getName()))));
+            }catch(FriendNotFoundException exception){
+                exception.printStackTrace();
             }
         });
     }

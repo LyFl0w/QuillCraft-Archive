@@ -3,10 +3,10 @@ package net.quillcraft.commons.account;
 import net.md_5.bungee.api.connection.ProxiedPlayer;
 import net.quillcraft.bungee.data.management.redis.RedisManager;
 import net.quillcraft.bungee.data.management.sql.DatabaseManager;
+import net.quillcraft.bungee.data.management.sql.table.SQLTablesManager;
 import net.quillcraft.bungee.serialization.ProfileSerializationAccount;
 import net.quillcraft.commons.exception.AccountNotFoundException;
 
-import net.quillcraft.commons.friend.FriendProvider;
 import org.redisson.api.RBucket;
 import org.redisson.api.RSet;
 import org.redisson.api.RedissonClient;
@@ -21,11 +21,13 @@ public class AccountProvider {
     private final String keyAccount;
     private final RedissonClient redissonClient;
     private final UUID uuid;
+    private final SQLTablesManager sqlTablesManager;
 
     public AccountProvider(UUID uuid){
         this.uuid = uuid;
-        this.redissonClient = RedisManager.PLAYER_DATA.getRedisAccess().getRedissonClient();
+        this.redissonClient = RedisManager.ACCOUNT.getRedisAccess().getRedissonClient();
         this.keyAccount = "account:"+uuid.toString();
+        this.sqlTablesManager = SQLTablesManager.PLAYER_ACCOUNT;
     }
 
     public AccountProvider(ProxiedPlayer player){
@@ -70,7 +72,7 @@ public class AccountProvider {
     public Account getAccountFromDatabase() throws AccountNotFoundException{
         try{
             final Connection connection = DatabaseManager.MINECRAFT_SERVER.getDatabaseAccess().getConnection();
-            final PreparedStatement preparedStatement = connection.prepareStatement("SELECT * FROM playerdata WHERE uuid = ?");
+            final PreparedStatement preparedStatement = connection.prepareStatement("SELECT * FROM "+sqlTablesManager.getTable()+" WHERE "+sqlTablesManager.getKeyColumn()+" = ?");
 
             preparedStatement.setString(1, uuid.toString());
             preparedStatement.executeQuery();
@@ -78,11 +80,11 @@ public class AccountProvider {
             final ResultSet resultSet = preparedStatement.getResultSet();
             if(resultSet.next()){
                 final int id = resultSet.getInt("id");
-                final String partyUUID = resultSet.getString("partyuuid");
+                final String partyUUID = resultSet.getString("party_uuid");
                 final int quillCoin = resultSet.getInt("quillcoins");
-                final byte rankID = resultSet.getByte("rankid");
+                final byte rankID = resultSet.getByte("rank_id");
                 final Account.Visibility visibility = Account.Visibility.valueOf(resultSet.getString("visibility"));
-                final HashMap<Account.Particles, Boolean> particule = new ProfileSerializationAccount.Particle().deserialize(resultSet.getString("jsonparticles"));
+                final HashMap<Account.Particles, Boolean> particule = new ProfileSerializationAccount.Particle().deserialize(resultSet.getString("json_particles"));
                 final String languageISO = resultSet.getString("language");
 
                 connection.close();
@@ -113,7 +115,7 @@ public class AccountProvider {
         final Account account = new Account(uuid);
         final Connection connection = DatabaseManager.MINECRAFT_SERVER.getDatabaseAccess().getConnection();
         //TODO:GET ID FIRST OF ALL !!!!
-        final PreparedStatement preparedStatement = connection.prepareStatement("INSERT INTO playerdata (uuid, quillcoins, jsonparticles) VALUES (?, ?, ?)",
+        final PreparedStatement preparedStatement = connection.prepareStatement("INSERT INTO "+sqlTablesManager.getTable()+" (uuid, quillcoins, json_particles) VALUES (?, ?, ?)",
                 Statement.RETURN_GENERATED_KEYS);
 
         preparedStatement.setString(1, uuid.toString());

@@ -11,6 +11,7 @@ import net.md_5.bungee.api.connection.ProxiedPlayer;
 import net.quillcraft.bungee.data.management.redis.RedisManager;
 import net.quillcraft.bungee.data.management.sql.DatabaseAccess;
 import net.quillcraft.bungee.data.management.sql.DatabaseManager;
+import net.quillcraft.bungee.data.management.sql.table.SQLTablesManager;
 import net.quillcraft.bungee.manager.LanguageManager;
 import net.quillcraft.bungee.serialization.ProfileSerializationUtils;
 import net.quillcraft.bungee.text.Text;
@@ -38,11 +39,13 @@ public class PartyProvider {
     private final ProxiedPlayer player;
     private UUID partyUUID;
     private String keyParty;
+    private final SQLTablesManager sqlTablesManager;
 
     public PartyProvider(Account account){
         this.player = ProxyServer.getInstance().getPlayer(account.getUUID());
         this.partyUUID = account.getPartyUUID();
-        this.redissonClient = RedisManager.PARTY_DATA.getRedisAccess().getRedissonClient();
+        this.redissonClient = RedisManager.PARTY.getRedisAccess().getRedissonClient();
+        this.sqlTablesManager = SQLTablesManager.PARTY;
 
         updatePartyKeys(account);
     }
@@ -146,7 +149,7 @@ public class PartyProvider {
     private Party getPartyFromDatabase() throws PartyNotFoundException{
         try{
             final Connection connection = DatabaseManager.MINECRAFT_SERVER.getDatabaseAccess().getConnection();
-            final PreparedStatement preparedStatement = connection.prepareStatement("SELECT * FROM partydata WHERE partyuuid = ?");
+            final PreparedStatement preparedStatement = connection.prepareStatement("SELECT * FROM "+sqlTablesManager.getTable()+" WHERE "+sqlTablesManager.getKeyColumn()+" = ?");
 
             preparedStatement.setString(1, partyUUID.toString());
             preparedStatement.executeQuery();
@@ -155,14 +158,14 @@ public class PartyProvider {
             if(resultSet.next()){
                 player.sendMessage(new TextComponent(ChatColor.GREEN+"Votre partie a bien été trouvé !"));
 
-                final UUID ownerUUID = UUID.fromString(resultSet.getString("owneruuid"));
-                final String ownerName = resultSet.getString("ownername");
-                final List<UUID> followersUUID = new ProfileSerializationUtils.ListUUID().deserialize(resultSet.getString("followersuuid"));
-                final List<String> followersNames = new ProfileSerializationUtils.ListString().deserialize(resultSet.getString("followersnames"));
+                final UUID ownerUUID = UUID.fromString(resultSet.getString("owner_uuid"));
+                final String ownerName = resultSet.getString("owner_name");
+                final List<UUID> followersUUID = new ProfileSerializationUtils.ListUUID().deserialize(resultSet.getString("followers_uuid"));
+                final List<String> followersName = new ProfileSerializationUtils.ListString().deserialize(resultSet.getString("followers_name"));
 
                 connection.close();
 
-                return new Party(partyUUID, ownerUUID, ownerName, followersUUID, followersNames);
+                return new Party(partyUUID, ownerUUID, ownerName, followersUUID, followersName);
             }
             connection.close();
 
@@ -187,13 +190,13 @@ public class PartyProvider {
     private void createPartyInDatabase(Party party){
         try{
             final Connection connection = DatabaseManager.MINECRAFT_SERVER.getDatabaseAccess().getConnection();
-            final PreparedStatement preparedStatement = connection.prepareStatement("INSERT INTO partydata (partyuuid, owneruuid, ownername, followersuuid, followersnames) VALUES (?,?,?,?,?)");
+            final PreparedStatement preparedStatement = connection.prepareStatement("INSERT INTO "+sqlTablesManager.getTable()+" (party_uuid, owner_uuid, owner_name, followers_uuid, followers_name) VALUES (?,?,?,?,?)");
 
             preparedStatement.setString(1, party.getPartyUUID().toString());
             preparedStatement.setString(2, player.getUniqueId().toString());
             preparedStatement.setString(3, player.getName());
             preparedStatement.setString(4, new ProfileSerializationUtils.ListUUID().serialize(party.getFollowersUUID()));
-            preparedStatement.setString(5, new ProfileSerializationUtils.ListString().serialize(party.getFollowersNames()));
+            preparedStatement.setString(5, new ProfileSerializationUtils.ListString().serialize(party.getFollowersName()));
 
             preparedStatement.execute();
 
