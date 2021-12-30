@@ -9,7 +9,6 @@ import org.bukkit.command.Command;
 import org.bukkit.command.CommandExecutor;
 import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
-import org.redisson.Redisson;
 import org.redisson.api.RSet;
 import org.redisson.api.RedissonClient;
 
@@ -24,7 +23,7 @@ public class MessageCommand implements CommandExecutor {
     private final RedissonClient redissonClient;
     public MessageCommand(QuillCraftCore quillCraftCore){
         this.quillCraftCore = quillCraftCore;
-        this.redissonClient = RedisManager.MESSAGE_DATA.getRedisAccess().getRedissonClient();
+        this.redissonClient = RedisManager.MESSAGE.getRedisAccess().getRedissonClient();
     }
 
     @Override

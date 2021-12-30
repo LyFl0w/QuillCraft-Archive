@@ -26,7 +26,7 @@ public class ReponseMessageCommand implements CommandExecutor {
 
     public ReponseMessageCommand(QuillCraftCore quillCraftCore){
         this.quillCraftCore = quillCraftCore;
-        this.redissonClient = RedisManager.MESSAGE_DATA.getRedisAccess().getRedissonClient();
+        this.redissonClient = RedisManager.MESSAGE.getRedisAccess().getRedissonClient();
     }
 
     @Override
