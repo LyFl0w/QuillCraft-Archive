@@ -56,7 +56,7 @@ public class MessageFriend extends Message{
 
                 if(sub.equalsIgnoreCase("Remove")){
                     if(!StringUtils.containsIgnoreCase(friend.getFriendsName(), tempTargetName)){
-                        player.sendMessage(languageManager.getMessageComponentReplace(Text.FRIEND_PLAYER_IS_NOT_YOUR_FRIEND, "%PLAYER", tempTargetName));
+                        player.sendMessage(languageManager.getMessageComponentReplace(Text.FRIEND_PLAYER_IS_NOT_YOUR_FRIEND, "%PLAYER%", tempTargetName));
                         return;
                     }
 
@@ -75,7 +75,7 @@ public class MessageFriend extends Message{
                     if(targetPlayer != null)
                         targetPlayer.sendMessage(languageManager.getMessageComponentReplace(Text.FRIEND_PLAYER_DELETED_FROM_HIS_FRIEND, "%PLAYER", player.getName()));
 
-                    player.sendMessage(languageManager.getMessageComponentReplace(Text.FRIEND_DELETED, "%PLAYER", targetName));
+                    player.sendMessage(languageManager.getMessageComponentReplace(Text.FRIEND_DELETED, "%PLAYER%", targetName));
                     return;
                 }
 
@@ -114,14 +114,14 @@ public class MessageFriend extends Message{
                     final FriendProvider targetFriendProvider = new FriendProvider(targetPlayer);
 
                     if(!targetFriendProvider.hasRequested(player)){
-                        player.sendMessage(languageManager.getMessageComponentReplace(Text.FRIEND_NO_RECEIVED_REQUEST, "%PLAYER", targetPlayer.getName()));
+                        player.sendMessage(languageManager.getMessageComponentReplace(Text.FRIEND_NO_RECEIVED_REQUEST, "%PLAYER%", targetPlayer.getName()));
                         return;
                     }
 
                     final String targetName = targetPlayer.getName();
 
                     if(friend.getFriendsName().contains(targetName)){
-                        player.sendMessage(languageManager.getMessageComponentReplace(Text.FRIEND_PLAYER_IS_ALREADY_YOUR_FRIEND, "%PLAYER", targetName));
+                        player.sendMessage(languageManager.getMessageComponentReplace(Text.FRIEND_PLAYER_IS_ALREADY_YOUR_FRIEND, "%PLAYER%", targetName));
                         return;
                     }
 
@@ -133,8 +133,8 @@ public class MessageFriend extends Message{
                     friendProvider.updateFriends(friend);
                     targetFriendProvider.updateFriends(targetFriend);
 
-                    player.sendMessage(languageManager.getMessageComponentReplace(Text.FRIEND_PLAYER_ACCEPT_REQUEST, "%PLAYER", targetName));
-                    targetPlayer.sendMessage(languageManager.getMessageComponentReplace(Text.FRIEND_PLAYER_ACCEPT_YOUR_REQUEST, "%PLAYER", player.getName()));
+                    player.sendMessage(languageManager.getMessageComponentReplace(Text.FRIEND_PLAYER_ACCEPT_REQUEST, "%PLAYER%", targetName));
+                    targetPlayer.sendMessage(languageManager.getMessageComponentReplace(Text.FRIEND_PLAYER_ACCEPT_YOUR_REQUEST, "%PLAYER%", player.getName()));
                     return;
                 }
 
@@ -147,10 +147,10 @@ public class MessageFriend extends Message{
                     final FriendProvider targetFriendProvider = new FriendProvider(targetPlayer);
 
                     if(!targetFriendProvider.hasRequested(player)){
-                        player.sendMessage(languageManager.getMessageComponentReplace(Text.FRIEND_NO_RECEIVED_REQUEST, "%PLAYER", targetPlayer.getName()));
+                        player.sendMessage(languageManager.getMessageComponentReplace(Text.FRIEND_NO_RECEIVED_REQUEST, "%PLAYER%", targetPlayer.getName()));
                         return;
                     }
-                    player.sendMessage(languageManager.getMessageComponentReplace(Text.FRIEND_REFUSE_REQUEST, "%PLAYER", targetPlayer.getName()));
+                    player.sendMessage(languageManager.getMessageComponentReplace(Text.FRIEND_REFUSE_REQUEST, "%PLAYER%", targetPlayer.getName()));
                 }
             }catch(FriendNotFoundException|AccountNotFoundException e){
                 e.printStackTrace();
