@@ -5,7 +5,7 @@ import net.minecraft.network.chat.IChatBaseComponent;
 import net.minecraft.network.protocol.Packet;
 import net.minecraft.network.protocol.game.*;
 import net.minecraft.server.network.PlayerConnection;
-import org.bukkit.craftbukkit.v1_17_R1.entity.CraftPlayer;
+import org.bukkit.craftbukkit.v1_18_R1.entity.CraftPlayer;
 import org.bukkit.entity.Player;
 
 public record Title(Player player) {
@@ -25,14 +25,14 @@ public record Title(Player player) {
     public Title sendTitle(final int fadeIn, final int stay, int fadeOut, final String title, final String subtitle){
         final PlayerConnection playerConnection = ((CraftPlayer) player).getHandle().b;
 
-        playerConnection.sendPacket(new ClientboundSetTitlesAnimationPacket(fadeIn*20, stay*20, fadeOut*20));
+        playerConnection.a(new ClientboundSetTitlesAnimationPacket(fadeIn*20, stay*20, fadeOut*20));
 
         if(title != null)
-            playerConnection.sendPacket(getTitlePacket(EnumTitleAction.TITLE,
+            playerConnection.a(getTitlePacket(EnumTitleAction.TITLE,
                     getChatSerializer(title.replaceAll("%player%", player.getDisplayName()))));
 
         if(subtitle != null)
-            playerConnection.sendPacket(getTitlePacket(EnumTitleAction.SUBTITLE,
+            playerConnection.a(getTitlePacket(EnumTitleAction.SUBTITLE,
                     getChatSerializer(subtitle.replaceAll("%player%", player.getDisplayName()))));
 
         return this;
@@ -45,7 +45,7 @@ public record Title(Player player) {
 
     public Title sendActionBar(final String message){
         final PlayerConnection connection = ((CraftPlayer) player).getHandle().b;
-        connection.sendPacket(new PacketPlayOutChat(getChatSerializer(message), ChatMessageType.c, null));
+        connection.a(new PacketPlayOutChat(getChatSerializer(message), ChatMessageType.c, null));
         return this;
     }
 
