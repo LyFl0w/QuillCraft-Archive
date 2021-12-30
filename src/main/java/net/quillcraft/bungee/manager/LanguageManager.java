@@ -1,5 +1,6 @@
 package net.quillcraft.bungee.manager;
 
+import net.md_5.bungee.api.chat.TextComponent;
 import net.md_5.bungee.api.connection.ProxiedPlayer;
 import net.md_5.bungee.config.Configuration;
 import net.quillcraft.bungee.data.management.redis.RedisManager;
@@ -80,6 +81,14 @@ public enum LanguageManager {
     public String getMessage(final Text text){
         final RBucket<String> message = redissonClient.getBucket(getISO()+":"+text.getPath());
         return message.get();
+    }
+
+    public TextComponent getMessageComponent(final Text text){
+        return new TextComponent(getMessage(text));
+    }
+
+    public TextComponent getMessageComponentReplace(final Text text, final String replace, final String to){
+        return new TextComponent(getMessage(text).replace(replace, to));
     }
 
     public List<String> getMessage(final TextList text){
