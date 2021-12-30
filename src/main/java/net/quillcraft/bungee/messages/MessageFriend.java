@@ -73,7 +73,7 @@ public class MessageFriend extends Message{
                     targetFriendProvider.updateFriends(targetFriend);
 
                     if(targetPlayer != null)
-                        targetPlayer.sendMessage(LanguageManager.getLanguage(targetPlayer).getMessageComponentReplace(Text.FRIEND_PLAYER_DELETED_FROM_HIS_FRIEND, "%PLAYER", player.getName()));
+                        targetPlayer.sendMessage(LanguageManager.getLanguage(targetPlayer).getMessageComponentReplace(Text.FRIEND_PLAYER_DELETED_FROM_HIS_FRIEND, "%PLAYER%", player.getName()));
 
                     player.sendMessage(languageManager.getMessageComponentReplace(Text.FRIEND_DELETED, "%PLAYER%", targetName));
                     return;
