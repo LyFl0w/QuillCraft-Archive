@@ -73,7 +73,7 @@ public class MessageFriend extends Message{
                     targetFriendProvider.updateFriends(targetFriend);
 
                     if(targetPlayer != null)
-                        targetPlayer.sendMessage(languageManager.getMessageComponentReplace(Text.FRIEND_PLAYER_DELETED_FROM_HIS_FRIEND, "%PLAYER", player.getName()));
+                        targetPlayer.sendMessage(LanguageManager.getLanguage(targetPlayer).getMessageComponentReplace(Text.FRIEND_PLAYER_DELETED_FROM_HIS_FRIEND, "%PLAYER", player.getName()));
 
                     player.sendMessage(languageManager.getMessageComponentReplace(Text.FRIEND_DELETED, "%PLAYER%", targetName));
                     return;
@@ -134,7 +134,7 @@ public class MessageFriend extends Message{
                     targetFriendProvider.updateFriends(targetFriend);
 
                     player.sendMessage(languageManager.getMessageComponentReplace(Text.FRIEND_PLAYER_ACCEPT_REQUEST, "%PLAYER%", targetName));
-                    targetPlayer.sendMessage(languageManager.getMessageComponentReplace(Text.FRIEND_PLAYER_ACCEPT_YOUR_REQUEST, "%PLAYER%", player.getName()));
+                    targetPlayer.sendMessage(LanguageManager.getLanguage(targetPlayer).getMessageComponentReplace(Text.FRIEND_PLAYER_ACCEPT_YOUR_REQUEST, "%PLAYER%", player.getName()));
                     return;
                 }
 
