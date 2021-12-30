@@ -7,10 +7,10 @@ import net.md_5.bungee.api.chat.TextComponent;
 import net.md_5.bungee.api.connection.ProxiedPlayer;
 import net.md_5.bungee.api.event.PluginMessageEvent;
 
+import net.quillcraft.bungee.QuillCraftBungee;
 import net.quillcraft.bungee.manager.LanguageManager;
 import net.quillcraft.bungee.text.Text;
 import net.quillcraft.bungee.utils.StringUtils;
-import net.quillcraft.commons.account.Account;
 import net.quillcraft.commons.account.AccountProvider;
 import net.quillcraft.commons.exception.AccountNotFoundException;
 import net.quillcraft.commons.exception.FriendNotFoundException;
@@ -28,106 +28,133 @@ public class MessageFriend extends Message{
 
     @Override
     protected void onPluginMessageRepPlayer(ProxiedPlayer player, String sub, ByteArrayDataInput in){
-        //TODO: 1 - Finir le code  / 2 - Check le code / 3 - Mettre les messages dans la langue du joueur
-        try{
-            final LanguageManager languageManager = LanguageManager.getLanguage(player);
-            final FriendProvider friendProvider = new FriendProvider(player);
-            final Friend friend = friendProvider.getFriends();
+        proxy.getScheduler().runAsync(QuillCraftBungee.getInstance(), () -> {
+            try{
+                final LanguageManager languageManager = LanguageManager.getLanguage(player);
+                final FriendProvider friendProvider = new FriendProvider(player);
+                final Friend friend = friendProvider.getFriends();
 
-            if(sub.equalsIgnoreCase("List")){
-                if(friend.getFriendsUUID().size() == 0){
-                    player.sendMessage(new TextComponent("§cVous n'avez pas d'ami"));
+                if(sub.equalsIgnoreCase("List")){
+                    if(friend.getFriendsUUID().size() == 0){
+                        player.sendMessage(languageManager.getMessageComponent(Text.FRIEND_NO_FRIENDS));
+                        return;
+                    }
+
+                    final StringBuilder message = new StringBuilder(languageManager.getMessage(Text.FRIEND_FRIENDS_LIST).replace("%COUNT%", Integer.toString(friend.getFriendsUUID().size())));
+                    final String textOnline = languageManager.getMessage(Text.STATUS_ONLINE);
+                    final String textOffline = languageManager.getMessage(Text.STATUS_OFFILNE);
+
+                    friend.getOnlineFriends().forEach(friendPlayer -> message.append("\n[").append(textOnline).append("] ").append(friendPlayer.getName()));
+                    friend.getOfflineFriendsName().forEach(friendName -> message.append("\n[").append(textOffline).append("] ").append(friendName));
+
+                    player.sendMessage(new TextComponent(message.toString()));
                     return;
                 }
 
-                final StringBuilder message = new StringBuilder("Vos amis :");
-                final String textOnline = "Online";
-                final String textOffline = "Offline";
+                final String tempTargetName = in.readUTF();
+                final ProxiedPlayer targetPlayer = proxy.getPlayer(tempTargetName);
 
-                friend.getOnlineFriends().forEach(friendPlayer -> message.append("\n[").append(textOnline).append("] ").append(friendPlayer.getName()));
-                friend.getOfflineFriendsName().forEach(friendName -> message.append("\n[").append(textOffline).append("] ").append(friendName));
+                if(sub.equalsIgnoreCase("Remove")){
+                    if(!StringUtils.containsIgnoreCase(friend.getFriendsName(), tempTargetName)){
+                        player.sendMessage(languageManager.getMessageComponentReplace(Text.FRIEND_PLAYER_IS_NOT_YOUR_FRIEND, "%PLAYER", tempTargetName));
+                        return;
+                    }
 
-                player.sendMessage(new TextComponent(message.toString()));
-                return;
+                    final UUID targetUUID = friend.getUUIDByFriendName(tempTargetName);
+                    final FriendProvider targetFriendProvider = new FriendProvider(targetUUID);
+                    final Friend targetFriend = targetFriendProvider.getFriends();
+
+                    final String targetName = targetPlayer == null ? friend.getNameByFriendUUID(targetUUID) : targetPlayer.getName();
+
+                    friend.removePlayer(targetUUID);
+                    targetFriend.removePlayer(player.getUniqueId());
+
+                    friendProvider.updateFriends(friend);
+                    targetFriendProvider.updateFriends(targetFriend);
+
+                    if(targetPlayer != null)
+                        targetPlayer.sendMessage(languageManager.getMessageComponentReplace(Text.FRIEND_PLAYER_DELETED_FROM_HIS_FRIEND, "%PLAYER", player.getName()));
+
+                    player.sendMessage(languageManager.getMessageComponentReplace(Text.FRIEND_DELETED, "%PLAYER", targetName));
+                    return;
+                }
+
+                if(sub.equalsIgnoreCase("Add")){
+                    if(targetPlayer == null){
+                        player.sendMessage(languageManager.getMessageComponentReplace(Text.FRIEND_PLAYER_IS_OFFLINE, "%PLAYER%", tempTargetName));
+                        return;
+                    }
+
+                    final String targetName = targetPlayer.getName();
+
+                    if(friendProvider.hasRequested(targetPlayer)){
+                        player.sendMessage(languageManager.getMessageComponentReplace(Text.FRIEND_PLAYER_ALREADY_RECEIVED_REQUEST, "%PLAYER%", targetName));
+                        return;
+                    }
+
+                    if(friend.getOnlineFriends().contains(targetPlayer)){
+                        player.sendMessage(languageManager.getMessageComponentReplace(Text.FRIEND_PLAYER_IS_ALREADY_YOUR_FRIEND, "%PLAYER%", targetName));
+                        return;
+                    }
+
+                    if(friendProvider.sendAddRequest(targetPlayer, new AccountProvider(targetPlayer).getAccount())){
+                        player.sendMessage(languageManager.getMessageComponentReplace(Text.FRIEND_SEND_REQUEST, "%PLAYER%", targetName));
+                    }else{
+                        player.sendMessage(languageManager.getMessageComponentReplace(Text.FRIEND_PLAYER_ALREADY_RECEIVED_REQUEST, "%PLAYER%", targetName));
+                    }
+                    return;
+                }
+
+                if(sub.equalsIgnoreCase("Accept")){
+                    if(targetPlayer == null){
+                        player.sendMessage(languageManager.getMessageComponentReplace(Text.FRIEND_PLAYER_IS_OFFLINE, "%PLAYER%", tempTargetName));
+                        return;
+                    }
+
+                    final FriendProvider targetFriendProvider = new FriendProvider(targetPlayer);
+
+                    if(!targetFriendProvider.hasRequested(player)){
+                        player.sendMessage(languageManager.getMessageComponentReplace(Text.FRIEND_NO_RECEIVED_REQUEST, "%PLAYER", targetPlayer.getName()));
+                        return;
+                    }
+
+                    final String targetName = targetPlayer.getName();
+
+                    if(friend.getFriendsName().contains(targetName)){
+                        player.sendMessage(languageManager.getMessageComponentReplace(Text.FRIEND_PLAYER_IS_ALREADY_YOUR_FRIEND, "%PLAYER", targetName));
+                        return;
+                    }
+
+                    final Friend targetFriend = targetFriendProvider.getFriends();
+
+                    friend.addPlayer(targetPlayer);
+                    targetFriend.addPlayer(player);
+
+                    friendProvider.updateFriends(friend);
+                    targetFriendProvider.updateFriends(targetFriend);
+
+                    player.sendMessage(languageManager.getMessageComponentReplace(Text.FRIEND_PLAYER_ACCEPT_REQUEST, "%PLAYER", targetName));
+                    targetPlayer.sendMessage(languageManager.getMessageComponentReplace(Text.FRIEND_PLAYER_ACCEPT_YOUR_REQUEST, "%PLAYER", player.getName()));
+                    return;
+                }
+
+                if(sub.equalsIgnoreCase("Deny")){
+                    if(targetPlayer == null){
+                        player.sendMessage(languageManager.getMessageComponentReplace(Text.FRIEND_PLAYER_IS_OFFLINE, "%PLAYER%", tempTargetName));
+                        return;
+                    }
+
+                    final FriendProvider targetFriendProvider = new FriendProvider(targetPlayer);
+
+                    if(!targetFriendProvider.hasRequested(player)){
+                        player.sendMessage(languageManager.getMessageComponentReplace(Text.FRIEND_NO_RECEIVED_REQUEST, "%PLAYER", targetPlayer.getName()));
+                        return;
+                    }
+                    player.sendMessage(languageManager.getMessageComponentReplace(Text.FRIEND_REFUSE_REQUEST, "%PLAYER", targetPlayer.getName()));
+                }
+            }catch(FriendNotFoundException|AccountNotFoundException e){
+                e.printStackTrace();
             }
-
-            final String tempTargetName = in.readUTF();
-            final ProxiedPlayer targetPlayer = proxy.getPlayer(tempTargetName);
-
-            if(sub.equalsIgnoreCase("Add")){
-
-                if(targetPlayer == null){
-                    player.sendMessage(new TextComponent("Le joueur "+tempTargetName+" n'est pas connecté"));
-                    return;
-                }
-
-                final String targetName = targetPlayer.getName();
-
-                if(friendProvider.hasRequested(targetPlayer)){
-                    player.sendMessage(new TextComponent("Le joueur sélectionné a déjà recu un demande d'ami "));
-                    return;
-                }
-
-                if(friend.getOnlineFriends().contains(targetPlayer)){
-                    player.sendMessage(new TextComponent("Le joueur sélectionné est déjà dans vos amis"));
-                    return;
-                }
-
-                if(friendProvider.sendAddRequest(targetPlayer, new AccountProvider(targetPlayer).getAccount())){
-                    player.sendMessage(new TextComponent("Vous avez envoyé une invite a "+targetName));
-                }else{
-                    player.sendMessage(new TextComponent("Vous avez envoyé une demande d'ami à "+targetName));
-                }
-                return;
-            }
-
-            if(sub.equalsIgnoreCase("Remove")){
-
-                if(!StringUtils.containsIgnoreCase(friend.getFriendsName(), tempTargetName)){
-                    player.sendMessage(new TextComponent("Le joueur sélectionné n'est pas dans vos mais"));
-                    return;
-                }
-
-                final UUID uuid = friend.getUUIDByFriendName(tempTargetName);
-                final String targetName = targetPlayer == null ? friend.getNameByFriendUUID(uuid) : targetPlayer.getName();
-                friend.removeFriend(uuid);
-
-                player.sendMessage(new TextComponent(targetName+" a été supprimé de vos amis !"));
-                return;
-            }
-
-            if(sub.equalsIgnoreCase("Accept")){
-
-                if(targetPlayer == null){
-                    player.sendMessage(new TextComponent("Le joueur "+tempTargetName+" n'est pas connecté"));
-                    return;
-                }
-
-                final FriendProvider targetFriendProvider = new FriendProvider(targetPlayer);
-
-                if(!targetFriendProvider.hasRequested(player)){
-                    player.sendMessage(new TextComponent("Le joueur "+tempTargetName+" ne vous a pas demandé en ami !"));
-                    return;
-                }
-
-                if(friend.getFriendsName().contains(targetPlayer.getName())){
-                    player.sendMessage(new TextComponent("Vous êtes déjà ami avec "+tempTargetName));
-                    return;
-                }
-
-                final Friend targetFriend = targetFriendProvider.getFriends();
-
-                friend.addPlayer(targetPlayer);
-                targetFriend.addPlayer(player);
-
-                friendProvider.updateFriends(friend);
-                targetFriendProvider.updateFriends(targetFriend);
-
-                player.sendMessage(new TextComponent("Vous avez accepté la demande d'ami de "+targetPlayer.getName()));
-                targetPlayer.sendMessage(new TextComponent(player.getName()+" a accepté votre demande d'ami"));
-            }
-        }catch(FriendNotFoundException | AccountNotFoundException e){
-            e.printStackTrace();
-        }
+        });
     }
 }
