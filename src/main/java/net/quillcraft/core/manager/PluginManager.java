@@ -23,6 +23,7 @@ public class PluginManager {
     private void registerPluginMessage(Messenger messenger){
         messenger.registerOutgoingPluginChannel(main, "quillcraft:party");
         messenger.registerOutgoingPluginChannel(main, "quillcraft:message");
+        messenger.registerOutgoingPluginChannel(main, "quillcraft:friend");
     }
 
     private void registerCommands(){

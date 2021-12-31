@@ -4,11 +4,11 @@ import net.quillcraft.commons.exception.AccountNotFoundException;
 import net.quillcraft.core.QuillCraftCore;
 import net.quillcraft.core.data.management.redis.RedisManager;
 import net.quillcraft.core.data.management.sql.DatabaseManager;
+import net.quillcraft.core.data.management.sql.table.SQLTablesManager;
 import net.quillcraft.core.event.player.PlayerChangeLanguageEvent;
 import net.quillcraft.core.manager.LanguageManager;
 import net.quillcraft.core.manager.ProfileSerializationManager;
 import net.quillcraft.core.text.Text;
-import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
 import org.bukkit.entity.Player;
 import org.redisson.api.RBucket;
@@ -26,16 +26,18 @@ public class AccountProvider {
     private final RedissonClient redissonClient;
     private final Player player;
     private final UUID uuid;
+    private final SQLTablesManager sqlTablesManager;
 
     public AccountProvider(Player player){
         this.player = player;
         this.uuid = player.getUniqueId();
-        this.redissonClient = RedisManager.PLAYER_DATA.getRedisAccess().getRedissonClient();
+        this.redissonClient = RedisManager.ACCOUNT.getRedisAccess().getRedissonClient();
         final String uuidString = uuid.toString();
         this.keyAccount = "account:"+uuidString;
         this.keyAutoLanguage = "autoLanguage:"+uuidString;
         this.keyUpdateLanguage = "updateLanguage:"+uuidString;
         this.keyUpdateVisibility = "updateVisibility:"+uuidString;
+        this.sqlTablesManager = SQLTablesManager.PLAYER_ACCOUNT;
     }
 
     public final Account getAccount() throws AccountNotFoundException{
@@ -75,21 +77,19 @@ public class AccountProvider {
     private Account getAccountFromDatabase() throws AccountNotFoundException{
         try{
             final Connection connection = DatabaseManager.MINECRAFT_SERVER.getDatabaseAccess().getConnection();
-            final PreparedStatement preparedStatement = connection.prepareStatement("SELECT * FROM playerdata WHERE uuid = ?");
+            final PreparedStatement preparedStatement = connection.prepareStatement("SELECT * FROM "+sqlTablesManager.getTable()+" WHERE "+sqlTablesManager.getKeyColumn()+" = ?");
 
             preparedStatement.setString(1, uuid.toString());
             preparedStatement.executeQuery();
 
             final ResultSet resultSet = preparedStatement.getResultSet();
             if(resultSet.next()){
-                player.sendMessage(ChatColor.GREEN+"Votre compte a bien été trouvé !");
-
                 final int id = resultSet.getInt("id");
-                final String partyUUID = resultSet.getString("partyuuid");
+                final String partyUUID = resultSet.getString("party_uuid");
                 final int quillCoins = resultSet.getInt("quillcoins");
-                final byte rankID = resultSet.getByte("rankid");
+                final byte rankID = resultSet.getByte("rank_id");
                 final Account.Visibility visibility = Account.Visibility.valueOf(resultSet.getString("visibility"));
-                final HashMap<Account.Particles, Boolean> particules = new ProfileSerializationManager().deserializeParticle(resultSet.getString("jsonparticles"));
+                final HashMap<Account.Particles, Boolean> particules = new ProfileSerializationManager().deserializeParticle(resultSet.getString("json_particles"));
                 final String languageISO = resultSet.getString("language");
 
                 connection.close();
@@ -126,7 +126,7 @@ public class AccountProvider {
         final Account account = new Account(player);
         final Connection connection = DatabaseManager.MINECRAFT_SERVER.getDatabaseAccess().getConnection();
 
-        final PreparedStatement preparedStatement = connection.prepareStatement("INSERT INTO playerdata (uuid, quillcoins, jsonparticles) VALUES (?, ?, ?)", Statement.RETURN_GENERATED_KEYS);
+        final PreparedStatement preparedStatement = connection.prepareStatement("INSERT INTO "+sqlTablesManager.getTable()+" (uuid, quillcoins, json_particles) VALUES (?, ?, ?)", Statement.RETURN_GENERATED_KEYS);
 
         preparedStatement.setString(1, uuid.toString());
         preparedStatement.setInt(2, account.getQuillCoins());

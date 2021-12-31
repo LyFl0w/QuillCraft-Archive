@@ -11,7 +11,14 @@ core:
 
 party:
 
-  kick_your_self: "[§9Party§f] §cVous ne pouvez pas vous expluser vous même"
-  accept_your_self: "[§9Party§f] §cVous ne pouvez pas vous accepter vous même"
-  invite_your_self: "[§9Party§f] §cVous ne pouvez pas vous ajouter vous même"
+  kick_your_self: "[§9Party§f] §cVous ne pouvez pas vous expluser"
+  accept_your_self: "[§9Party§f] §cVous ne pouvez pas vous accepter"
+  invite_your_self: "[§9Party§f] §cVous ne pouvez pas vous ajouter"
   no_party: "[§9Party§f] §cVous n'avez pas de parti"
+
+friend:
+
+  invite_your_self: "§6[Ami] §fVous §cne pouvez pas §fvous ajouter dans vos amis"
+  remove_your_self: "§6[Ami] §fVous §cne pouvez pas §fvous supprimer de vos amis"
+  accept_your_self: "§6[Ami] §fVous §cne pouvez pas §faccepter votre demande d'ami"
+  deny_your_self: "§6[Ami] §fVous §cne pouvez pas §frefuser votre demande d'ami"

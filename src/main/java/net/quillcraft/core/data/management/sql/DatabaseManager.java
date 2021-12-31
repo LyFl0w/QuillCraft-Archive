@@ -5,9 +5,9 @@ import org.bukkit.configuration.file.FileConfiguration;
 
 public enum DatabaseManager {
 
-    MINECRAFT_SERVER(new DatabaseCredentials(getConfiguration().getString("mysql.minecraft_server.host"),
-            getConfiguration().getString("mysql.minecraft_server.user.name"), getConfiguration().getString("mysql.minecraft_server.user.password"),
-            getConfiguration().getString("mysql.minecraft_server.database_name"), getConfiguration().getInt("mysql.minecraft_server.port")));
+    MINECRAFT_SERVER(new DatabaseCredentials(getConfiguration().getString("mysql.minecraft_data.host"),
+            getConfiguration().getString("mysql.minecraft_data.user.name"), getConfiguration().getString("mysql.minecraft_data.user.password"),
+            getConfiguration().getString("mysql.minecraft_data.database_name"), getConfiguration().getInt("mysql.minecraft_data.port")));
 
     private final DatabaseAccess databaseAccess;
 

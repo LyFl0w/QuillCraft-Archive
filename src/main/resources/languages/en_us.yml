@@ -15,3 +15,10 @@ party:
   accept_your_self: "[§9Party§f] §cYou can't accept yourself"
   invite_your_self: "[§9Party§f] §cYou can't add yourself"
   no_party: "[§9Party§f] §cYou don't have a party"
+
+friend:
+
+  invite_your_self: "§6[Friend] §fYou §ccan't §fadd yourself"
+  remove_your_self: "§6[Friend] §fYou §ccan't §fremove yourself from your friends"
+  accept_your_self: "§6[Friend] §fYou §ccan't §faccept your friend request"
+  deny_your_self: "§6[Friend] §fYou §ccan't §frefuse your friend request"

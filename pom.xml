@@ -6,7 +6,7 @@
 
     <groupId>net.quillcraft</groupId>
     <artifactId>QuillCraftCore</artifactId>
-    <version>1.0</version>
+    <version>1.0dev-friends</version>
 
     <properties>
         <maven.compiler.source>16</maven.compiler.source>
@@ -54,7 +54,15 @@
                             <goal>shade</goal>
                         </goals>
                         <configuration>
-                            <outputFile>../QuillCraftProjectOutPut/${project.artifactId}-${project.version}.jar</outputFile>
+                            <filters>
+                                <filter>
+                                    <artifact>*</artifact>
+                                    <excludes>
+                                        <exclude>META-INF/**</exclude>
+                                    </excludes>
+                                </filter>
+                            </filters>
+                            <outputFile>../QuillCraftProjectOutPut/dev-friends/${project.artifactId}-${project.version}.jar</outputFile>
                         </configuration>
                     </execution>
                 </executions>
@@ -79,7 +87,21 @@
         <dependency>
             <groupId>org.redisson</groupId>
             <artifactId>redisson</artifactId>
-            <version>3.16.3</version>
+            <version>3.16.6</version>
+            <exclusions>
+                <exclusion>
+                    <groupId>com.fasterxml.jackson.core</groupId>
+                    <artifactId>jackson-annotations</artifactId>
+                </exclusion>
+                <exclusion>
+                    <groupId>com.fasterxml.jackson.dataformat</groupId>
+                    <artifactId>jackson-dataformat-yaml</artifactId>
+                </exclusion>
+                <exclusion>
+                    <groupId>com.fasterxml.jackson.core</groupId>
+                    <artifactId>jackson-core</artifactId>
+                </exclusion>
+            </exclusions>
         </dependency>
 
         <dependency>
@@ -89,20 +111,8 @@
         </dependency>
 
         <dependency>
-            <groupId>com.fasterxml.jackson.core</groupId>
-            <artifactId>jackson-core</artifactId>
-            <version>2.12.5</version>
-        </dependency>
-
-        <dependency>
             <groupId>com.fasterxml.jackson.dataformat</groupId>
             <artifactId>jackson-dataformat-yaml</artifactId>
-            <version>2.12.5</version>
-        </dependency>
-
-        <dependency>
-            <groupId>com.fasterxml.jackson.core</groupId>
-            <artifactId>jackson-annotations</artifactId>
             <version>2.12.5</version>
         </dependency>
 

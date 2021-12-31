@@ -12,6 +12,11 @@ public enum Text {
     PARTY_INVITE_YOUR_SELF("party.invite_your_self"),
     PARTY_NO_PARTY("party.no_party"),
 
+    FRIEND_INVITE_YOUR_SELF("friend.invite_your_self"),
+    FRIEND_REMOVE_YOUR_SELF("friend.remove_your_self"),
+    FRIEND_ACCEPT_YOUR_SELF("friend.accept_your_self"),
+    FRIEND_DENY_YOUR_SELF("friend.deny_your_self"),
+
     SPAM("core.spam");
 
     private final String path;

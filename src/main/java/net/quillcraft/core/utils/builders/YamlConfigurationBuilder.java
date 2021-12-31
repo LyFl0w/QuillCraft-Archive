@@ -8,7 +8,7 @@ import org.bukkit.plugin.java.JavaPlugin;
 import java.io.File;
 import java.io.IOException;
 
-public class YamlConfigurationBuilder {
+public class YamlConfigurationBuilder{
 
     private final YamlConfiguration yamlConfiguration;
     private final File file;
@@ -22,7 +22,25 @@ public class YamlConfigurationBuilder {
         yamlConfiguration = new YamlConfiguration();
         try{
             yamlConfiguration.load(file);
-        }catch(IOException | InvalidConfigurationException exception){
+        }catch(IOException|InvalidConfigurationException exception){
+            exception.printStackTrace();
+        }
+    }
+
+    public YamlConfigurationBuilder(JavaPlugin javaPlugin, String fileName){
+        file = new File(javaPlugin.getDataFolder(), fileName);
+        try{
+            if(!file.exists()){
+                file.getParentFile().mkdirs();
+                file.createNewFile();
+            }
+        }catch(IOException exception){
+            exception.printStackTrace();
+        }
+        yamlConfiguration = new YamlConfiguration();
+        try{
+            yamlConfiguration.load(file);
+        }catch(IOException|InvalidConfigurationException exception){
             exception.printStackTrace();
         }
     }

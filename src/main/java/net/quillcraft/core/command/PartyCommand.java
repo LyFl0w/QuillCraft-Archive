@@ -28,7 +28,7 @@ public class PartyCommand implements CommandExecutor, TabCompleter {
 
     @Override
     public boolean onCommand(@Nonnull CommandSender cmds, @Nonnull Command cmd, @Nonnull String label, @Nonnull String[] args){
-        if(cmds instanceof Player player && (args.length <= 2 && args.length > 0)){
+        if(cmds instanceof Player player){
 
             final String sub = args[0];
 
@@ -59,58 +59,61 @@ public class PartyCommand implements CommandExecutor, TabCompleter {
                 return false;
             }
 
-            if(sub.equalsIgnoreCase("kick")){
-                if(player.getName().equals(args[1])){
-                    player.sendMessage(LanguageManager.getLanguage(player).getMessage(Text.PARTY_KICK_YOUR_SELF));
+            if(args.length == 2){
+                final String targetPlayerName = args[1];
+                if(sub.equalsIgnoreCase("kick")){
+                    if(player.getName().equals(targetPlayerName)){
+                        player.sendMessage(LanguageManager.getLanguage(player).getMessage(Text.PARTY_KICK_YOUR_SELF));
+                        return true;
+                    }
+
+                    final ByteArrayDataOutput out = ByteStreams.newDataOutput();
+                    out.writeUTF("Kick");
+                    out.writeUTF(targetPlayerName);
+
+                    player.sendPluginMessage(quillCraftCore, "quillcraft:party", out.toByteArray());
                     return true;
                 }
 
-                final ByteArrayDataOutput out = ByteStreams.newDataOutput();
-                out.writeUTF("Kick");
-                out.writeUTF(args[1]);
+                if(sub.equalsIgnoreCase("accept")){
+                    if(player.getName().equals(targetPlayerName)){
+                        player.sendMessage(LanguageManager.getLanguage(player).getMessage(Text.PARTY_ACCEPT_YOUR_SELF));
+                        return true;
+                    }
 
-                player.sendPluginMessage(quillCraftCore, "quillcraft:party", out.toByteArray());
-                return true;
-            }
+                    final ByteArrayDataOutput out = ByteStreams.newDataOutput();
 
-            if(sub.equalsIgnoreCase("accept")){
-                if(player.getName().equals(args[1])){
-                    player.sendMessage(LanguageManager.getLanguage(player).getMessage(Text.PARTY_ACCEPT_YOUR_SELF));
+                    out.writeUTF("Accept");
+                    out.writeUTF(targetPlayerName);
+
+                    player.sendPluginMessage(quillCraftCore, "quillcraft:party", out.toByteArray());
                     return true;
                 }
 
-                final ByteArrayDataOutput out = ByteStreams.newDataOutput();
+                if(sub.equalsIgnoreCase("invite")){
+                    if(player.getName().equals(targetPlayerName)){
+                        player.sendMessage(LanguageManager.getLanguage(player).getMessage(Text.PARTY_INVITE_YOUR_SELF));
+                        return true;
+                    }
 
-                out.writeUTF("Accept");
-                out.writeUTF(args[1]);
+                    final ByteArrayDataOutput out = ByteStreams.newDataOutput();
 
-                player.sendPluginMessage(quillCraftCore, "quillcraft:party", out.toByteArray());
-                return true;
-            }
+                    out.writeUTF("Invite");
+                    out.writeUTF(targetPlayerName);
 
-            if(sub.equalsIgnoreCase("invite")){
-                if(player.getName().equals(args[1])){
-                    player.sendMessage(LanguageManager.getLanguage(player).getMessage(Text.PARTY_INVITE_YOUR_SELF));
+                    player.sendPluginMessage(quillCraftCore, "quillcraft:party", out.toByteArray());
                     return true;
                 }
 
-                final ByteArrayDataOutput out = ByteStreams.newDataOutput();
+                if(sub.equalsIgnoreCase("setowner")){
+                    final ByteArrayDataOutput out = ByteStreams.newDataOutput();
 
-                out.writeUTF("Invite");
-                out.writeUTF(args[1]);
+                    out.writeUTF("SetOwner");
+                    out.writeUTF(targetPlayerName);
 
-                player.sendPluginMessage(quillCraftCore, "quillcraft:party", out.toByteArray());
-                return true;
-            }
-
-            if(sub.equalsIgnoreCase("setowner")){
-                final ByteArrayDataOutput out = ByteStreams.newDataOutput();
-
-                out.writeUTF("SetOwner");
-                out.writeUTF(args[1]);
-
-                player.sendPluginMessage(quillCraftCore, "quillcraft:party", out.toByteArray());
-                return true;
+                    player.sendPluginMessage(quillCraftCore, "quillcraft:party", out.toByteArray());
+                    return true;
+                }
             }
         }
         return false;

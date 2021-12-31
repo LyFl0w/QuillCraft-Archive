@@ -2,9 +2,8 @@ package net.quillcraft.core.data.management.sql.table;
 
 public enum SQLTablesManager {
 
-    PLAYER_DATA("playerdata", "uuid"),
-    PARTY_DATA("partydata", "partyuuid"),
-    RANK_DATA("rankdata", "rankid");
+    PLAYER_ACCOUNT("player_account", "uuid"),
+    RANK("rank", "rank_id");
 
     private final String table, keyColumn;
 
