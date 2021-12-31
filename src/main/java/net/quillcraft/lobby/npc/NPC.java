@@ -16,8 +16,8 @@ import net.quillcraft.core.utils.PacketUtils;
 import org.bukkit.Bukkit;
 import org.bukkit.Location;
 import org.bukkit.World;
-import org.bukkit.craftbukkit.v1_18_R1.CraftServer;
-import org.bukkit.craftbukkit.v1_18_R1.CraftWorld;
+import org.bukkit.craftbukkit.v1_17_R1.CraftServer;
+import org.bukkit.craftbukkit.v1_17_R1.CraftWorld;
 import org.bukkit.entity.Player;
 import org.bukkit.plugin.java.JavaPlugin;
 
@@ -50,7 +50,7 @@ public class NPC {
         final WorldServer world = ((CraftWorld) location.getWorld()).getHandle();
         this.npc = new EntityPlayer(server, world, gameProfile);
 
-        this.npc.getBukkitEntity().setPlayerListName("§8[NPC] §f"+npc.co());
+        this.npc.getBukkitEntity().setPlayerListName("§8[NPC] §f"+npc.getName());
     }
 
     protected NPC(JavaPlugin javaPlugin, String name, List<String> skinPart, int reference, Location location, float yawHead, GameProfile gameProfile){
@@ -84,15 +84,15 @@ public class NPC {
     }
 
     private void setDataWatcher(){
-        dataWatcher = npc.ai();
-        dataWatcher.b(new DataWatcherObject<>(17, DataWatcherRegistry.a), (byte) 0xFF);
+        dataWatcher = npc.getDataWatcher();
+        dataWatcher.set(new DataWatcherObject<>(17, DataWatcherRegistry.a), (byte) 0xFF);
     }
 
     public NPC setLocation(Location location){
         this.location = location;
         this.world = location.getWorld();
 
-        npc.a(location.getX(), location.getY(), location.getZ(), location.getYaw(), location.getPitch());
+        npc.setLocation(location.getX(), location.getY(), location.getZ(), location.getYaw(), location.getPitch());
         return this;
     }
 
@@ -196,7 +196,7 @@ public class NPC {
     }
 
     public int getId(){
-        return npc.ae();
+        return npc.getId();
     }
 
     public Set<Player> getReceivers(){
@@ -229,7 +229,7 @@ public class NPC {
 
     public void setBodyRotation(float yaw){
         this.location.setYaw(yaw);
-        npc.a(location.getX(), location.getY(), location.getZ(), location.getYaw(), location.getPitch());
+        npc.setLocation(location.getX(), location.getY(), location.getZ(), location.getYaw(), location.getPitch());
     }
 
     public float getYawHead(){
