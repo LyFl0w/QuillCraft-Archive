@@ -9,7 +9,6 @@ import net.quillcraft.core.event.player.PlayerChangeLanguageEvent;
 import net.quillcraft.core.manager.LanguageManager;
 import net.quillcraft.core.manager.ProfileSerializationManager;
 import net.quillcraft.core.text.Text;
-import org.bukkit.ChatColor;
 import org.bukkit.entity.Player;
 import org.redisson.api.RBucket;
 import org.redisson.api.RSet;
