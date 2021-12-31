@@ -32,13 +32,11 @@ public class FriendCommand implements CommandExecutor, TabCompleter{
         if(cmds instanceof Player player){
             final String sub = args[0];
             if(args.length == 1){
-                System.out.println(sub+" / "+sub.equalsIgnoreCase("list"));
                 if(sub.equalsIgnoreCase("list")){
                     final ByteArrayDataOutput out = ByteStreams.newDataOutput();
                     out.writeUTF("List");
 
                     player.sendPluginMessage(quillCraftCore, "quillcraft:friend", out.toByteArray());
-                    System.out.println("list");
                     return true;
                 }
                 return false;
