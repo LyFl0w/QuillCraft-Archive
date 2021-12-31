@@ -1,6 +1,5 @@
 package net.quillcraft.bungee.listeners.player;
 
-import net.md_5.bungee.api.chat.TextComponent;
 import net.md_5.bungee.api.connection.ProxiedPlayer;
 import net.md_5.bungee.api.event.*;
 import net.md_5.bungee.api.plugin.Listener;
@@ -35,8 +34,7 @@ public class PostLoginListener implements Listener {
                 final Account account = new AccountProvider(player).getAccount();
                 if(account.hasParty()){
                     new PartyProvider(account).getParty().getOnlinePlayers().stream().filter(players -> !players.getUniqueId().equals(player.getUniqueId())).forEach(players ->
-                            players.sendMessage(new TextComponent(LanguageManager.getLanguage(players).getMessage(Text.PARTY_JOIN_SERVER)
-                                    .replace("%PLAYER%", player.getName()))));
+                            players.sendMessage(LanguageManager.getLanguage(players).getMessageComponentReplace(Text.PARTY_JOIN_SERVER, "%PLAYER%", player.getName())));
                 }
             }catch(AccountNotFoundException | PartyNotFoundException exception){
                 exception.printStackTrace();
@@ -46,8 +44,7 @@ public class PostLoginListener implements Listener {
         taskScheduler.runAsync(quillCraftBungee, () -> {
             try{
                 new FriendProvider(player).getFriends().getOnlineFriends().stream().parallel().forEach(onlineFriend ->
-                        onlineFriend.sendMessage(new TextComponent(LanguageManager.getLanguage(onlineFriend)
-                                .getMessage(Text.FRIEND_JOIN_SERVER).replace("%PLAYER%", player.getName()))));
+                        onlineFriend.sendMessage(LanguageManager.getLanguage(onlineFriend).getMessageComponentReplace(Text.FRIEND_JOIN_SERVER, "%PLAYER%", player.getName())));
             }catch(FriendNotFoundException exception){
                 exception.printStackTrace();
             }

@@ -113,27 +113,25 @@ public class PartyProvider {
     }
 
     public void sendMessageToPlayers(Party party, TextList textList, String oldChar, String newChar){
-        party.getOnlinePlayers().stream().parallel().forEach(player -> {
-            LanguageManager.getLanguage(player).getMessage(textList).forEach(message ->
-                    player.sendMessage(new TextComponent(message.replace(oldChar, newChar))));
-        });
+        party.getOnlinePlayers().stream().parallel().forEach(player ->
+                LanguageManager.getLanguage(player).getMessage(textList).forEach(message ->
+                        player.sendMessage(new TextComponent(message.replace(oldChar, newChar)))));
     }
 
     public void sendMessageToPlayers(Party party, TextList textList){
-        party.getOnlinePlayers().stream().parallel().forEach(player -> {
-            LanguageManager.getLanguage(player).getMessage(textList).forEach(message ->
-                    player.sendMessage(new TextComponent(message)));
-        });
+        party.getOnlinePlayers().stream().parallel().forEach(player ->
+                LanguageManager.getLanguage(player).getMessage(textList).forEach(message ->
+                        player.sendMessage(new TextComponent(message))));
     }
 
     public void sendMessageToPlayers(Party party, Text text, String oldChar, String newChar){
         party.getOnlinePlayers().stream().parallel().forEach(player ->
-                player.sendMessage(new TextComponent(LanguageManager.getLanguage(player).getMessage(text).replace(oldChar, newChar))));
+                player.sendMessage(LanguageManager.getLanguage(player).getMessageComponentReplace(text, oldChar, newChar)));
     }
 
     public void sendMessageToPlayers(Party party, Text text){
         party.getOnlinePlayers().stream().parallel().forEach(player ->
-                player.sendMessage(new TextComponent(LanguageManager.getLanguage(player).getMessage(text))));
+                player.sendMessage(LanguageManager.getLanguage(player).getMessageComponent(text)));
     }
 
     public void sendMessageToPlayers(Party party, String message){
@@ -149,7 +147,8 @@ public class PartyProvider {
     private Party getPartyFromDatabase() throws PartyNotFoundException{
         try{
             final Connection connection = DatabaseManager.MINECRAFT_SERVER.getDatabaseAccess().getConnection();
-            final PreparedStatement preparedStatement = connection.prepareStatement("SELECT * FROM "+sqlTablesManager.getTable()+" WHERE "+sqlTablesManager.getKeyColumn()+" = ?");
+            final PreparedStatement preparedStatement =
+                    connection.prepareStatement("SELECT * FROM "+sqlTablesManager.getTable()+" WHERE "+sqlTablesManager.getKeyColumn()+" = ?");
 
             preparedStatement.setString(1, partyUUID.toString());
             preparedStatement.executeQuery();
@@ -190,7 +189,8 @@ public class PartyProvider {
     private void createPartyInDatabase(Party party){
         try{
             final Connection connection = DatabaseManager.MINECRAFT_SERVER.getDatabaseAccess().getConnection();
-            final PreparedStatement preparedStatement = connection.prepareStatement("INSERT INTO "+sqlTablesManager.getTable()+" (party_uuid, owner_uuid, owner_name, followers_uuid, followers_name) VALUES (?,?,?,?,?)");
+            final PreparedStatement preparedStatement = connection.prepareStatement(
+                    "INSERT INTO "+sqlTablesManager.getTable()+" (party_uuid, owner_uuid, owner_name, followers_uuid, followers_name) VALUES (?,?,?,?,?)");
 
             preparedStatement.setString(1, party.getPartyUUID().toString());
             preparedStatement.setString(2, player.getUniqueId().toString());
@@ -244,7 +244,7 @@ public class PartyProvider {
         inviteBucket.expire(3, TimeUnit.MINUTES);
 
         final LanguageManager languageManager = LanguageManager.getLanguage(targetAccount);
-        final TextComponent textComponent = new TextComponent(languageManager.getMessage(Text.PARTY_INVITATION_RECEIVED).replace("%PLAYER%", player.getName()));
+        final TextComponent textComponent = languageManager.getMessageComponentReplace(Text.PARTY_INVITATION_RECEIVED, "%PLAYER%", player.getName());
         textComponent.setHoverEvent(new HoverEvent(HoverEvent.Action.SHOW_TEXT,
                 new net.md_5.bungee.api.chat.hover.content.Text(new ComponentBuilder(languageManager.getMessage(Text.PARTY_HOVER_INVITATION_RECEIVED)).create())));
         textComponent.setClickEvent(new ClickEvent(ClickEvent.Action.RUN_COMMAND, "/party accept "+player.getName()));
