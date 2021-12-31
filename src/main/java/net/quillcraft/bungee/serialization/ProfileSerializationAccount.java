@@ -4,7 +4,6 @@ import com.google.gson.reflect.TypeToken;
 import net.quillcraft.commons.account.Account;
 
 import javax.annotation.Nonnull;
-import java.util.ArrayList;
 import java.util.HashMap;
 
 public class ProfileSerializationAccount {
