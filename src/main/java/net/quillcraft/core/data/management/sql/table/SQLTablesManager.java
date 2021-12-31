@@ -3,7 +3,8 @@ package net.quillcraft.core.data.management.sql.table;
 public enum SQLTablesManager {
 
     PLAYER_ACCOUNT("player_account", "uuid"),
-    RANK("rank", "rank_id");
+    RANK("rank", "rank_id"),
+    FRIEND("friend","uuid");
 
     private final String table, keyColumn;
 

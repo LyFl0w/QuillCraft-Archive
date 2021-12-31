@@ -6,7 +6,7 @@
 
     <groupId>net.quillcraft</groupId>
     <artifactId>QuillCraftCore</artifactId>
-    <version>1.0dev</version>
+    <version>1.0dev-friends</version>
 
     <properties>
         <maven.compiler.source>16</maven.compiler.source>
@@ -62,7 +62,7 @@
                                     </excludes>
                                 </filter>
                             </filters>
-                            <outputFile>../QuillCraftProjectOutPut/dev/${project.artifactId}-${project.version}.jar</outputFile>
+                            <outputFile>../QuillCraftProjectOutPut/dev/friends/${project.artifactId}-${project.version}.jar</outputFile>
                         </configuration>
                     </execution>
                 </executions>
@@ -79,6 +79,12 @@
         </dependency>
 
         <dependency>
+            <groupId>com.google.code.gson</groupId>
+            <artifactId>gson</artifactId>
+            <version>2.8.9</version>
+        </dependency>
+
+        <dependency>
             <groupId>com.zaxxer</groupId>
             <artifactId>HikariCP</artifactId>
             <version>5.0.0</version>
@@ -87,7 +93,7 @@
         <dependency>
             <groupId>org.redisson</groupId>
             <artifactId>redisson</artifactId>
-            <version>3.16.6</version>
+            <version>3.16.7</version>
             <exclusions>
                 <exclusion>
                     <groupId>com.fasterxml.jackson.core</groupId>
@@ -123,18 +129,6 @@
         </dependency>
 
         <dependency>
-            <groupId>com.google.code.gson</groupId>
-            <artifactId>gson</artifactId>
-            <version>2.8.9</version>
-        </dependency>
-
-        <dependency>
-            <groupId>net.lyflow</groupId>
-            <artifactId>SQLRequest</artifactId>
-            <version>1.0</version>
-        </dependency>
-
-        <dependency>
             <groupId>org.yaml</groupId>
             <artifactId>snakeyaml</artifactId>
             <version>1.30</version>
@@ -151,5 +145,12 @@
             <artifactId>slf4j-simple</artifactId>
             <version>1.7.32</version>
         </dependency>
+
+        <dependency>
+            <groupId>net.lyflow</groupId>
+            <artifactId>SQLRequest</artifactId>
+            <version>1.0.1</version>
+        </dependency>
+
     </dependencies>
 </project>
