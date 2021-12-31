@@ -35,8 +35,8 @@ friend:
 
   join_server: "§6[Ami] §b%PLAYER% §fc'est §econnecté"
   left_server: "§6[Ami] §b%PLAYER% §fc'est §cdéconnecté"
-  no_friends: "§6[Ami] Vous §cn'avez pas §fd'amis"
-  friends_list: "§6[Ami] Vos amis sont :\nAmis : %COUNT%"
+  no_friends: "§6[Ami] §cVous n'avez pas §fd'amis"
+  friends_list: "§6[Ami] §fVos amis sont :\nAmis : %COUNT%"
   send_request: "§6[Ami] §fVous avez §eenvoyé §fune demande d'ami à §b%PLAYER%"
   received_request: "§6[Ami] §fVous avez §ereçu §fune demande d'ami de §b%PLAYER%"
   no_received_request: "§6[Ami] §fVous §cn'avez pas §freçu de demande d'ami de §b%PLAYER% §fou alors sa demande d'ami a §cexpiré"
