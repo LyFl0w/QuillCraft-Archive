@@ -79,8 +79,10 @@ public class Party {
 
     public List<ProxiedPlayer> getFollowers(){
         final List<ProxiedPlayer> followersList = new ArrayList<>();
+        final ProxyServer proxyServer = ProxyServer.getInstance();
+     
         followersUUID.stream().parallel().
-                forEach(playerUUID -> followersList.add(ProxyServer.getInstance().getPlayer(playerUUID)));
+                forEach(playerUUID -> followersList.add(proxyServer.getPlayer(playerUUID)));
         return followersList;
     }
 
@@ -158,11 +160,6 @@ public class Party {
     public String getNameByFollowerUUID(UUID uuid){
         final int index = followersUUID.indexOf(uuid);
         return index == -1 ? null : followersName.get(index);
-        /* OLD version
-        for(int i = 0; i < followersUUID.size(); i++)
-            if(uuid.equals(followersUUID.get(i))) return followers_name.get(i);
-
-        return null;*/
     }
 
     protected SQLRequest getSQLRequest(){
