@@ -1,7 +1,6 @@
 package net.quillcraft.lobby.manager;
 
 import net.quillcraft.lobby.QuillCraftLobby;
-import net.quillcraft.lobby.command.HeadCommand;
 import net.quillcraft.lobby.command.LobbyCommand;
 import net.quillcraft.lobby.command.NPCCommand;
 import net.quillcraft.lobby.command.SetLobbyCommand;
@@ -11,15 +10,15 @@ import net.quillcraft.lobby.listener.entity.EntityDamageListener;
 import net.quillcraft.lobby.listener.entity.ExplosionPrimeListener;
 import net.quillcraft.lobby.listener.inventory.InventoryClickListener;
 import net.quillcraft.lobby.listener.player.*;
-import net.quillcraft.lobby.listener.player.PlayerChangeLanguageListener;
+import net.quillcraft.lobby.listener.player.custom.PlayerChangeLanguageListener;
 
 public class PluginManager {
 
-    //private final TaskManager taskManager;
+    private final TaskManager taskManager;
     private final QuillCraftLobby main;
     public PluginManager(QuillCraftLobby main){
         this.main = main;
-        //this.taskManager = new TaskManager(main);
+        this.taskManager = new TaskManager(main);
         registerEvents(main.getServer().getPluginManager());
         registerCommands();
     }
@@ -47,11 +46,10 @@ public class PluginManager {
         main.getCommand("lobby").setExecutor(new LobbyCommand());
         main.getCommand("setlobby").setExecutor(new SetLobbyCommand());
         main.getCommand("npc").setExecutor(new NPCCommand(main));
-        main.getCommand("head").setExecutor(new HeadCommand());
     }
 
-    /*public void onDisable(){
+    public void onDisable(){
         taskManager.onDisableTasks();
-    }*/
+    }
 
 }
