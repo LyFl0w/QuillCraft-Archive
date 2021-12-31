@@ -62,7 +62,7 @@
                                     </excludes>
                                 </filter>
                             </filters>
-                            <outputFile>../QuillCraftProjectOutPut/dev-friends/${project.artifactId}-${project.version}.jar</outputFile>
+                            <outputFile>../QuillCraftProjectOutPut/dev/${project.artifactId}-${project.version}.jar</outputFile>
                         </configuration>
                     </execution>
                 </executions>
