@@ -22,9 +22,9 @@ public class RedisAccess {
         config.setNettyThreads(4);
         config.useSingleServer()
                 .setAddress(redisCredential.getAdress())
-                .setPassword(redisCredential.getPassword())
-                .setDatabase(redisCredential.getDatabase())
-                .setClientName(redisCredential.getClientName());
+                .setPassword(redisCredential.password())
+                .setDatabase(redisCredential.database())
+                .setClientName(redisCredential.clientName());
 
         return Redisson.create(config);
     }
