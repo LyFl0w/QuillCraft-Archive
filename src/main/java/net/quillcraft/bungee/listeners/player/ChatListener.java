@@ -14,9 +14,8 @@ public class ChatListener implements Listener {
 
     @EventHandler
     public void onPlayerChat(ChatEvent event){
-        if(event.getSender() instanceof ProxiedPlayer){
+        if(event.getSender() instanceof final ProxiedPlayer proxiedPlayer){
             final String message = event.getMessage();
-            final ProxiedPlayer proxiedPlayer = (ProxiedPlayer) event.getSender();
             if(message.startsWith("&")){
                 try{
                     final AccountProvider accountProvider = new AccountProvider(proxiedPlayer);
