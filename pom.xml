@@ -4,7 +4,7 @@
          xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
     <modelVersion>4.0.0</modelVersion>
 
-    <groupId>net.quillcraft.lobby</groupId>
+    <groupId>net.quillcraft</groupId>
     <artifactId>QuillCraftLobby</artifactId>
     <version>1.0</version>
 
@@ -22,16 +22,28 @@
         </repository>
     </repositories>
 
+    <pluginRepositories>
+        <pluginRepository>
+            <id>apache.snapshots</id>
+            <url>https://repository.apache.org/snapshots/</url>
+        </pluginRepository>
+    </pluginRepositories>
+
     <build>
+        <pluginManagement>
+            <plugins>
+                <plugin>
+                    <groupId>org.apache.maven.plugins</groupId>
+                    <artifactId>maven-compiler-plugin</artifactId>
+                    <version>3.8.1</version>
+                    <configuration>
+                        <source>16</source>
+                        <target>16</target>
+                    </configuration>
+                </plugin>
+            </plugins>
+        </pluginManagement>
         <plugins>
-            <plugin>
-                <groupId>org.apache.maven.plugins</groupId>
-                <artifactId>maven-compiler-plugin</artifactId>
-                <configuration>
-                    <source>16</source>
-                    <target>16</target>
-                </configuration>
-            </plugin>
             <plugin>
                 <groupId>org.apache.maven.plugins</groupId>
                 <artifactId>maven-shade-plugin</artifactId>
@@ -43,15 +55,7 @@
                             <goal>shade</goal>
                         </goals>
                         <configuration>
-                            <artifactSet>
-                                <excludes>
-                                    <exclude>org.redisson:*</exclude>
-                                    <exclude>net.quillcraft.core:*</exclude>
-                                    <exclude>com.zaxxer.hikari:*</exclude>
-                                    <exclude>com.fasterxml.jackson:*</exclude>
-                                </excludes>
-                            </artifactSet>
-                            <outputFile>../../QuillCraftProjectOutPut/${project.artifactId}-${project.version}.jar</outputFile>
+                            <outputFile>../QuillCraftProjectOutPut/${project.artifactId}-${project.version}.jar</outputFile>
                         </configuration>
                     </execution>
                 </executions>
@@ -63,7 +67,7 @@
         <dependency>
             <groupId>org.spigotmc</groupId>
             <artifactId>spigot</artifactId>
-            <version>1.17.1-R0.1-SNAPSHOT</version>
+            <version>1.18.1-R0.1-SNAPSHOT</version>
             <scope>provided</scope>
         </dependency>
 
@@ -117,21 +121,21 @@
         </dependency>
 
         <dependency>
-            <groupId>net.lyflow.sqlrequest</groupId>
+            <groupId>net.lyflow</groupId>
             <artifactId>SQLRequest</artifactId>
             <version>1.0</version>
             <scope>provided</scope>
         </dependency>
 
         <dependency>
-            <groupId>net.quillcraft.core</groupId>
+            <groupId>net.quillcraft</groupId>
             <artifactId>QuillCraftCore</artifactId>
             <version>1.0</version>
             <scope>provided</scope>
         </dependency>
 
         <dependency>
-            <groupId>net.lyflow.songapi</groupId>
+            <groupId>net.lyflow</groupId>
             <artifactId>SongAPI</artifactId>
             <version>1.0</version>
         </dependency>
@@ -150,5 +154,7 @@
             <scope>provided</scope>
         </dependency>
     </dependencies>
+
+
 
 </project>

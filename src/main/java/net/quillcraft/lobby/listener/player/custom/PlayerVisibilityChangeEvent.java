@@ -1,4 +1,4 @@
-package net.quillcraft.lobby.player;
+package net.quillcraft.lobby.listener.player.custom;
 
 import net.quillcraft.commons.account.Account;
 import net.quillcraft.commons.account.AccountProvider;
