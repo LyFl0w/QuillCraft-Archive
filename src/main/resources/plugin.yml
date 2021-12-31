@@ -2,7 +2,7 @@ name: QuillCraftLobby
 version: 1.0
 author: LyFlow
 main: net.quillcraft.lobby.QuillCraftLobby
-api-version: 1.17
+api-version: 1.18
 prefix: Lobby
 description: Plugin dedicated to QuillCraft
 website: https://quillcraft.fr
@@ -18,3 +18,7 @@ commands:
     permission-message: Unknown command. Type "/help" for help.
   npc:
     usage: §c/npc <add> <displayName> (<skinname>) or /npc <remove> <name> <reference> or /npc <list>
+  head:
+    description: Cette commande permet de créer une tete interractive
+    permission: quillcraftlobby.head
+    usage: §c/head <head-id>

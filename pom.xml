@@ -55,14 +55,6 @@
                             <goal>shade</goal>
                         </goals>
                         <configuration>
-                            <artifactSet>
-                                <excludes>
-                                    <exclude>org.redisson:*</exclude>
-                                    <exclude>net.quillcraft.core:*</exclude>
-                                    <exclude>com.zaxxer.hikari:*</exclude>
-                                    <exclude>com.fasterxml.jackson:*</exclude>
-                                </excludes>
-                            </artifactSet>
                             <outputFile>../QuillCraftProjectOutPut/${project.artifactId}-${project.version}.jar</outputFile>
                         </configuration>
                     </execution>
@@ -75,7 +67,7 @@
         <dependency>
             <groupId>org.spigotmc</groupId>
             <artifactId>spigot</artifactId>
-            <version>1.17.1-R0.1-SNAPSHOT</version>
+            <version>1.18.1-R0.1-SNAPSHOT</version>
             <scope>provided</scope>
         </dependency>
 
@@ -162,5 +154,7 @@
             <scope>provided</scope>
         </dependency>
     </dependencies>
+
+
 
 </project>

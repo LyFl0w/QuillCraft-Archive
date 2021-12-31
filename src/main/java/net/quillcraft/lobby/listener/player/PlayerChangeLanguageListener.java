@@ -1,4 +1,4 @@
-package net.quillcraft.lobby.listener.player.custom;
+package net.quillcraft.lobby.listener.player;
 
 import net.quillcraft.core.event.player.PlayerChangeLanguageEvent;
 import net.quillcraft.core.utils.Title;

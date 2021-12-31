@@ -6,7 +6,7 @@ import net.quillcraft.commons.exception.AccountNotFoundException;
 import net.quillcraft.lobby.QuillCraftLobby;
 import net.quillcraft.lobby.inventory.VisibilityInventory;
 import net.quillcraft.lobby.manager.LanguageManager;
-import net.quillcraft.lobby.player.PlayerVisibilityChangeEvent;
+import net.quillcraft.lobby.listener.player.custom.PlayerVisibilityChangeEvent;
 import net.quillcraft.lobby.text.Text;
 import org.bukkit.Material;
 import org.bukkit.entity.Player;
@@ -41,7 +41,8 @@ public record InventoryClickListener(QuillCraftLobby quillCraftLobby) implements
             }
 
             if(title.equals(languageManager.getMessage(Text.VISIBILITY_INVENTORY))){
-                final PlayerVisibilityChangeEvent playerVisibilityChangeEvent = new PlayerVisibilityChangeEvent(player, accountProvider, account, Account.Visibility.getVisibilityByData(item.getType()));
+                final PlayerVisibilityChangeEvent playerVisibilityChangeEvent =
+                        new PlayerVisibilityChangeEvent(player, accountProvider, account, Account.Visibility.getVisibilityByData(item.getType()));
                 quillCraftLobby.getServer().getPluginManager().callEvent(playerVisibilityChangeEvent);
                 if(!playerVisibilityChangeEvent.isCancelled()){
                     player.openInventory(new VisibilityInventory().getVisibilityInventory(account));
