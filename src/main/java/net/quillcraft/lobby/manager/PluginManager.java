@@ -11,7 +11,7 @@ import net.quillcraft.lobby.listener.entity.EntityDamageListener;
 import net.quillcraft.lobby.listener.entity.ExplosionPrimeListener;
 import net.quillcraft.lobby.listener.inventory.InventoryClickListener;
 import net.quillcraft.lobby.listener.player.*;
-import net.quillcraft.lobby.listener.player.custom.PlayerChangeLanguageListener;
+import net.quillcraft.lobby.listener.player.PlayerChangeLanguageListener;
 
 public class PluginManager {
 

@@ -32,8 +32,7 @@ public class VisibilityInventory {
         return menuBuilder.toInventory();
     }
 
-
-    public static ItemBuilder getItemVisibility(final Account.Visibility visibility, final LanguageManager languageManager){
+    protected static ItemBuilder getItemVisibility(final Account.Visibility visibility, final LanguageManager languageManager){
         return switch(visibility){
             case EVERYONE -> setVisibilityItemBuilderName(languageManager, Text.VISIBILITY_ITEM_STATUS_EVERYONE, new ItemBuilder(Material.LIME_DYE));
             case FRIENDS -> setVisibilityItemBuilderName(languageManager, Text.VISIBILITY_ITEM_STATUS_FRIENDS, new ItemBuilder(Material.CYAN_DYE));

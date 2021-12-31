@@ -119,7 +119,6 @@ public class PlayerInteractListener implements Listener {
                 }
                 //Visibility
                 default -> {
-                    System.out.println("default");
                     if(new ItemBuilder(item).isItemDye()){
                         try{
                             player.openInventory(new VisibilityInventory().getVisibilityInventory(new AccountProvider(player).getAccount()));
