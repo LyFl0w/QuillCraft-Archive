@@ -2,9 +2,10 @@ package net.quillcraft.bungee.data.management.sql.table;
 
 public enum SQLTablesManager {
 
-    PLAYER_DATA("playerdata", "uuid"),
-    RANK_DATA("rankdata", "rankid"),
-    PARTY_DATA("partydata", "partyuuid");
+    PLAYER_ACCOUNT("player_account", "uuid"),
+    RANK("rank", "rank_id"),
+    PARTY("party", "party_uuid"),
+    FRIEND("friend","uuid");
 
     private final String table, keyColumn;
 

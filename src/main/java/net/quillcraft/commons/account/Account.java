@@ -1,20 +1,22 @@
 package net.quillcraft.commons.account;
 
 import net.lyflow.sqlrequest.SQLRequest;
-import net.md_5.bungee.api.connection.ProxiedPlayer;
-import net.quillcraft.bungee.data.management.sql.table.SQLTablesManager;
-import net.quillcraft.bungee.manager.ProfileSerializationManager;
 
-import java.util.Arrays;
-import java.util.HashMap;
-import java.util.UUID;
+import net.md_5.bungee.api.connection.ProxiedPlayer;
+
+import net.quillcraft.bungee.data.management.sql.table.SQLTablesManager;
+import net.quillcraft.bungee.serialization.ProfileSerializationAccount;
+import net.quillcraft.commons.friend.Friend;
+import net.quillcraft.commons.friend.FriendProvider;
+
+import java.util.*;
 
 public class Account {
 
     private int id;
     private UUID uuid;
     private UUID partyUUID;
-    private int quillCoins;
+    private int quillCoin;
     private byte rankID;
     private Visibility visibility;
     private HashMap<Particles, Boolean> particles;
@@ -24,26 +26,25 @@ public class Account {
     //Redis
     public Account(){}
 
-    public Account(final ProxiedPlayer player){
-        this(0, player.getUniqueId(), null, 10, (byte) 0, Visibility.EVERYONE, defaultParticles(), "en_us");
+    public Account(ProxiedPlayer player){
+        this(player.getUniqueId());
     }
 
-    public Account(final int id, final UUID uuid, final int quillCoins, final byte rankID, final Visibility visibility,
-                   final HashMap<Particles, Boolean> particles, final String languageISO){
-        this(id, uuid, null, quillCoins, rankID, visibility, particles, languageISO);
+    public Account(UUID uuid){
+        this(0, uuid, null, 10, (byte) 0, Visibility.EVERYONE, defaultParticles(), "en_us");
     }
 
-    public Account(final int id, final UUID uuid, final UUID partyUUID, final int quillCoins, final byte rankID, final Visibility visibility,
-                   final HashMap<Particles, Boolean> particles, final String languageISO){
+    public Account(int id, UUID uuid, UUID partyUUID, int quillCoin, byte rankID, Visibility visibility,
+                   HashMap<Particles, Boolean> particles, String languageISO){
         this.id = id;
         this.uuid = uuid;
         this.partyUUID = partyUUID;
-        this.quillCoins = quillCoins;
+        this.quillCoin = quillCoin;
         this.rankID = rankID;
         this.visibility = visibility;
         this.particles = particles;
         this.languageISO = languageISO;
-        final SQLTablesManager sqlTablesManager = SQLTablesManager.PLAYER_DATA;
+        final SQLTablesManager sqlTablesManager = SQLTablesManager.PLAYER_ACCOUNT;
         this.sqlRequest = new SQLRequest(sqlTablesManager.getTable(), sqlTablesManager.getKeyColumn(), uuid.toString());
     }
 
@@ -59,8 +60,8 @@ public class Account {
         return partyUUID;
     }
 
-    public int getQuillCoins(){
-        return quillCoins;
+    public int getQuillCoin(){
+        return quillCoin;
     }
 
     public byte getRankID(){
@@ -75,45 +76,44 @@ public class Account {
         return particles;
     }
 
-    public boolean hasParty(){
-        return getPartyUUID() != null;
-    }
-
-    public void setPartyUUID(final UUID partyUUID){
-        this.partyUUID = partyUUID;
-        getSQLRequest().addData("partyuuid", getPartyUUID());
-    }
-
-    public void setQuillCoins(final int quillCoins){
-        this.quillCoins = quillCoins;
-        getSQLRequest().addData("quillcoins", getQuillCoins());
-    }
-
-    public void setRankID(final byte rankID){
-        this.rankID = rankID;
-        getSQLRequest().addData("rankid", getRankID());
-    }
-
-    public void setVisibility(final Visibility visibility){
-        this.visibility = visibility;
-        getSQLRequest().addData("visibility", getVisibility().name());
-    }
-
-    public void setParticles(HashMap<Particles, Boolean> particles){
-        this.particles = particles;
-        getSQLRequest().addData("jsonparticles", new ProfileSerializationManager().serialize(getParticles()));
-    }
-
-    public void setId(int id){
-        this.id = id;
-        //sqlRequest.addData("id", getId());
-    }
-
     public String getLanguageISO(){
         return languageISO;
     }
 
-    public void setLanguage(final String languageISO){
+    public boolean hasParty(){
+        return getPartyUUID() != null;
+    }
+
+    public void setPartyUUID(UUID partyUUID){
+        this.partyUUID = partyUUID;
+        getSQLRequest().addData("party_uuid", getPartyUUID());
+    }
+
+    public void setQuillCoin(int quillCoin){
+        this.quillCoin = quillCoin;
+        getSQLRequest().addData("quillcoins", quillCoin);
+    }
+
+    public void setRankID(byte rankID){
+        this.rankID = rankID;
+        getSQLRequest().addData("rank_id", rankID);
+    }
+
+    public void setVisibility(Visibility visibility){
+        this.visibility = visibility;
+        getSQLRequest().addData("visibility", getVisibility().name());
+    }
+
+    public void setParticle(HashMap<Particles, Boolean> particles){
+        this.particles = particles;
+        getSQLRequest().addData("json_particles", new ProfileSerializationAccount.Particle().serialize(getParticles()));
+    }
+
+    protected void setId(int id) {
+        this.id = id;
+    }
+
+    public void setLanguage(String languageISO){
         this.languageISO = languageISO;
         sqlRequest.addData("language", languageISO);
     }

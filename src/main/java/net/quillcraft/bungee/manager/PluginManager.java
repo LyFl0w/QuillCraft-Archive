@@ -20,7 +20,6 @@ public class PluginManager {
 
         this.pluginManager = proxy.getPluginManager();
 
-        registerMessages();
         registerListeners();
         registerCommand();
     }
@@ -28,14 +27,12 @@ public class PluginManager {
     private void registerListeners(){
         pluginManager.registerListener(quillCraftBungee, new PostLoginListener(quillCraftBungee));
         pluginManager.registerListener(quillCraftBungee, new ChatListener());
-        pluginManager.registerListener(quillCraftBungee, new DisconnectListener());
+        pluginManager.registerListener(quillCraftBungee, new DisconnectListener(quillCraftBungee));
 
         pluginManager.registerListener(quillCraftBungee, new ProxyPingListener());
-    }
 
-    private void registerMessages(){
-        proxy.getPluginManager().registerListener(quillCraftBungee, new PluginMessageManager(quillCraftBungee,
-                "quillcraft:party", "quillcraft:message"));
+        //Register Message
+        pluginManager.registerListener(quillCraftBungee, new PluginMessageManager(quillCraftBungee));
     }
 
     private void registerCommand(){
