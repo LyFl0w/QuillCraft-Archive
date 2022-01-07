@@ -1,0 +1,5 @@
+ip: "localhost"
+clientName: "Lumy-Server"
+password: "password"
+database: 0
+port: 6379
