@@ -9,4 +9,4 @@ Project Lumy allows the QuillCraft server to easily update texts stored in Redis
 ## How to use it ?
 Lumy has an API to facilitate communication with the server.
 
-[![Build Status](https://travis-ci.com/LyFl0w/Lumy.svg?branch=master)]
+![Build Status](https://travis-ci.com/LyFl0w/Lumy.svg?branch=master)
