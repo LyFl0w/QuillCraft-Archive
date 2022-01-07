@@ -7,6 +7,4 @@ Project Lumy allows the QuillCraft server to easily update texts stored in Redis
 - The text files are in YAML format and are named according to the iso assigned to the language of the text contained in the file *(example: English (USA) -> en_us, French -> fr_fr)*.
 
 ## How to use it ?
-Lumy has an API to facilitate communication with the server.
-
-![Build Status](https://travis-ci.com/LyFl0w/Lumy.svg?branch=master)
+Lumy has an API to facilitate communication with the server. [![Build Status](https://img.shields.io/badge/API-passing-green)](https://github.com/LyFl0w/LumyAPI)
