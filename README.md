@@ -3,6 +3,6 @@ The Lumy-API project allows the QuillCraft server to easily update text stored i
 
 ## How to configure it?
 - The Lumy server connection port can be changed in the **config-lumy.yml** configuration file.
-- The text files are in YAML format and are named according to the iso assigned to the language of the text contained in the file *(example: English (USA) -> en_us, French -> fr_fr)*.
+- To update the language files in Redis with Lumy Server, you must also update the enumerations of this project
 
 ## How to use it ?
