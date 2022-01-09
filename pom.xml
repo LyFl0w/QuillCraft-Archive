@@ -6,7 +6,7 @@
 
     <groupId>net.quillcraft</groupId>
     <artifactId>QuillCraftCore</artifactId>
-    <version>1.0dev-friends</version>
+    <version>1.0dev</version>
 
     <properties>
         <maven.compiler.source>16</maven.compiler.source>
