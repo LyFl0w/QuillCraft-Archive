@@ -15,7 +15,6 @@
         <project.reporting.outputEncoding>UTF-8</project.reporting.outputEncoding>
     </properties>
 
-
     <build>
         <pluginManagement>
             <plugins>
@@ -38,7 +37,7 @@
                     <archive>
                         <manifest>
                             <addClasspath>true</addClasspath>
-                            <mainClass>net.quillcraft.lumy.Lumy</mainClass>
+                            <mainClass>org.lumy.lumy.Lumy</mainClass>
                         </manifest>
                     </archive>
                 </configuration>
@@ -57,7 +56,7 @@
                             <outputFile>../QuillCraftProjectOutPut/${project.artifactId}-${project.version}.jar</outputFile>
                             <transformers>
                                 <transformer implementation="org.apache.maven.plugins.shade.resource.ManifestResourceTransformer">
-                                    <mainClass>net.quillcraft.lumy.Lumy</mainClass>
+                                    <mainClass>org.lumy.Lumy</mainClass>
                                     <manifestEntries>
                                         <Multi-Release>true</Multi-Release>
                                     </manifestEntries>
@@ -145,6 +144,22 @@
             <groupId>org.apache.logging.log4j</groupId>
             <artifactId>log4j-core</artifactId>
             <version>2.17.1</version>
+        </dependency>
+
+        <dependency>
+            <groupId>org.lumy</groupId>
+            <artifactId>lumy-api</artifactId>
+            <version>1.0</version>
+            <exclusions>
+                <exclusion>
+                    <groupId>org.apache.logging.log4j</groupId>
+                    <artifactId>log4j-core</artifactId>
+                </exclusion>
+                <exclusion>
+                    <groupId>com.fasterxml.jackson.dataformat</groupId>
+                    <artifactId>jackson-dataformat-yaml</artifactId>
+                </exclusion>
+            </exclusions>
         </dependency>
 
     </dependencies>
