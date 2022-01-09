@@ -1,7 +1,6 @@
 package net.quillcraft.core;
 
 import net.quillcraft.core.manager.DataManager;
-import net.quillcraft.core.manager.LanguageManager;
 import net.quillcraft.core.manager.PluginManager;
 
 import org.bukkit.command.PluginCommand;
@@ -13,13 +12,11 @@ import java.util.Objects;
 public class QuillCraftCore extends JavaPlugin {
 
     private static QuillCraftCore INSTANCE;
-    //private static ProtocolManager protocolManager;
     @Override
     public void onEnable(){
         INSTANCE = this;
 
         DataManager.initAllData();
-        LanguageManager.initAllLanguage(this);
 
         new PluginManager(this);
     }
