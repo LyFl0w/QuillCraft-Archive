@@ -1,9 +1,8 @@
-package net.quillcraft.lumy.server.data;
+package org.lumy.server.data;
 
 public enum RedisManager{
 
     TEXT(new RedisAccess(RedisCredential.getRedisCrendential()));
-
 
     private final RedisAccess redisAccess;
     RedisManager(RedisAccess redisAccess){

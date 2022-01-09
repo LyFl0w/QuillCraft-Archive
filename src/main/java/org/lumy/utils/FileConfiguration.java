@@ -1,4 +1,4 @@
-package net.quillcraft.lumy.utils;
+package org.lumy.utils;
 
 import org.yaml.snakeyaml.Yaml;
 

@@ -1,4 +1,4 @@
-package net.quillcraft.lumy.server.data;
+package org.lumy.server.data;
 
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
