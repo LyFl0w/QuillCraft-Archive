@@ -99,6 +99,12 @@ public enum Text implements TextBase{
     STATUS_VISIBILITY_NOBODY("status.visibility.nobody"),
 
 
+    // SERVER PART
+    SERVER_DESCRIPTION("server.description"),
+    SERVER_VERSION_DOESNT_MATCHED("server.version.doesnt_matched"),
+
+
+
     // RANDOM PART
     SPAM("spam"),
 
