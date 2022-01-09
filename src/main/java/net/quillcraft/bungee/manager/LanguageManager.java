@@ -2,14 +2,12 @@ package net.quillcraft.bungee.manager;
 
 import net.md_5.bungee.api.chat.TextComponent;
 import net.md_5.bungee.api.connection.ProxiedPlayer;
-import net.md_5.bungee.config.Configuration;
 import net.quillcraft.bungee.data.management.redis.RedisManager;
-import net.quillcraft.bungee.text.Text;
-import net.quillcraft.bungee.text.TextList;
-import net.quillcraft.bungee.utils.builder.YamlConfigurationBuilder;
 import net.quillcraft.commons.account.Account;
 import net.quillcraft.commons.account.AccountProvider;
 import net.quillcraft.commons.exception.AccountNotFoundException;
+import org.lumy.api.text.Text;
+import org.lumy.api.text.TextList;
 import org.redisson.api.RBucket;
 import org.redisson.api.RList;
 import org.redisson.api.RedissonClient;
@@ -20,7 +18,8 @@ import java.util.List;
 public enum LanguageManager {
 
     ENGLISH_US("en_us"),
-    FRENCH("fr_fr");
+    FRENCH("fr_fr"),
+    DEFAULT(ENGLISH_US.getISO());
 
     private final String iso;
 
@@ -28,28 +27,6 @@ public enum LanguageManager {
 
     LanguageManager(final String isoLanguage){
         this.iso = isoLanguage;
-    }
-
-    public static void initAllLanguage(){
-        redissonClient.getKeys().deleteByPattern("*bungee*");
-
-        Arrays.stream(values()).forEach(languageManager -> {
-            final String languageISO = languageManager.getISO();
-            final Configuration textFile = new YamlConfigurationBuilder(languageISO+".yml", "languages", true).getConfig();
-
-            Arrays.stream(Text.values()).parallel().filter(text -> textFile.contains(text.getPath())).forEach(text -> {
-                final String path = text.getPath();
-                redissonClient.getBucket(languageISO+":"+path).set(textFile.getString(path));
-            });
-
-            Arrays.stream(TextList.values()).parallel().filter(text -> textFile.contains(text.getPath())).forEach(text -> {
-                final String path = text.getPath();
-                final RList<String> textList = redissonClient.getList(languageISO+":"+path);
-                textList.clear();
-                textList.addAll(textFile.getStringList(path));
-            });
-
-        });
     }
 
 
@@ -63,7 +40,7 @@ public enum LanguageManager {
         }catch(AccountNotFoundException e){
             e.printStackTrace();
         }
-        return LanguageManager.ENGLISH_US;
+        return LanguageManager.DEFAULT;
     }
 
     public static LanguageManager getLanguage(final Account account){
@@ -71,11 +48,15 @@ public enum LanguageManager {
     }
 
     public static String getMessageByDefaultLanguage(final Text text){
-        return ENGLISH_US.getMessage(text);
+        return DEFAULT.getMessage(text);
     }
 
     public static List<String> getListMessageByDefaultLanguage(final TextList textList){
-        return ENGLISH_US.getMessage(textList);
+        return DEFAULT.getMessage(textList);
+    }
+
+    public static TextComponent getMessageComponentByDefaultLanguage(final Text text){
+        return new TextComponent(getMessageByDefaultLanguage(text));
     }
 
     public String getMessage(final Text text){

@@ -9,13 +9,13 @@ import net.md_5.bungee.api.event.PluginMessageEvent;
 
 import net.quillcraft.bungee.QuillCraftBungee;
 import net.quillcraft.bungee.manager.LanguageManager;
-import net.quillcraft.bungee.text.Text;
 import net.quillcraft.bungee.utils.StringUtils;
 import net.quillcraft.commons.account.AccountProvider;
 import net.quillcraft.commons.exception.AccountNotFoundException;
 import net.quillcraft.commons.exception.FriendNotFoundException;
 import net.quillcraft.commons.friend.Friend;
 import net.quillcraft.commons.friend.FriendProvider;
+import org.lumy.api.text.Text;
 
 import java.util.UUID;
 
@@ -25,6 +25,7 @@ public class MessageFriend extends Message{
     public MessageFriend(ProxyServer proxy, PluginMessageEvent event){
         super(proxy, event);
     }
+
 
     @Override
     protected void onPluginMessageRepPlayer(ProxiedPlayer player, String sub, ByteArrayDataInput in){
@@ -41,8 +42,8 @@ public class MessageFriend extends Message{
                     }
 
                     final StringBuilder message = new StringBuilder(languageManager.getMessage(Text.FRIEND_FRIENDS_LIST).replace("%COUNT%", Integer.toString(friend.getFriendsUUID().size())));
-                    final String textOnline = languageManager.getMessage(Text.STATUS_ONLINE);
-                    final String textOffline = languageManager.getMessage(Text.STATUS_OFFILNE);
+                    final String textOnline = languageManager.getMessage(Text.STATUS_PLAYER_ONLINE);
+                    final String textOffline = languageManager.getMessage(Text.STATUS_PLAYER_OFFLINE);
 
                     friend.getOnlineFriends().forEach(friendPlayer -> message.append("\n[").append(textOnline).append("] ").append(friendPlayer.getName()));
                     friend.getOfflineFriendsName().forEach(friendName -> message.append("\n[").append(textOffline).append("] ").append(friendName));
@@ -61,6 +62,9 @@ public class MessageFriend extends Message{
                     }
 
                     final UUID targetUUID = friend.getUUIDByFriendName(tempTargetName);
+
+                    //Target UUID is not null because we check before (ligne 59) if the target player is in his friends
+
                     final FriendProvider targetFriendProvider = new FriendProvider(targetUUID);
                     final Friend targetFriend = targetFriendProvider.getFriends();
 
@@ -150,7 +154,7 @@ public class MessageFriend extends Message{
                         player.sendMessage(languageManager.getMessageComponentReplace(Text.FRIEND_NO_RECEIVED_REQUEST, "%PLAYER%", targetPlayer.getName()));
                         return;
                     }
-                    player.sendMessage(languageManager.getMessageComponentReplace(Text.FRIEND_REFUSE_REQUEST, "%PLAYER%", targetPlayer.getName()));
+                    player.sendMessage(languageManager.getMessageComponentReplace(Text.FRIEND_DECLINED_REQUEST, "%PLAYER%", targetPlayer.getName()));
                 }
             }catch(FriendNotFoundException|AccountNotFoundException e){
                 e.printStackTrace();

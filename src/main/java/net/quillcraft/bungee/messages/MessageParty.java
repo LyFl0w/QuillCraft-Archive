@@ -8,7 +8,6 @@ import net.md_5.bungee.api.connection.ProxiedPlayer;
 import net.md_5.bungee.api.event.PluginMessageEvent;
 import net.quillcraft.bungee.QuillCraftBungee;
 import net.quillcraft.bungee.manager.LanguageManager;
-import net.quillcraft.bungee.text.Text;
 import net.quillcraft.bungee.utils.StringUtils;
 import net.quillcraft.commons.account.Account;
 import net.quillcraft.commons.account.AccountProvider;
@@ -16,6 +15,7 @@ import net.quillcraft.commons.exception.AccountNotFoundException;
 import net.quillcraft.commons.exception.PartyNotFoundException;
 import net.quillcraft.commons.party.Party;
 import net.quillcraft.commons.party.PartyProvider;
+import org.lumy.api.text.Text;
 
 import java.security.SecureRandom;
 import java.util.List;
@@ -74,7 +74,10 @@ public class MessageParty extends Message{
                         player.sendMessage(languageManager.getMessageComponent(Text.PARTY_PLAYER_NOT_IN_YOUR_PARTY));
                         return;
                     }
+
                     final UUID targetUUID = party.getUUIDByFollowerName(targetName);
+
+                    // targetUUID is not null because we check (in line 73) if the target player is in its party
                     final AccountProvider targetAccountProvider = new AccountProvider(targetUUID);
                     final Account targetAccount = targetAccountProvider.getAccount();
 
@@ -148,11 +151,11 @@ public class MessageParty extends Message{
                     final Party party = partyProvider.getParty();
                     final ProxiedPlayer owner = proxy.getPlayer(party.getOwnerUUID());
 
-                    final String textOnline = languageManager.getMessage(Text.STATUS_ONLINE);
-                    final String textOffline = languageManager.getMessage(Text.STATUS_OFFILNE);
+                    final String textOnline = languageManager.getMessage(Text.STATUS_PLAYER_ONLINE);
+                    final String textOffline = languageManager.getMessage(Text.STATUS_PLAYER_OFFLINE);
 
                     final StringBuilder ownerPartMessage = new StringBuilder("§f\n[")
-                            .append(languageManager.getMessage(Text.STATUS_OWNER)).append("\\")
+                            .append(languageManager.getMessage(Text.STATUS_PLAYER_OWNER)).append("\\")
                             .append((owner == null) ? textOffline : textOnline)
                             .append("] §b").append(party.getOwnerName()).append("§f");
 
@@ -182,7 +185,7 @@ public class MessageParty extends Message{
                         }
 
                         if(account.hasParty()){
-                            player.sendMessage(languageManager.getMessageComponent(Text.PARTY_PLAYER_ARE_ALREADY_IN_PARTY));
+                            player.sendMessage(languageManager.getMessageComponent(Text.PARTY_PLAYER_IS_ALREADY_IN_PARTY));
                             return;
                         }
 
