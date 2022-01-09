@@ -2,14 +2,13 @@ package net.quillcraft.core.event.player;
 
 import net.quillcraft.commons.account.Account;
 import net.quillcraft.commons.account.AccountProvider;
-import net.quillcraft.core.QuillCraftCore;
 import net.quillcraft.core.manager.LanguageManager;
 
-import net.quillcraft.core.text.Text;
 import org.bukkit.entity.Player;
 import org.bukkit.event.Cancellable;
 import org.bukkit.event.HandlerList;
 import org.bukkit.event.player.PlayerEvent;
+import org.lumy.api.text.Text;
 
 import javax.annotation.Nonnull;
 

@@ -8,8 +8,9 @@ import net.quillcraft.core.data.management.sql.table.SQLTablesManager;
 import net.quillcraft.core.event.player.PlayerChangeLanguageEvent;
 import net.quillcraft.core.manager.LanguageManager;
 import net.quillcraft.core.manager.ProfileSerializationManager;
-import net.quillcraft.core.text.Text;
+
 import org.bukkit.entity.Player;
+import org.lumy.api.text.Text;
 import org.redisson.api.RBucket;
 import org.redisson.api.RSet;
 import org.redisson.api.RedissonClient;
