@@ -23,8 +23,8 @@ inventory_name:
 tablist:
 
   default:
-    header: "§bYou play on the server §e§lQUILLCRAFT"
-    footer: "§9§lDiscord: §9§odiscord.gg/GzyZcJn"
+    - "§bYou play on the server §e§lQUILLCRAFT"
+    - "§9§lDiscord: §9§odiscord.gg/GzyZcJn"
 
 
 auto_text:
@@ -43,12 +43,12 @@ auto_text:
       text: "1st ligne\n2nd ligne"
 
 
-titles:
+title:
 
   lobby:
     join:
-      title: "§bWelcome on"
-      subtitle: "§6QuillCraft"
+      - "§bWelcome on"
+      - "§6QuillCraft"
 
 
 items_inventory:
