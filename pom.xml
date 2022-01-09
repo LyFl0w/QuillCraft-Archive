@@ -6,7 +6,7 @@
 
     <groupId>net.quillcraft.bungee</groupId>
     <artifactId>QuillCraftBungee</artifactId>
-    <version>1.0dev</version>
+    <version>1.0dev-lumy</version>
 
     <properties>
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
@@ -54,7 +54,7 @@
                             </excludes>
                         </filter>
                     </filters>
-                    <outputFile>../QuillCraftProjectOutPut/dev/${project.artifactId}-${project.version}.jar</outputFile>
+                    <outputFile>../QuillCraftProjectOutPut/dev/lumy/${project.artifactId}-${project.version}.jar</outputFile>
                 </configuration>
             </plugin>
         </plugins>
