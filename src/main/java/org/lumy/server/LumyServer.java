@@ -1,7 +1,7 @@
-package net.quillcraft.lumy.server;
+package org.lumy.server;
 
-import net.quillcraft.lumy.Lumy;
-import net.quillcraft.lumy.server.manager.LanguageManager;
+import org.lumy.Lumy;
+import org.lumy.server.manager.LanguageManager;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
