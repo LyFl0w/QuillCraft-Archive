@@ -147,6 +147,15 @@ party:
   no_party: "[§9Party§f] §cYou don't have a party"
 
 
+server:
+
+  version_doesnt_matched: "Requires MC 1.18"
+
+  description:
+    - "§7§l»§f§l» §6§lQuillCraft §f§l«§7§l« §r§8- §rBêta  §c[1.18]"
+    - "§eParkourPvP§f, §aPvPBox §f§l► §d§lSoon: §bPractice"
+
+
 status:
 
   player:
