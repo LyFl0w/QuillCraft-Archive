@@ -50,4 +50,11 @@ redis:
       name: "username"
       password: "password"
     database_number: 6
-    port: 6379
+    port: 6379 #default
+  friend:
+    host: "127.0.0.1"
+    user:
+      name: "username"
+      password: "password"
+    database_number: 1
+    port: 6379 #default

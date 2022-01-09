@@ -1,6 +1,8 @@
 package net.quillcraft.commons.account;
 
 import net.lyflow.sqlrequest.SQLRequest;
+import net.quillcraft.commons.exception.FriendNotFoundException;
+import net.quillcraft.commons.friend.FriendProvider;
 import net.quillcraft.core.QuillCraftCore;
 import net.quillcraft.core.data.management.sql.table.SQLTablesManager;
 import net.quillcraft.core.manager.ProfileSerializationManager;
@@ -8,9 +10,9 @@ import org.bukkit.Bukkit;
 import org.bukkit.Material;
 import org.bukkit.entity.Player;
 
-import javax.annotation.Nonnull;
 import java.util.Arrays;
 import java.util.HashMap;
+import java.util.List;
 import java.util.UUID;
 
 public class Account {
@@ -134,7 +136,24 @@ public class Account {
         switch(getVisibility()){
             case NOBODY -> Bukkit.getOnlinePlayers().forEach(players -> player.hidePlayer(quillCraftCore, players));
             case EVERYONE -> Bukkit.getOnlinePlayers().forEach(players -> player.showPlayer(quillCraftCore, players));
-            case FRIENDS -> {}
+            case FRIENDS -> {
+                try{
+                    final List<UUID> friendListUUID = new FriendProvider(player).getFriends().getFriendsUUID();
+                    if(friendListUUID.size() == 0) {
+                        Bukkit.getOnlinePlayers().forEach(players -> player.hidePlayer(quillCraftCore, players));
+                        break;
+                    }
+                    Bukkit.getOnlinePlayers().forEach(players -> {
+                        if(friendListUUID.contains(players.getUniqueId())){
+                            player.showPlayer(quillCraftCore, players);
+                        }else{
+                            player.hidePlayer(quillCraftCore, players);
+                        }
+                    });
+                }catch(FriendNotFoundException e){
+                    e.printStackTrace();
+                }
+            }
         }
     }
 
