@@ -11,14 +11,17 @@ public enum TextList implements TextBase{
 
 
     //TITLE PART
-    TITLE_LOBBY_JOIN("titles.lobby.join");
+    TITLE_LOBBY_JOIN("titles.lobby.join"),
+
+
+    // SERVER PART
+    SERVER_DESCRIPTION("server.description");
 
     private final String path;
 
     TextList(String path){
         this.path = path;
     }
-
 
     @Override
     public String getPath(){

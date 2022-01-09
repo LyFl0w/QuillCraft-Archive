@@ -65,6 +65,7 @@ public enum Text implements TextBase{
     PARTY_NOT_OWNER("party.not_owner"),
     PARTY_NO_PARTY("party.no_party"),
 
+
     // FRIEND PART
     FRIEND_INVITE_YOUR_SELF("friend.invite_your_self"),
     FRIEND_REMOVE_YOUR_SELF("friend.remove_your_self"),
@@ -100,9 +101,7 @@ public enum Text implements TextBase{
 
 
     // SERVER PART
-    SERVER_DESCRIPTION("server.description"),
-    SERVER_VERSION_DOESNT_MATCHED("server.version.doesnt_matched"),
-
+    SERVER_VERSION_DOESNT_MATCHED("server.version_doesnt_matched"),
 
 
     // RANDOM PART
