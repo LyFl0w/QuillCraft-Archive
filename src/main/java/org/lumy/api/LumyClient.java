@@ -1,13 +1,14 @@
 package org.lumy.api;
 
 import org.lumy.api.utils.FileUtils;
-import org.apache.logging.log4j.Logger;
 
 import java.io.DataOutputStream;
 import java.io.IOException;
 import java.net.InetAddress;
 import java.net.Socket;
 import java.net.UnknownHostException;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 
 public class LumyClient{
 
@@ -17,7 +18,7 @@ public class LumyClient{
                     FileUtils.getFileFromResource("config-lumy.yml"), LumyConfiguration.class);
             start(logger, lumyConfiguration.ip(), lumyConfiguration.port());
         }catch(IOException e){
-            logger.error(e.getMessage(), e);
+            logger.log(Level.SEVERE, e.getMessage(), e);
         }
     }
 
@@ -42,13 +43,13 @@ public class LumyClient{
                 socket.close();
                 dataOutputStream.close();
             }catch(IOException e){
-                logger.error(e.getMessage(), e);
+                logger.log(Level.SEVERE, e.getMessage(), e);
             }
 
         }catch(UnknownHostException e){
-            logger.error("Unknown Host", e);
+            logger.log(Level.SEVERE, "Unknown Host", e);
         }catch(IOException e){
-            logger.error("Connexion Refused", e);
+            logger.log(Level.SEVERE, "Connexion Refused", e);
         }
     }
 
