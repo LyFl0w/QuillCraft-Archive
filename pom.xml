@@ -6,7 +6,7 @@
 
     <groupId>org.lumy</groupId>
     <artifactId>lumy-server</artifactId>
-    <version>1.0.1</version>
+    <version>1.1.0</version>
 
     <properties>
         <maven.compiler.source>17</maven.compiler.source>
@@ -149,7 +149,7 @@
         <dependency>
             <groupId>org.lumy</groupId>
             <artifactId>lumy-api</artifactId>
-            <version>1.0.1</version>
+            <version>1.1.0</version>
             <exclusions>
                 <exclusion>
                     <groupId>org.apache.logging.log4j</groupId>
