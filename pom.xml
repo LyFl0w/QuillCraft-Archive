@@ -53,7 +53,7 @@
                             <goal>shade</goal>
                         </goals>
                         <configuration>
-                            <outputFile>../QuillCraftProjectOutPut/${project.artifactId}-${project.version}.jar</outputFile>
+                            <outputFile>../LumyProjectOutPut/${project.artifactId}-${project.version}.jar</outputFile>
                             <transformers>
                                 <transformer implementation="org.apache.maven.plugins.shade.resource.ManifestResourceTransformer">
                                     <mainClass>org.lumy.Lumy</mainClass>
