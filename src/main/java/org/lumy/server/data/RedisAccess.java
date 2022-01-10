@@ -1,7 +1,6 @@
 package org.lumy.server.data;
 
-import org.apache.logging.log4j.LogManager;
-import org.apache.logging.log4j.Logger;
+import org.lumy.Lumy;
 import org.redisson.Redisson;
 import org.redisson.api.RedissonClient;
 import org.redisson.codec.JsonJacksonCodec;
@@ -11,7 +10,6 @@ public class RedisAccess {
 
     private RedissonClient redissonClient;
     private final RedisCredential redisCredential;
-    private final Logger logger = LogManager.getLogger("Lumy");
 
     public RedisAccess(RedisCredential redisCredential){
         this.redisCredential = redisCredential;
@@ -33,14 +31,15 @@ public class RedisAccess {
     }
 
     public void init(){
-        logger.info("Redis init");
+        Lumy.logger.info("Redis init");
         redissonClient = initRedisson(redisCredential);
     }
 
     public void close(){
-        logger.info("ShutDown - Start");
+        if(redissonClient == null) return;
+        Lumy.logger.info("ShutDown - Start");
         redissonClient.shutdown();
-        logger.info("ShutDown - End");
+        Lumy.logger.info("ShutDown - End");
     }
 
     public final RedissonClient getRedissonClient(){
