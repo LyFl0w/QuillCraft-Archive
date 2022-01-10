@@ -1,9 +1,11 @@
 package org.lumy.utils;
 
+import org.lumy.Lumy;
 import org.yaml.snakeyaml.Yaml;
 
 import java.io.InputStream;
 import java.util.*;
+
 
 public class FileConfiguration{
 
@@ -31,6 +33,8 @@ public class FileConfiguration{
 
             return objectToFind;
 
+        }catch(NullPointerException e){
+            Lumy.logger.error("text with path : "+path+" was not found !");
         }catch(ClassCastException ignored){}
         return null;
     }
@@ -68,7 +72,7 @@ public class FileConfiguration{
 
     @SuppressWarnings("unchecked")
     public Collection<String> getStringList(String path){
-        return getObject(Collections.<String>emptyList().getClass(), path);
+        return getObject(List.class, path);
     }
 
     private static class Section{
@@ -84,13 +88,19 @@ public class FileConfiguration{
         }
 
         private Iterator<String> parsePath(String tempPath){
-            if(tempPath.isBlank()) return Arrays.stream(getPath().split("\\.")).iterator();
-            return Arrays.stream((getPath()+((!tempPath.contains(".")) ? "."+tempPath : tempPath)).split("\\.")).iterator();
+            final String regex = "\\.";
+            if(tempPath.isBlank()) return Arrays.stream(getPath().split(regex)).iterator();
+            if(pathIsEmpty()) return Arrays.stream(tempPath.split(regex)).iterator();
+            return Arrays.stream((getPath()+((!tempPath.contains(".")) ? "."+tempPath : tempPath)).split(regex)).iterator();
         }
 
         private void setConfiguration(String path){
             sectionPathBuilder.setLength(0);
             sectionPathBuilder.append(path);
+        }
+
+        private boolean pathIsEmpty(){
+            return sectionPathBuilder.isEmpty();
         }
 
         private String getPath(){
