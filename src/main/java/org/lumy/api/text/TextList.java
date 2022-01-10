@@ -27,4 +27,5 @@ public enum TextList implements TextBase{
     public String getPath(){
         return path;
     }
+
 }
