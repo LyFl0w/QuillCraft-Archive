@@ -11,7 +11,7 @@ public enum TextList implements TextBase{
 
 
     //TITLE PART
-    TITLE_LOBBY_JOIN("titles.lobby.join"),
+    TITLE_LOBBY_JOIN("title.lobby.join"),
 
 
     // SERVER PART
