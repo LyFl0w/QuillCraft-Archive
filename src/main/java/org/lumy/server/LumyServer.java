@@ -1,8 +1,8 @@
 package org.lumy.server;
 
 import org.lumy.Lumy;
+import org.lumy.server.data.RedisManager;
 import org.lumy.server.manager.LanguageManager;
-import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
 import java.io.DataInputStream;
@@ -26,18 +26,12 @@ public class LumyServer{
     private long lastUpdate = 0L;
 
     public LumyServer(Lumy.Configuration lumyConfiguration){
-        this.logger = LogManager.getLogger("Lumy");
+        this.logger = Lumy.logger;
         this.port = lumyConfiguration.port();
         this.scheduleur = Executors.newScheduledThreadPool(1);
         this.scheduledFuture = scheduleTask();
 
-        LanguageManager.initAllLanguage();
-        try{
-            start();
-        }catch(Exception e){
-            logger.fatal(e);
-            System.exit(0);
-        }
+        start();
     }
 
     private ScheduledFuture<?> scheduleTask(){
@@ -49,18 +43,28 @@ public class LumyServer{
         this.scheduledFuture = scheduleTask();
     }
 
-    private void start() throws Exception{
-        final ServerSocket serverSocket = new ServerSocket(port);
-        logger.info("Server start on port : "+port);
-        while(true){
-            try{
-                final Socket clientSocket = serverSocket.accept();
+    private void start(){
+        try{
+            final ServerSocket serverSocket = new ServerSocket(port);
+            logger.info("Server start on port : "+port);
 
-                new ClientConnection(clientSocket, new DataInputStream(clientSocket.getInputStream())).start();
-            }catch(Exception e){
-                e.printStackTrace();
+            RedisManager.TEXT.getRedisAccess().init();
+            LanguageManager.initAllLanguage();
+
+            while(true){
+                try{
+                    final Socket clientSocket = serverSocket.accept();
+
+                    new ClientConnection(clientSocket, new DataInputStream(clientSocket.getInputStream())).start();
+                }catch(Exception e){
+                    e.printStackTrace();
+                }
             }
+        }catch(IOException e){
+            logger.fatal(e);
         }
+        RedisManager.TEXT.getRedisAccess().close();
+        System.exit(0);
     }
 
     private class ClientConnection extends Thread{
