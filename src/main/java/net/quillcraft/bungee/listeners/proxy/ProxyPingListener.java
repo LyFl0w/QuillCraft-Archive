@@ -13,17 +13,23 @@ import org.lumy.api.text.TextList;
 
 public class ProxyPingListener implements Listener {
 
-    private final LanguageManager languageManger = LanguageManager.DEFAULT;
-
+    private static final LanguageManager languageManger = LanguageManager.DEFAULT;
+    private static TextComponent description = new TextComponent(MessageUtils.motd(languageManger.getMessage(TextList.SERVER_DESCRIPTION)));
+    private static ServerPing.Protocol protocol = new ServerPing.Protocol(languageManger.getMessage(Text.SERVER_VERSION_DOESNT_MATCHED), 757);
 
     @EventHandler
     public void onProxyPing(ProxyPingEvent event){
         final ServerPing serverPing = event.getResponse();
 
-        serverPing.setDescriptionComponent(new TextComponent(MessageUtils.motd(languageManger.getMessage(TextList.SERVER_DESCRIPTION))));
-        serverPing.setVersion(new ServerPing.Protocol(languageManger.getMessage(Text.SERVER_VERSION_DOESNT_MATCHED), 0));
-
         event.getResponse().getVersion().setProtocol(serverPing.getVersion().getProtocol());
+
+        serverPing.setDescriptionComponent(description);
+        serverPing.setVersion(protocol);
+    }
+
+    private void updateServeurDescription(){
+        description = new TextComponent(MessageUtils.motd(languageManger.getMessage(TextList.SERVER_DESCRIPTION)));
+        protocol = new ServerPing.Protocol(languageManger.getMessage(Text.SERVER_VERSION_DOESNT_MATCHED), 757);
     }
 
 }

@@ -12,9 +12,11 @@ public class QuillCraftBungee extends Plugin {
     public void onEnable(){
         INSTANCE = this;
 
-        DataManager.initAllData();
-
+        DataManager.initAllData(this);
         new PluginManager(this);
+
+
+
     }
 
     @Override
