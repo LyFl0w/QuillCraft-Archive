@@ -5,7 +5,6 @@ import net.quillcraft.bungee.utils.builder.YamlConfigurationBuilder;
 
 public enum ConfigurationManager {
 
-    DEFAULT_CONFIGURATION(new YamlConfigurationBuilder("config.yml", true).getConfig()),
     DATA_ACCESS(new YamlConfigurationBuilder("data_access.yml", true).getConfig());
 
     private final Configuration configuration;
