@@ -29,13 +29,12 @@ public class LumyServer{
         this.logger = Lumy.logger;
         this.port = lumyConfiguration.port();
         this.scheduleur = Executors.newScheduledThreadPool(1);
-        this.scheduledFuture = scheduleTask();
 
         start();
     }
 
     private ScheduledFuture<?> scheduleTask(){
-        return scheduleur.scheduleWithFixedDelay(this::updateDataBase, 0, 2, TimeUnit.HOURS);
+        return scheduleur.scheduleWithFixedDelay(this::updateDataBase, 0, 2, TimeUnit.MINUTES);
     }
 
     private void restartScheduleTask(){
@@ -49,7 +48,7 @@ public class LumyServer{
             logger.info("Server start on port : "+port);
 
             RedisManager.TEXT.getRedisAccess().init();
-            LanguageManager.initAllLanguage();
+            this.scheduledFuture = scheduleTask();
 
             while(true){
                 try{
@@ -79,7 +78,7 @@ public class LumyServer{
             this.dataInputStream = dataInputStream;
             //Auto Destroy if inactif
             this.scheduleur = Executors.newScheduledThreadPool(0);
-            scheduleur.schedule(this::stopThreadAction, 1, TimeUnit.MINUTES);
+            scheduleur.schedule(this::stopThreadAction, 15, TimeUnit.SECONDS);
         }
 
         public void run(){
@@ -92,7 +91,6 @@ public class LumyServer{
                         case "update" -> {
                             logger.info("update database requested from : "+getFullAdress());
                             restartScheduleTask();
-                            updateDataBase();
                         }
 
                         case "ping" -> {
@@ -120,7 +118,7 @@ public class LumyServer{
         }
 
         private void stopThreadAction(){
-            logger.warn("A one-minute delay was exceeded with the customer : "+getFullAdress());
+            logger.warn("A 30 seconds delay was exceeded with the customer : "+getFullAdress());
             exit = true;
             try{
                 dataInputStream.close();
@@ -136,10 +134,11 @@ public class LumyServer{
     }
 
     private void updateDataBase(){
-        if(System.currentTimeMillis()-lastUpdate >= 300000L) return;
+        // 1000millisec = 1sec , so 1000*60millisec = 1min , so 1000*60*5millisec = 300000millisec = 5min
+        if(System.currentTimeMillis()-lastUpdate <= 300000L) return;
         lastUpdate = System.currentTimeMillis();
 
-        LanguageManager.getLastLanguagesModifiedTime(3, TimeUnit.HOURS).forEach(LanguageManager::updateTexteRedis);
+        LanguageManager.getLastLanguagesModifiedTime(3, TimeUnit.HOURS).stream().parallel().forEach(LanguageManager::updateTexteRedis);
     }
 
 
