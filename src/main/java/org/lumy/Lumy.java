@@ -13,7 +13,7 @@ public class Lumy{
     public static void main(String[] args){
         try{
             new LumyServer(FileUtils.getObjectFromYamlFile(
-                    FileUtils.getFileFromResource( "config-lumy.yml"), Lumy.Configuration.class));
+                    FileUtils.getFileFromResource("config-lumy.yml"), Lumy.Configuration.class));
         }catch(Exception e){
             logger.error(e.getMessage(), e);
         }
