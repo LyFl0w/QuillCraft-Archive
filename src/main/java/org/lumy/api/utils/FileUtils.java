@@ -5,26 +5,25 @@ import com.fasterxml.jackson.dataformat.yaml.YAMLFactory;
 
 import java.io.File;
 import java.io.IOException;
-import java.io.InputStream;
 import java.nio.file.Files;
+import java.util.Objects;
 
 public class FileUtils{
 
-    public static File getFileFromResource(String fileName){
+    public static File getFileFromResource(File parent, String fileName){
         try{
-            final File file = new File(System.getProperty("user.dir"), fileName);
+            final File file = new File(parent, fileName);
             if(!file.getParentFile().exists()) file.getParentFile().mkdirs();
-            if(!file.exists()) Files.copy(getFileInputStreamFromResource(fileName), file.toPath());
+            if(!file.exists()) Files.copy(Objects.requireNonNull(FileUtils.class.getClassLoader().getResourceAsStream(fileName)), file.toPath());
 
+            System.out.println("return file");
             return file;
         }catch(Exception e){
             e.printStackTrace();
+            System.out.println("null exceptio");
         }
+        System.out.println("noul");
         return null;
-    }
-
-    public static InputStream getFileInputStreamFromResource(String fileName){
-        return Thread.currentThread().getContextClassLoader().getResourceAsStream(fileName);
     }
 
     public static <T> T getObjectFromYamlFile(File file, Class<T> valueType) throws IOException{

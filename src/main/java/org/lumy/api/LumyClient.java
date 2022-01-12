@@ -3,6 +3,7 @@ package org.lumy.api;
 import org.lumy.api.utils.FileUtils;
 
 import java.io.DataOutputStream;
+import java.io.File;
 import java.io.IOException;
 import java.net.InetAddress;
 import java.net.Socket;
@@ -12,10 +13,10 @@ import java.util.logging.Logger;
 
 public class LumyClient{
 
-    public LumyClient(Logger logger){
+    public LumyClient(Logger logger, File dataFolder){
         try{
             final LumyConfiguration lumyConfiguration = FileUtils.getObjectFromYamlFile(
-                    FileUtils.getFileFromResource("config-lumy.yml"), LumyConfiguration.class);
+                    FileUtils.getFileFromResource(dataFolder, "config-lumy.yml"), LumyConfiguration.class);
             start(logger, lumyConfiguration.ip(), lumyConfiguration.port());
         }catch(IOException e){
             logger.log(Level.SEVERE, e.getMessage(), e);
