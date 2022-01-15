@@ -38,7 +38,7 @@ public enum LanguageManager{
         final long timeToWait = System.currentTimeMillis()-timeUnit.toMillis(time);
 
         if(lastUpdate.isEmpty()){
-            final List<LanguageManager> languages = getLanguages();
+            final List<LanguageManager> languages = Arrays.stream(values()).filter(languageManager -> languageManager != LanguageManager.DEFAULT).toList();
             languages.stream().parallel().forEach(language -> lastUpdate.put(language, language.getFileLastModifiedTime()));
             return languages.stream().parallel().filter(language -> language.getFileLastModifiedTime() >= timeToWait).toList();
         }
@@ -53,10 +53,6 @@ public enum LanguageManager{
         });
 
         return languages.stream().parallel().filter(language -> language.getFileLastModifiedTime() >= timeToWait).toList();
-    }
-
-    public static List<LanguageManager> getLanguages(){
-        return Arrays.stream(values()).filter(languageManager -> languageManager != LanguageManager.DEFAULT).toList();
     }
 
     private Long getFileLastModifiedTime(){
