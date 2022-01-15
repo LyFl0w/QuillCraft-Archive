@@ -34,7 +34,7 @@ public class LumyServer{
     }
 
     private ScheduledFuture<?> scheduleTask(){
-        return scheduleur.scheduleWithFixedDelay(this::updateDataBase, 0, 2, TimeUnit.MINUTES);
+        return scheduleur.scheduleWithFixedDelay(this::updateDataBase, 0, 5, TimeUnit.MINUTES);
     }
 
     private void restartScheduleTask(){
