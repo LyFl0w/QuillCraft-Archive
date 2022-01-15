@@ -34,7 +34,7 @@ public class LumyServer{
     }
 
     private ScheduledFuture<?> scheduleTask(){
-        return scheduleur.scheduleWithFixedDelay(this::updateDataBase, 0, 5, TimeUnit.MINUTES);
+        return scheduleur.scheduleWithFixedDelay(this::updateDataBase, 0, 2, TimeUnit.HOURS);
     }
 
     private void restartScheduleTask(){
@@ -135,7 +135,7 @@ public class LumyServer{
 
     private void updateDataBase(){
         // 1000millisec = 1sec , so 1000*60millisec = 1min , so 1000*60*5millisec = 300000millisec = 5min
-        if(System.currentTimeMillis()-lastUpdate <= 300000L) return;
+        if(System.currentTimeMillis()-lastUpdate < 300000L) return;
         lastUpdate = System.currentTimeMillis();
 
         LanguageManager.getLastLanguagesModifiedTime(3, TimeUnit.HOURS).stream().parallel().forEach(LanguageManager::updateTexteRedis);
