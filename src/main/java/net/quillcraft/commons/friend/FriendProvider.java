@@ -10,10 +10,10 @@ import net.quillcraft.bungee.data.management.sql.DatabaseManager;
 import net.quillcraft.bungee.data.management.sql.table.SQLTablesManager;
 import net.quillcraft.bungee.manager.LanguageManager;
 import net.quillcraft.bungee.serialization.ProfileSerializationUtils;
-import net.quillcraft.bungee.text.Text;
 import net.quillcraft.commons.account.Account;
 
 import net.quillcraft.commons.exception.FriendNotFoundException;
+import org.lumy.api.text.Text;
 import org.redisson.api.RBucket;
 import org.redisson.api.RSet;
 import org.redisson.api.RedissonClient;

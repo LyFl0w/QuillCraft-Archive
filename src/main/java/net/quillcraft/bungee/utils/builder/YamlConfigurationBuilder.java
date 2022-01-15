@@ -7,15 +7,15 @@ import net.quillcraft.bungee.QuillCraftBungee;
 
 import java.io.File;
 import java.io.IOException;
-import java.io.InputStream;
 import java.nio.file.Files;
+import java.util.Objects;
 
 public class YamlConfigurationBuilder{
 
     private final File file;
     private String parentPath = "";
-    private final QuillCraftBungee main = QuillCraftBungee.getInstance();
-    private File dataFolder = main.getDataFolder();
+    private final ClassLoader classLoader;
+    private File dataFolder;
     private Configuration config;
 
     public YamlConfigurationBuilder(final String fileName, final boolean isDefault){
@@ -23,6 +23,10 @@ public class YamlConfigurationBuilder{
     }
 
     public YamlConfigurationBuilder(final String fileName, final String parentPath, final boolean isDefault){
+        QuillCraftBungee quillCraftBungee = QuillCraftBungee.getInstance();
+        classLoader = quillCraftBungee.getClass().getClassLoader();
+        dataFolder = quillCraftBungee.getDataFolder();
+
         if(parentPath != null) this.parentPath = parentPath;
         if(!this.parentPath.isEmpty()) dataFolder =  new File(dataFolder, parentPath);
 
@@ -46,18 +50,7 @@ public class YamlConfigurationBuilder{
     private YamlConfigurationBuilder saveDefaultConfig(){
         if(!file.exists()){
             try{
-
-                if(parentPath.isEmpty()){
-                    System.out.println("is empty");
-                }else{
-                    System.out.println("is not empty");
-                }
-
-                System.out.println("value = "+(parentPath.isEmpty() ? file.getName() : parentPath+"/"+file.getName()));
-
-                InputStream in = main.getResourceAsStream(parentPath.isEmpty() ? file.getName() : parentPath+"/"+file.getName());
-
-                Files.copy(in, file.toPath());
+                Files.copy(Objects.requireNonNull(classLoader.getResourceAsStream(parentPath.isEmpty() ? file.getName() : parentPath+"/"+file.getName())), file.toPath());
             }catch(IOException exception){
                 exception.printStackTrace();
             }

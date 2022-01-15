@@ -2,7 +2,7 @@ package net.quillcraft.commons.exception;
 
 import net.md_5.bungee.api.connection.ProxiedPlayer;
 import net.quillcraft.bungee.manager.LanguageManager;
-import net.quillcraft.bungee.text.Text;
+import org.lumy.api.text.Text;
 
 public class PartyNotFoundException extends Exception{
 
