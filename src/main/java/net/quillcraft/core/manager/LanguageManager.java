@@ -4,13 +4,10 @@ import net.quillcraft.commons.account.Account;
 import net.quillcraft.commons.account.AccountProvider;
 import net.quillcraft.commons.exception.AccountNotFoundException;
 import net.quillcraft.core.data.management.redis.RedisManager;
-import net.quillcraft.core.text.Text;
-import net.quillcraft.core.text.TextList;
-import net.quillcraft.core.utils.builders.YamlConfigurationBuilder;
 
-import org.bukkit.configuration.file.FileConfiguration;
 import org.bukkit.entity.Player;
-import org.bukkit.plugin.java.JavaPlugin;
+import org.lumy.api.text.Text;
+import org.lumy.api.text.TextList;
 import org.redisson.api.RBucket;
 import org.redisson.api.RList;
 import org.redisson.api.RedissonClient;
@@ -29,27 +26,6 @@ public enum LanguageManager {
 
     LanguageManager(final String isoLanguage){
         this.iso = isoLanguage;
-    }
-
-    public static void initAllLanguage(JavaPlugin javaPlugin){
-        redissonClient.getKeys().deleteByPattern("*core*");
-
-        Arrays.stream(values()).parallel().forEach(languageManager -> {
-            final String languageISO = languageManager.getISO();
-            final FileConfiguration textFile = new YamlConfigurationBuilder(javaPlugin,"languages/"+languageISO+".yml", true).getConfig();
-
-            Arrays.stream(Text.values()).parallel().filter(text -> textFile.contains(text.getPath())).forEach(text -> {
-                final String path = text.getPath();
-                redissonClient.getBucket(languageISO+":"+path).set(textFile.getString(path));
-            });
-
-            Arrays.stream(TextList.values()).parallel().filter(text -> textFile.contains(text.getPath())).forEach(text -> {
-                final String path = text.getPath();
-                final RList<String> textList = redissonClient.getList(languageISO+":"+path);
-                textList.clear();
-                textList.addAll(textFile.getStringList(path));
-            });
-        });
     }
 
     public static LanguageManager getLanguageByISO(final String isoLanguage){

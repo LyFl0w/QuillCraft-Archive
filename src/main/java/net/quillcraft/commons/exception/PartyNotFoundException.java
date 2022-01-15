@@ -1,8 +1,8 @@
 package net.quillcraft.commons.exception;
 
 import net.quillcraft.core.manager.LanguageManager;
-import net.quillcraft.core.text.Text;
 import org.bukkit.entity.Player;
+import org.lumy.api.text.Text;
 
 public class PartyNotFoundException extends Exception{
 

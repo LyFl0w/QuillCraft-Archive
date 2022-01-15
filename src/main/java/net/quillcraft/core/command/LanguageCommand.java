@@ -6,7 +6,6 @@ import net.quillcraft.core.QuillCraftCore;
 import net.quillcraft.core.manager.LanguageManager;
 import net.quillcraft.core.event.player.PlayerChangeLanguageEvent;
 import net.quillcraft.commons.exception.AccountNotFoundException;
-import net.quillcraft.core.text.Text;
 import net.quillcraft.core.utils.CommandUtils;
 
 import org.bukkit.command.Command;
@@ -14,6 +13,7 @@ import org.bukkit.command.CommandExecutor;
 import org.bukkit.command.CommandSender;
 import org.bukkit.command.TabCompleter;
 import org.bukkit.entity.Player;
+import org.lumy.api.text.Text;
 
 import javax.annotation.Nonnull;
 import java.util.Arrays;
