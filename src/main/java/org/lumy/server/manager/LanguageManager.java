@@ -28,6 +28,7 @@ public enum LanguageManager{
 
     private final static RedissonClient redissonClient = RedisManager.TEXT.getRedisAccess().getRedissonClient();
     private final static Logger logger = Lumy.logger;
+    private final static HashMap<LanguageManager, Long> lastUpdate = new HashMap<>();
 
     LanguageManager(final String isoLanguage){
         this.iso = isoLanguage;
@@ -36,7 +37,26 @@ public enum LanguageManager{
     public static List<LanguageManager> getLastLanguagesModifiedTime(int time, TimeUnit timeUnit){
         final long timeToWait = System.currentTimeMillis()-timeUnit.toMillis(time);
 
-        return Arrays.stream(values()).parallel().filter(languageManager -> languageManager != DEFAULT && languageManager.getFileLastModifiedTime() >= timeToWait).toList();
+        if(lastUpdate.isEmpty()){
+            final List<LanguageManager> languages = getLanguages();
+            languages.stream().parallel().forEach(language -> lastUpdate.put(language, language.getFileLastModifiedTime()));
+            return languages.stream().parallel().filter(language -> language.getFileLastModifiedTime() >= timeToWait).toList();
+        }
+
+        final List<LanguageManager> languages = new ArrayList<>();
+
+        lastUpdate.forEach((language, lastUpdateFile) -> {
+            if(!lastUpdateFile.equals(language.getFileLastModifiedTime())){
+                languages.add(language);
+                lastUpdate.replace(language, language.getFileLastModifiedTime());
+            }
+        });
+
+        return languages.stream().parallel().filter(language -> language.getFileLastModifiedTime() >= timeToWait).toList();
+    }
+
+    public static List<LanguageManager> getLanguages(){
+        return Arrays.stream(values()).filter(languageManager -> languageManager != LanguageManager.DEFAULT).toList();
     }
 
     private Long getFileLastModifiedTime(){
@@ -48,7 +68,8 @@ public enum LanguageManager{
         logger.info("Language Manager Update ISO ("+iso.toUpperCase()+")");
 
         try{
-            final FileConfiguration textFile = new FileConfiguration(new FileInputStream(FileUtils.getFileFromResource("languages/"+iso+".yml")));
+            final FileConfiguration textFile =
+                    new FileConfiguration(new FileInputStream(FileUtils.getFileFromResource("languages/"+iso+".yml")));
 
             final Stream<Text> textStream = Arrays.stream(Text.values()).parallel();
             final Stream<TextList> textListStream = Arrays.stream(TextList.values()).parallel();
