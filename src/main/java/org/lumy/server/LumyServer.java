@@ -10,6 +10,7 @@ import java.io.DataOutputStream;
 import java.io.IOException;
 import java.net.ServerSocket;
 import java.net.Socket;
+import java.util.Arrays;
 import java.util.concurrent.Executors;
 import java.util.concurrent.ScheduledExecutorService;
 import java.util.concurrent.ScheduledFuture;
@@ -33,13 +34,13 @@ public class LumyServer{
         start();
     }
 
-    private ScheduledFuture<?> scheduleTask(){
-        return scheduleur.scheduleWithFixedDelay(this::updateDataBase, 0, 2, TimeUnit.HOURS);
+    private ScheduledFuture<?> scheduleTask(int initialDealay){
+        return scheduleur.scheduleWithFixedDelay(this::updateDataBase, initialDealay, 2, TimeUnit.HOURS);
     }
 
     private void restartScheduleTask(){
         scheduledFuture.cancel(false);
-        this.scheduledFuture = scheduleTask();
+        this.scheduledFuture = scheduleTask(0);
     }
 
     private void start(){
@@ -48,7 +49,9 @@ public class LumyServer{
             logger.info("Server start on port : "+port);
 
             RedisManager.TEXT.getRedisAccess().init();
-            this.scheduledFuture = scheduleTask();
+            this.scheduledFuture = scheduleTask(2);
+
+            updateDataBaseNow();
 
             while(true){
                 try{
@@ -139,6 +142,10 @@ public class LumyServer{
         lastUpdate = System.currentTimeMillis();
 
         LanguageManager.getLastLanguagesModifiedTime(3, TimeUnit.HOURS).stream().parallel().forEach(LanguageManager::updateTexteRedis);
+    }
+
+    private void updateDataBaseNow(){
+        Arrays.stream(LanguageManager.values()).parallel().filter(language -> language != LanguageManager.DEFAULT).forEach(LanguageManager::updateTexteRedis);
     }
 
 
