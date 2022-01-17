@@ -1,12 +1,11 @@
 package net.quillcraft.lobby.command;
 
 import net.quillcraft.lobby.location.LocationEnum;
-import net.quillcraft.lobby.manager.LanguageManager;
-import net.quillcraft.lobby.text.Text;
 import org.bukkit.command.Command;
 import org.bukkit.command.CommandExecutor;
 import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
+import org.lumy.api.text.Text;
 
 import javax.annotation.Nonnull;
 

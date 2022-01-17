@@ -3,11 +3,11 @@ package net.quillcraft.lobby.listener.inventory;
 import net.quillcraft.commons.account.Account;
 import net.quillcraft.commons.account.AccountProvider;
 import net.quillcraft.commons.exception.AccountNotFoundException;
+import net.quillcraft.core.manager.LanguageManager;
 import net.quillcraft.lobby.QuillCraftLobby;
 import net.quillcraft.lobby.inventory.VisibilityInventory;
-import net.quillcraft.lobby.manager.LanguageManager;
 import net.quillcraft.lobby.listener.player.custom.PlayerVisibilityChangeEvent;
-import net.quillcraft.lobby.text.Text;
+
 import org.bukkit.Material;
 import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
@@ -15,6 +15,7 @@ import org.bukkit.event.Listener;
 import org.bukkit.event.inventory.InventoryClickEvent;
 import org.bukkit.inventory.Inventory;
 import org.bukkit.inventory.ItemStack;
+import org.lumy.api.text.Text;
 
 public record InventoryClickListener(QuillCraftLobby quillCraftLobby) implements Listener {
 
@@ -36,11 +37,11 @@ public record InventoryClickListener(QuillCraftLobby quillCraftLobby) implements
             final Account account = accountProvider.getAccount();
             final LanguageManager languageManager = LanguageManager.getLanguage(account);
 
-            if(title.equals(languageManager.getMessage(Text.MENU_INVENTORY))){
+            if(title.equals(languageManager.getMessage(Text.INVENTORY_NAME_MENU))){
                 return;
             }
 
-            if(title.equals(languageManager.getMessage(Text.VISIBILITY_INVENTORY))){
+            if(title.equals(languageManager.getMessage(Text.INVENTORY_NAME_VISIBILITY))){
                 final PlayerVisibilityChangeEvent playerVisibilityChangeEvent =
                         new PlayerVisibilityChangeEvent(player, accountProvider, account, Account.Visibility.getVisibilityByData(item.getType()));
                 quillCraftLobby.getServer().getPluginManager().callEvent(playerVisibilityChangeEvent);

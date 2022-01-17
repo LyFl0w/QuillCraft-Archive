@@ -3,18 +3,20 @@ package net.quillcraft.lobby.listener.player;
 import net.quillcraft.commons.account.Account;
 import net.quillcraft.commons.account.AccountProvider;
 import net.quillcraft.commons.exception.AccountNotFoundException;
+import net.quillcraft.core.manager.LanguageManager;
 import net.quillcraft.core.utils.Title;
 import net.quillcraft.lobby.QuillCraftLobby;
 import net.quillcraft.lobby.location.LocationEnum;
-import net.quillcraft.lobby.manager.LanguageManager;
-import net.quillcraft.lobby.text.Text;
 import net.quillcraft.lobby.utils.PlayerUtils;
+
 import org.bukkit.Bukkit;
 import org.bukkit.Sound;
 import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
 import org.bukkit.event.player.PlayerJoinEvent;
+import org.lumy.api.text.Text;
+import org.lumy.api.text.TextList;
 
 public class PlayerJoinListener implements Listener {
 
@@ -34,11 +36,11 @@ public class PlayerJoinListener implements Listener {
                 final Account account = accountProvider.getAccount();
                 final LanguageManager languageManager = LanguageManager.getLanguage(account);
 
-                player.sendMessage(languageManager.getMessage(Text.PLAYER_JOIN).replace("%PLAYER%", player.getDisplayName()));
+                player.sendMessage(languageManager.getMessage(Text.LOBBY_PLAYER_JOIN).replace("%PLAYER%", player.getDisplayName()));
 
                 new Title(player).
-                        sendTitle(1, 1, 1, languageManager.getMessage(Text.TITLE_JOIN_LOBBY), languageManager.getMessage(Text.SUBTITLE_JOIN_LOBBY)).
-                        sendTablistTitle(languageManager.getMessage(Text.TABLIST_LOBBY_HEADER), languageManager.getMessage(Text.TABLIST_LOBBY_FOOTER));
+                        sendTitle(1, 1, 1, languageManager.getMessage(TextList.TITLE_LOBBY_JOIN)).
+                        sendTablistTitle(languageManager.getMessage(TextList.TABLIST_DEFAULT));
 
                 if(accountProvider.hasAutoLanguage()){
                     Bukkit.getScheduler().runTaskAsynchronously(quillCraftLobby, () -> quillCraftLobby.getServer().getScheduler().runTask(quillCraftLobby, () ->
@@ -73,7 +75,7 @@ public class PlayerJoinListener implements Listener {
         player.playSound(player.getLocation(), Sound.ENTITY_EXPERIENCE_ORB_PICKUP, 1, 1);
 
         Bukkit.getOnlinePlayers().stream().parallel().filter(players -> !players.getUniqueId().equals(player.getUniqueId())).forEach(players ->
-                players.sendMessage(LanguageManager.getLanguage(players).getMessage(Text.PLAYER_JOIN).replace("%PLAYER%", player.getDisplayName())));
+                players.sendMessage(LanguageManager.getLanguage(players).getMessage(Text.LOBBY_PLAYER_JOIN).replace("%PLAYER%", player.getDisplayName())));
 
         event.setJoinMessage("");
     }

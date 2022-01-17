@@ -6,7 +6,6 @@ import net.md_5.bungee.api.chat.HoverEvent;
 import net.md_5.bungee.api.chat.TextComponent;
 import net.md_5.bungee.api.chat.hover.content.Text;
 import net.quillcraft.lobby.QuillCraftLobby;
-import net.quillcraft.lobby.manager.LanguageManager;
 import org.bukkit.Bukkit;
 import org.bukkit.configuration.ConfigurationSection;
 import org.bukkit.entity.Player;

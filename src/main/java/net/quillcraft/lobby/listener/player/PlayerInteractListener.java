@@ -1,19 +1,15 @@
 package net.quillcraft.lobby.listener.player;
 
-import com.google.gson.Gson;
-import com.google.gson.GsonBuilder;
-import com.google.gson.reflect.TypeToken;
 import net.quillcraft.commons.account.AccountProvider;
 import net.quillcraft.commons.exception.AccountNotFoundException;
-import net.quillcraft.core.data.management.sql.DatabaseManager;
 import net.quillcraft.core.event.action.ActualAction;
+import net.quillcraft.core.manager.LanguageManager;
 import net.quillcraft.core.utils.builders.ItemBuilder;
 import net.quillcraft.lobby.headfinder.HeadFinderProvider;
 import net.quillcraft.lobby.inventory.MenuInventory;
 import net.quillcraft.lobby.inventory.VisibilityInventory;
 import net.quillcraft.lobby.manager.ConfigurationManager;
-import net.quillcraft.lobby.manager.LanguageManager;
-import net.quillcraft.lobby.text.Text;
+
 import org.bukkit.Material;
 import org.bukkit.block.Block;
 import org.bukkit.block.data.type.Door;
@@ -26,12 +22,9 @@ import org.bukkit.event.block.Action;
 import org.bukkit.event.player.PlayerInteractEvent;
 import org.bukkit.inventory.EquipmentSlot;
 import org.bukkit.inventory.ItemStack;
+import org.lumy.api.text.Text;
 
-import java.sql.*;
-import java.util.ArrayList;
-import java.util.Collections;
 import java.util.List;
-import java.util.Objects;
 
 public class PlayerInteractListener implements Listener {
 

@@ -3,13 +3,14 @@ package net.quillcraft.lobby.listener.player.custom;
 import net.quillcraft.commons.account.Account;
 import net.quillcraft.commons.account.AccountProvider;
 import net.quillcraft.commons.exception.AccountNotFoundException;
+import net.quillcraft.core.manager.LanguageManager;
 import net.quillcraft.lobby.inventory.InventoryLobby;
-import net.quillcraft.lobby.manager.LanguageManager;
-import net.quillcraft.lobby.text.Text;
+
 import org.bukkit.entity.Player;
 import org.bukkit.event.Cancellable;
 import org.bukkit.event.Event;
 import org.bukkit.event.HandlerList;
+import org.lumy.api.text.Text;
 
 import javax.annotation.Nonnull;
 
@@ -44,7 +45,7 @@ public class PlayerVisibilityChangeEvent extends Event implements Cancellable {
         }
 
         if(account.getVisibility().equals(visibility)){
-            player.sendMessage(languageManager.getMessage(Text.VISIBILITY_CHANGE_SAME));
+            player.sendMessage(languageManager.getMessage(Text.ITEMS_INVENTORY_LOBBY_VISIBILITY_SAME));
             setCancelled(true);
             return;
         }
