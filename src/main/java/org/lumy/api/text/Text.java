@@ -27,8 +27,8 @@ public enum Text implements TextBase{
     ITEMS_INVENTORY_LOBBY_PARTICLES_NAME("items_inventory.lobby.particles.name"),
     ITEMS_INVENTORY_LOBBY_VISIBILITY_NAME("items_inventory.lobby.visibility.name"),
     ITEMS_INVENTORY_LOBBY_VISIBILITY_SAME("items_inventory.lobby.visibility.same"),
-    ITEMS_INVENTORY_LOBBY_PARAMETERS_NAME("items_inventory.lobby.parameters"),
-    ITEMS_INVENTORY_LOBBY_PARKOURPVP_NAME("items_inventory.lobby.parkourpvp"),
+    ITEMS_INVENTORY_LOBBY_PARAMETERS_NAME("items_inventory.lobby.parameters.name"),
+    ITEMS_INVENTORY_LOBBY_PARKOURPVP_NAME("items_inventory.lobby.parkourpvp.name"),
 
 
     // LOBBY PART
