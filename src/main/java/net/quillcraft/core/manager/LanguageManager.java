@@ -39,7 +39,7 @@ public enum LanguageManager {
         }catch(AccountNotFoundException e){
             e.printStackTrace();
         }
-        return LanguageManager.ENGLISH_US;
+        return LanguageManager.DEFAULT;
     }
 
     public static LanguageManager getLanguage(final Account account){
