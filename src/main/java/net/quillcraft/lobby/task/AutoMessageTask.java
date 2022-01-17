@@ -5,8 +5,9 @@ import net.md_5.bungee.api.chat.ComponentBuilder;
 import net.md_5.bungee.api.chat.HoverEvent;
 import net.md_5.bungee.api.chat.TextComponent;
 import net.md_5.bungee.api.chat.hover.content.Text;
+import net.quillcraft.core.manager.LanguageManager;
 import net.quillcraft.lobby.QuillCraftLobby;
-import net.quillcraft.lobby.manager.LanguageManager;
+
 import org.bukkit.Bukkit;
 import org.bukkit.configuration.ConfigurationSection;
 import org.bukkit.entity.Player;
@@ -16,14 +17,14 @@ import java.security.SecureRandom;
 import java.util.HashMap;
 import java.util.HashSet;
 
-public class AutoMessageTask extends BukkitRunnable {
+public class AutoMessageTask {
 
-    private int lastChoice;
+    /*private int lastChoice;
     private final int size;
     private final QuillCraftLobby quillCraftLobby;
     public AutoMessageTask(QuillCraftLobby quillCraftLobby){
         this.quillCraftLobby = quillCraftLobby;
-        this.size = LanguageManager.DEFAULT.getFileConfiguration(quillCraftLobby).getConfigurationSection("lobby.auto_text").getKeys(false).size();
+        this.size = LanguageManager.DEFAULT.getMessage(Text).getFileConfiguration(quillCraftLobby).getConfigurationSection("auto_text.lobby").getKeys(false).size();
         this.lastChoice = -1;
     }
 
@@ -37,7 +38,7 @@ public class AutoMessageTask extends BukkitRunnable {
         lastChoice = choice;
 
         languagesToGenerate.forEach(language -> {
-            final ConfigurationSection configurationSection = language.getFileConfiguration(quillCraftLobby).getConfigurationSection("lobby.auto_text");
+            final ConfigurationSection configurationSection = language.getFileConfiguration(quillCraftLobby).getConfigurationSection("auto_text.lobby");
 
             final ConfigurationSection configurationSectionText = configurationSection.
                     getConfigurationSection(configurationSection.getKeys(false).toArray()[choice].toString());
@@ -69,6 +70,6 @@ public class AutoMessageTask extends BukkitRunnable {
             }
         }
         return choice;
-    }
+    }*/
 
 }

@@ -1,23 +1,24 @@
 package net.quillcraft.lobby.listener.player;
 
 import net.quillcraft.core.event.player.PlayerChangeLanguageEvent;
+import net.quillcraft.core.manager.LanguageManager;
 import net.quillcraft.core.utils.Title;
 import net.quillcraft.lobby.inventory.InventoryLobby;
-import net.quillcraft.lobby.manager.LanguageManager;
-import net.quillcraft.lobby.text.Text;
+
 import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
+import org.lumy.api.text.TextList;
 
 public class PlayerChangeLanguageListener implements Listener {
 
     @EventHandler(ignoreCancelled = true)
-    public void onPlayerChange(PlayerChangeLanguageEvent event){
+    public void onPlayerChangeLanguage(PlayerChangeLanguageEvent event){
         final Player player = event.getPlayer();
         final LanguageManager languageManager = LanguageManager.getLanguageByISO(event.getNewLanguageISO());
 
         InventoryLobby.setDefaultInventory(player, languageManager, event.getAccount().getVisibility());
-        new Title(player).sendTablistTitle(languageManager.getMessage(Text.TABLIST_LOBBY_HEADER), languageManager.getMessage(Text.TABLIST_LOBBY_FOOTER));
+        new Title(player).sendTablistTitle(languageManager.getMessage(TextList.TABLIST_DEFAULT));
     }
 
 }

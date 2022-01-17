@@ -1,7 +1,6 @@
 package net.quillcraft.lobby.manager;
 
 import net.quillcraft.lobby.QuillCraftLobby;
-import net.quillcraft.lobby.task.AutoMessageTask;
 import org.bukkit.scheduler.BukkitTask;
 
 import java.util.ArrayList;
@@ -18,8 +17,8 @@ public class TaskManager {
     }
 
     private void onEnableTasks(){
-        taskInProcess.add(new AutoMessageTask(quillCraftLobby)
-                .runTaskTimerAsynchronously(quillCraftLobby, 120L, 20L*60));
+        // TODO : ADD NEW SYSTEM TASK
+        // taskInProcess.add(new AutoMessageTask(quillCraftLobby).runTaskTimerAsynchronously(quillCraftLobby, 120L, 20L*60));
     }
 
     public void onDisableTasks(){

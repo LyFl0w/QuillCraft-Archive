@@ -6,7 +6,7 @@
 
     <groupId>net.quillcraft</groupId>
     <artifactId>QuillCraftLobby</artifactId>
-    <version>1.0dev</version>
+    <version>1.0dev-lumy</version>
 
     <properties>
         <maven.compiler.source>16</maven.compiler.source>
@@ -52,7 +52,7 @@
                                     </excludes>
                                 </filter>
                             </filters>
-                            <outputFile>../QuillCraftProjectOutPut/dev/${project.artifactId}-${project.version}.jar</outputFile>
+                            <outputFile>../QuillCraftProjectOutPut/dev/lumy/${project.artifactId}-${project.version}.jar</outputFile>
                         </configuration>
                     </execution>
                 </executions>
@@ -141,6 +141,13 @@
             <groupId>net.lyflow</groupId>
             <artifactId>SQLRequest</artifactId>
             <version>1.0.1</version>
+            <scope>provided</scope>
+        </dependency>
+
+        <dependency>
+            <groupId>org.lumy</groupId>
+            <artifactId>lumy-api</artifactId>
+            <version>1.1.0</version>
             <scope>provided</scope>
         </dependency>
 
