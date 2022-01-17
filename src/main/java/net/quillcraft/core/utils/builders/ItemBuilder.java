@@ -13,7 +13,9 @@ import java.util.Arrays;
 import java.util.List;
 import java.util.Objects;
 
-public record ItemBuilder(@Nonnull ItemStack itemStack) implements Cloneable{
+public class ItemBuilder implements Cloneable{
+
+    private final ItemStack itemStack;
 
     public ItemBuilder(final Material material){
         this(material, 1);
@@ -130,13 +132,12 @@ public record ItemBuilder(@Nonnull ItemStack itemStack) implements Cloneable{
         };
     }
 
-    public ItemStack toItemStack(){
-        return itemStack;
-    }
-
     @Nonnull
     private ItemMeta getItemMeta(){
         return Objects.requireNonNull(itemStack.getItemMeta());
     }
 
+    public ItemStack toItemStack(){
+        return itemStack;
+    }
 }
