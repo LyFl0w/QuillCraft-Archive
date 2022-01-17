@@ -18,9 +18,10 @@ public class FileConfiguration{
 
     @SuppressWarnings("unchecked")
     public Object get(String path){
-        final Iterator<String> pathPoint = configurationSection.parsePath(path);
-
         try{
+            if(configurationSection.pathIsEmpty() && !path.contains(".")) return data.get(path);
+
+            final Iterator<String> pathPoint = configurationSection.parsePath(path);
             HashMap<String, Object> dataSearching = (HashMap<String, Object>) data.get(pathPoint.next());
             Object objectToFind = null;
 
@@ -35,7 +36,9 @@ public class FileConfiguration{
 
         }catch(NullPointerException e){
             Lumy.logger.error("text with path : "+path+" was not found !");
-        }catch(ClassCastException ignored){}
+        }catch(ClassCastException e){
+            Lumy.logger.error("text with path : "+path+" was found, but the error is on the casting !");
+        }
         return null;
     }
 
