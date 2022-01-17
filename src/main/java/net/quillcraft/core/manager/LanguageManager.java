@@ -18,7 +18,8 @@ import java.util.List;
 public enum LanguageManager {
 
     ENGLISH_US("en_us"),
-    FRENCH("fr_fr");
+    FRENCH("fr_fr"),
+    DEFAULT(ENGLISH_US.getISO());
 
     private final String iso;
 
