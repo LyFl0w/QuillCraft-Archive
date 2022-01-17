@@ -147,7 +147,7 @@ public class AccountProvider {
     }
 
     public void setLocaleLanguage(final Account account){
-        player.sendMessage(LanguageManager.getMessageByDefaultLanguage(Text.COMMAND_SETLANGUAGE_AUTO));
+        player.sendMessage(LanguageManager.DEFAULT.getMessage(Text.COMMAND_SETLANGUAGE_AUTO));
         QuillCraftCore.getInstance().getServer().getPluginManager().callEvent(new PlayerChangeLanguageEvent(player, this, account, player.getLocale()));
     }
 

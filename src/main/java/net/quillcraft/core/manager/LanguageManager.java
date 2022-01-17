@@ -30,7 +30,7 @@ public enum LanguageManager {
     }
 
     public static LanguageManager getLanguageByISO(final String isoLanguage){
-        return Arrays.stream(values()).parallel().filter(textManager -> textManager.getISO().equalsIgnoreCase(isoLanguage)).findFirst().orElse(LanguageManager.ENGLISH_US);
+        return Arrays.stream(values()).parallel().filter(textManager -> textManager.getISO().equalsIgnoreCase(isoLanguage)).findFirst().orElse(LanguageManager.DEFAULT);
     }
 
     public static LanguageManager getLanguage(final Player player){
@@ -48,14 +48,6 @@ public enum LanguageManager {
 
     public static LanguageManager getPlayerLocaleLanguage(final Player player){
         return LanguageManager.getLanguageByISO(player.getLocale());
-    }
-
-    public static String getMessageByDefaultLanguage(final Text text){
-        return ENGLISH_US.getMessage(text);
-    }
-
-    public static List<String> getListMessageByDefaultLanguage(final TextList textList){
-        return ENGLISH_US.getMessage(textList);
     }
 
     public String getMessage(final Text text){
