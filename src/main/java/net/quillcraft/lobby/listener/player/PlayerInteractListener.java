@@ -2,8 +2,8 @@ package net.quillcraft.lobby.listener.player;
 
 import net.quillcraft.commons.account.AccountProvider;
 import net.quillcraft.commons.exception.AccountNotFoundException;
-import net.quillcraft.core.event.action.ActualAction;
 import net.quillcraft.core.manager.LanguageManager;
+import net.quillcraft.core.utils.ActionUtils;
 import net.quillcraft.core.utils.builders.ItemBuilder;
 import net.quillcraft.lobby.headfinder.HeadFinderProvider;
 import net.quillcraft.lobby.inventory.MenuInventory;
@@ -34,7 +34,7 @@ public class PlayerInteractListener implements Listener {
         final Action action = event.getAction();
 
 
-        if(event.getHand() == EquipmentSlot.OFF_HAND) {return;}
+        if(event.getHand() == EquipmentSlot.OFF_HAND) return;
 
         if(action == Action.RIGHT_CLICK_BLOCK){
             final Block clickedBlock = event.getClickedBlock();
@@ -55,10 +55,11 @@ public class PlayerInteractListener implements Listener {
                         break;
                     }
                 }
-            }return;
+                return;
+            }
         }
 
-        if(ActualAction.hasRight(action)){
+        if(ActionUtils.hasRight(action)){
             final ItemStack item = event.getItem();
 
             if(item == null) return;
