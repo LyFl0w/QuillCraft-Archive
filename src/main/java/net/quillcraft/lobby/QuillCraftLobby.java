@@ -1,6 +1,5 @@
 package net.quillcraft.lobby;
 
-
 import net.lyflow.songapi.manager.SongManager;
 import net.quillcraft.lobby.manager.PluginManager;
 import net.quillcraft.lobby.npc.NPCManager;
@@ -24,8 +23,6 @@ public class QuillCraftLobby extends JavaPlugin {
 
         saveDefaultConfig();
 
-        LanguageManager.initAllLanguage(this);
-
         //this.protocolManager = ProtocolLibrary.getProtocolManager();
         this.npcManager = new NPCManager(this,120);
         this.songManager = new SongManager(this);
@@ -37,10 +34,6 @@ public class QuillCraftLobby extends JavaPlugin {
     public void onDisable(){
         npcManager.onDisable();
     }
-
-    //public ProtocolManager getProtocolManager(){
-      //  return protocolManager;
-    //}
 
     public static QuillCraftLobby getInstance(){
         return INSTANCE;
