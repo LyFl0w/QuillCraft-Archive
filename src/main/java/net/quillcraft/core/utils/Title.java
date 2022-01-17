@@ -8,6 +8,8 @@ import net.minecraft.server.network.PlayerConnection;
 import org.bukkit.craftbukkit.v1_18_R1.entity.CraftPlayer;
 import org.bukkit.entity.Player;
 
+import java.util.List;
+
 public record Title(Player player) {
 
     public Title sendTitle(final int fadeIn, final int stay, final int fadeOut, final String message){
@@ -20,6 +22,10 @@ public record Title(Player player) {
 
     public Title sendFullTitle(final int fadeIn, final int stay, final int fadeOut, final String title, final String subtitle){
         return sendTitle(fadeIn, stay, fadeOut, title, subtitle);
+    }
+
+    public Title sendTitle(final int fadeIn, final int stay, int fadeOut, final List<String> titles){
+        return sendTitle(fadeIn, stay, fadeOut, titles.get(0), titles.get(1));
     }
 
     public Title sendTitle(final int fadeIn, final int stay, int fadeOut, final String title, final String subtitle){
@@ -40,6 +46,11 @@ public record Title(Player player) {
 
     public Title sendTablistTitle(final String header, final String footer){
         PacketUtils.sendPacket(player, getTabListPacket(getChatSerializer(header), getChatSerializer(footer)));
+        return this;
+    }
+
+    public Title sendTablistTitle(final List<String> tablist){
+        PacketUtils.sendPacket(player, getTabListPacket(getChatSerializer(tablist.get(0)), getChatSerializer(tablist.get(1))));
         return this;
     }
 
