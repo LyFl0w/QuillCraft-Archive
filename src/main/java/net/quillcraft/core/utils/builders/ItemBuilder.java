@@ -21,6 +21,15 @@ public class ItemBuilder implements Cloneable{
         this(material, 1);
     }
 
+    public ItemBuilder(final Material material, final ItemFlag... itemFlags){
+        this(material, 1, itemFlags);
+    }
+
+    public ItemBuilder(final Material material, final int amount, final ItemFlag... itemFlags){
+        this(material, amount);
+        addItemFlags(itemFlags);
+    }
+
     public ItemBuilder(final Material material, final int amount){
         this(new ItemStack(material, amount));
     }
@@ -35,7 +44,7 @@ public class ItemBuilder implements Cloneable{
         this(new ItemStack(material, amount, meta));
     }
 
-    public ItemBuilder(@Nonnull final ItemStack itemStack){
+    public ItemBuilder(final ItemStack itemStack){
         this.itemStack = itemStack;
     }
 
@@ -51,7 +60,7 @@ public class ItemBuilder implements Cloneable{
     public ItemBuilder setDamage(final int damage){
         final Damageable im = (Damageable)getItemMeta();
         im.setDamage(damage);
-        itemStack.setItemMeta((ItemMeta) im);
+        itemStack.setItemMeta(im);
         return this;
     }
 
