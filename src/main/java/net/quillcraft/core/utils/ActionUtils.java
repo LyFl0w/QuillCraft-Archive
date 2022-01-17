@@ -1,16 +1,16 @@
-package net.quillcraft.core.event.action;
+package net.quillcraft.core.utils;
 
 import org.bukkit.event.block.Action;
 
 import java.util.Arrays;
 
-public enum ActualAction {
+public enum ActionUtils {
 
     RIGHT(Action.RIGHT_CLICK_AIR, Action.RIGHT_CLICK_BLOCK),
     LEFT(Action.LEFT_CLICK_AIR, Action.LEFT_CLICK_BLOCK);
 
     private final Action[] actions;
-    ActualAction(Action... actions){
+    ActionUtils(Action... actions){
         this.actions = actions;
     }
 
