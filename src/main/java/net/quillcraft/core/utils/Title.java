@@ -50,8 +50,7 @@ public record Title(Player player) {
     }
 
     public Title sendTablistTitle(final List<String> tablist){
-        PacketUtils.sendPacket(player, getTabListPacket(getChatSerializer(tablist.get(0)), getChatSerializer(tablist.get(1))));
-        return this;
+        return sendTablistTitle(tablist.get(0), tablist.get(1));
     }
 
     public Title sendActionBar(final String message){
