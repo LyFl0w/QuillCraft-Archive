@@ -14,9 +14,6 @@ public class QuillCraftBungee extends Plugin {
 
         DataManager.initAllData(this);
         new PluginManager(this);
-
-
-
     }
 
     @Override
