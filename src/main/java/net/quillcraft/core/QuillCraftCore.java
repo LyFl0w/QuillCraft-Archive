@@ -12,6 +12,7 @@ import java.util.Objects;
 public class QuillCraftCore extends JavaPlugin {
 
     private static QuillCraftCore INSTANCE;
+
     @Override
     public void onEnable(){
         INSTANCE = this;
@@ -33,4 +34,5 @@ public class QuillCraftCore extends JavaPlugin {
     public PluginCommand getCommand(@Nonnull String name){
         return Objects.requireNonNull(super.getCommand(name));
     }
+
 }

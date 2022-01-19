@@ -7,8 +7,8 @@ import net.quillcraft.core.data.management.sql.DatabaseManager;
 import net.quillcraft.core.data.management.sql.table.SQLTablesManager;
 import net.quillcraft.core.event.player.PlayerChangeLanguageEvent;
 import net.quillcraft.core.manager.LanguageManager;
-import net.quillcraft.core.manager.ProfileSerializationManager;
 
+import net.quillcraft.core.serialization.ProfileSerializationAccount;
 import org.bukkit.entity.Player;
 import org.lumy.api.text.Text;
 import org.redisson.api.RBucket;
@@ -89,7 +89,9 @@ public class AccountProvider {
                 final int quillCoins = resultSet.getInt("quillcoins");
                 final byte rankID = resultSet.getByte("rank_id");
                 final Account.Visibility visibility = Account.Visibility.valueOf(resultSet.getString("visibility"));
-                final HashMap<Account.Particles, Boolean> particules = new ProfileSerializationManager().deserializeParticle(resultSet.getString("json_particles"));
+
+                final HashMap<Account.Particles, Boolean> particules = new ProfileSerializationAccount.Particle().deserialize(resultSet.getString("json_particles"));
+                //final HashMap<Account.Particles, Boolean> particules = new ProfileSerializationManager().deserializeParticle(resultSet.getString("json_particles"));
                 final String languageISO = resultSet.getString("language");
 
                 connection.close();
@@ -130,7 +132,7 @@ public class AccountProvider {
 
         preparedStatement.setString(1, uuid.toString());
         preparedStatement.setInt(2, account.getQuillCoins());
-        preparedStatement.setString(3, new ProfileSerializationManager().serialize(account.getParticles()));
+        preparedStatement.setString(3, new ProfileSerializationAccount.Particle().serialize(account.getParticles()));
 
         final int row = preparedStatement.executeUpdate();
         final ResultSet resultSet = preparedStatement.getGeneratedKeys();

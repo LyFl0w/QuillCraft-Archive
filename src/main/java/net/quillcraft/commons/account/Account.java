@@ -5,7 +5,7 @@ import net.quillcraft.commons.exception.FriendNotFoundException;
 import net.quillcraft.commons.friend.FriendProvider;
 import net.quillcraft.core.QuillCraftCore;
 import net.quillcraft.core.data.management.sql.table.SQLTablesManager;
-import net.quillcraft.core.manager.ProfileSerializationManager;
+import net.quillcraft.core.serialization.ProfileSerializationAccount;
 import org.bukkit.Bukkit;
 import org.bukkit.Material;
 import org.bukkit.entity.Player;
@@ -108,7 +108,7 @@ public class Account {
 
     public void setParticles(HashMap<Particles, Boolean> particles){
         this.particles = particles;
-        getSQLRequest().addData("json_particles", new ProfileSerializationManager().serialize(getParticles()));
+        getSQLRequest().addData("json_particles", new ProfileSerializationAccount.Particle().serialize(getParticles()));
     }
 
     public void setId(int id){
@@ -159,10 +159,8 @@ public class Account {
 
 
     private static HashMap<Particles, Boolean> defaultParticles(){
-        HashMap<Particles, Boolean> defaultParticles = new HashMap<>();
-        for(Particles particles : Particles.values()){
-            defaultParticles.put(particles, false);
-        }
+        final HashMap<Particles, Boolean> defaultParticles = new HashMap<>();
+        Arrays.stream(Particles.values()).forEach(particles -> defaultParticles.put(particles, false));
         return defaultParticles;
     }
 
