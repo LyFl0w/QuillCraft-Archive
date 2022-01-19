@@ -24,16 +24,15 @@ import java.util.stream.Collectors;
 public class LanguageCommand implements CommandExecutor, TabCompleter {
 
     private final QuillCraftCore quillCraftCore;
-    private final String languages;
+    private final static String languages = "§cLanguage values : AUTO, "+Arrays.stream(LanguageManager.values()).parallel().map(Object::toString).collect(Collectors.joining(", "));;
 
     public LanguageCommand(final QuillCraftCore quillCraftCore){
         this.quillCraftCore = quillCraftCore;
-        languages = "§cLanguage values : AUTO, "+Arrays.stream(LanguageManager.values()).parallel().map(Object::toString).collect(Collectors.joining(", "));
     }
 
     @Override
-    public boolean onCommand(@Nonnull CommandSender cmds, @Nonnull Command cmd, @Nonnull String label, @Nonnull String[] args){
-        if(cmds instanceof final Player player){
+    public boolean onCommand(@Nonnull CommandSender commandSender, @Nonnull Command command, @Nonnull String label, @Nonnull String[] args){
+        if(commandSender instanceof final Player player){
             final AccountProvider accountProvider = new AccountProvider(player);
             try{
                 final Account account = accountProvider.getAccount();
@@ -52,6 +51,9 @@ public class LanguageCommand implements CommandExecutor, TabCompleter {
                                 player.getLocale()));
                         return true;
                     }
+                    Arrays.stream(LanguageManager.values()).parallel().forEach(language -> {
+
+                    });
                     for(LanguageManager languageManager : LanguageManager.values()){
                         if(languageManager.name().equalsIgnoreCase(arg)){
                             quillCraftCore.getServer().getPluginManager().callEvent(new PlayerChangeLanguageEvent(player, accountProvider, account,
@@ -71,8 +73,8 @@ public class LanguageCommand implements CommandExecutor, TabCompleter {
     }
 
     @Override
-    public List<String> onTabComplete(@Nonnull CommandSender cmds, @Nonnull Command cmd, @Nonnull String label, @Nonnull String[] args){
-        if(cmds instanceof Player){
+    public List<String> onTabComplete(@Nonnull CommandSender commandSender, @Nonnull Command command, @Nonnull String label, @Nonnull String[] args){
+        if(commandSender instanceof Player){
             if(args.length == 1){
                 if(args[0] == null) return null;
                 return CommandUtils.completionTable(args[0], LanguageManager.values(), Collections.singletonList("AUTO"));

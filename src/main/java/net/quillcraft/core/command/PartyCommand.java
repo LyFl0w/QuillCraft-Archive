@@ -20,15 +20,15 @@ import java.util.List;
 public class PartyCommand implements CommandExecutor, TabCompleter {
 
     private final QuillCraftCore quillCraftCore;
-    private final String[] argsCompletion = new String[]{"accept", "invite", "kick", "setowner", "list", "leave", "delete"};
+    private final static String[] argsCompletion = new String[]{"accept", "invite", "kick", "setowner", "list", "leave", "delete"};
 
     public PartyCommand(QuillCraftCore quillCraftCore){
         this.quillCraftCore = quillCraftCore;
     }
 
     @Override
-    public boolean onCommand(@Nonnull CommandSender cmds, @Nonnull Command cmd, @Nonnull String label, @Nonnull String[] args){
-        if(cmds instanceof Player player){
+    public boolean onCommand(@Nonnull CommandSender commandSender, @Nonnull Command command, @Nonnull String label, @Nonnull String[] args){
+        if(commandSender instanceof Player player && args.length != 0){
 
             final String sub = args[0];
 
@@ -120,8 +120,8 @@ public class PartyCommand implements CommandExecutor, TabCompleter {
     }
 
     @Override
-    public List<String> onTabComplete(@Nonnull CommandSender cmds, @Nonnull Command cmd, @Nonnull String label, @Nonnull String[] args){
-        if(cmds instanceof Player){
+    public List<String> onTabComplete(@Nonnull CommandSender commandSender, @Nonnull Command command, @Nonnull String label, @Nonnull String[] args){
+        if(commandSender instanceof Player){
             if(args.length == 1){
                 if(args[0] == null) return null;
                 return CommandUtils.completionTable(args[0], argsCompletion);

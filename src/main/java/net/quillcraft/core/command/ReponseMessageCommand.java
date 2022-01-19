@@ -19,7 +19,7 @@ import java.util.Arrays;
 import java.util.UUID;
 import java.util.concurrent.TimeUnit;
 
-public class ReponseMessageCommand implements CommandExecutor {
+public class ReponseMessageCommand implements CommandExecutor{
 
     private final QuillCraftCore quillCraftCore;
     private final RedissonClient redissonClient;
@@ -30,8 +30,8 @@ public class ReponseMessageCommand implements CommandExecutor {
     }
 
     @Override
-    public boolean onCommand(@Nonnull CommandSender cmds, @Nonnull Command cmd, @Nonnull String label, @Nonnull String[] args){
-        if(cmds instanceof Player player && args.length > 0){
+    public boolean onCommand(@Nonnull CommandSender commandSender, @Nonnull Command command, @Nonnull String label, @Nonnull String[] args){
+        if(commandSender instanceof Player player && args.length > 0){
             final RSet<String> rSet = redissonClient.getSet(player.getUniqueId().toString());
             if(rSet.isExists()){
                 final UUID playerUUID = player.getUniqueId();

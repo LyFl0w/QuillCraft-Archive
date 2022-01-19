@@ -20,16 +20,16 @@ import java.util.List;
 public class FriendCommand implements CommandExecutor, TabCompleter{
 
     private final QuillCraftCore quillCraftCore;
-    private final String[] argsCompletion = new String[]{"add", "remove", "accept", "deny", "list"};
+    private final static String[] argsCompletion = new String[]{"add", "remove", "accept", "deny", "list"};
 
     public FriendCommand(QuillCraftCore quillCraftCore){
         this.quillCraftCore = quillCraftCore;
     }
 
     @Override
-    public boolean onCommand(@Nonnull CommandSender cmds, @Nonnull Command cmd, @Nonnull String label, @Nonnull String[] args){
+    public boolean onCommand(@Nonnull CommandSender commandSender, @Nonnull Command command, @Nonnull String label, @Nonnull String[] args){
         if (args.length == 0) return false;
-        if(cmds instanceof Player player){
+        if(commandSender instanceof Player player){
             final String sub = args[0];
             if(args.length == 1){
                 if(sub.equalsIgnoreCase("list")){
@@ -101,8 +101,8 @@ public class FriendCommand implements CommandExecutor, TabCompleter{
     }
 
     @Override
-    public List<String> onTabComplete(@Nonnull CommandSender cmds, @Nonnull Command cmd, @Nonnull String label, @Nonnull String[] args){
-        if(cmds instanceof Player){
+    public List<String> onTabComplete(@Nonnull CommandSender commandSender, @Nonnull Command command, @Nonnull String label, @Nonnull String[] args){
+        if(commandSender instanceof Player){
             if(args.length == 1){
                 if(args[0] == null) return null;
                 return CommandUtils.completionTable(args[0], argsCompletion);

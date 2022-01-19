@@ -27,9 +27,8 @@ public class MessageCommand implements CommandExecutor {
     }
 
     @Override
-    public boolean onCommand(@Nonnull CommandSender cmds, @Nonnull Command cmd, @Nonnull String label, @Nonnull String[] args){
-        if(cmds instanceof Player player){
-            if(args.length > 1){
+    public boolean onCommand(@Nonnull CommandSender commandSender, @Nonnull Command command, @Nonnull String label, @Nonnull String[] args){
+        if(commandSender instanceof Player player && args.length > 1){
                 String targetPlayerName = args[0];
 
                 if(player.getName().equalsIgnoreCase(targetPlayerName)){
@@ -75,7 +74,6 @@ public class MessageCommand implements CommandExecutor {
 
                 player.sendPluginMessage(quillCraftCore, "quillcraft:message", out.toByteArray());
                 return true;
-            }
         }
         return false;
     }
