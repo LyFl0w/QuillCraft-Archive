@@ -24,6 +24,8 @@ public abstract class Game{
         this.gameProperties = gameProperties;
         this.playerList = new ArrayList<>();
         this.uuid = UUID.randomUUID();
+
+        updateRedis();
     }
 
     public UUID getUUID(){

@@ -2,7 +2,7 @@ package net.quillcraft.commons.game;
 
 import org.bukkit.configuration.file.FileConfiguration;
 
-public abstract class GameProperties{
+public class GameProperties{
 
     private int maxPlayer, minPlayer;
 
