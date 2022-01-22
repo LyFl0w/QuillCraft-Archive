@@ -1,32 +1,41 @@
 package net.quillcraft.commons.game;
 
 import net.quillcraft.core.data.management.redis.RedisManager;
+
 import org.redisson.api.RBucket;
+import org.redisson.api.RedissonClient;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.UUID;
 
 public abstract class Game{
 
-    private final int id;
+    private final RedissonClient redissonClient = RedisManager.GAME_SERVER.getRedisAccess().getRedissonClient();
+
+    private final UUID uuid;
     private final List<String> playerList;
+
     private final GameProperties gameProperties;
     private GameStatus gameStatus;
-
 
     public Game(GameProperties gameProperties){
         this.gameStatus = GameStatus.STARTING;
         this.gameProperties = gameProperties;
-        this.id = 0;
         this.playerList = new ArrayList<>();
+        this.uuid = UUID.randomUUID();
     }
 
-    public int getId(){
-        return id;
+    public UUID getUUID(){
+        return uuid;
+    }
+
+    public String getName(){
+        return getClass().getName();
     }
 
     public String getRedisKey(){
-        return getClass().getName()+":"+id;
+        return getName()+":"+uuid;
     }
 
     public List<String> getPlayerList(){
@@ -38,7 +47,7 @@ public abstract class Game{
     }
 
     public void updateRedis(){
-        final RBucket<Game> gameRBucket = RedisManager.GAME_SERVER.getRedisAccess().getRedissonClient().getBucket(getRedisKey());
+        final RBucket<Game> gameRBucket = redissonClient.getBucket(getRedisKey());
         gameRBucket.set(this);
     }
 
