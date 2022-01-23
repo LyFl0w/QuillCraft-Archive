@@ -1,5 +1,6 @@
 package net.quillcraft.commons.friend;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import net.lyflow.sqlrequest.SQLRequest;
 import net.md_5.bungee.api.ProxyServer;
 import net.md_5.bungee.api.connection.ProxiedPlayer;
@@ -17,6 +18,8 @@ public class Friend{
 
     private List<UUID> friendsUUID;
     private List<String> friendsName;
+
+    @JsonIgnore
     private SQLRequest sqlRequest;
 
     // For Redis

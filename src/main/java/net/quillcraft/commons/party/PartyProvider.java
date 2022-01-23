@@ -1,5 +1,6 @@
 package net.quillcraft.commons.party;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import net.md_5.bungee.api.ChatColor;
 import net.md_5.bungee.api.ProxyServer;
 import net.md_5.bungee.api.chat.ClickEvent;
@@ -39,6 +40,8 @@ public class PartyProvider {
     private final ProxiedPlayer player;
     private UUID partyUUID;
     private String keyParty;
+
+    @JsonIgnore
     private final SQLTablesManager sqlTablesManager;
 
     public PartyProvider(Account account){

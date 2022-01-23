@@ -1,5 +1,6 @@
 package net.quillcraft.commons.account;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import net.lyflow.sqlrequest.SQLRequest;
 
 import net.md_5.bungee.api.connection.ProxiedPlayer;
@@ -21,6 +22,8 @@ public class Account {
     private Visibility visibility;
     private HashMap<Particles, Boolean> particles;
     private String languageISO;
+
+    @JsonIgnore
     private SQLRequest sqlRequest;
 
     //Redis
