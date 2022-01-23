@@ -1,5 +1,6 @@
 package net.quillcraft.commons.account;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import net.lyflow.sqlrequest.SQLRequest;
 import net.quillcraft.commons.exception.FriendNotFoundException;
 import net.quillcraft.commons.friend.FriendProvider;
@@ -25,6 +26,8 @@ public class Account {
     private Visibility visibility;
     private HashMap<Particles, Boolean> particles;
     private String languageISO;
+
+    @JsonIgnore
     private SQLRequest sqlRequest;
 
     //Redis

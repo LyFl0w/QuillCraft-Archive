@@ -9,7 +9,6 @@ public class Friend{
 
     private List<UUID> friendsUUID;
     private List<String> friendsName;
-    private SQLRequest sqlRequest;
 
     // For Redis
     public Friend(){}
