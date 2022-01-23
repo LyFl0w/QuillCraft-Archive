@@ -1,5 +1,6 @@
 package net.quillcraft.commons.game;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import net.quillcraft.core.data.management.redis.RedisManager;
 
 import org.redisson.api.RBucket;
@@ -11,6 +12,7 @@ import java.util.UUID;
 
 public abstract class Game{
 
+    @JsonIgnore
     private final RedissonClient redissonClient = RedisManager.GAME_SERVER.getRedisAccess().getRedissonClient();
 
     private final UUID uuid;
