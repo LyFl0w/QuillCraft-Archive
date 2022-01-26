@@ -19,3 +19,7 @@ commands:
     description: create a warp where you want
     permission: quillcraft.build.createwarp
     usage: "§c/createwarp <categorie> <zone>"
+  removewarp:
+    aliases: ["rw","remw"]
+    description: remove a warp
+    permission: quillcraft.build.removewarp

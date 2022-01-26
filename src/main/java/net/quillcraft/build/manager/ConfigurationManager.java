@@ -1,13 +1,14 @@
 package net.quillcraft.build.manager;
 
-import net.quillcraft.core.QuillCraftCore;
+import net.quillcraft.build.QuillCraftBuild;
+
 import net.quillcraft.core.utils.builders.YamlConfigurationBuilder;
 
 import org.bukkit.configuration.file.FileConfiguration;
 
 public enum ConfigurationManager{
 
-    WARPS(new YamlConfigurationBuilder(QuillCraftCore.getInstance(), "warps.yml", true));
+    WARPS(new YamlConfigurationBuilder(QuillCraftBuild.getInstance(), "warps.yml", true));
 
     private final YamlConfigurationBuilder yamlConfigurationBuilder;
 

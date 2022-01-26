@@ -3,7 +3,10 @@ package net.quillcraft.build.manager;
 import net.quillcraft.build.QuillCraftBuild;
 import net.quillcraft.build.command.CreateWarpCommand;
 import net.quillcraft.build.command.FlightSpeedCommand;
+import net.quillcraft.build.command.RemoveWarpCommand;
 import net.quillcraft.build.command.WarpCommand;
+import net.quillcraft.build.command.completion.WarpTabCompletion;
+
 import org.bukkit.Server;
 
 public class PluginManager {
@@ -24,13 +27,15 @@ public class PluginManager {
     private void registerCommands(){
         main.getCommand("flightspeed").setExecutor(new FlightSpeedCommand());
 
-        final WarpCommand warpCommand = new WarpCommand();
-        main.getCommand("warp").setExecutor(warpCommand);
-        main.getCommand("warp").setTabCompleter(warpCommand);
+        final WarpTabCompletion warpTabCompletion = new WarpTabCompletion();
+        main.getCommand("warp").setExecutor(new WarpCommand());
+        main.getCommand("warp").setTabCompleter(warpTabCompletion);
 
-        final CreateWarpCommand createWarpCommand = new CreateWarpCommand();
-        main.getCommand("createwarp").setExecutor(createWarpCommand);
-        main.getCommand("createwarp").setTabCompleter(createWarpCommand);
+        main.getCommand("createwarp").setExecutor(new CreateWarpCommand());
+        main.getCommand("createwarp").setTabCompleter(warpTabCompletion);
+
+        main.getCommand("removewarp").setExecutor(new RemoveWarpCommand());
+        main.getCommand("removewarp").setTabCompleter(warpTabCompletion);
     }
 
 }
