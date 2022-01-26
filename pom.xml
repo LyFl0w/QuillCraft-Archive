@@ -65,6 +65,13 @@
             <version>1.18.1-R0.1-SNAPSHOT</version>
             <scope>provided</scope>
         </dependency>
+
+        <dependency>
+            <groupId>net.quillcraft</groupId>
+            <artifactId>QuillCraftCore</artifactId>
+            <version>1.0dev</version>
+            <scope>provided</scope>
+        </dependency>
     </dependencies>
 
 </project>
