@@ -1,11 +1,11 @@
 name: QuillCraftBuild
 version: 1.0
-api-version: 1.17
+api-version: 1.18
 author: LyFlow
 main: net.quillcraft.build.QuillCraftBuild
 commands:
   flightspeed:
-    aliases: ["fs"]
+    aliases: ["fs","fls"]
     description: change your flying speed
     permission: quillcraft.build.flyingspeed
     usage: "§c/flightspeed <vitesse> or /flightspeed to reset your flight speed"
