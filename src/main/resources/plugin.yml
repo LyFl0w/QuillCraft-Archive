@@ -5,7 +5,17 @@ author: LyFlow
 main: net.quillcraft.build.QuillCraftBuild
 commands:
   flightspeed:
-    aliases: ["fs","fls"]
+    aliases: ["fl","fls"]
     description: change your flying speed
     permission: quillcraft.build.flyingspeed
-    usage: "§c/flightspeed <vitesse> or /flightspeed to reset your flight speed"
+    usage: "§c/flightspeed <speed> or /flightspeed to reset your flight speed"
+  warp:
+    aliases: ["w", "wp"]
+    description: teleports you wherever you want
+    permission: quillcraft.build.warp
+    usage: "§c/warp <categorie> <zone>"
+  createwarp:
+    aliases: ["cw","cwp"]
+    description: create a warp where you want
+    permission: quillcraft.build.createwarp
+    usage: "§c/createwarp <categorie> <zone>"
