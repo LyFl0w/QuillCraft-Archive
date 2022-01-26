@@ -6,7 +6,7 @@
 
     <groupId>net.quillcraft</groupId>
     <artifactId>QuillCraftBuild</artifactId>
-    <version>1.0</version>
+    <version>1.0-dev</version>
 
     <properties>
         <maven.compiler.source>17</maven.compiler.source>
@@ -50,7 +50,7 @@
                             <goal>shade</goal>
                         </goals>
                         <configuration>
-                            <outputFile>../QuillCraftProjectOutPut/${project.artifactId}-${project.version}.jar</outputFile>
+                            <outputFile>../QuillCraftProjectOutPut/dev/${project.artifactId}-${project.version}.jar</outputFile>
                         </configuration>
                     </execution>
                 </executions>
