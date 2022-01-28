@@ -23,3 +23,4 @@ commands:
     aliases: ["rw","remw"]
     description: remove a warp
     permission: quillcraft.build.removewarp
+    usage: "§c/removewarp <categorie> <zone>"
