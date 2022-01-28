@@ -17,7 +17,12 @@ import org.bukkit.inventory.Inventory;
 import org.bukkit.inventory.ItemStack;
 import org.lumy.api.text.Text;
 
-public record InventoryClickListener(QuillCraftLobby quillCraftLobby) implements Listener {
+public class InventoryClickListener implements Listener {
+
+    private final QuillCraftLobby quillCraftLobby;
+    public InventoryClickListener(QuillCraftLobby quillCraftLobby){
+        this.quillCraftLobby = quillCraftLobby;
+    }
 
     @EventHandler
     public void onInventoryClick(InventoryClickEvent event){
@@ -38,6 +43,10 @@ public record InventoryClickListener(QuillCraftLobby quillCraftLobby) implements
             final LanguageManager languageManager = LanguageManager.getLanguage(account);
 
             if(title.equals(languageManager.getMessage(Text.INVENTORY_NAME_MENU))){
+                if(item.getType() == Material.IRON_BOOTS){
+
+                    return;
+                }
                 return;
             }
 
