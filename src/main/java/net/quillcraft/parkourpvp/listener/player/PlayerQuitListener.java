@@ -17,7 +17,7 @@ public class PlayerQuitListener implements Listener{
     public PlayerQuitListener(ParkourPvP parkourPvP){
         this.parkourPvP = parkourPvP;
     }
-
+    
     @EventHandler
     public void playerJoinEvent(PlayerQuitEvent event){
         final Player player = event.getPlayer();
