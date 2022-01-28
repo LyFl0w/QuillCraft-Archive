@@ -19,11 +19,12 @@ public class ParkourPvP extends JavaPlugin{
         INSTANCE = this;
 
         parkourPvPGame = new ParkourPvPGame(
-                new GameProperties(new YamlConfigurationBuilder(this, "game_properties.yaml", true).getConfig()));
+                new GameProperties(new YamlConfigurationBuilder(this, "game_properties.yml", true).getConfig()));
 
         new PluginManager(this);
 
         parkourPvPGame.setGameStatus(GameStatus.PLAYER_WAITING);
+        parkourPvPGame.updateRedis();
 
         getLogger().info("Plugin ParkourPvP enable");
     }

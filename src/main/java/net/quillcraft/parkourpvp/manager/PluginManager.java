@@ -1,6 +1,7 @@
 package net.quillcraft.parkourpvp.manager;
 
 import net.quillcraft.parkourpvp.ParkourPvP;
+import net.quillcraft.parkourpvp.listener.player.PlayerJoinListener;
 
 import org.bukkit.Server;
 import org.bukkit.plugin.messaging.Messenger;
@@ -17,7 +18,10 @@ public class PluginManager{
         registerCommands();
     }
 
-    private void registerEvents(org.bukkit.plugin.PluginManager pluginManager){}
+    private void registerEvents(org.bukkit.plugin.PluginManager pluginManager){
+        pluginManager.registerEvents(new PlayerJoinListener(main), main);
+
+    }
 
     private void registerPluginMessage(Messenger messenger){}
 
