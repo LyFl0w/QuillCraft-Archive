@@ -19,10 +19,7 @@ public class PluginManager {
         registerCommands();
     }
 
-    private void registerEvents(org.bukkit.plugin.PluginManager pluginManager){
-    }
-
-
+    private void registerEvents(org.bukkit.plugin.PluginManager pluginManager){}
 
     private void registerCommands(){
         main.getCommand("flightspeed").setExecutor(new FlightSpeedCommand());
