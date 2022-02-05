@@ -1,0 +1,11 @@
+name: Particles
+description: Plugin animated particles
+author: LyFlow
+api-version: 1.18
+version: 1.0-snapshot
+main: net.lyflow.particles.Particles
+commands:
+  particle:
+    description: test particle command
+    usage: "§c/particle <rayon> <points on circle>"
+    aliases: ["p"]
