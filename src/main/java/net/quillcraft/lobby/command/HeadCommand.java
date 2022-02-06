@@ -27,9 +27,10 @@ public class HeadCommand implements CommandExecutor {
     @Override
     public boolean onCommand(@Nonnull CommandSender commandSender, @Nonnull Command command, @Nonnull String label, @Nonnull String[] args) {
         if(commandSender instanceof final Player player){
-            if(args.length == 2){
+            if(args.length == 3){
                 try{
                     final int headYaw = Integer.parseInt(args[1]);
+                    final int coins = Integer.parseInt(args[2]);
                     if(headYaw > 15) return sendError(player);
 
                     final Block block = player.getWorld().getBlockAt(player.getLocation());
@@ -47,6 +48,7 @@ public class HeadCommand implements CommandExecutor {
                         headConfiguration.set(pathBuilder+"y", player.getLocation().getBlockY());
                         headConfiguration.set(pathBuilder+"z", player.getLocation().getBlockZ());
                         headConfiguration.set(pathBuilder+"yaw", headYaw);
+                        headConfiguration.set(pathBuilder+"coins", coins);
                         ConfigurationManager.HEAD.saveFile();
 
                         //Place head

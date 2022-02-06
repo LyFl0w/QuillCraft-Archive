@@ -84,7 +84,7 @@ public class HeadFinderProvider{
         }
     }
 
-    private void updateHeadListDatabase(){
+    private void updateHeadListDatabase(int quillcoins){
         try{
             final Gson gson = new GsonBuilder().serializeNulls().create();
             final Connection connection = DatabaseManager.MINECRAFT_SERVER.getDatabaseAccess().getConnection();
@@ -92,6 +92,10 @@ public class HeadFinderProvider{
             preparedStatement.setObject(1, gson.toJson(headlist)); // Finilisation de la requête / Serialise List<Integer> to String (-> Json)
             preparedStatement.setObject(2, uuid); // Finilisation de la requête
             preparedStatement.executeUpdate();    //Mise à jour de la liste dans la bdd
+            final PreparedStatement preparedStatement2 = connection.prepareStatement("UPDATE player_account SET quillcoins = ? WHERE uuid = ?"); // Précontruction d'une requète SQL
+            preparedStatement2.setObject(1, gson.toJson(quillcoins)); // Finilisation de la requête / Serialise List<Integer> to String (-> Json)
+            preparedStatement2.setObject(2, uuid); // Finilisation de la requête
+            preparedStatement2.executeUpdate();    //Mise à jour de la liste dans la bdd
             connection.close();
         }catch(SQLException e){
             e.printStackTrace();
@@ -103,9 +107,9 @@ public class HeadFinderProvider{
         headListRBucket.set(headlist);
     }
 
-    public void updateHeadList(){
+    public void updateHeadList(int quillcoins){
         updateHeadListInRedis(headlist);
-        updateHeadListDatabase();
+        updateHeadListDatabase(quillcoins);
     }
 
     public List<Integer> getHeadlist(){
