@@ -32,8 +32,7 @@ public class Account {
     private SQLRequest sqlRequest;
 
     //Redis
-    public Account(){
-    }
+    private Account(){}
 
     public Account(final Player player){
         this(0, player.getUniqueId(), null, 10, (byte) 0, Visibility.EVERYONE, defaultParticles(), "en_us");
@@ -54,8 +53,8 @@ public class Account {
         this.visibility = visibility;
         this.particles = particles;
         this.languageISO = languageISO;
-        final SQLTablesManager sqlTablesManager = SQLTablesManager.PLAYER_ACCOUNT;
-        this.sqlRequest = new SQLRequest(sqlTablesManager.getTable(), sqlTablesManager.getKeyColumn(), uuid.toString());
+
+        setSQLRequest();
     }
 
     public int getId(){
@@ -161,6 +160,10 @@ public class Account {
         }
     }
 
+    protected void setSQLRequest(){
+        final SQLTablesManager sqlTablesManager = SQLTablesManager.PLAYER_ACCOUNT;
+        this.sqlRequest = new SQLRequest(sqlTablesManager.getTable(), sqlTablesManager.getKeyColumn(), uuid.toString());
+    }
 
     private static HashMap<Particles, Boolean> defaultParticles(){
         final HashMap<Particles, Boolean> defaultParticles = new HashMap<>();
