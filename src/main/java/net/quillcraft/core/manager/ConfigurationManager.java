@@ -6,18 +6,20 @@ import org.bukkit.configuration.file.FileConfiguration;
 
 public enum ConfigurationManager {
 
-    DEFAULT_CONFIG(QuillCraftCore.getInstance().getConfig()),
-    DATA_ACCESS(new YamlConfigurationBuilder(QuillCraftCore.getInstance(), "data_access.yml", true).getConfig());
+    DATA_ACCESS(new YamlConfigurationBuilder(QuillCraftCore.getInstance(), "data_access.yml", true));
 
-    private final FileConfiguration configuration;
-    private final QuillCraftCore main = QuillCraftCore.getInstance();
+    private final YamlConfigurationBuilder yamlConfigurationBuilder;
 
-    ConfigurationManager(FileConfiguration configuration){
-        this.configuration = configuration;
+    ConfigurationManager(YamlConfigurationBuilder yamlConfigurationBuilder){
+        this.yamlConfigurationBuilder = yamlConfigurationBuilder;
     }
 
     public FileConfiguration getConfiguration(){
-        return configuration;
+        return yamlConfigurationBuilder.getConfig();
+    }
+
+    public void saveFile(){
+        yamlConfigurationBuilder.save();
     }
 
 }
