@@ -1,8 +1,5 @@
 package net.quillcraft.commons.friend;
 
-import com.fasterxml.jackson.annotation.JsonIgnore;
-import net.lyflow.sqlrequest.SQLRequest;
-
 import java.util.List;
 import java.util.UUID;
 
@@ -12,7 +9,7 @@ public class Friend{
     private List<String> friendsName;
 
     // For Redis
-    public Friend(){}
+    private Friend(){}
 
     public Friend(List<UUID> friendsUUID, List<String> friendsName){
         this.friendsUUID = friendsUUID;
