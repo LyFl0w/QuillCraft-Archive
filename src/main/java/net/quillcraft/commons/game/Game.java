@@ -3,26 +3,29 @@ package net.quillcraft.commons.game;
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import net.quillcraft.core.data.management.redis.RedisManager;
 
-import org.redisson.api.RBucket;
+import org.redisson.api.RBucket;;
 import org.redisson.api.RedissonClient;
 
 import java.util.ArrayList;
 import java.util.List;
 import java.util.UUID;
 
-public abstract class Game{
+public abstract sealed class Game permits ParkourPvPGame{
 
     @JsonIgnore
-    private final RedissonClient redissonClient = RedisManager.GAME_SERVER.getRedisAccess().getRedissonClient();
+    protected final static RedissonClient redissonClient = RedisManager.GAME_SERVER.getRedisAccess().getRedissonClient();
 
     private final UUID uuid;
-    private final List<String> playerList;
+    private final List<UUID> playerList;
 
     private final GameProperties gameProperties;
-    private GameStatus gameStatus;
+    private GeneralGameStatus generalGameStatus;
 
-    public Game(GameProperties gameProperties){
-        this.gameStatus = GameStatus.STARTING;
+    private final GameEnum gameEnum;
+
+    public Game(GameEnum gameEnum, GameProperties gameProperties){
+        this.generalGameStatus = GeneralGameStatus.STARTING_SERVER;
+        this.gameEnum = gameEnum;
         this.gameProperties = gameProperties;
         this.playerList = new ArrayList<>();
         this.uuid = UUID.randomUUID();
@@ -30,19 +33,22 @@ public abstract class Game{
         updateRedis();
     }
 
+    protected Game(){
+        this.gameEnum = null;
+        this.uuid = null;
+        this.playerList = null;
+        this.gameProperties = null;
+    }
+
     public UUID getUUID(){
         return uuid;
     }
 
-    public String getName(){
-        return getClass().getName();
-    }
-
     public String getRedisKey(){
-        return getName()+":"+uuid;
+        return gameEnum.name()+":"+uuid;
     }
 
-    public List<String> getPlayerList(){
+    public List<UUID> getPlayerUUIDList(){
         return playerList;
     }
 
@@ -50,20 +56,22 @@ public abstract class Game{
         return gameProperties.getMaxPlayer() == playerList.size();
     }
 
-    public void updateRedis(){
-        final RBucket<Game> gameRBucket = redissonClient.getBucket(getRedisKey());
-        gameRBucket.set(this);
+    public abstract void updateRedis();
+
+    private WaitingList waitingList(){
+        final RBucket<WaitingList> waitingListRBucket = redissonClient.getBucket(gameEnum.name()+":waitinglist");
+        return waitingListRBucket.get();
     }
 
-    public GameStatus getGameStatus(){
-        return gameStatus;
+    public GeneralGameStatus getGameStatus(){
+        return generalGameStatus;
     }
 
-    public void setGameStatus(GameStatus gameStatus){
-        this.gameStatus = gameStatus;
+    public void setGameStatus(GeneralGameStatus generalGameStatus){
+        this.generalGameStatus = generalGameStatus;
     }
 
-    public boolean actualGameStatusIs(GameStatus gameStatus){
-        return this.gameStatus == gameStatus;
+    public boolean actualGameStatusIs(GeneralGameStatus generalGameStatus){
+        return this.generalGameStatus == generalGameStatus;
     }
 }
