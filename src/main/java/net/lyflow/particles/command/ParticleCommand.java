@@ -21,7 +21,7 @@ import java.util.Objects;
 
 public class ParticleCommand implements CommandExecutor, TabCompleter{
 
-    private final String[] subArgs = {"circle", "spincircle", "reversspincircle", "circlearound", "tempcircle"};
+    private final String[] subArgs = {"circle", "spincircle", "reversspincircle", "circlearound", "tempcircle", "spawnreseau"};
 
     private final Particles particles;
     public ParticleCommand(Particles particles){
@@ -329,6 +329,79 @@ public class ParticleCommand implements CommandExecutor, TabCompleter{
 
                     }
                 }.runTaskTimer(particles, 0L, 1L);
+                return true;
+            }
+
+            if(args[0].equalsIgnoreCase(subArgs[5])){
+                final BukkitRunnable bukkitRunnable = new BukkitRunnable() {
+                    // radius of the circle
+                    double radius = 0.0d;
+                    // Starting location for the first circle will be the player's eye location
+                    final Location defaultPlayerLoc = player.getEyeLocation();
+                    Location playerLoc = defaultPlayerLoc.clone();
+                    // We need world for the spawnParticle function
+                    final World world = playerLoc.getWorld();
+                    // This is the direction the player is looking, normalized to a length (speed) of 1.
+                    Vector dir = playerLoc.getDirection().normalize();
+                    // We need the pitch in radians for the rotate axis function
+                    // We also add 90 degrees to compensate for the non-standard use of pitch degrees in Minecraft.
+                    double pitch = (playerLoc.getPitch() + 90.0F) * 0.017453292F;
+                    // The yaw is also converted to radians here, but we need to negate it for the function to work properly
+                    double yaw = -playerLoc.getYaw() * 0.017453292F;
+                    // This is the distance between each point around the circumference of the circle.
+                    final double increment = (2 * Math.PI) / circlePoints;
+                    // Max length of the beam..for now
+
+                    double roundUnit = 1.0d;
+
+                    int beamLength = 10;
+                    @Override
+                    public void run() {
+                        // We need to loop to get all of the points on the circle every loop
+                        for (int i = 0; i < circlePoints; i++) {
+                            // Angle on the circle + the offset for rotating each loop
+                            final double angle = i * increment;
+                            final double x = radius * Math.cos(angle);
+                            final double z = radius * Math.sin(angle);
+                            // Convert that to a 3D Vector where the height is always 0
+                            final Vector vec = new Vector(x, 0, z);
+                            // Now rotate the circle point so it's properly aligned no matter where the player is looking:
+                            VectorUtils.rotateAroundAxisX(vec, pitch);
+                            VectorUtils.rotateAroundAxisY(vec, yaw);
+                            // Display the particle
+                            Objects.requireNonNull(world).spawnParticle(Particle.FLAME, playerLoc.clone().add(vec), 0, 0.0d, 0.0d, 0.0d, 1); // Reminder to self - the "data" option for a (particle, location, data) is speed, not count!!
+                        }
+
+                        /* We multiplied this by 1 already (using normalize()), ensuring the beam will
+                        travel one block away from the player each loop.
+                        */
+                        playerLoc.add(dir);
+
+                        radius += increment * 10;
+
+                        beamLength--;
+                        if(beamLength < 1){
+                            beamLength = 10;
+                            radius = 0.0d;
+
+                            roundUnit+=1.0D;
+
+                            defaultPlayerLoc.setYaw(defaultPlayerLoc.getYaw()+5f);
+                            if(defaultPlayerLoc.getPitch() == 0){
+                                defaultPlayerLoc.setPitch(-0);
+                            }
+
+                            playerLoc = defaultPlayerLoc.clone();
+
+                            pitch = (playerLoc.getPitch() + 90.0F) * 0.017453292F;
+                            yaw = -playerLoc.getYaw() * 0.017453292F;
+
+                            dir = playerLoc.getDirection().normalize();
+                        }
+                    }
+                };
+
+                bukkitRunnable.runTaskTimer(particles, 0, 1);
                 return true;
             }
 
