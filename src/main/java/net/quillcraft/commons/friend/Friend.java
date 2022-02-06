@@ -23,7 +23,7 @@ public class Friend{
     private SQLRequest sqlRequest;
 
     // For Redis
-    public Friend(){}
+    private Friend(){}
 
     public Friend(UUID uuid){
         this(uuid, new ArrayList<>(), new ArrayList<>());
@@ -32,8 +32,8 @@ public class Friend{
     public Friend(UUID uuid, List<UUID> friendsUUID, List<String> friendsName){
         this.friendsUUID = friendsUUID;
         this.friendsName = friendsName;
-        final SQLTablesManager sqlTablesManager = SQLTablesManager.FRIEND;
-        this.sqlRequest = new SQLRequest(sqlTablesManager.getTable(), sqlTablesManager.getKeyColumn(), uuid.toString());
+
+        setSQLRequest(uuid);
     }
 
     public List<String> getFriendsName(){
@@ -79,6 +79,11 @@ public class Friend{
 
     protected SQLRequest getSQLRequest(){
         return sqlRequest;
+    }
+
+    protected void setSQLRequest(UUID uuid){
+        final SQLTablesManager sqlTablesManager = SQLTablesManager.FRIEND;
+        this.sqlRequest = new SQLRequest(sqlTablesManager.getTable(), sqlTablesManager.getKeyColumn(), uuid.toString());
     }
 
     public void addPlayer(ProxiedPlayer targetPlayer){

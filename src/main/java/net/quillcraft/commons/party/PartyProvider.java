@@ -62,6 +62,7 @@ public class PartyProvider {
             party = getPartyFromDatabase();
             sendPartyToRedis(party);
         }else{
+            party.setSQLRequest();
             redissonClient.getBucket(keyParty).clearExpire();
         }
 

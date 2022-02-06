@@ -5,6 +5,7 @@ import net.md_5.bungee.api.event.PlayerDisconnectEvent;
 import net.md_5.bungee.api.plugin.Listener;
 import net.md_5.bungee.api.scheduler.TaskScheduler;
 import net.md_5.bungee.event.EventHandler;
+
 import net.quillcraft.bungee.QuillCraftBungee;
 import net.quillcraft.bungee.manager.LanguageManager;
 import net.quillcraft.commons.account.Account;
@@ -14,6 +15,7 @@ import net.quillcraft.commons.exception.FriendNotFoundException;
 import net.quillcraft.commons.exception.PartyNotFoundException;
 import net.quillcraft.commons.friend.FriendProvider;
 import net.quillcraft.commons.party.PartyProvider;
+
 import org.lumy.api.text.Text;
 
 public class DisconnectListener implements Listener {
@@ -39,6 +41,7 @@ public class DisconnectListener implements Listener {
             }
             friendProvider.expireRedis();
         });
+
         taskScheduler.runAsync(quillCraftBungee, () -> {
             final AccountProvider accountProvider = new AccountProvider(player);
             try{

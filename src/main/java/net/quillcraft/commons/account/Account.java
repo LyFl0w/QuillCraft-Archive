@@ -27,7 +27,7 @@ public class Account {
     private SQLRequest sqlRequest;
 
     //Redis
-    public Account(){}
+    private Account(){}
 
     public Account(ProxiedPlayer player){
         this(player.getUniqueId());
@@ -47,8 +47,8 @@ public class Account {
         this.visibility = visibility;
         this.particles = particles;
         this.languageISO = languageISO;
-        final SQLTablesManager sqlTablesManager = SQLTablesManager.PLAYER_ACCOUNT;
-        this.sqlRequest = new SQLRequest(sqlTablesManager.getTable(), sqlTablesManager.getKeyColumn(), uuid.toString());
+
+        setSQLRequest();
     }
 
     public int getId(){
@@ -123,6 +123,11 @@ public class Account {
 
     public SQLRequest getSQLRequest(){
         return sqlRequest;
+    }
+
+    protected void setSQLRequest(){
+        final SQLTablesManager sqlTablesManager = SQLTablesManager.PLAYER_ACCOUNT;
+        this.sqlRequest = new SQLRequest(sqlTablesManager.getTable(), sqlTablesManager.getKeyColumn(), uuid.toString());
     }
 
     private static HashMap<Particles, Boolean> defaultParticles(){

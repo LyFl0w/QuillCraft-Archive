@@ -58,6 +58,7 @@ public class FriendProvider {
             friends = getFriendsFromDatabase();
             sendFriendsToRedis(friends);
         }else{
+            friends.setSQLRequest(uuid);
             redissonClient.getBucket(keyFriends).clearExpire();
         }
 

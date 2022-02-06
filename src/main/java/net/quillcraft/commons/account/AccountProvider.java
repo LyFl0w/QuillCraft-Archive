@@ -41,6 +41,7 @@ public class AccountProvider {
             account = getAccountFromDatabase();
             sendAccountToRedis(account);
         }else{
+            account.setSQLRequest();
             redissonClient.getBucket(keyAccount).clearExpire();
         }
 
