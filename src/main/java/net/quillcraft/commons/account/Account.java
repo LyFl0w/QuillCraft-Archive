@@ -7,8 +7,6 @@ import net.md_5.bungee.api.connection.ProxiedPlayer;
 
 import net.quillcraft.bungee.data.management.sql.table.SQLTablesManager;
 import net.quillcraft.bungee.serialization.ProfileSerializationAccount;
-import net.quillcraft.commons.friend.Friend;
-import net.quillcraft.commons.friend.FriendProvider;
 
 import java.util.*;
 
@@ -125,9 +123,11 @@ public class Account {
         return sqlRequest;
     }
 
-    protected void setSQLRequest(){
+    public void setSQLRequest(){
         final SQLTablesManager sqlTablesManager = SQLTablesManager.PLAYER_ACCOUNT;
         this.sqlRequest = new SQLRequest(sqlTablesManager.getTable(), sqlTablesManager.getKeyColumn(), uuid.toString());
+
+        System.out.println("set sqlrequest");
     }
 
     private static HashMap<Particles, Boolean> defaultParticles(){

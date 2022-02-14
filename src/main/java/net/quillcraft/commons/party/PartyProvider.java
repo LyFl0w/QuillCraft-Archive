@@ -1,6 +1,5 @@
 package net.quillcraft.commons.party;
 
-import com.fasterxml.jackson.annotation.JsonIgnore;
 import net.md_5.bungee.api.ChatColor;
 import net.md_5.bungee.api.ProxyServer;
 import net.md_5.bungee.api.chat.ClickEvent;
@@ -37,12 +36,11 @@ import java.util.concurrent.TimeUnit;
 public class PartyProvider {
 
     private final RedissonClient redissonClient;
+    private final SQLTablesManager sqlTablesManager;
+
     private final ProxiedPlayer player;
     private UUID partyUUID;
     private String keyParty;
-
-    @JsonIgnore
-    private final SQLTablesManager sqlTablesManager;
 
     public PartyProvider(Account account){
         this.player = ProxyServer.getInstance().getPlayer(account.getUUID());
@@ -95,7 +93,7 @@ public class PartyProvider {
                     account = accountProvider.getAccountFromDatabase();
                     hasAccountOnRedis = false;
                 }
-
+                account.setSQLRequest();
                 account.setPartyUUID(null);
                 if(hasAccountOnRedis){
                     accountProvider.updateAccount(account);
