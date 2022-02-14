@@ -4,6 +4,8 @@ import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
 import com.google.gson.reflect.TypeToken;
 
+import net.quillcraft.commons.account.Account;
+import net.quillcraft.commons.account.AccountProvider;
 import net.quillcraft.core.data.management.redis.RedisManager;
 import net.quillcraft.core.data.management.sql.DatabaseManager;
 
@@ -98,14 +100,26 @@ public class HeadFinderProvider{
         }
     }
 
+    private void updatePlayerCoins(Player player, int quillcoins){
+        try{
+            final AccountProvider accountProvider = new AccountProvider(player);
+            final Account account = accountProvider.getAccount();
+            account.setQuillCoins(account.getQuillCoins()+quillcoins);
+            accountProvider.updateAccount(account);
+        }catch(Exception e){
+            e.printStackTrace();
+        }
+    }
+
     private void updateHeadListInRedis(List<Integer> headlist){
         final RBucket<List<Integer>> headListRBucket = redissonClient.getBucket(keyHeadList);
         headListRBucket.set(headlist);
     }
 
-    public void updateHeadList(){
+    public void updateHeadList(Player player, int quillcoins){
         updateHeadListInRedis(headlist);
         updateHeadListDatabase();
+        updatePlayerCoins(player, quillcoins);
     }
 
     public List<Integer> getHeadlist(){

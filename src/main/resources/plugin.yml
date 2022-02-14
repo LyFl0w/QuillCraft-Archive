@@ -21,4 +21,4 @@ commands:
   head:
     description: Cette commande permet de créer une tete interractive
     permission: quillcraftlobby.head
-    usage: §c/head <head-id>
+    usage: §c/head <head-id> <coins>

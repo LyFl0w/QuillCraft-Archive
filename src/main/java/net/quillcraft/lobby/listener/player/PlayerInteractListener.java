@@ -33,7 +33,6 @@ public class PlayerInteractListener implements Listener {
         final Player player = event.getPlayer();
         final Action action = event.getAction();
 
-
         if(event.getHand() == EquipmentSlot.OFF_HAND) return;
 
         if(action == Action.RIGHT_CLICK_BLOCK){
@@ -47,8 +46,10 @@ public class PlayerInteractListener implements Listener {
                         final List<Integer> list = headFinderProvider.getHeadlist();
                         if(!list.contains(i)){
                             list.add(i);
-                            headFinderProvider.updateHeadList();
-                            player.sendMessage("Nouvelle tête trouvée");
+                            final int quillcoins = configurationSection.getInt(i + ".quillcoins");
+                            headFinderProvider.updateHeadList(player, quillcoins);
+
+                            player.sendMessage("Nouvelle tête trouvée, vous gagnez " + quillcoins + "quillcoins" );
                         }else{
                             player.sendMessage("Tête déjà trouvée");
                         }
