@@ -5,7 +5,7 @@ import net.quillcraft.commons.exception.AccountNotFoundException;
 import net.quillcraft.core.manager.LanguageManager;
 import net.quillcraft.core.utils.ActionUtils;
 import net.quillcraft.core.utils.builders.ItemBuilder;
-imprrt net.quillcraft.lobby.headfinder.HeadFinderProvider
+import net.quillcraft.lobby.headfinder.HeadFinderProvider;
 import net.quillcraft.lobby.inventory.MenuInventory;
 import net.quillcraft.lobby.inventory.VisibilityInventory;
 import net.quillcraft.lobby.manager.ConfigurationManager;
@@ -33,7 +33,6 @@ public class PlayerInteractListener implements Listener {
         final Player player = event.getPlayer();
         final Action action = event.getAction();
 
-
         if(event.getHand() == EquipmentSlot.OFF_HAND) return;
 
         if(action == Action.RIGHT_CLICK_BLOCK){
@@ -47,9 +46,10 @@ public class PlayerInteractListener implements Listener {
                         final List<Integer> list = headFinderProvider.getHeadlist();
                         if(!list.contains(i)){
                             list.add(i);
-                            headFinderProvider.updateHeadList(configurationSection.getInt(i + ".quillcoins"));
+                            final int quillcoins = configurationSection.getInt(i + ".quillcoins");
+                            headFinderProvider.updateHeadList(player, quillcoins);
 
-                            player.sendMessage("Nouvelle tête trouvée, vous gagnez " + configurationSection.getInt( i +".quillcoins") + "quillcoins" );
+                            player.sendMessage("Nouvelle tête trouvée, vous gagnez " + quillcoins + "quillcoins" );
                         }else{
                             player.sendMessage("Tête déjà trouvée");
                         }

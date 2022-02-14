@@ -4,6 +4,8 @@ import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
 import com.google.gson.reflect.TypeToken;
 
+import net.quillcraft.commons.account.Account;
+import net.quillcraft.commons.account.AccountProvider;
 import net.quillcraft.core.data.management.redis.RedisManager;
 import net.quillcraft.core.data.management.sql.DatabaseManager;
 
@@ -84,7 +86,7 @@ public class HeadFinderProvider{
         }
     }
 
-    private void updateHeadListDatabase(int quillcoins){
+    private void updateHeadListDatabase(){
         try{
             final Gson gson = new GsonBuilder().serializeNulls().create();
             final Connection connection = DatabaseManager.MINECRAFT_SERVER.getDatabaseAccess().getConnection();
@@ -92,12 +94,19 @@ public class HeadFinderProvider{
             preparedStatement.setObject(1, gson.toJson(headlist)); // Finilisation de la requête / Serialise List<Integer> to String (-> Json)
             preparedStatement.setObject(2, uuid); // Finilisation de la requête
             preparedStatement.executeUpdate();    //Mise à jour de la liste dans la bdd
-            final PreparedStatement preparedStatement2 = connection.prepareStatement("UPDATE player_account SET quillcoins = ? WHERE uuid = ?"); // Précontruction d'une requète SQL
-            preparedStatement2.setObject(1, gson.toJson(quillcoins)); // Finilisation de la requête / Serialise List<Integer> to String (-> Json)
-            preparedStatement2.setObject(2, uuid); // Finilisation de la requête
-            preparedStatement2.executeUpdate();    //Mise à jour de la liste dans la bdd
             connection.close();
         }catch(SQLException e){
+            e.printStackTrace();
+        }
+    }
+
+    private void updatePlayerCoins(Player player, int quillcoins){
+        try{
+            final AccountProvider accountProvider = new AccountProvider(player);
+            final Account account = accountProvider.getAccount();
+            account.setQuillCoins(account.getQuillCoins()+quillcoins);
+            accountProvider.updateAccount(account);
+        }catch(Exception e){
             e.printStackTrace();
         }
     }
@@ -107,9 +116,10 @@ public class HeadFinderProvider{
         headListRBucket.set(headlist);
     }
 
-    public void updateHeadList(int quillcoins){
+    public void updateHeadList(Player player, int quillcoins){
         updateHeadListInRedis(headlist);
-        updateHeadListDatabase(quillcoins);
+        updateHeadListDatabase();
+        updatePlayerCoins(player, quillcoins);
     }
 
     public List<Integer> getHeadlist(){

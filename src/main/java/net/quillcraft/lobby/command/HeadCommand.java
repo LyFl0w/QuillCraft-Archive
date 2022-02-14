@@ -63,7 +63,8 @@ public class HeadCommand implements CommandExecutor {
 
                         player.sendMessage("Votre tête a été créée");
                         return true;
-                    } player.sendMessage("Il y a un block la où vous vous trouver");
+                    }
+                    player.sendMessage("Il y a un block la où vous vous trouver");
                     return true;
                 }catch(Exception exception){
                     return sendError(player);
