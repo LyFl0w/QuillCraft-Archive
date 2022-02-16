@@ -20,7 +20,6 @@ public class PluginManager{
 
     private void registerEvents(org.bukkit.plugin.PluginManager pluginManager){
         pluginManager.registerEvents(new PlayerJoinListener(main), main);
-
     }
 
     private void registerPluginMessage(Messenger messenger){}

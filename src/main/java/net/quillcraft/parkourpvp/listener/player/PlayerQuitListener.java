@@ -1,15 +1,16 @@
 package net.quillcraft.parkourpvp.listener.player;
 
-import net.quillcraft.commons.game.GameStatus;
+import net.quillcraft.commons.game.GeneralGameStatus;
 import net.quillcraft.commons.game.ParkourPvPGame;
 import net.quillcraft.parkourpvp.ParkourPvP;
+
 import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
-import org.bukkit.event.player.PlayerJoinEvent;
 import org.bukkit.event.player.PlayerQuitEvent;
 
 import java.util.List;
+import java.util.UUID;
 
 public class PlayerQuitListener implements Listener{
 
@@ -19,19 +20,20 @@ public class PlayerQuitListener implements Listener{
     }
     
     @EventHandler
-    public void playerJoinEvent(PlayerQuitEvent event){
+    public void playerQuitEvent(PlayerQuitEvent event){
         final Player player = event.getPlayer();
         final ParkourPvPGame parkourPvPGame = parkourPvP.getParkourPvPGame();
 
-        final List<Player> playerList = parkourPvPGame.getPlayerList();
-        if(!playerList.contains(player)) return;
+        final List<UUID> playerList = parkourPvPGame.getPlayerUUIDList();
+        if(!playerList.contains(player.getUniqueId())) return;
 
-        if(parkourPvPGame.actualGameStatusIs(GameStatus.STARTING)){
-            if(parkourPvPGame.isFullyFilled()) parkourPvPGame.setGameStatus(GameStatus.PLAYER_WAITING);
+        if(parkourPvPGame.actualGameStatusIs(GeneralGameStatus.PLAYER_WAITING_FULL)){
+            if(parkourPvPGame.isFullyFilled()) parkourPvPGame.setGameStatus(GeneralGameStatus.PLAYER_WAITING);
         }
 
-        parkourPvPGame.getPlayerList().remove(player);
-
+        playerList.remove(player.getUniqueId());
+        parkourPvPGame.updateRedis();
+        parkourPvPGame.searchPlayer();
     }
 
 }

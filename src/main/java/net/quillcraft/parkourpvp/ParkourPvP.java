@@ -1,7 +1,7 @@
 package net.quillcraft.parkourpvp;
 
 import net.quillcraft.commons.game.GameProperties;
-import net.quillcraft.commons.game.GameStatus;
+import net.quillcraft.commons.game.GeneralGameStatus;
 import net.quillcraft.commons.game.ParkourPvPGame;
 import net.quillcraft.core.utils.builders.YamlConfigurationBuilder;
 import net.quillcraft.parkourpvp.manager.PluginManager;
@@ -23,8 +23,9 @@ public class ParkourPvP extends JavaPlugin{
 
         new PluginManager(this);
 
-        parkourPvPGame.setGameStatus(GameStatus.PLAYER_WAITING);
+        parkourPvPGame.setGameStatus(GeneralGameStatus.PLAYER_WAITING);
         parkourPvPGame.updateRedis();
+        parkourPvPGame.searchPlayer();
 
         getLogger().info("Plugin ParkourPvP enable");
     }

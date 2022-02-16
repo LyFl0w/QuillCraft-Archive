@@ -1,6 +1,6 @@
 package net.quillcraft.parkourpvp.listener.player;
 
-import net.quillcraft.commons.game.GameStatus;
+import net.quillcraft.commons.game.GeneralGameStatus;
 import net.quillcraft.commons.game.ParkourPvPGame;
 import net.quillcraft.parkourpvp.ParkourPvP;
 
@@ -21,15 +21,15 @@ public class PlayerJoinListener implements Listener{
         final Player player = event.getPlayer();
         final ParkourPvPGame parkourPvPGame = parkourPvP.getParkourPvPGame();
 
-        if(parkourPvPGame.actualGameStatusIs(GameStatus.PLAYER_WAITING)){
+        if(parkourPvPGame.actualGameStatusIs(GeneralGameStatus.PLAYER_WAITING)){
             // FIXME: 28/01/2022  NOT KICK PLAYER BUT RETOUR TO THE LOBBY
             if(parkourPvPGame.isFullyFilled()){
                 player.kickPlayer("Server is full");
                 return;
             }
-            parkourPvPGame.getPlayerList().add(player);
+            parkourPvPGame.getPlayerUUIDList().add(player.getUniqueId());
+            parkourPvPGame.updateRedis();
         }
-
     }
 
 }
