@@ -6,6 +6,8 @@ public class GameProperties{
 
     private int maxPlayer, minPlayer;
 
+    private GameProperties(){}
+
     public GameProperties(FileConfiguration fileConfiguration){
         this.maxPlayer = fileConfiguration.getInt("player.max");
         this.minPlayer = fileConfiguration.getInt("player.min");

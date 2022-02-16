@@ -3,7 +3,6 @@ package net.quillcraft.commons.game;
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import net.quillcraft.core.data.management.redis.RedisManager;
 
-import org.redisson.api.RBucket;;
 import org.redisson.api.RedissonClient;
 
 import java.util.ArrayList;
@@ -58,9 +57,8 @@ public abstract sealed class Game permits ParkourPvPGame{
 
     public abstract void updateRedis();
 
-    private WaitingList waitingList(){
-        final RBucket<WaitingList> waitingListRBucket = redissonClient.getBucket(gameEnum.name()+":waitinglist");
-        return waitingListRBucket.get();
+    public void searchPlayer(){
+        redissonClient.getTopic("game.searchplayer").publish(getRedisKey());
     }
 
     public GeneralGameStatus getGameStatus(){
