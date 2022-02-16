@@ -11,7 +11,12 @@ import org.bukkit.entity.Player;
 
 import java.util.List;
 
-public record Title(Player player) {
+public class Title {
+
+    private final Player player;
+    public Title(Player player){
+        this.player = player;
+    }
 
     public Title sendTitle(final int fadeIn, final int stay, final int fadeOut, final String message){
         return sendTitle(fadeIn, stay, fadeOut, message, null);
