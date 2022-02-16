@@ -37,6 +37,13 @@ redis:
       password: "password"
     database_number: 1
     port: 6379 #default
+  gameserver:
+    host: "127.0.0.1"
+    user:
+      name: "username"
+      password: "password"
+    database_number: 6
+    port: 6379 #default
   message:
     host: "127.0.0.1"
     user:
