@@ -2,15 +2,14 @@ package net.quillcraft.bungee.subscriber;
 
 import net.md_5.bungee.api.ProxyServer;
 import net.md_5.bungee.api.config.ServerInfo;
-import net.md_5.bungee.api.connection.ProxiedPlayer;
 
+import net.quillcraft.bungee.QuillCraftBungee;
 import net.quillcraft.commons.account.AccountProvider;
 import net.quillcraft.commons.exception.AccountNotFoundException;
 import net.quillcraft.commons.exception.PartyNotFoundException;
 import net.quillcraft.commons.game.Game;
 import net.quillcraft.commons.game.Waiter;
 import net.quillcraft.commons.game.WaitingList;
-import net.quillcraft.commons.party.Party;
 import net.quillcraft.commons.party.PartyProvider;
 
 import org.redisson.api.RBucket;
@@ -27,6 +26,8 @@ public class SubscriberGame extends Subscriber{
             final Game game = gameRBucket.get();
             final WaitingList waitingList = new WaitingList(game.getGameEnum());
             final List<UUID> futurPlayers = new ArrayList<>();
+
+            QuillCraftBungee.getInstance().getLogger().info("Game server pub : "+game.getUUID());
 
             waitingList.sortWaitersList();
             for(Waiter waiter : waitingList.getWaitersList()){
