@@ -3,6 +3,11 @@ package net.quillcraft.lobby.listener.inventory;
 import net.quillcraft.commons.account.Account;
 import net.quillcraft.commons.account.AccountProvider;
 import net.quillcraft.commons.exception.AccountNotFoundException;
+import net.quillcraft.commons.exception.PartyNotFoundException;
+import net.quillcraft.commons.game.GameEnum;
+import net.quillcraft.commons.game.Waiter;
+import net.quillcraft.commons.game.WaitingList;
+import net.quillcraft.commons.party.PartyProvider;
 import net.quillcraft.core.manager.LanguageManager;
 import net.quillcraft.lobby.QuillCraftLobby;
 import net.quillcraft.lobby.inventory.VisibilityInventory;
@@ -17,7 +22,12 @@ import org.bukkit.inventory.Inventory;
 import org.bukkit.inventory.ItemStack;
 import org.lumy.api.text.Text;
 
-public record InventoryClickListener(QuillCraftLobby quillCraftLobby) implements Listener {
+public class InventoryClickListener implements Listener {
+
+    private final QuillCraftLobby quillCraftLobby;
+    public InventoryClickListener(QuillCraftLobby quillCraftLobby){
+        this.quillCraftLobby = quillCraftLobby;
+    }
 
     @EventHandler
     public void onInventoryClick(InventoryClickEvent event){
@@ -38,6 +48,18 @@ public record InventoryClickListener(QuillCraftLobby quillCraftLobby) implements
             final LanguageManager languageManager = LanguageManager.getLanguage(account);
 
             if(title.equals(languageManager.getMessage(Text.INVENTORY_NAME_MENU))){
+                if(account.hasParty() && !new PartyProvider(account).getParty().getOwnerUUID().equals(player.getUniqueId())){
+                    player.sendMessage("§cVous devez être l'owner de votre party pour pouvoir lancer un jeu");
+                    return;
+                }
+
+                final WaitingList waitingList = new WaitingList(GameItemToGameEnum.valueOf(item.getType().name()).getGameEnum());
+                if(waitingList.getWaitersList().size() != 0){
+                    waitingList.getWaitersList().add(new Waiter(player.getUniqueId(), account.hasParty()));
+                    waitingList.updateWaitersListRedis();
+                    return;
+                }
+                //TODO : ADD PLAYER AND HIS GROUP TO THE GAME IF A GAME EXIST
                 return;
             }
 
@@ -51,8 +73,22 @@ public record InventoryClickListener(QuillCraftLobby quillCraftLobby) implements
                 return;
             }
 
-        }catch(AccountNotFoundException e){
+        }catch(AccountNotFoundException | PartyNotFoundException e){
             e.printStackTrace();
+        }
+    }
+
+    private enum GameItemToGameEnum{
+
+        IRON_BOOTS(GameEnum.PARKOUR_PVP_SOLO);
+
+        private final GameEnum gameEnum;
+        GameItemToGameEnum(GameEnum gameEnum){
+            this.gameEnum = gameEnum;
+        }
+
+        public GameEnum getGameEnum(){
+            return gameEnum;
         }
     }
 
