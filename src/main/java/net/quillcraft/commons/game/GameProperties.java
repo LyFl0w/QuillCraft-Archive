@@ -1,6 +1,5 @@
 package net.quillcraft.commons.game;
 
-
 public class GameProperties{
 
     private int maxPlayer, minPlayer;

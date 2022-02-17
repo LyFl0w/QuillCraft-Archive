@@ -1,9 +1,12 @@
 package net.quillcraft.commons.game;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
+
 import net.quillcraft.bungee.data.management.redis.RedisManager;
+
 import org.redisson.api.RedissonClient;
 
+import java.util.ArrayList;
 import java.util.List;
 import java.util.UUID;
 
@@ -12,31 +15,38 @@ public abstract sealed class Game permits ParkourPvPGame{
     @JsonIgnore
     protected final static RedissonClient redissonClient = RedisManager.GAME_SERVER.getRedisAccess().getRedissonClient();
 
-    private final UUID uuid;
+    private final int id;
     private final List<UUID> playerList;
-
     private final GameProperties gameProperties;
-    private GeneralGameStatus generalGameStatus;
-
     private final GameEnum gameEnum;
+
+    private GeneralGameStatus generalGameStatus;
 
     protected Game(){
         this.gameEnum = null;
-        this.uuid = null;
         this.playerList = null;
         this.gameProperties = null;
+        this.id = 0;
     }
 
-    public UUID getUUID(){
-        return uuid;
+    public GameProperties getGameProperties(){
+        return gameProperties;
     }
 
     public GameEnum getGameEnum(){
         return gameEnum;
     }
 
+    public GeneralGameStatus getGeneralGameStatus(){
+        return generalGameStatus;
+    }
+
+    public int getId(){
+        return id;
+    }
+
     public String getRedisKey(){
-        return gameEnum.name()+":"+uuid;
+        return gameEnum.name()+":"+id;
     }
 
     public List<UUID> getPlayerUUIDList(){
@@ -47,8 +57,8 @@ public abstract sealed class Game permits ParkourPvPGame{
         return gameProperties.getMaxPlayer() == playerList.size();
     }
 
-    public int getMaxPlayer(){
-        return gameProperties.getMaxPlayer();
+    public void deleteRedisKey(){
+        redissonClient.getBucket(getRedisKey()).delete();
     }
 
     public void searchPlayer(){

@@ -4,5 +4,4 @@ public non-sealed class ParkourPvPGame extends Game{
 
     private ParkourPvPGame(){}
 
-
 }

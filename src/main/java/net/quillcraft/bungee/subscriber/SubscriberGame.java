@@ -25,32 +25,36 @@ public class SubscriberGame extends Subscriber{
             final RBucket<? extends Game> gameRBucket = redissonClient.getBucket(message);
             final Game game = gameRBucket.get();
             final WaitingList waitingList = new WaitingList(game.getGameEnum());
-            final List<UUID> futurPlayers = new ArrayList<>();
+            final ArrayList<UUID> futurPlayers = new ArrayList<>();
+            final ArrayList<Waiter> toRemove = new ArrayList<>();
 
-            QuillCraftBungee.getInstance().getLogger().info("Game server pub : "+game.getUUID());
+            QuillCraftBungee.getInstance().getLogger().info("Game server pub : "+message);
+
+            final int maxPlayer = game.getGameProperties().getMaxPlayer();
 
             waitingList.sortWaitersList();
             for(Waiter waiter : waitingList.getWaitersList()){
-                if(game.getMaxPlayer() == futurPlayers.size()) break;
+                if(maxPlayer == futurPlayers.size()) break;
 
                 final UUID playerUUID = waiter.getPlayer();
                 if(waiter.hasParty()){
                     try{
                         final List<UUID> uuidList = new PartyProvider(new AccountProvider(playerUUID).getAccount()).getParty().getOnlineFollowersUUID();
-                        if(game.getMaxPlayer() < futurPlayers.size() + uuidList.size() + 1) continue;
+                        if(maxPlayer < futurPlayers.size() + uuidList.size() + 1) continue;
                         futurPlayers.addAll(uuidList);
                     }catch(AccountNotFoundException | PartyNotFoundException e){
                         e.printStackTrace();
                     }
                 }
                 futurPlayers.add(playerUUID);
-                waitingList.getWaitersList().remove(waiter);
+                toRemove.add(waiter);
             }
+            waitingList.getWaitersList().removeAll(toRemove);
             waitingList.updateWaitersListRedis();
 
             //TODO : set good string into getServerInfo method
             final ProxyServer proxyServer = ProxyServer.getInstance();
-            final ServerInfo serverInfo = proxyServer.getServerInfo("srebrfihgjb");
+            final ServerInfo serverInfo = proxyServer.getServerInfo(message);
             futurPlayers.stream().parallel().forEach(uuid -> proxyServer.getPlayer(uuid).connect(serverInfo));
         });
     }
