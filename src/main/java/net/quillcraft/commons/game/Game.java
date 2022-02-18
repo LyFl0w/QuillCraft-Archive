@@ -14,37 +14,36 @@ public abstract sealed class Game permits ParkourPvPGame{
     @JsonIgnore
     protected final static RedissonClient redissonClient = RedisManager.GAME_SERVER.getRedisAccess().getRedissonClient();
 
-    private final UUID uuid;
+    private final int id;
     private final List<UUID> playerList;
-
     private final GameProperties gameProperties;
-    private GeneralGameStatus generalGameStatus;
-
     private final GameEnum gameEnum;
 
-    public Game(GameEnum gameEnum, GameProperties gameProperties){
+    private GeneralGameStatus generalGameStatus;
+
+    public Game(GameEnum gameEnum, int id, GameProperties gameProperties){
         this.generalGameStatus = GeneralGameStatus.STARTING_SERVER;
         this.gameEnum = gameEnum;
         this.gameProperties = gameProperties;
         this.playerList = new ArrayList<>();
-        this.uuid = UUID.randomUUID();
+        this.id = id;
 
         updateRedis();
     }
 
     protected Game(){
         this.gameEnum = null;
-        this.uuid = null;
         this.playerList = null;
         this.gameProperties = null;
+        this.id = 0;
     }
 
-    public UUID getUUID(){
-        return uuid;
+    public int getId(){
+        return id;
     }
 
     public String getRedisKey(){
-        return gameEnum.name()+":"+uuid;
+        return gameEnum.name()+":"+id;
     }
 
     public List<UUID> getPlayerUUIDList(){
@@ -56,6 +55,10 @@ public abstract sealed class Game permits ParkourPvPGame{
     }
 
     public abstract void updateRedis();
+
+    public void deleteRedisKey(){
+        redissonClient.getBucket(getRedisKey()).delete();
+    }
 
     public void searchPlayer(){
         redissonClient.getTopic("game.searchplayer").publish(getRedisKey());
