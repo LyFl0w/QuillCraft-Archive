@@ -6,8 +6,8 @@ public non-sealed class ParkourPvPGame extends Game{
 
     private ParkourPvPGame(){}
 
-    public ParkourPvPGame(GameProperties gameProperties){
-        super(GameEnum.PARKOUR_PVP_SOLO, gameProperties);
+    public ParkourPvPGame(int id, GameProperties gameProperties){
+        super(GameEnum.PARKOUR_PVP_SOLO, id, gameProperties);
     }
 
     @Override
