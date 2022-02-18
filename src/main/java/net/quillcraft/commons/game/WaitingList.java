@@ -26,11 +26,16 @@ public class WaitingList{
     }
 
     public void updateWaitersListRedis(){
-        getWaitersListBucket().set(waiters);
+        final RBucket<List<Waiter>> listRBucket = getWaitersListBucket();
+        if(waiters.size() == 0 && listRBucket.isExists()){
+            listRBucket.delete();
+            return;
+        }
+        listRBucket.set(waiters);
     }
 
     private RBucket<List<Waiter>> getWaitersListBucket(){
-        return Game.redissonClient.getBucket(gameEnum.name()+":waitinglist");
+        return Game.redissonClient.getBucket(gameEnum.name()+".WAITINGLIST");
     }
 
 }
