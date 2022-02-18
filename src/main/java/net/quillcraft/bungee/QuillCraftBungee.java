@@ -3,6 +3,7 @@ package net.quillcraft.bungee;
 import net.md_5.bungee.api.plugin.Plugin;
 import net.quillcraft.bungee.manager.DataManager;
 import net.quillcraft.bungee.manager.PluginManager;
+import net.quillcraft.bungee.subscriber.SubscriberManager;
 
 public class QuillCraftBungee extends Plugin {
 
@@ -13,12 +14,14 @@ public class QuillCraftBungee extends Plugin {
         INSTANCE = this;
 
         DataManager.initAllData(this);
+        SubscriberManager.initAllSubscribers();
         new PluginManager(this);
     }
 
     @Override
     public void onDisable(){
         DataManager.closeAllData();
+        SubscriberManager.removeAllSubscribersData();
     }
 
     public static QuillCraftBungee getInstance(){
