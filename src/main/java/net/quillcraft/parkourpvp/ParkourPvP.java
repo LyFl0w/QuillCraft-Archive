@@ -19,6 +19,7 @@ public class ParkourPvP extends JavaPlugin{
         INSTANCE = this;
 
         parkourPvPGame = new ParkourPvPGame(
+                new YamlConfigurationBuilder(this, "default_game_setting.yml", true).getConfig().getInt("id"),
                 new GameProperties(new YamlConfigurationBuilder(this, "game_properties.yml", true).getConfig()));
 
         new PluginManager(this);
@@ -32,6 +33,7 @@ public class ParkourPvP extends JavaPlugin{
 
     @Override
     public void onDisable(){
+        parkourPvPGame.deleteRedisKey();
         getLogger().info("Plugin ParkourPvP disable");
     }
 
