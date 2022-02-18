@@ -16,7 +16,6 @@ public class PluginManager {
         this.quillCraftBungee = main;
         new MessagesPropertiesUtils().generateNewBundleMessagesProperties(true);
 
-        SubscriberManager.initAllSubscribers();
         registerListeners(main.getProxy().getPluginManager());
         registerCommand();
     }
