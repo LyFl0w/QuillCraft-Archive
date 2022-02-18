@@ -126,8 +126,6 @@ public class Account {
     public void setSQLRequest(){
         final SQLTablesManager sqlTablesManager = SQLTablesManager.PLAYER_ACCOUNT;
         this.sqlRequest = new SQLRequest(sqlTablesManager.getTable(), sqlTablesManager.getKeyColumn(), uuid.toString());
-
-        System.out.println("set sqlrequest");
     }
 
     private static HashMap<Particles, Boolean> defaultParticles(){
