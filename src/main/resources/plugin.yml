@@ -3,3 +3,4 @@ version: 1.0
 author: LyFlow
 main: net.quillcraft.parkourpvp.ParkourPvP
 api-version: 1.18
+depend: [QuillCraftCore]
