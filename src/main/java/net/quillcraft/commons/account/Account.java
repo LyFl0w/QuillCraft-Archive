@@ -1,8 +1,11 @@
 package net.quillcraft.commons.account;
 
 import net.lyflow.sqlrequest.SQLRequest;
+import net.quillcraft.commons.exception.AccountNotFoundException;
 import net.quillcraft.commons.exception.FriendNotFoundException;
+import net.quillcraft.commons.exception.PartyNotFoundException;
 import net.quillcraft.commons.friend.FriendProvider;
+import net.quillcraft.commons.party.PartyProvider;
 import net.quillcraft.core.QuillCraftCore;
 import net.quillcraft.core.data.management.sql.table.SQLTablesManager;
 import net.quillcraft.core.serialization.ProfileSerializationAccount;
@@ -138,7 +141,25 @@ public class Account {
 
         switch(getVisibility()){
             case NOBODY -> Bukkit.getOnlinePlayers().forEach(players -> player.hidePlayer(quillCraftCore, players));
-            case EVERYONE -> Bukkit.getOnlinePlayers().forEach(players -> player.showPlayer(quillCraftCore, players));
+            case PARTY -> {
+                try{
+                    final List<UUID> playersUUID = new PartyProvider(new AccountProvider(player).getAccount()).getParty().getPlayersUUID();
+                    playersUUID.remove(player);
+                    if(playersUUID.size() == 0) {
+                        Bukkit.getOnlinePlayers().forEach(players -> player.hidePlayer(quillCraftCore, players));
+                        break;
+                    }
+                    Bukkit.getOnlinePlayers().forEach(players -> {
+                        if(playersUUID.contains(players.getUniqueId())){
+                            player.showPlayer(quillCraftCore, players);
+                        }else{
+                            player.hidePlayer(quillCraftCore, players);
+                        }
+                    });
+                }catch(AccountNotFoundException e){
+                    e.printStackTrace();
+                }catch(PartyNotFoundException ignored){}
+            }
             case FRIENDS -> {
                 try{
                     final List<UUID> friendListUUID = new FriendProvider(player).getFriends().getFriendsUUID();
@@ -157,6 +178,7 @@ public class Account {
                     e.printStackTrace();
                 }
             }
+            case EVERYONE -> Bukkit.getOnlinePlayers().forEach(players -> player.showPlayer(quillCraftCore, players));
         }
     }
 
@@ -172,7 +194,7 @@ public class Account {
     }
 
     public enum Visibility {
-        EVERYONE(2, Material.LIME_DYE), FRIENDS(4, Material.CYAN_DYE), NOBODY(6, Material.GRAY_DYE);
+        EVERYONE(1, Material.LIME_DYE), PARTY(3, Material.ORANGE_DYE), FRIENDS(5, Material.CYAN_DYE), NOBODY(7, Material.GRAY_DYE);
 
         private final int slot;
         private final Material material;
