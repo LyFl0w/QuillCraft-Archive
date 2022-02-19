@@ -5,7 +5,7 @@ import org.bukkit.scoreboard.DisplaySlot;
 import java.util.ArrayList;
 import java.util.List;
 
-public class ObjectiveBuilder {
+public class ObjectiveBuilder{
 
     private String name, displayName;
     private DisplaySlot displaySlot;
@@ -26,7 +26,8 @@ public class ObjectiveBuilder {
     }
 
     public ObjectiveBuilder removeScore(int index){
-        ScoreBuilder scoreBuilder = scoreBuilders.stream().filter(oldScoreBuilder -> oldScoreBuilder.index() == index).findFirst().get();
+        ScoreBuilder scoreBuilder = scoreBuilders.stream().filter(oldScoreBuilder -> oldScoreBuilder.index() == index)
+                .findFirst().get();
         scoreBuilders.remove(scoreBuilder);
 
         return this;
