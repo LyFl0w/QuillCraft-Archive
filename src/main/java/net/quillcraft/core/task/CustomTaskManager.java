@@ -24,8 +24,10 @@ public abstract class CustomTaskManager{
         isRunning = true;
     }
 
-    public void runTaskLater(long delay){
+    public void runTaskLater(long delay) throws TaskOverflowException{
+        if(isRunning) throw new TaskOverflowException();
         task.runTaskLater(javaPlugin, delay);
+        isRunning = true;
     }
 
     protected void resetTask(){
