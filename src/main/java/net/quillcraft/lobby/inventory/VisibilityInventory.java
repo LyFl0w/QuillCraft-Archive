@@ -22,7 +22,7 @@ public class VisibilityInventory {
         final Account.Visibility visibility = account.getVisibility();
 
         Arrays.stream(Account.Visibility.values()).parallel().forEach(visibilitys -> {
-            ItemBuilder itemBuilder = getItemVisibility(visibilitys, language);
+            final ItemBuilder itemBuilder = getItemVisibility(visibilitys, language);
             if(visibility.equals(visibilitys)){
                 itemBuilder.addEnchant(Enchantment.DURABILITY, 1);
                 itemBuilder.addItemFlags(ItemFlag.HIDE_ENCHANTS);
@@ -35,13 +35,15 @@ public class VisibilityInventory {
 
     protected static ItemBuilder getItemVisibility(final Account.Visibility visibility, final LanguageManager languageManager){
         return switch(visibility){
-            case EVERYONE -> setVisibilityItemBuilderName(languageManager, Text.STATUS_VISIBILITY_EVERYONE, new ItemBuilder(Material.LIME_DYE));
-            case FRIENDS -> setVisibilityItemBuilderName(languageManager, Text.STATUS_VISIBILITY_FRIENDS, new ItemBuilder(Material.CYAN_DYE));
-            case NOBODY -> setVisibilityItemBuilderName(languageManager, Text.STATUS_VISIBILITY_NOBODY, new ItemBuilder(Material.GRAY_DYE));
+            case EVERYONE -> setVisibilityItemBuilderName(languageManager, Text.STATUS_VISIBILITY_EVERYONE, Account.Visibility.EVERYONE);
+            // TODO : CHANGE TEXT ITEM NAME FOR PARTY CASE
+            case PARTY -> setVisibilityItemBuilderName(languageManager, Text.STATUS_VISIBILITY_EVERYONE, Account.Visibility.PARTY);
+            case FRIENDS -> setVisibilityItemBuilderName(languageManager, Text.STATUS_VISIBILITY_FRIENDS, Account.Visibility.FRIENDS);
+            case NOBODY -> setVisibilityItemBuilderName(languageManager, Text.STATUS_VISIBILITY_NOBODY, Account.Visibility.NOBODY);
         };
     }
 
-    private static ItemBuilder setVisibilityItemBuilderName(final LanguageManager languageManager, final Text text, final ItemBuilder visibilityItemBuilder){
-        return visibilityItemBuilder.setName(languageManager.getMessage(Text.ITEMS_INVENTORY_LOBBY_VISIBILITY_NAME).replace("%STATUS%", languageManager.getMessage(text)));
+    private static ItemBuilder setVisibilityItemBuilderName(final LanguageManager languageManager, final Text text, Account.Visibility visibility){
+        return new ItemBuilder(visibility.getMaterial()).setName(languageManager.getMessage(Text.ITEMS_INVENTORY_LOBBY_VISIBILITY_NAME).replace("%STATUS%", languageManager.getMessage(text)));
     }
 }
