@@ -4,6 +4,7 @@ import net.md_5.bungee.api.ProxyServer;
 import net.md_5.bungee.api.config.ServerInfo;
 import net.md_5.bungee.api.connection.ProxiedPlayer;
 
+import net.quillcraft.bungee.QuillCraftBungee;
 import net.quillcraft.commons.account.AccountProvider;
 import net.quillcraft.commons.exception.AccountNotFoundException;
 import net.quillcraft.commons.exception.PartyNotFoundException;
@@ -14,7 +15,7 @@ import net.quillcraft.commons.party.PartyProvider;
 
 import java.util.ArrayList;
 import java.util.List;
-import java.util.UUID;
+import java.util.concurrent.ConcurrentLinkedQueue;
 
 public class SubscriberGame extends Subscriber{
 
@@ -23,44 +24,50 @@ public class SubscriberGame extends Subscriber{
     }
 
     public void read(){
-        redissonClient.getTopic("game.searchplayer").addListener(String.class, (channel, message) -> {
-            //QuillCraftBungee.getInstance().getLogger().info("Game server pub : "+message);
+        final ConcurrentLinkedQueue<String> linkedQueue = new ConcurrentLinkedQueue<>();
 
-            final Game game = (Game)redissonClient.getBucket(message).get();
-            final WaitingList waitingList = new WaitingList(game.getGameEnum());
-            if(waitingList.getWaitersList().size() == 0) return;
+        redissonClient.getTopic("game.searchplayer").addListener(String.class, (channel, message) -> linkedQueue.offer(message));
 
-            final ArrayList<ProxiedPlayer> futurPlayers = new ArrayList<>();
-            final ArrayList<Waiter> toRemove = new ArrayList<>();
+        new Thread(() -> {
+            while(true){
+                if(linkedQueue.size() == 0) continue;
+                final String message = linkedQueue.poll();
 
-            final int maxPlayer = game.getGameProperties().getMaxPlayer() - game.getPlayerUUIDList().size();
+                QuillCraftBungee.getInstance().getLogger().info("Game server pub : "+message);
 
-            waitingList.sortWaitersList();
-            for(Waiter waiter : waitingList.getWaitersList()){
-                if(maxPlayer == futurPlayers.size()) break;
+                final Game game = (Game) redissonClient.getBucket(message).get();
+                final WaitingList waitingList = new WaitingList(game.getGameEnum());
 
-                final UUID playerUUID = waiter.getPlayerUUID();
-                if(waiter.hasParty()){
-                    try{
-                        final List<ProxiedPlayer> playerStream = new PartyProvider(new AccountProvider(playerUUID).getAccount()).getParty().getOnlinePlayers()
-                                .stream().filter(proxiedPlayer -> !proxiedPlayer.getServer().getInfo().getName().equalsIgnoreCase(message)).toList();
-                        if(maxPlayer < futurPlayers.size() + playerStream.size()) continue;
-                        futurPlayers.addAll(playerStream);
-                    }catch(AccountNotFoundException | PartyNotFoundException e){
-                        e.printStackTrace();
+                if(waitingList.getWaitersList().size() == 0) continue;
+
+                final ArrayList<ProxiedPlayer> futurPlayers = new ArrayList<>();
+                final ArrayList<Waiter> toRemove = new ArrayList<>();
+
+                final int maxPlayer = game.getGameProperties().getMaxPlayer()-game.getPlayerUUIDList().size();
+
+                waitingList.sortWaitersList();
+                for(Waiter waiter : waitingList.getWaitersList()){
+                    if(maxPlayer == futurPlayers.size()) break;
+
+                    if(waiter.hasParty()){
+                        try{
+                            final List<ProxiedPlayer> playerStream = new PartyProvider(new AccountProvider(waiter.getPlayerUUID()).getAccount()).getParty().getOnlinePlayers().stream().filter(proxiedPlayer -> !proxiedPlayer.getServer().getInfo().getName().equalsIgnoreCase(message)).toList();
+                            if(maxPlayer < futurPlayers.size()+playerStream.size()) continue;
+                            futurPlayers.addAll(playerStream);
+                        }catch(AccountNotFoundException|PartyNotFoundException e){
+                            e.printStackTrace();
+                        }
+                    }else{
+                        futurPlayers.add(proxyServer.getPlayer(waiter.getPlayerUUID()));
                     }
-                }else{
-                    futurPlayers.add(proxyServer.getPlayer(waiter.getPlayerUUID()));
+                    toRemove.add(waiter);
                 }
-                toRemove.add(waiter);
+                waitingList.getWaitersList().removeAll(toRemove);
+                waitingList.updateWaitersListRedis();
+
+                final ServerInfo serverInfo = proxyServer.getServerInfo(message);
+                futurPlayers.stream().parallel().forEach(proxiedPlayer -> proxiedPlayer.connect(serverInfo));
             }
-            waitingList.getWaitersList().removeAll(toRemove);
-            waitingList.updateWaitersListRedis();
-
-            final ServerInfo serverInfo = proxyServer.getServerInfo(message);
-            futurPlayers.stream().parallel().forEach(proxiedPlayer -> proxiedPlayer.connect(serverInfo));
-        });
+        }).start();
     }
-
-
 }
