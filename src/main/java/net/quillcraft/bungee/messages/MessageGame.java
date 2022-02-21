@@ -21,6 +21,7 @@ import org.redisson.api.RedissonClient;
 import java.util.Collections;
 import java.util.Comparator;
 import java.util.List;
+import java.util.Optional;
 
 public class MessageGame extends Message{
 
@@ -39,41 +40,26 @@ public class MessageGame extends Message{
     private static synchronized void synchronizedPlayerRep(RedissonClient redissonClient, ProxyServer proxyServer, ProxiedPlayer player, String sub, boolean hasParty){
         try{
             final Account account = new AccountProvider(player).getAccount();
+            final List<ProxiedPlayer> playerList = (hasParty) ? new PartyProvider(account).getParty().getOnlinePlayers() : Collections.singletonList(player);
 
-            try{
-                final List<ProxiedPlayer> playerList = (hasParty) ? new PartyProvider(account).getParty().getOnlinePlayers() : Collections.singletonList(player);
+            final Optional<String> serversName = redissonClient.getKeys().getKeysStreamByPattern(sub+":*").parallel().filter(key -> {
+                final Game game = (Game) redissonClient.getBucket(key).get();
+                return game.actualGameStatusIs(GeneralGameStatus.PLAYER_WAITING) && game.getGameProperties().getMaxPlayer()-game.getPlayerUUIDList().size() >= playerList.size();
+            }).min(Comparator.comparing(key -> ((Game) redissonClient.getBucket(key).get()).getPlayerUUIDList().size()));
 
-                final String serverName = redissonClient.getKeys().getKeysStreamByPattern(sub+":*").parallel().filter(key -> {
-                    final Game game = (Game) redissonClient.getBucket(key).get();
-                    return game.actualGameStatusIs(GeneralGameStatus.PLAYER_WAITING) && game.getGameProperties().getMaxPlayer()-game.getPlayerUUIDList().size() >= playerList.size();
-                }).min(Comparator.comparing(key -> ((Game) redissonClient.getBucket(key).get()).getPlayerUUIDList().size())).get();
-
+            if(serversName.isPresent()){
+                final String serverName = serversName.get();
                 final ServerInfo serverInfo = proxyServer.getServerInfo(serverName);
                 playerList.stream().parallel().filter(players -> !players.getServer().getInfo().getName().equalsIgnoreCase(serverName)).forEach(players -> players.connect(serverInfo));
+            }else{
+                final GameEnum gameEnum = GameEnum.valueOf(sub);
+                final WaitingList waitingList = new WaitingList(gameEnum);
 
-                    /*for(final String key : redissonClient.getKeys().getKeysByPattern(sub+":*")){
-                        final Game game = (Game) redissonClient.getBucket(key).get();
-
-                        if(game.actualGameStatusIs(GeneralGameStatus.PLAYER_WAITING)
-                                && game.getGameProperties().getMaxPlayer() - game.getPlayerUUIDList().size() >= playerList.size()){
-                            final ServerInfo serverInfo = proxy.getServerInfo(key);
-                            playerList.stream().parallel().filter(players -> !players.getServer().getInfo().getName().equalsIgnoreCase(key))
-                                    .forEach(players -> players.connect(serverInfo));
-                            return;
-                        }
-                    }*/
-            }catch(PartyNotFoundException e){
-                e.printStackTrace();
+                waitingList.getWaitersList().add(new Waiter(player.getUniqueId(), account.hasParty()));
+                waitingList.updateWaitersListRedis();
+                player.sendMessage(new TextComponent("§bVous avez rejoins une liste d'attente pour le jeu "+gameEnum.getGameName()));
             }
-
-            final GameEnum gameEnum = GameEnum.valueOf(sub);
-            final WaitingList waitingList = new WaitingList(gameEnum);
-
-            waitingList.getWaitersList().add(new Waiter(player.getUniqueId(), account.hasParty()));
-            waitingList.updateWaitersListRedis();
-            player.sendMessage(new TextComponent("§bVous avez rejoins une liste d'attente pour le jeu "+gameEnum.getGameName()));
-
-        }catch(AccountNotFoundException e){
+        }catch(AccountNotFoundException|PartyNotFoundException e){
             e.printStackTrace();
         }
     }
