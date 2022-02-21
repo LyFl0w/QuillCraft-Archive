@@ -1,20 +1,19 @@
 package net.quillcraft.parkourpvp.manager;
 
+import net.quillcraft.core.task.CustomTaskManager;
 import net.quillcraft.parkourpvp.ParkourPvP;
-import net.quillcraft.parkourpvp.task.StartingTask;
-
-import org.bukkit.scheduler.BukkitRunnable;
+import net.quillcraft.parkourpvp.task.wait.LobbyTaskManager;
 
 public enum TaskManager{
 
-    STARTING(new StartingTask(ParkourPvP.getInstance().getParkourPvPGame(), 15));
+    STARTING_TASK_MANAGER(new LobbyTaskManager(ParkourPvP.getInstance()));
 
-    private final BukkitRunnable bukkitRunnable;
-    TaskManager(BukkitRunnable bukkitRunnable){
-        this.bukkitRunnable = bukkitRunnable;
+    private final CustomTaskManager customTaskManager;
+    TaskManager(CustomTaskManager customTaskManager){
+        this.customTaskManager = customTaskManager;
     }
 
-    public BukkitRunnable getBukkitRunnable(){
-        return bukkitRunnable;
+    public CustomTaskManager getCustomTaskManager(){
+        return customTaskManager;
     }
 }
