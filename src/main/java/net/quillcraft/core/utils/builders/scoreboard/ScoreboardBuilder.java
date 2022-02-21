@@ -16,7 +16,7 @@ public class ScoreboardBuilder{
     private final Scoreboard scoreboard;
     private final ArrayList<ObjectiveBuilder> objectiveBuilders = new ArrayList<>();
     private final ArrayList<Team> teams = new ArrayList<>();
-    private final ArrayList<String> players = new ArrayList<>();
+    private final ArrayList<String> playersName = new ArrayList<>();
 
     public ScoreboardBuilder(JavaPlugin javaPlugin){
         this.javaPlugin = javaPlugin;
@@ -24,11 +24,11 @@ public class ScoreboardBuilder{
     }
 
     public void addPlayer(Player player){
-        players.add(player.getName());
+        playersName.add(player.getName());
     }
 
     public void removePlayer(Player player){
-        players.remove(player.getName());
+        playersName.remove(player.getName());
     }
 
     public ScoreboardBuilder addObjective(ObjectiveBuilder objectiveBuilder){
@@ -83,7 +83,7 @@ public class ScoreboardBuilder{
     }
 
     public void updateScoreboard(){
-        players.stream().parallel().forEach(playersName -> {
+        playersName.stream().parallel().forEach(playersName -> {
             final Player player = javaPlugin.getServer().getPlayerExact(playersName);
             Objects.requireNonNull(player).setScoreboard(scoreboard);
         });
@@ -112,8 +112,8 @@ public class ScoreboardBuilder{
         return team;
     }
 
-    public ArrayList<String> getPlayers(){
-        return (ArrayList<String>) players.clone();
+    public ArrayList<String> getPlayersName(){
+        return (ArrayList<String>) playersName.clone();
     }
 
 }
