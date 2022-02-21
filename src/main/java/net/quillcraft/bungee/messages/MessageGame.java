@@ -19,6 +19,7 @@ import net.quillcraft.commons.party.PartyProvider;
 import org.redisson.api.RedissonClient;
 
 import java.util.Collections;
+import java.util.Comparator;
 import java.util.List;
 
 public class MessageGame extends Message{
@@ -39,17 +40,27 @@ public class MessageGame extends Message{
                 try{
                     final List<ProxiedPlayer> playerList = (in.readBoolean()) ? new PartyProvider(account).getParty().getOnlinePlayers() : Collections.singletonList(player);
 
-                    for(final String key : redissonClient.getKeys().getKeysByPattern(sub+":*")){
+                    final String serverName = redissonClient.getKeys().getKeysStreamByPattern(sub+":*").parallel().filter(key -> {
+                        final Game game = (Game) redissonClient.getBucket(key).get();
+                        return game.actualGameStatusIs(GeneralGameStatus.PLAYER_WAITING) &&
+                                game.getGameProperties().getMaxPlayer() - game.getPlayerUUIDList().size() >= playerList.size();
+                    }).min(Comparator.comparing(key -> ((Game) redissonClient.getBucket(key).get()).getPlayerUUIDList().size())).get();
+
+                    final ServerInfo serverInfo = proxy.getServerInfo(serverName);
+                    playerList.stream().parallel().filter(players -> !players.getServer().getInfo().getName().equalsIgnoreCase(serverName))
+                            .forEach(players -> players.connect(serverInfo));
+
+                    /*for(final String key : redissonClient.getKeys().getKeysByPattern(sub+":*")){
                         final Game game = (Game) redissonClient.getBucket(key).get();
 
                         if(game.actualGameStatusIs(GeneralGameStatus.PLAYER_WAITING)
-                                && game.getGameProperties().getMaxPlayer()-game.getPlayerUUIDList().size() >= playerList.size()){
+                                && game.getGameProperties().getMaxPlayer() - game.getPlayerUUIDList().size() >= playerList.size()){
                             final ServerInfo serverInfo = proxy.getServerInfo(key);
                             playerList.stream().parallel().filter(players -> !players.getServer().getInfo().getName().equalsIgnoreCase(key))
                                     .forEach(players -> players.connect(serverInfo));
                             return;
                         }
-                    }
+                    }*/
                 }catch(PartyNotFoundException e){
                     e.printStackTrace();
                 }
