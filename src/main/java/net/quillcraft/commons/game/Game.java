@@ -54,6 +54,10 @@ public abstract sealed class Game permits ParkourPvPGame{
         return gameProperties.getMaxPlayer() == playerList.size();
     }
 
+    public GameProperties getGameProperties(){
+        return gameProperties;
+    }
+
     public abstract void updateRedis();
 
     public void deleteRedisKey(){
