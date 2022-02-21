@@ -1,8 +1,8 @@
 package net.quillcraft.core.task;
 
 import net.quillcraft.core.exception.TaskOverflowException;
-import org.bukkit.plugin.java.JavaPlugin;
 
+import org.bukkit.plugin.java.JavaPlugin;
 
 public abstract class CustomTaskManager{
 
@@ -50,4 +50,6 @@ public abstract class CustomTaskManager{
     public CustomTask getTask(){
         return task;
     }
+
+    protected abstract <T extends JavaPlugin> T getJavaPlugin();
 }

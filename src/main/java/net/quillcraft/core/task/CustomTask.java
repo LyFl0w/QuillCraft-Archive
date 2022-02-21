@@ -5,6 +5,7 @@ import org.bukkit.scheduler.BukkitRunnable;
 public abstract class CustomTask extends BukkitRunnable{
 
     private final CustomTaskManager customTaskManager;
+
     public CustomTask(CustomTaskManager customTaskManager){
         this.customTaskManager = customTaskManager;
     }
@@ -16,4 +17,5 @@ public abstract class CustomTask extends BukkitRunnable{
         customTaskManager.isRunning = false;
         customTaskManager.resetTask();
     }
+
 }
