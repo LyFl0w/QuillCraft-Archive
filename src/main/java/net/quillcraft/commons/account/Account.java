@@ -137,26 +137,7 @@ public class Account {
     }
 
     public enum Visibility {
-        EVERYONE(2, (byte)10), FRIENDS(4, (byte)6), NOBODY(6, (byte)8);
-
-        private final int slot;
-        private final byte data;
-        Visibility(final int slot, final byte data){
-            this.slot = slot;
-            this.data = data;
-        }
-
-        public int getSlot(){
-            return slot;
-        }
-
-        public byte getData(){
-            return data;
-        }
-
-        public static Visibility getVisibilityByData(byte data){
-            return Arrays.stream(values()).parallel().filter(visibility -> visibility.getData() == data).findFirst().get();
-        }
+        EVERYONE, PARTY, FRIENDS, NOBODY
     }
 
     public enum Particles {
