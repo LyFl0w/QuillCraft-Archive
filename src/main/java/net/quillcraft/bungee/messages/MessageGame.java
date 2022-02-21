@@ -33,22 +33,24 @@ public class MessageGame extends Message{
 
     @Override
     protected void onPluginMessageRepPlayer(ProxiedPlayer player, String sub, ByteArrayDataInput in){
-        proxy.getScheduler().runAsync(QuillCraftBungee.getInstance(), () -> {
+        System.out.println("MessageGame "+Thread.currentThread().getId()+" / "+Thread.currentThread().getName());
+        proxy.getScheduler().runAsync(QuillCraftBungee.getInstance(), () -> MessageGame.synchronizedPlayerRep(redissonClient, proxy, player, sub, in.readBoolean()));
+    }
+
+    private static synchronized void synchronizedPlayerRep(RedissonClient redissonClient, ProxyServer proxyServer, ProxiedPlayer player, String sub, boolean hasParty){
+        try{
+            final Account account = new AccountProvider(player).getAccount();
+
             try{
-                final Account account = new AccountProvider(player).getAccount();
+                final List<ProxiedPlayer> playerList = (hasParty) ? new PartyProvider(account).getParty().getOnlinePlayers() : Collections.singletonList(player);
 
-                try{
-                    final List<ProxiedPlayer> playerList = (in.readBoolean()) ? new PartyProvider(account).getParty().getOnlinePlayers() : Collections.singletonList(player);
+                final String serverName = redissonClient.getKeys().getKeysStreamByPattern(sub+":*").parallel().filter(key -> {
+                    final Game game = (Game) redissonClient.getBucket(key).get();
+                    return game.actualGameStatusIs(GeneralGameStatus.PLAYER_WAITING) && game.getGameProperties().getMaxPlayer()-game.getPlayerUUIDList().size() >= playerList.size();
+                }).min(Comparator.comparing(key -> ((Game) redissonClient.getBucket(key).get()).getPlayerUUIDList().size())).get();
 
-                    final String serverName = redissonClient.getKeys().getKeysStreamByPattern(sub+":*").parallel().filter(key -> {
-                        final Game game = (Game) redissonClient.getBucket(key).get();
-                        return game.actualGameStatusIs(GeneralGameStatus.PLAYER_WAITING) &&
-                                game.getGameProperties().getMaxPlayer() - game.getPlayerUUIDList().size() >= playerList.size();
-                    }).min(Comparator.comparing(key -> ((Game) redissonClient.getBucket(key).get()).getPlayerUUIDList().size())).get();
-
-                    final ServerInfo serverInfo = proxy.getServerInfo(serverName);
-                    playerList.stream().parallel().filter(players -> !players.getServer().getInfo().getName().equalsIgnoreCase(serverName))
-                            .forEach(players -> players.connect(serverInfo));
+                final ServerInfo serverInfo = proxyServer.getServerInfo(serverName);
+                playerList.stream().parallel().filter(players -> !players.getServer().getInfo().getName().equalsIgnoreCase(serverName)).forEach(players -> players.connect(serverInfo));
 
                     /*for(final String key : redissonClient.getKeys().getKeysByPattern(sub+":*")){
                         final Game game = (Game) redissonClient.getBucket(key).get();
@@ -61,22 +63,20 @@ public class MessageGame extends Message{
                             return;
                         }
                     }*/
-                }catch(PartyNotFoundException e){
-                    e.printStackTrace();
-                }
-
-                final GameEnum gameEnum = GameEnum.valueOf(sub);
-                final WaitingList waitingList = new WaitingList(gameEnum);
-
-                waitingList.getWaitersList().add(new Waiter(player.getUniqueId(), account.hasParty()));
-                waitingList.updateWaitersListRedis();
-                player.sendMessage(new TextComponent("§bVous avez rejoins une liste d'attente pour le jeu "+gameEnum.getGameName()));
-
-            }catch(AccountNotFoundException e){
+            }catch(PartyNotFoundException e){
                 e.printStackTrace();
             }
 
-        });
+            final GameEnum gameEnum = GameEnum.valueOf(sub);
+            final WaitingList waitingList = new WaitingList(gameEnum);
+
+            waitingList.getWaitersList().add(new Waiter(player.getUniqueId(), account.hasParty()));
+            waitingList.updateWaitersListRedis();
+            player.sendMessage(new TextComponent("§bVous avez rejoins une liste d'attente pour le jeu "+gameEnum.getGameName()));
+
+        }catch(AccountNotFoundException e){
+            e.printStackTrace();
+        }
     }
 
 }
