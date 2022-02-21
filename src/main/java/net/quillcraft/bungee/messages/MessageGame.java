@@ -33,7 +33,6 @@ public class MessageGame extends Message{
 
     @Override
     protected void onPluginMessageRepPlayer(ProxiedPlayer player, String sub, ByteArrayDataInput in){
-        System.out.println("MessageGame "+Thread.currentThread().getId()+" / "+Thread.currentThread().getName());
         proxy.getScheduler().runAsync(QuillCraftBungee.getInstance(), () -> MessageGame.synchronizedPlayerRep(redissonClient, proxy, player, sub, in.readBoolean()));
     }
 
