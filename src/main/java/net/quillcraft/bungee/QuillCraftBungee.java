@@ -20,8 +20,8 @@ public class QuillCraftBungee extends Plugin {
 
     @Override
     public void onDisable(){
-        DataManager.closeAllData();
         SubscriberManager.removeAllSubscribersData();
+        DataManager.closeAllData();
     }
 
     public static QuillCraftBungee getInstance(){
