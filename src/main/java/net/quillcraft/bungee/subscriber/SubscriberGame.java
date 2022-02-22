@@ -42,7 +42,10 @@ public class SubscriberGame extends Subscriber{
                 final Game game = (Game) redissonClient.getBucket(message).get();
                 final WaitingList waitingList = new WaitingList(game.getGameEnum());
 
-                if(waitingList.getWaitersList().size() == 0) continue;
+                if(waitingList.getWaitersList().size() == 0){
+                    linkedQueue.poll();
+                    continue;
+                }
 
                 final ArrayList<ProxiedPlayer> futurPlayers = new ArrayList<>();
                 final ArrayList<Waiter> toRemove = new ArrayList<>();
@@ -66,13 +69,13 @@ public class SubscriberGame extends Subscriber{
                     }
                     toRemove.add(waiter);
                 }
+                linkedQueue.poll();
+
                 waitingList.getWaitersList().removeAll(toRemove);
                 waitingList.updateWaitersListRedis();
 
                 final ServerInfo serverInfo = proxyServer.getServerInfo(message);
                 futurPlayers.stream().parallel().forEach(proxiedPlayer -> proxiedPlayer.connect(serverInfo));
-
-                linkedQueue.poll();
             }
         }).start();
     }
