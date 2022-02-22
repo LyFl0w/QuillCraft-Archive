@@ -19,19 +19,23 @@ import java.util.concurrent.ConcurrentLinkedQueue;
 
 public class SubscriberGame extends Subscriber{
 
+    private final static ConcurrentLinkedQueue<String> linkedQueue = new ConcurrentLinkedQueue<>();
+
     public SubscriberGame(ProxyServer proxyServer){
         super(proxyServer);
     }
 
-    public void read(){
-        final ConcurrentLinkedQueue<String> linkedQueue = new ConcurrentLinkedQueue<>();
+    public static ConcurrentLinkedQueue<String> getPublishGameLinkedQueue(){
+        return linkedQueue;
+    }
 
+    public void read(){
         redissonClient.getTopic("game.searchplayer").addListener(String.class, (channel, message) -> linkedQueue.offer(message));
 
         new Thread(() -> {
             while(true){
                 if(linkedQueue.size() == 0) continue;
-                final String message = linkedQueue.poll();
+                final String message = linkedQueue.peek();
 
                 QuillCraftBungee.getInstance().getLogger().info("Game server pub : "+message);
 
@@ -67,6 +71,8 @@ public class SubscriberGame extends Subscriber{
 
                 final ServerInfo serverInfo = proxyServer.getServerInfo(message);
                 futurPlayers.stream().parallel().forEach(proxiedPlayer -> proxiedPlayer.connect(serverInfo));
+
+                linkedQueue.poll();
             }
         }).start();
     }
