@@ -1,6 +1,8 @@
 package net.quillcraft.parkourpvp.task.wait;
 
+import net.quillcraft.commons.game.GeneralGameStatus;
 import net.quillcraft.core.task.CustomTask;
+import net.quillcraft.core.task.CustomTaskManager;
 import net.quillcraft.parkourpvp.ParkourPvP;
 
 public class LobbyTask extends CustomTask{
@@ -11,11 +13,11 @@ public class LobbyTask extends CustomTask{
     private int time;
     private final int defaultTime;
 
-    public LobbyTask(LobbyTaskManager lobbyTaskManager){
-        super(lobbyTaskManager);
+    public LobbyTask(CustomTaskManager customTaskManager){
+        super(customTaskManager);
         this.time = 60;
         this.defaultTime = time;
-        this.parkourPvP = lobbyTaskManager.getJavaPlugin();
+        this.parkourPvP = ((LobbyTaskManager)customTaskManager).getJavaPlugin();
     }
 
     @Override
@@ -23,6 +25,7 @@ public class LobbyTask extends CustomTask{
 
         if(time == 0){
             parkourPvP.getServer().broadcastMessage("§1Fin de l'attente : -> démarrage du jeu !");
+            parkourPvP.getParkourPvPGame().setGameStatus(GeneralGameStatus.IN_GAME);
             cancel();
             return;
         }
