@@ -8,7 +8,6 @@ import org.bukkit.Server;
 import org.bukkit.World;
 import org.bukkit.WorldCreator;
 import org.bukkit.configuration.file.FileConfiguration;
-import org.bukkit.scheduler.BukkitScheduler;
 
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
@@ -36,18 +35,16 @@ public class GameData{
         LogManager.getLogger("Minecraft").info("World chose is "+defaultWorldName);
         this.worlds = new World[]{parkourPvP.getServer().createWorld(createNewWorld(defaultWorldName)),
                 parkourPvP.getServer().createWorld(createNewWorld(defaultWorldName+"-PvP"))};
-        this.fileConfiguration = new YamlConfigurationBuilder(parkourPvP, "game-settings-byworld/"+defaultWorldName+"-Settings", true).getConfig();
+        this.fileConfiguration = new YamlConfigurationBuilder(parkourPvP, "game-settings-byworld/"+defaultWorldName+"-Settings.yml", true).getConfig();
     }
 
+    @SuppressWarnings({})
     public void onDisable(){
         final Server server = parkourPvP.getServer();
         final File worldDir = server.getWorldContainer();
-        final BukkitScheduler scheduler = server.getScheduler();
         for(final World world : worlds){
-            scheduler.runTaskAsynchronously(parkourPvP, () -> {
-                server.unloadWorld(world, true);
-                new File(worldDir, world.getName()).delete();
-            });
+            server.unloadWorld(world, true);
+            new File(worldDir, world.getName()).delete();
         }
     }
 
@@ -65,14 +62,13 @@ public class GameData{
 
     @Nullable
     private WorldCreator createNewWorld(@Nonnull String worldName){
-        final File worldDir = parkourPvP.getServer().getWorldContainer();
-        final String worldNameCopy = worldName + "_ig";
-        final File newWorldFile = new File(worldDir.getParent(), worldNameCopy);
+        final File world = new File(parkourPvP.getServer().getWorldContainer(), worldName);
+        final File newWorldFile = new File(world.getParent(), worldName + "_ig");
 
         if(newWorldFile.exists()) newWorldFile.delete();
         try{
-            FileUtils.copyDirectory(worldDir, newWorldFile);
-            return new WorldCreator(worldNameCopy);
+            FileUtils.copyDirectory(world, newWorldFile);
+            return new WorldCreator(newWorldFile.getName());
         }catch(IOException e){
             e.printStackTrace();
         }

@@ -44,7 +44,6 @@ public class ParkourPvP extends JavaPlugin{
     @Override
     public void onDisable(){
         parkourPvPGame.deleteRedisKey();
-        gameData.onDisable();
         getLogger().info("Plugin ParkourPvP disable");
     }
 
