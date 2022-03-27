@@ -16,11 +16,16 @@ public class ParkourPvP extends JavaPlugin{
     private static ParkourPvP INSTANCE;
 
     private final HashMap<String, ScoreboardBuilder> scoreboardBuilderHashMap = new HashMap<>();
+
+    private GameData gameData;
+
     private ParkourPvPGame parkourPvPGame;
 
     @Override
     public void onEnable(){
         INSTANCE = this;
+
+        gameData = new GameData(this);
 
         parkourPvPGame = new ParkourPvPGame(
                 new YamlConfigurationBuilder(this, "default_game_setting.yml", true).getConfig().getInt("id"),
@@ -39,6 +44,7 @@ public class ParkourPvP extends JavaPlugin{
     @Override
     public void onDisable(){
         parkourPvPGame.deleteRedisKey();
+        gameData.onDisable();
         getLogger().info("Plugin ParkourPvP disable");
     }
 
