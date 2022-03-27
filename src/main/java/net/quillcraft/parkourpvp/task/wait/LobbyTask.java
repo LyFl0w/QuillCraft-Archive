@@ -4,6 +4,7 @@ import net.quillcraft.commons.game.GeneralGameStatus;
 import net.quillcraft.core.task.CustomTask;
 import net.quillcraft.core.task.CustomTaskManager;
 import net.quillcraft.parkourpvp.ParkourPvP;
+import net.quillcraft.parkourpvp.scoreboard.GameScoreboard;
 
 public class LobbyTask extends CustomTask{
 
@@ -26,6 +27,8 @@ public class LobbyTask extends CustomTask{
         if(time == 0){
             parkourPvP.getServer().broadcastMessage("§1Fin de l'attente : -> démarrage du jeu !");
             parkourPvP.getParkourPvPGame().setGameStatus(GeneralGameStatus.IN_GAME);
+            parkourPvP.getParkourPvPGame().getPlayerUUIDList().stream().parallel()
+                    .forEach(uuid -> new GameScoreboard(parkourPvP).setScoreboard(parkourPvP.getServer().getPlayer(uuid)));
             cancel();
             return;
         }
