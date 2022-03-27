@@ -3,6 +3,7 @@ package net.quillcraft.parkourpvp.listener.player;
 import net.quillcraft.commons.game.GeneralGameStatus;
 import net.quillcraft.commons.game.ParkourPvPGame;
 import net.quillcraft.parkourpvp.ParkourPvP;
+import net.quillcraft.parkourpvp.scoreboard.GameScoreboard;
 
 import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
@@ -27,13 +28,22 @@ public class PlayerQuitListener implements Listener{
         final List<UUID> playerList = parkourPvPGame.getPlayerUUIDList();
         if(!playerList.contains(player.getUniqueId())) return;
 
+        playerList.remove(player.getUniqueId());
+
+        final String playerName = player.getName();
+        parkourPvP.getScoreboardBuilderHashMap().remove(playerName);
+
         if(parkourPvPGame.actualGameStatusIs(GeneralGameStatus.PLAYER_WAITING_FULL)){
             if(parkourPvPGame.isFullyFilled()) parkourPvPGame.setGameStatus(GeneralGameStatus.PLAYER_WAITING);
+        }else if(parkourPvPGame.actualGameStatusIs(GeneralGameStatus.IN_GAME)){
+            parkourPvP.getServer().broadcastMessage("§c"+playerName+" a quitté le jeu !");
+            new GameScoreboard(parkourPvP).updatePlayersSize();
         }
 
-        playerList.remove(player.getUniqueId());
         parkourPvPGame.updateRedis();
-        parkourPvPGame.searchPlayer();
+
+        if(parkourPvPGame.actualGameStatusIs(GeneralGameStatus.PLAYER_WAITING))
+            parkourPvPGame.searchPlayer();
     }
 
 }
