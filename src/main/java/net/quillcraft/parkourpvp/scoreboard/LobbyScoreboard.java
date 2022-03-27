@@ -23,17 +23,18 @@ public class LobbyScoreboard implements ScoreboardManager{
         final ScoreboardBuilder scoreboardBuilder = new ScoreboardBuilder(parkourPvP);
 
         scoreboardBuilder.addObjective(new ObjectiveBuilder("sbs", "§lParkourPvP", DisplaySlot.SIDEBAR)
-                .addScore(4, getPlayerSizeLine())
-                .addScore(5, "§c")
-                .addScore(6, "§b§lStats")
-                .addScore(7, "Total Jumps: ?")
-                .addScore(8, "Parkour Fini: ?")
-                .addScore(9, "Temps Parkour: ?")
-                .addScore(10, "§b")
-                .addScore(11, "Total Kills: ?")
-                .addScore(12, "Victoires: ?")
-                .addScore(13, "§e")
-                .addScore(14, "§bmc.quillcraft.fr"));
+                .addScore(14, "§c")
+                .addScore(13, "§b§lStats")
+                .addScore(12, "Total Jumps: ?")
+                .addScore(11, "Parkour Fini: ?")
+                .addScore(10, "Temps Parkour: ?")
+                .addScore(9, "§b")
+                .addScore(8, "Total Kills: ?")
+                .addScore(7, "Victoires: ?")
+                .addScore(6, "§e")
+                .addScore(5, getPlayerSizeLine())
+                .addScore(4, "§f")
+                .addScore(3, "§6mc.quillcraft.fr"));
 
         scoreboardBuilder.addPlayer(player);
         scoreboardBuilder.updateScoreboard();

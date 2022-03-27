@@ -21,14 +21,16 @@ public class GameScoreboard implements ScoreboardManager{
         final ScoreboardBuilder scoreboardBuilder = new ScoreboardBuilder(parkourPvP);
 
         scoreboardBuilder.addObjective(new ObjectiveBuilder("sbs", "§lParkourPvP", DisplaySlot.SIDEBAR)
-                .addScore(5, getPlayerSizeLine())
-                .addScore(6, "§c")
-                .addScore(7, "Temps : 00:00")
-                .addScore(8, "1er : ?")
-                .addScore(9, "2ème : ?")
-                .addScore(10, "3ème : ?")
+                .addScore(14, "§a")
+                .addScore(13, getPlayerSizeLine())
+                .addScore(12, "Coins : §e0")
                 .addScore(11, "§b")
-                .addScore(12, "Coins : §c0"));
+                .addScore(10, "Temps : 00:00")
+                .addScore(9, "1er : ?")
+                .addScore(8, "2ème : ?")
+                .addScore(7, "3ème : ?")
+                .addScore(6, "§l")
+                .addScore(5, "§6mc.quillcraft.fr"));
 
         scoreboardBuilder.addPlayer(player);
         scoreboardBuilder.updateScoreboard();
@@ -39,7 +41,7 @@ public class GameScoreboard implements ScoreboardManager{
     public void updatePlayersSize(){
         final String newLine = getPlayerSizeLine();
         parkourPvP.getScoreboardBuilderHashMap().values().stream().parallel()
-                .forEach(scoreboardBuilder -> scoreboardBuilder.updateScore("sbs", 5, newLine).updateScoreboard());
+                .forEach(scoreboardBuilder -> scoreboardBuilder.updateScore("sbs", 13, newLine).updateScoreboard());
     }
 
     private String getPlayerSizeLine(){
