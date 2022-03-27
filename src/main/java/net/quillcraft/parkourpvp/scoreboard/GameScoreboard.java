@@ -8,7 +8,7 @@ import net.quillcraft.parkourpvp.ParkourPvP;
 import org.bukkit.entity.Player;
 import org.bukkit.scoreboard.DisplaySlot;
 
-public class GameScoreboard{
+public class GameScoreboard implements ScoreboardManager{
 
     private final ParkourPvP parkourPvP;
     public GameScoreboard(ParkourPvP parkourPvP){
@@ -17,7 +17,7 @@ public class GameScoreboard{
 
     //TODO : SPECTATOR SCOREBOARD IN GAME (SAME AS GameScoreboard but without the lines 11 and 12)
 
-    public void setGameScoreboard(Player player){
+    public void setScoreboard(Player player){
         final ScoreboardBuilder scoreboardBuilder = new ScoreboardBuilder(parkourPvP);
 
         scoreboardBuilder.addObjective(new ObjectiveBuilder("sbs", "§lParkourPvP", DisplaySlot.SIDEBAR)
