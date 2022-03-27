@@ -36,8 +36,6 @@ public class PlayerJoinListener implements Listener{
             final List<UUID> uuidList = parkourPvPGame.getPlayerUUIDList();
             final GameProperties gameProperties = parkourPvPGame.getGameProperties();
 
-            new LobbyScoreboard(parkourPvP).setScoreboard(player);
-
             // GAME IS ALREADY FULL
             // TODO : SPECTATOR MODE
             if(uuidList.size() == gameProperties.getMaxPlayer()){
@@ -48,11 +46,13 @@ public class PlayerJoinListener implements Listener{
 
             uuidList.add(player.getUniqueId());
 
-            // GAME IS NOW FULL
+            new LobbyScoreboard(parkourPvP).setScoreboard(player);
+
             final LobbyTaskManager lobbyTaskManager = (LobbyTaskManager) TaskManager.STARTING_TASK_MANAGER.getCustomTaskManager();
             final LobbyTask lobbyTask = lobbyTaskManager.getTask();
             if(uuidList.size() == gameProperties.getMaxPlayer()){
                 // CAN START AUTO START (15 seconds)
+                parkourPvPGame.setGameStatus(GeneralGameStatus.PLAYER_WAITING_FULL);
                 if(lobbyTask.getTime() > 15) lobbyTask.setTime(15);
             }else if(uuidList.size() >= parkourPvPGame.getGameProperties().getMinPlayer()){
                 // CAN START AUTO START (3 minutes)
