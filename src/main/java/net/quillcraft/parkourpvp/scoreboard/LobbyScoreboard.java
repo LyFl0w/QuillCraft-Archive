@@ -1,6 +1,7 @@
 package net.quillcraft.parkourpvp.scoreboard;
 
 import net.quillcraft.commons.game.ParkourPvPGame;
+import net.quillcraft.core.manager.ScoreboardManager;
 import net.quillcraft.core.utils.builders.scoreboard.ObjectiveBuilder;
 import net.quillcraft.core.utils.builders.scoreboard.ScoreboardBuilder;
 import net.quillcraft.parkourpvp.ParkourPvP;
