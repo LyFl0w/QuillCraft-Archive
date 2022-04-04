@@ -4,7 +4,6 @@ import net.quillcraft.commons.game.GameProperties;
 import net.quillcraft.commons.game.GeneralGameStatus;
 import net.quillcraft.commons.game.ParkourPvPGame;
 import net.quillcraft.core.exception.TaskOverflowException;
-import net.quillcraft.core.utils.builders.scoreboard.ScoreboardBuilder;
 import net.quillcraft.parkourpvp.ParkourPvP;
 import net.quillcraft.parkourpvp.manager.TaskManager;
 
@@ -48,7 +47,7 @@ public class PlayerJoinListener implements Listener{
 
             new LobbyScoreboard(parkourPvP).setScoreboard(player);
 
-            final LobbyTaskManager lobbyTaskManager = (LobbyTaskManager) TaskManager.STARTING_TASK_MANAGER.getCustomTaskManager();
+            final LobbyTaskManager lobbyTaskManager = (LobbyTaskManager) TaskManager.LOBBY_TASK_MANAGER.getCustomTaskManager();
             final LobbyTask lobbyTask = lobbyTaskManager.getTask();
             if(uuidList.size() == gameProperties.getMaxPlayer()){
                 // CAN START AUTO START (15 seconds)
