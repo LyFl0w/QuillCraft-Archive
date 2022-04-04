@@ -40,12 +40,12 @@ public class LobbyScoreboard implements ScoreboardManager{
         scoreboardBuilder.addPlayer(player);
         scoreboardBuilder.updateScoreboard();
 
-        parkourPvP.getScoreboardBuilderHashMap().put(player.getName(), scoreboardBuilder);
+        parkourPvP.getGameData().getScoreboardBuilderHashMap().put(player.getName(), scoreboardBuilder);
     }
 
     public void updatePlayersSize(){
         final String newLine = getPlayerSizeLine();
-        parkourPvP.getScoreboardBuilderHashMap().values().stream().parallel()
+        parkourPvP.getGameData().getScoreboardBuilderHashMap().values().stream().parallel()
                 .forEach(scoreboardBuilder -> scoreboardBuilder.updateScore("sbs", 5, newLine).updateScoreboard());
     }
 
