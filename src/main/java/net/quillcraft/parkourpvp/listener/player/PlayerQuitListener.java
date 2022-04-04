@@ -31,7 +31,7 @@ public class PlayerQuitListener implements Listener{
         playerList.remove(player.getUniqueId());
 
         final String playerName = player.getName();
-        parkourPvP.getScoreboardBuilderHashMap().remove(playerName);
+        parkourPvP.getGameData().getScoreboardBuilderHashMap().remove(playerName);
 
         if(parkourPvPGame.actualGameStatusIs(GeneralGameStatus.PLAYER_WAITING_FULL)){
             if(parkourPvPGame.isFullyFilled()) parkourPvPGame.setGameStatus(GeneralGameStatus.PLAYER_WAITING);
