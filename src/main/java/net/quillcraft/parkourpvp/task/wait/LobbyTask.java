@@ -1,9 +1,11 @@
 package net.quillcraft.parkourpvp.task.wait;
 
 import net.quillcraft.commons.game.GeneralGameStatus;
+import net.quillcraft.core.exception.TaskOverflowException;
 import net.quillcraft.core.task.CustomTask;
 import net.quillcraft.core.task.CustomTaskManager;
 import net.quillcraft.parkourpvp.ParkourPvP;
+import net.quillcraft.parkourpvp.manager.TaskManager;
 import net.quillcraft.parkourpvp.scoreboard.GameScoreboard;
 
 public class LobbyTask extends CustomTask{
@@ -27,6 +29,13 @@ public class LobbyTask extends CustomTask{
         if(time == 0){
             parkourPvP.getServer().broadcastMessage("§1Fin de l'attente : -> démarrage du jeu !");
             parkourPvP.getParkourPvPGame().setGameStatus(GeneralGameStatus.IN_GAME);
+
+            try{
+                TaskManager.GAME_TASK_MANAGER.getCustomTaskManager().runTaskTimer(0L, 20L);
+            }catch(TaskOverflowException e){
+                e.printStackTrace();
+            }
+
             parkourPvP.getParkourPvPGame().getPlayerUUIDList().stream().parallel()
                     .forEach(uuid -> new GameScoreboard(parkourPvP).setScoreboard(parkourPvP.getServer().getPlayer(uuid)));
             cancel();
