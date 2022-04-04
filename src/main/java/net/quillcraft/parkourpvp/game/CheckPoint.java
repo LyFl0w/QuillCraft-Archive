@@ -9,7 +9,7 @@ public class CheckPoint{
 
     private final ArrayList<UUID> players;
     private final Location location;
-    public static int coins;
+    public static int coins, bonusFirst, bonusSecond, bonusThird;
 
     public CheckPoint(Location location){
         this.location = location;
