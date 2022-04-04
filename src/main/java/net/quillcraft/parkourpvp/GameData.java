@@ -1,12 +1,14 @@
 package net.quillcraft.parkourpvp;
 
 import net.quillcraft.core.utils.builders.YamlConfigurationBuilder;
+import net.quillcraft.core.utils.builders.scoreboard.ScoreboardBuilder;
 import net.quillcraft.parkourpvp.game.CheckPoint;
-import net.quillcraft.parkourpvp.manager.CheckPointManager;
 
+import net.quillcraft.parkourpvp.game.PlayerData;
 import org.apache.commons.io.FileUtils;
 import org.apache.logging.log4j.LogManager;
 import org.bukkit.*;
+import org.bukkit.configuration.ConfigurationSection;
 import org.bukkit.configuration.file.FileConfiguration;
 
 import javax.annotation.Nonnull;
@@ -15,9 +17,14 @@ import java.io.File;
 import java.io.IOException;
 import java.security.SecureRandom;
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
 
 public class GameData{
+
+    private final HashMap<String, ScoreboardBuilder> scoreboardBuilderHashMap = new HashMap<>();
+    private final ArrayList<CheckPoint> checkPoints = new ArrayList<>();
+    private final ArrayList<PlayerData> playerData = new ArrayList<>();
 
     private final ParkourPvP parkourPvP;
 
@@ -78,20 +85,33 @@ public class GameData{
 
     private void loadCheckPoints(){
         final FileConfiguration fileConfiguration = getFileConfiguration();
-        final ArrayList<CheckPoint> checkPoints = CheckPointManager.CHECKPOINTS.getCheckPoints();
 
         final String path = "checkpoints";
         final String finalPath = path+".pos";
 
         final World world = Bukkit.getWorld(fileConfiguration.getString(path+".world"));
 
-        fileConfiguration.getConfigurationSection(finalPath).getKeys(false).forEach(key -> {
-            checkPoints.add(new CheckPoint(new Location(world, fileConfiguration.getDouble(finalPath+".x"),
-                    fileConfiguration.getDouble(finalPath+".y"), fileConfiguration.getDouble(finalPath+".z"),
-                    (float) fileConfiguration.getDouble(finalPath+".yaw"), (float) fileConfiguration.getDouble(finalPath+".pitch"))));
-        });
+        fileConfiguration.getConfigurationSection(finalPath).getKeys(false).forEach(key ->
+                checkPoints.add(new CheckPoint(new Location(world, fileConfiguration.getDouble(finalPath+".x"),
+                fileConfiguration.getDouble(finalPath+".y"), fileConfiguration.getDouble(finalPath+".z"),
+                (float) fileConfiguration.getDouble(finalPath+".yaw"), (float) fileConfiguration.getDouble(finalPath+".pitch")))));
 
-        CheckPoint.coins = fileConfiguration.getInt("checkpoint_data.coins");
+        final ConfigurationSection coins_conf = fileConfiguration.getConfigurationSection("checkpoint_data");
+        CheckPoint.coins = coins_conf.getInt("coins");
+        CheckPoint.bonusFirst = coins_conf.getInt("bonus.first");
+        CheckPoint.bonusSecond = coins_conf.getInt("bonus.second");
+        CheckPoint.bonusThird = coins_conf.getInt("bonus.third");
     }
 
+    public HashMap<String, ScoreboardBuilder> getScoreboardBuilderHashMap(){
+        return scoreboardBuilderHashMap;
+    }
+
+    public ArrayList<CheckPoint> getCheckPoints(){
+        return checkPoints;
+    }
+
+    public ArrayList<PlayerData> getPlayerData(){
+        return playerData;
+    }
 }
