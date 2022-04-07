@@ -15,21 +15,23 @@ public class ProxyPingListener implements Listener {
 
     private static final LanguageManager languageManger = LanguageManager.DEFAULT;
     private static TextComponent description = new TextComponent(MessageUtils.motd(languageManger.getMessage(TextList.SERVER_DESCRIPTION)));
-    private static ServerPing.Protocol protocol = new ServerPing.Protocol(languageManger.getMessage(Text.SERVER_VERSION_DOESNT_MATCHED), 757);
+    private static ServerPing.Protocol protocolText = new ServerPing.Protocol(languageManger.getMessage(Text.SERVER_VERSION_DOESNT_MATCHED), 0);
 
     @EventHandler
     public void onProxyPing(ProxyPingEvent event){
         final ServerPing serverPing = event.getResponse();
 
-        event.getResponse().getVersion().setProtocol(serverPing.getVersion().getProtocol());
-
         serverPing.setDescriptionComponent(description);
-        serverPing.setVersion(protocol);
+        serverPing.setVersion(protocolText);
     }
 
-    private void updateServeurDescription(){
+    private void updateServeurDescription(int protocolInt){
         description = new TextComponent(MessageUtils.motd(languageManger.getMessage(TextList.SERVER_DESCRIPTION)));
-        protocol = new ServerPing.Protocol(languageManger.getMessage(Text.SERVER_VERSION_DOESNT_MATCHED), 757);
+        protocolText = new ServerPing.Protocol(languageManger.getMessage(Text.SERVER_VERSION_DOESNT_MATCHED), protocolInt);
+    }
+
+    public static void updateProtocolVersion(int protocolInt){
+        protocolText.setProtocol(protocolInt);
     }
 
 }
