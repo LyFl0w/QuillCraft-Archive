@@ -5,6 +5,7 @@ import net.quillcraft.commons.game.ParkourPvPGame;
 import net.quillcraft.parkourpvp.ParkourPvP;
 import net.quillcraft.parkourpvp.scoreboard.GameScoreboard;
 
+import net.quillcraft.parkourpvp.scoreboard.LobbyScoreboard;
 import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
@@ -34,16 +35,17 @@ public class PlayerQuitListener implements Listener{
         parkourPvP.getGameData().getScoreboardBuilderHashMap().remove(playerName);
 
         if(parkourPvPGame.actualGameStatusIs(GeneralGameStatus.PLAYER_WAITING_FULL)){
-            if(parkourPvPGame.isFullyFilled()) parkourPvPGame.setGameStatus(GeneralGameStatus.PLAYER_WAITING);
+            if(!parkourPvPGame.isFullyFilled()) parkourPvPGame.setGameStatus(GeneralGameStatus.PLAYER_WAITING);
         }else if(parkourPvPGame.actualGameStatusIs(GeneralGameStatus.IN_GAME)){
             parkourPvP.getServer().broadcastMessage("§c"+playerName+" a quitté le jeu !");
-            new GameScoreboard(parkourPvP).updatePlayersSize();
+            GameScoreboard.updatePlayersSize(parkourPvP);
         }
-
         parkourPvPGame.updateRedis();
 
-        if(parkourPvPGame.actualGameStatusIs(GeneralGameStatus.PLAYER_WAITING))
+        if(parkourPvPGame.actualGameStatusIs(GeneralGameStatus.PLAYER_WAITING)){
+            LobbyScoreboard.updatePlayersSize(parkourPvP);
             parkourPvPGame.searchPlayer();
+        }
     }
 
 }

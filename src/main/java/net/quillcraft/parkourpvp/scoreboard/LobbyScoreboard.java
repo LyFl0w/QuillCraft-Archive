@@ -33,7 +33,7 @@ public class LobbyScoreboard implements ScoreboardManager{
                 .addScore(8, "Total Kills: ?")
                 .addScore(7, "Victoires: ?")
                 .addScore(6, "§e")
-                .addScore(5, getPlayerSizeLine())
+                .addScore(5, getPlayerSizeLine(parkourPvP))
                 .addScore(4, "§f")
                 .addScore(3, "§6mc.quillcraft.fr"));
 
@@ -43,13 +43,13 @@ public class LobbyScoreboard implements ScoreboardManager{
         parkourPvP.getGameData().getScoreboardBuilderHashMap().put(player.getName(), scoreboardBuilder);
     }
 
-    public void updatePlayersSize(){
-        final String newLine = getPlayerSizeLine();
+    public static void updatePlayersSize(ParkourPvP parkourPvP){
+        final String newLine = getPlayerSizeLine(parkourPvP);
         parkourPvP.getGameData().getScoreboardBuilderHashMap().values().stream().parallel()
                 .forEach(scoreboardBuilder -> scoreboardBuilder.updateScore("sbs", 5, newLine).updateScoreboard());
     }
 
-    private String getPlayerSizeLine(){
+    private static String getPlayerSizeLine(ParkourPvP parkourPvP){
         final ParkourPvPGame parkourPvPGame = parkourPvP.getParkourPvPGame();
         return "Joueurs : §a"+parkourPvPGame.getPlayerUUIDList().size()+"/"+parkourPvPGame.getGameProperties().getMaxPlayer();
     }

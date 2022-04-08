@@ -7,6 +7,7 @@ import net.quillcraft.core.task.CustomTaskManager;
 import net.quillcraft.parkourpvp.ParkourPvP;
 import net.quillcraft.parkourpvp.manager.TaskManager;
 import net.quillcraft.parkourpvp.scoreboard.GameScoreboard;
+import net.quillcraft.parkourpvp.task.game.GameTaskManager;
 
 public class LobbyTask extends CustomTask{
 
@@ -36,7 +37,7 @@ public class LobbyTask extends CustomTask{
                 e.printStackTrace();
             }
 
-            parkourPvP.getParkourPvPGame().getPlayerUUIDList().stream().parallel()
+            parkourPvP.getParkourPvPGame().getPlayerUUIDList()
                     .forEach(uuid -> new GameScoreboard(parkourPvP).setScoreboard(parkourPvP.getServer().getPlayer(uuid)));
             cancel();
             return;
