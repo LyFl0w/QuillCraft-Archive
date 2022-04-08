@@ -1,6 +1,5 @@
 package net.quillcraft.core.utils;
 
-import java.util.Arrays;
 import java.util.concurrent.TimeUnit;
 
 public class TimeUtils{
@@ -14,25 +13,28 @@ public class TimeUtils{
 
     public String formatToTimer(){
         final StringBuilder message = new StringBuilder();
-        Arrays.stream(pattern.split(":")).forEach(pattern -> {
-            switch(pattern){
-                case "h" -> message.append(time/3600).append(":");
+        final String[] split = pattern.split(":");
+        int i = 0;
+        for(String part : split){
+            switch(part){
+                case "h" -> message.append(time/3600);
                 case "hh" -> {
                     final long hour = time/3600;
-                    message.append(((hour < 10) ? "0"+hour : hour)).append(":");
+                    message.append(((hour < 10) ? "0"+hour : hour));
                 }
-                case "m" -> message.append(time/60).append(":");
+                case "m" -> message.append(time/60);
                 case "mm" -> {
                     final long minute = time/60;
-                    message.append(((minute < 10) ? "0"+minute : minute)).append(":");
+                    message.append(((minute < 10) ? "0"+minute : minute));
                 }
-                case "s" -> message.append(time%60).append(":");
+                case "s" -> message.append(time%60);
                 case "ss" -> {
                     final long second = time%60;
-                    message.append(((second < 10) ? "0"+second : second)).append(":");
+                    message.append(((second < 10) ? "0"+second : second));
                 }
             }
-        });
+            if((i+=1) != split.length) message.append(":");
+        }
         return message.toString();
     }
 
