@@ -33,7 +33,6 @@ public class PlayerInteractListener implements Listener {
         final Player player = event.getPlayer();
         final Action action = event.getAction();
 
-
         if(event.getHand() == EquipmentSlot.OFF_HAND) return;
 
         if(action == Action.RIGHT_CLICK_BLOCK){
