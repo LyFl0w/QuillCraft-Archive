@@ -7,9 +7,10 @@ import java.util.UUID;
 
 public class CheckPoint{
 
+    public static int coins, bonusFirst, bonusSecond, bonusThird;
+
     private final ArrayList<UUID> players;
     private final Location location;
-    public static int coins, bonusFirst, bonusSecond, bonusThird;
 
     public CheckPoint(Location location){
         this.location = location;

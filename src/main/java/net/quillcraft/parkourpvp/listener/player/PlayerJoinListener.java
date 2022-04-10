@@ -44,8 +44,9 @@ public class PlayerJoinListener implements Listener{
             }
             uuidList.add(player.getUniqueId());
 
-            LobbyScoreboard.updatePlayersSize(parkourPvP);
-            new LobbyScoreboard(parkourPvP).setScoreboard(player);
+            final LobbyScoreboard lobbyScoreboard = new LobbyScoreboard(parkourPvP);
+            lobbyScoreboard.updatePlayersSize();
+            lobbyScoreboard.setScoreboard(player);
 
             final LobbyTaskManager lobbyTaskManager = (LobbyTaskManager) TaskManager.LOBBY_TASK_MANAGER.getCustomTaskManager();
             final LobbyTask lobbyTask = lobbyTaskManager.getTask();

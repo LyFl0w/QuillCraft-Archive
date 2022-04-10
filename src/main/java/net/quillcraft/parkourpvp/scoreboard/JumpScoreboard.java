@@ -6,19 +6,19 @@ import net.quillcraft.core.utils.TimeUtils;
 import net.quillcraft.core.utils.builders.scoreboard.ObjectiveBuilder;
 import net.quillcraft.core.utils.builders.scoreboard.ScoreboardBuilder;
 import net.quillcraft.parkourpvp.ParkourPvP;
-
 import net.quillcraft.parkourpvp.manager.TaskManager;
-import net.quillcraft.parkourpvp.task.game.GameTask;
-import net.quillcraft.parkourpvp.task.game.GameTaskManager;
+import net.quillcraft.parkourpvp.task.jump.JumpTask;
+import net.quillcraft.parkourpvp.task.jump.JumpTaskManager;
+
 import org.bukkit.entity.Player;
 import org.bukkit.scoreboard.DisplaySlot;
 
 import java.util.concurrent.TimeUnit;
 
-public class GameScoreboard implements ScoreboardManager{
+public class JumpScoreboard implements ScoreboardManager{
 
     private final ParkourPvP parkourPvP;
-    public GameScoreboard(ParkourPvP parkourPvP){
+    public JumpScoreboard(ParkourPvP parkourPvP){
         this.parkourPvP = parkourPvP;
     }
 
@@ -29,7 +29,7 @@ public class GameScoreboard implements ScoreboardManager{
 
         scoreboardBuilder.addObjective(new ObjectiveBuilder("sbs", "§lParkourPvP", DisplaySlot.SIDEBAR)
                 .addScore(14, "§a")
-                .addScore(13, getPlayerSizeLine(parkourPvP))
+                .addScore(13, getPlayerSizeLine())
                 .addScore(12, "Coins : §e0")
                 .addScore(11, "§b")
                 .addScore(10, getTimeLine())
@@ -45,26 +45,26 @@ public class GameScoreboard implements ScoreboardManager{
         parkourPvP.getGameData().getScoreboardBuilderHashMap().put(player.getName(), scoreboardBuilder);
     }
 
-    public static void updatePlayersSize(ParkourPvP parkourPvP){
-        final String newLine = getPlayerSizeLine(parkourPvP);
+    public void updatePlayersSize(){
+        final String newLine = getPlayerSizeLine();
         parkourPvP.getGameData().getScoreboardBuilderHashMap().values().stream().parallel()
                 .forEach(scoreboardBuilder -> scoreboardBuilder.updateScore("sbs", 13, newLine).updateScoreboard());
     }
 
-    private static String getPlayerSizeLine(ParkourPvP parkourPvP){
+    private String getPlayerSizeLine(){
         final ParkourPvPGame parkourPvPGame = parkourPvP.getParkourPvPGame();
         return "Joueurs : §a"+parkourPvPGame.getPlayerUUIDList().size()+"/"+parkourPvPGame.getGameProperties().getMaxPlayer();
     }
 
-    public static void updateTime(ParkourPvP parkourPvP){
+    public void updateTime(){
         final String newLine = getTimeLine();
         parkourPvP.getGameData().getScoreboardBuilderHashMap().values().stream().parallel()
                 .forEach(scoreboardBuilder -> scoreboardBuilder.updateScore("sbs", 10, newLine).updateScoreboard());
     }
 
-    private static String getTimeLine(){
-        final GameTask gameTask = ((GameTaskManager)TaskManager.GAME_TASK_MANAGER.getCustomTaskManager()).getTask();
-        return "Temps : "+new TimeUtils(gameTask.getTimeToReach()-gameTask.getTime(), TimeUnit.SECONDS, "m:ss").formatToTimer();
+    private String getTimeLine(){
+        final JumpTask jumpTask = ((JumpTaskManager)TaskManager.JUMP_TASK_MANAGER.getCustomTaskManager()).getTask();
+        return "Temps : "+new TimeUtils(jumpTask.getTimeToReach()-jumpTask.getTime(), TimeUnit.SECONDS, "m:ss").formatToTimer();
     }
 
 }

@@ -1,27 +1,26 @@
-package net.quillcraft.parkourpvp.task.game;
+package net.quillcraft.parkourpvp.task.jump;
 
 import net.quillcraft.core.task.CustomTask;
 import net.quillcraft.core.task.CustomTaskManager;
 import net.quillcraft.parkourpvp.ParkourPvP;
-import net.quillcraft.parkourpvp.scoreboard.GameScoreboard;
+import net.quillcraft.parkourpvp.scoreboard.JumpScoreboard;
 
-public class GameTask extends CustomTask{
+public class JumpTask extends CustomTask{
 
     private final ParkourPvP parkourPvP;
     private int time;
     private final int timeToReach;
 
-    public GameTask(CustomTaskManager customTaskManager){
+    public JumpTask(CustomTaskManager customTaskManager){
         super(customTaskManager);
         this.time = 0;
         this.timeToReach = 300; // 60s*5 = 5min
-        this.parkourPvP = ((GameTaskManager)customTaskManager).getJavaPlugin();
+        this.parkourPvP = ((JumpTaskManager)customTaskManager).getJavaPlugin();
     }
 
     @Override
     public void run(){
-
-        GameScoreboard.updateTime(parkourPvP);
+        new JumpScoreboard(parkourPvP).updateTime();
 
         if(time == timeToReach){
             //END Jump phase

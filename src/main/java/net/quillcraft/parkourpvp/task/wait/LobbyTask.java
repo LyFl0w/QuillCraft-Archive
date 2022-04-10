@@ -1,13 +1,19 @@
 package net.quillcraft.parkourpvp.task.wait;
 
 import net.quillcraft.commons.game.GeneralGameStatus;
+import net.quillcraft.commons.game.ParkourPvPGame;
 import net.quillcraft.core.exception.TaskOverflowException;
 import net.quillcraft.core.task.CustomTask;
 import net.quillcraft.core.task.CustomTaskManager;
 import net.quillcraft.parkourpvp.ParkourPvP;
 import net.quillcraft.parkourpvp.manager.TaskManager;
-import net.quillcraft.parkourpvp.scoreboard.GameScoreboard;
-import net.quillcraft.parkourpvp.task.game.GameTaskManager;
+import net.quillcraft.parkourpvp.scoreboard.JumpScoreboard;
+import org.bukkit.Location;
+import org.bukkit.Server;
+import org.bukkit.entity.Player;
+
+import java.util.List;
+import java.util.UUID;
 
 public class LobbyTask extends CustomTask{
 
@@ -15,12 +21,10 @@ public class LobbyTask extends CustomTask{
 
     private final ParkourPvP parkourPvP;
     private int time;
-    private final int defaultTime;
 
     public LobbyTask(CustomTaskManager customTaskManager){
         super(customTaskManager);
         this.time = 60;
-        this.defaultTime = time;
         this.parkourPvP = ((LobbyTaskManager)customTaskManager).getJavaPlugin();
     }
 
@@ -28,17 +32,37 @@ public class LobbyTask extends CustomTask{
     public void run(){
 
         if(time == 0){
-            parkourPvP.getServer().broadcastMessage("§1Fin de l'attente : -> démarrage du jeu !");
-            parkourPvP.getParkourPvPGame().setGameStatus(GeneralGameStatus.IN_GAME);
+            final Server server = parkourPvP.getServer();
+            final ParkourPvPGame parkourPvPGame = parkourPvP.getParkourPvPGame();
+
+            parkourPvPGame.setGameStatus(GeneralGameStatus.IN_GAME);
+            parkourPvPGame.updateRedis();
+
+            server.broadcastMessage("§1Fin de l'attente : -> démarrage du jeu !");
 
             try{
-                TaskManager.GAME_TASK_MANAGER.getCustomTaskManager().runTaskTimer(0L, 20L);
+                //Start Wait Jump timer
+                TaskManager.WAIT_JUMP_TASK_MANAGER.getCustomTaskManager().runTaskTimer(0L, 20L);
             }catch(TaskOverflowException e){
                 e.printStackTrace();
             }
 
-            parkourPvP.getParkourPvPGame().getPlayerUUIDList()
-                    .forEach(uuid -> new GameScoreboard(parkourPvP).setScoreboard(parkourPvP.getServer().getPlayer(uuid)));
+            final List<UUID> playersUUID = parkourPvPGame.getPlayerUUIDList();
+            final Location startLocation = parkourPvP.getGameData().getCheckPoints().get(0).getLocation();
+            playersUUID.forEach(playerUUID -> {
+                final Player player = server.getPlayer(playerUUID);
+
+                //Teleport players
+                player.teleport(startLocation);
+
+                //Hide players
+                playersUUID.forEach(otherPlayersUUID -> player.hidePlayer(parkourPvP, server.getPlayer(otherPlayersUUID)));
+
+                //Change Scoreboard
+                new JumpScoreboard(parkourPvP).setScoreboard(player);
+            });
+
+            //Stop Lobby timer
             cancel();
             return;
         }
@@ -58,7 +82,4 @@ public class LobbyTask extends CustomTask{
         this.time = time;
     }
 
-    public int getDefaultTime(){
-        return defaultTime;
-    }
 }

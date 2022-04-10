@@ -3,8 +3,9 @@ package net.quillcraft.parkourpvp;
 import net.quillcraft.core.utils.builders.YamlConfigurationBuilder;
 import net.quillcraft.core.utils.builders.scoreboard.ScoreboardBuilder;
 import net.quillcraft.parkourpvp.game.CheckPoint;
-
 import net.quillcraft.parkourpvp.game.PlayerData;
+
+import net.quillcraft.parkourpvp.status.InGameStatus;
 import org.apache.commons.io.FileUtils;
 import org.apache.logging.log4j.LogManager;
 import org.bukkit.*;
@@ -32,6 +33,8 @@ public class GameData{
     private final World[] worlds;
     private final FileConfiguration fileConfiguration;
 
+    private InGameStatus inGameStatus = InGameStatus.WAIT;
+
     public GameData(ParkourPvP parkourPvP){
         this.parkourPvP = parkourPvP;
 
@@ -43,7 +46,8 @@ public class GameData{
         LogManager.getLogger("Minecraft").info("World chose is "+defaultWorldName);
         this.worlds = new World[]{parkourPvP.getServer().createWorld(createNewWorld(defaultWorldName)),
                 parkourPvP.getServer().createWorld(createNewWorld(defaultWorldName+"-PvP"))};
-        this.fileConfiguration = new YamlConfigurationBuilder(parkourPvP, "game-settings-byworld/"+defaultWorldName+"-Settings.yml", true).getConfig();
+        this.fileConfiguration = new YamlConfigurationBuilder(parkourPvP,
+                "game-settings-byworld/"+defaultWorldName+"-Settings.yml", true).getConfig();
         loadCheckPoints();
     }
 
@@ -86,15 +90,14 @@ public class GameData{
     private void loadCheckPoints(){
         final FileConfiguration fileConfiguration = getFileConfiguration();
 
-        final String path = "checkpoints";
-        final String finalPath = path+".pos";
+        final ConfigurationSection configurationSection = fileConfiguration.getConfigurationSection("checkpoints");
 
-        final World world = Bukkit.getWorld(fileConfiguration.getString(path+".world"));
-
-        fileConfiguration.getConfigurationSection(finalPath).getKeys(false).forEach(key ->
-                checkPoints.add(new CheckPoint(new Location(world, fileConfiguration.getDouble(finalPath+".x"),
-                fileConfiguration.getDouble(finalPath+".y"), fileConfiguration.getDouble(finalPath+".z"),
-                (float) fileConfiguration.getDouble(finalPath+".yaw"), (float) fileConfiguration.getDouble(finalPath+".pitch")))));
+        configurationSection.getKeys(false).forEach(key -> {
+            final ConfigurationSection configurationPosition = configurationSection.getConfigurationSection(key);
+            checkPoints.add(new CheckPoint(new Location(worlds[0], configurationPosition.getDouble("x"),
+                    configurationPosition.getDouble("y"), configurationPosition.getDouble("z"),
+                    (float) configurationPosition.getDouble("yaw"), (float)configurationPosition.getDouble("pitch"))));
+        });
 
         final ConfigurationSection coins_conf = fileConfiguration.getConfigurationSection("checkpoint_data");
         CheckPoint.coins = coins_conf.getInt("coins");
@@ -114,4 +117,13 @@ public class GameData{
     public ArrayList<PlayerData> getPlayerData(){
         return playerData;
     }
+
+    public InGameStatus getInGameStatus(){
+        return inGameStatus;
+    }
+
+    public void setInGameStatus(InGameStatus inGameStatus){
+        this.inGameStatus = inGameStatus;
+    }
+
 }
