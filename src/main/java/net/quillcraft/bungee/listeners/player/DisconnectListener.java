@@ -7,6 +7,7 @@ import net.md_5.bungee.api.scheduler.TaskScheduler;
 import net.md_5.bungee.event.EventHandler;
 
 import net.quillcraft.bungee.QuillCraftBungee;
+import net.quillcraft.bungee.data.management.redis.RedisManager;
 import net.quillcraft.bungee.manager.LanguageManager;
 import net.quillcraft.commons.account.Account;
 import net.quillcraft.commons.account.AccountProvider;
@@ -17,19 +18,34 @@ import net.quillcraft.commons.friend.FriendProvider;
 import net.quillcraft.commons.party.PartyProvider;
 
 import org.lumy.api.text.Text;
+import org.redisson.api.RList;
+import org.redisson.api.RedissonClient;
 
 public class DisconnectListener implements Listener {
 
+    private final RedissonClient redissonClient;
     private final QuillCraftBungee quillCraftBungee;
     public DisconnectListener(QuillCraftBungee quillCraftBungee){
         this.quillCraftBungee = quillCraftBungee;
+        this.redissonClient = RedisManager.WEB_API.getRedisAccess().getRedissonClient();
     }
 
     @EventHandler
     public void onPlayerDisconnect(PlayerDisconnectEvent event){
         final ProxiedPlayer player = event.getPlayer();
-
         final TaskScheduler taskScheduler = quillCraftBungee.getProxy().getScheduler();
+
+        redissonClient.getLongAdder("players.size").add(-1L);
+
+        final RList<PlayerInfomation> playerInfomationRList = redissonClient.getList("players.list");
+        final PlayerInfomation[] playerInfomations = (PlayerInfomation[]) playerInfomationRList.toArray();
+
+        for(int i = 0; i < playerInfomations.length; i++){
+            if(playerInfomations[i].name().equals(player.getName())){
+                playerInfomationRList.remove(i);
+                break;
+            }
+        }
 
         taskScheduler.runAsync(quillCraftBungee, () ->  {
             final FriendProvider friendProvider = new FriendProvider(player);
