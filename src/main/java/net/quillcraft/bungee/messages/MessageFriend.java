@@ -26,7 +26,6 @@ public class MessageFriend extends Message{
         super(proxy, event);
     }
 
-
     @Override
     protected void onPluginMessageRepPlayer(ProxiedPlayer player, String sub, ByteArrayDataInput in){
         proxy.getScheduler().runAsync(QuillCraftBungee.getInstance(), () -> {

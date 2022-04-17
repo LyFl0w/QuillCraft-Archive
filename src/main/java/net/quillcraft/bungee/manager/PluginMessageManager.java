@@ -5,14 +5,9 @@ import net.md_5.bungee.api.event.PluginMessageEvent;
 import net.md_5.bungee.api.plugin.Listener;
 import net.md_5.bungee.event.EventHandler;
 import net.quillcraft.bungee.QuillCraftBungee;
-import net.quillcraft.bungee.messages.Message;
-import net.quillcraft.bungee.messages.MessageFriend;
-import net.quillcraft.bungee.messages.MessageMessage;
-import net.quillcraft.bungee.messages.MessageParty;
+import net.quillcraft.bungee.messages.*;
 
-import java.lang.reflect.InvocationTargetException;
 import java.util.Arrays;
-import java.util.Objects;
 
 public class PluginMessageManager implements Listener {
 
@@ -42,7 +37,8 @@ public class PluginMessageManager implements Listener {
 
         PARTY("quillcraft:party", MessageParty.class),
         MESSAGE("quillcraft:message", MessageMessage.class),
-        FRIEND("quillcraft:friend", MessageFriend.class);
+        FRIEND("quillcraft:friend", MessageFriend.class),
+        GAME("quillcraft:game", MessageGame.class);
 
         private final String channel;
         private final Class<? extends Message> aClass;

@@ -1,8 +1,10 @@
 package net.quillcraft.bungee;
 
 import net.md_5.bungee.api.plugin.Plugin;
+import net.quillcraft.bungee.listeners.proxy.ProxyPingListener;
 import net.quillcraft.bungee.manager.DataManager;
 import net.quillcraft.bungee.manager.PluginManager;
+import net.quillcraft.bungee.subscriber.SubscriberManager;
 
 public class QuillCraftBungee extends Plugin {
 
@@ -13,11 +15,16 @@ public class QuillCraftBungee extends Plugin {
         INSTANCE = this;
 
         DataManager.initAllData(this);
+        SubscriberManager.initAllSubscribers();
+
+        ProxyPingListener.updateProtocolVersion(getProxy().getProtocolVersion());
+
         new PluginManager(this);
     }
 
     @Override
     public void onDisable(){
+        SubscriberManager.removeAllSubscribersData();
         DataManager.closeAllData();
     }
 

@@ -27,7 +27,11 @@ public enum RedisManager {
 
     RANK(new RedisAccess(new RedisCredential(getDataConfig().getString("redis.rank.host"),
             getDataConfig().getString("redis.rank.user.name"), getDataConfig().getString("redis.rank.user.password"),
-            getDataConfig().getInt("redis.rank.database_number"), getDataConfig().getInt("redis.rank.port"))));
+            getDataConfig().getInt("redis.rank.database_number"), getDataConfig().getInt("redis.rank.port")))),
+
+    GAME_SERVER(new RedisAccess(new RedisCredential(getDataConfig().getString("redis.gameserver.host"),
+            getDataConfig().getString("redis.gameserver.user.name"), getDataConfig().getString("redis.gameserver.user.password"),
+            getDataConfig().getInt("redis.gameserver.database_number"), getDataConfig().getInt("redis.gameserver.port"))));
 
     private final RedisAccess redisAccess;
     RedisManager(RedisAccess redisAccess){
