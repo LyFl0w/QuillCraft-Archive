@@ -21,6 +21,8 @@ import org.lumy.api.text.Text;
 import org.redisson.api.RList;
 import org.redisson.api.RedissonClient;
 
+import java.util.HashMap;
+
 public class DisconnectListener implements Listener {
 
     private final RedissonClient redissonClient;
@@ -35,17 +37,7 @@ public class DisconnectListener implements Listener {
         final ProxiedPlayer player = event.getPlayer();
         final TaskScheduler taskScheduler = quillCraftBungee.getProxy().getScheduler();
 
-        redissonClient.getLongAdder("players.size").add(-1L);
-
-        final RList<PlayerInfomation> playerInfomationRList = redissonClient.getList("players.list");
-        final PlayerInfomation[] playerInfomations = (PlayerInfomation[]) playerInfomationRList.toArray();
-
-        for(int i = 0; i < playerInfomations.length; i++){
-            if(playerInfomations[i].name().equals(player.getName())){
-                playerInfomationRList.remove(i);
-                break;
-            }
-        }
+        redissonClient.getAtomicLong("players.size").decrementAndGet();
 
         taskScheduler.runAsync(quillCraftBungee, () ->  {
             final FriendProvider friendProvider = new FriendProvider(player);
