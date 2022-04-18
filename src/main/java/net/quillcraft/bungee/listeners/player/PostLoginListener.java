@@ -35,6 +35,7 @@ public class PostLoginListener implements Listener {
         final TaskScheduler taskScheduler = quillCraftBungee.getProxy().getScheduler();
 
         redissonClient.getAtomicLong("players.size").incrementAndGet();
+        redissonClient.getTopic("players.size.update").publish(0);
 
         taskScheduler.runAsync(quillCraftBungee, () -> {
             try{
@@ -44,7 +45,6 @@ public class PostLoginListener implements Listener {
                     new PartyProvider(account).getParty().getOnlinePlayers().stream().filter(players -> !players.getUniqueId().equals(player.getUniqueId())).forEach(players ->
                             players.sendMessage(LanguageManager.getLanguage(players).getMessageComponentReplace(Text.PARTY_JOIN_SERVER, "%PLAYER%", player.getName())));
                 }
-
             }catch(AccountNotFoundException | PartyNotFoundException exception){
                 exception.printStackTrace();
             }

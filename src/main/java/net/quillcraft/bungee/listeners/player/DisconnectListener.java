@@ -18,10 +18,7 @@ import net.quillcraft.commons.friend.FriendProvider;
 import net.quillcraft.commons.party.PartyProvider;
 
 import org.lumy.api.text.Text;
-import org.redisson.api.RList;
 import org.redisson.api.RedissonClient;
-
-import java.util.HashMap;
 
 public class DisconnectListener implements Listener {
 
@@ -38,6 +35,7 @@ public class DisconnectListener implements Listener {
         final TaskScheduler taskScheduler = quillCraftBungee.getProxy().getScheduler();
 
         redissonClient.getAtomicLong("players.size").decrementAndGet();
+        redissonClient.getTopic("players.size.update").publish(0);
 
         taskScheduler.runAsync(quillCraftBungee, () ->  {
             final FriendProvider friendProvider = new FriendProvider(player);
