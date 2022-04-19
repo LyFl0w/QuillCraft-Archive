@@ -7,6 +7,7 @@ import net.quillcraft.core.utils.Title;
 import net.quillcraft.parkourpvp.ParkourPvP;
 import net.quillcraft.parkourpvp.manager.TaskManager;
 
+import net.quillcraft.parkourpvp.status.InGameStatus;
 import org.bukkit.entity.Player;
 
 public class WaitJumpTask extends CustomTask{
@@ -26,11 +27,11 @@ public class WaitJumpTask extends CustomTask{
         if(time % 5 == 0 && time >= 5){
             parkourPvP.getParkourPvPGame().getPlayerUUIDList().forEach(uuid -> {
                 final Player player = parkourPvP.getServer().getPlayer(uuid);
-                new Title(player).sendFullTitle(0, 0, 0, "Le jump commence", "dans "+time+" secondes");
+                new Title(player).sendFullTitle(1, 1, 1, "Le jump commence", "dans "+time+" secondes");
             });
         }
 
-        if(time % 5 == 0 || time < 5){
+        if(time % 5 == 0 || time < 5 && time > 0){
             parkourPvP.getParkourPvPGame().getPlayerUUIDList().forEach(uuid -> {
                 final Player player = parkourPvP.getServer().getPlayer(uuid);
                 new Title(player).sendActionBar("Le jump commence dans "+time+"'s");
@@ -38,6 +39,7 @@ public class WaitJumpTask extends CustomTask{
         }
 
         if(time == 0){
+            parkourPvP.getGameData().setInGameStatus(InGameStatus.JUMP);
 
             try{
                 //Start Wait Jump timer
@@ -45,6 +47,11 @@ public class WaitJumpTask extends CustomTask{
             }catch(TaskOverflowException e){
                 e.printStackTrace();
             }
+
+            parkourPvP.getParkourPvPGame().getPlayerUUIDList().forEach(uuid -> {
+                final Player player = parkourPvP.getServer().getPlayer(uuid);
+                new Title(player).sendActionBar("C'est parti !");
+            });
 
             cancel();
             return;
