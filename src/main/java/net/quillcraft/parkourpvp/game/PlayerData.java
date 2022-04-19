@@ -5,11 +5,11 @@ import java.util.UUID;
 public class PlayerData{
 
     private final UUID uuid;
-    private int checkPointID, jump, kill;
+    private int checkPointID, jump, kill, coins;
     private boolean hasWin, hasFinishParkour, isDead;
     private long timeToFinishParkour;
 
-    public PlayerData(UUID uuid, int checkPointID, int jump, int kill, boolean hasWin, boolean hasFinishParkour, boolean isDead, long timeToFinishParkour){
+    public PlayerData(UUID uuid, int checkPointID, int jump, int kill, int coins, boolean hasWin, boolean hasFinishParkour, boolean isDead, long timeToFinishParkour){
         this.uuid = uuid;
         this.checkPointID = checkPointID;
         this.jump = jump;
@@ -18,10 +18,11 @@ public class PlayerData{
         this.hasFinishParkour = hasFinishParkour;
         this.isDead = isDead;
         this.timeToFinishParkour = timeToFinishParkour;
+        this.coins = coins;
     }
 
     public PlayerData(UUID uuid){
-        this(uuid, 0, 0, 0, false, false, false, -1L);
+        this(uuid, 0, 0, 0, 0, false, false, false, -1L);
     }
 
     public UUID getUuid(){
@@ -38,6 +39,10 @@ public class PlayerData{
 
     public int getKill(){
         return kill;
+    }
+
+    public int getCoins(){
+        return coins;
     }
 
     public boolean hasWin(){
@@ -82,6 +87,14 @@ public class PlayerData{
 
     private void addKill(){
         this.kill++;
+    }
+
+    public void addCoins(int toAdd){
+        this.coins += toAdd;
+    }
+
+    public void removeCoins(int toRemove){
+        this.coins -= toRemove;
     }
 
 }
