@@ -25,6 +25,7 @@ public class JumpTask extends CustomTask{
         if(time == timeToReach){
             //END Jump phase
             parkourPvP.getServer().broadcastMessage("FIN DU PARKOUR");
+
             cancel();
             return;
         }
@@ -33,8 +34,6 @@ public class JumpTask extends CustomTask{
 
         time++;
     }
-
-
 
     public int getTime(){
         return time;
