@@ -1,4 +1,4 @@
-package net.quillcraft.parkourpvp.task.wait;
+package net.quillcraft.parkourpvp.task.lobby;
 
 import net.quillcraft.core.task.CustomTaskManager;
 
