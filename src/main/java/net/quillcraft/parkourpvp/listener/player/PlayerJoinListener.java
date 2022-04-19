@@ -4,18 +4,21 @@ import net.quillcraft.commons.game.GameProperties;
 import net.quillcraft.commons.game.GeneralGameStatus;
 import net.quillcraft.commons.game.ParkourPvPGame;
 import net.quillcraft.core.exception.TaskOverflowException;
+import net.quillcraft.parkourpvp.GameData;
 import net.quillcraft.parkourpvp.ParkourPvP;
 import net.quillcraft.parkourpvp.manager.TaskManager;
-
 import net.quillcraft.parkourpvp.scoreboard.LobbyScoreboard;
-import net.quillcraft.parkourpvp.task.wait.LobbyTaskManager;
-import net.quillcraft.parkourpvp.task.wait.LobbyTask;
+import net.quillcraft.parkourpvp.status.InGameStatus;
+import net.quillcraft.parkourpvp.task.lobby.LobbyTaskManager;
+import net.quillcraft.parkourpvp.task.lobby.LobbyTask;
+
 import org.bukkit.GameMode;
 import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
 import org.bukkit.event.player.PlayerJoinEvent;
 
+import java.security.SecureRandom;
 import java.util.List;
 import java.util.UUID;
 
@@ -29,19 +32,31 @@ public class PlayerJoinListener implements Listener{
     @EventHandler
     public void playerJoinEvent(PlayerJoinEvent event) throws TaskOverflowException{
         final Player player = event.getPlayer();
+        final GameData gameData = parkourPvP.getGameData();
         final ParkourPvPGame parkourPvPGame = parkourPvP.getParkourPvPGame();
+
+        if(gameData.getInGameStatus().actualInGameStatusIs(InGameStatus.WAIT)){
+            player.teleport(gameData.getLobby());
+        }
+
+        if(parkourPvPGame.actualGameStatusIs(GeneralGameStatus.PLAYER_WAITING_FULL) || parkourPvPGame.actualGameStatusIs(GeneralGameStatus.IN_GAME)){
+            // TODO : SPECTATOR MODE
+            if(parkourPvPGame.actualGameStatusIs(GeneralGameStatus.IN_GAME)){
+                final List<UUID> uuidList = parkourPvPGame.getPlayerUUIDList();
+                player.teleport(parkourPvP.getServer().getPlayer(uuidList.get(new SecureRandom().nextInt(uuidList.size()))));
+            }
+
+            player.setGameMode(GameMode.SPECTATOR);
+            player.sendMessage("§cMode specateur activé (beta donc non fonctionnel encore)");
+
+            event.setJoinMessage("");
+            return;
+        }
 
         if(parkourPvPGame.actualGameStatusIs(GeneralGameStatus.PLAYER_WAITING)){
             final List<UUID> uuidList = parkourPvPGame.getPlayerUUIDList();
             final GameProperties gameProperties = parkourPvPGame.getGameProperties();
 
-            // GAME IS ALREADY FULL
-            // TODO : SPECTATOR MODE
-            if(uuidList.size() == gameProperties.getMaxPlayer()){
-                player.setGameMode(GameMode.SPECTATOR);
-                player.sendMessage("§cMode specateur activé (beta donc non fonctionnel encore)");
-                return;
-            }
             uuidList.add(player.getUniqueId());
 
             final LobbyScoreboard lobbyScoreboard = new LobbyScoreboard(parkourPvP);
