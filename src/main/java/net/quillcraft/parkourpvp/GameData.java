@@ -3,6 +3,7 @@ package net.quillcraft.parkourpvp;
 import net.quillcraft.core.utils.builders.YamlConfigurationBuilder;
 import net.quillcraft.core.utils.builders.scoreboard.ScoreboardBuilder;
 import net.quillcraft.parkourpvp.game.CheckPoint;
+import net.quillcraft.parkourpvp.game.CheckPointCoinsBonus;
 import net.quillcraft.parkourpvp.game.PlayerData;
 
 import net.quillcraft.parkourpvp.status.InGameStatus;
@@ -23,21 +24,24 @@ import java.util.List;
 
 public class GameData{
 
-    private final HashMap<String, ScoreboardBuilder> scoreboardBuilderHashMap = new HashMap<>();
-    private final ArrayList<CheckPoint> checkPoints = new ArrayList<>();
-    private final ArrayList<PlayerData> playerData = new ArrayList<>();
-
     private final ParkourPvP parkourPvP;
+
+    private InGameStatus inGameStatus = InGameStatus.WAIT;
+
+    private final HashMap<String, ScoreboardBuilder> scoreboardBuilderHashMap = new HashMap<>();
+    private final HashMap<String, PlayerData> playersData = new HashMap<>();
+
+    private final ArrayList<CheckPoint> checkPoints = new ArrayList<>();
+
+    private final Location lobby;
 
     private final String defaultWorldName;
     private final World[] worlds;
     private final FileConfiguration fileConfiguration;
 
-    private InGameStatus inGameStatus = InGameStatus.WAIT;
-
     public GameData(ParkourPvP parkourPvP){
         this.parkourPvP = parkourPvP;
-
+        this.lobby = new Location(parkourPvP.getServer().getWorld("Lobby-ParkourPvP"), 0, -59, 0, 0, 0);
         // TODO : DELETE COMMENTS WHEN WE HAVE MORE THAN ONE MAP
         //final List<String> worldsName = Arrays.asList("Natura", "Chronos", "Biomia");
         final List<String> worldsName = List.of("Natura");
@@ -96,14 +100,15 @@ public class GameData{
             final ConfigurationSection configurationPosition = configurationSection.getConfigurationSection(key);
             checkPoints.add(new CheckPoint(new Location(worlds[0], configurationPosition.getDouble("x"),
                     configurationPosition.getDouble("y"), configurationPosition.getDouble("z"),
-                    (float) configurationPosition.getDouble("yaw"), (float)configurationPosition.getDouble("pitch"))));
+                    (float) configurationPosition.getDouble("yaw"), (float)configurationPosition.getDouble("pitch")),
+                    checkPoints.size()));
         });
 
         final ConfigurationSection coins_conf = fileConfiguration.getConfigurationSection("checkpoint_data");
         CheckPoint.coins = coins_conf.getInt("coins");
-        CheckPoint.bonusFirst = coins_conf.getInt("bonus.first");
-        CheckPoint.bonusSecond = coins_conf.getInt("bonus.second");
-        CheckPoint.bonusThird = coins_conf.getInt("bonus.third");
+        CheckPointCoinsBonus.BONUS_FIRST.setAdditionalCoins(coins_conf.getInt("bonus.first"));
+        CheckPointCoinsBonus.BONUS_SECOND.setAdditionalCoins(coins_conf.getInt("bonus.second"));
+        CheckPointCoinsBonus.BONUS_THIRD.setAdditionalCoins(coins_conf.getInt("bonus.third"));
     }
 
     public HashMap<String, ScoreboardBuilder> getScoreboardBuilderHashMap(){
@@ -114,12 +119,16 @@ public class GameData{
         return checkPoints;
     }
 
-    public ArrayList<PlayerData> getPlayerData(){
-        return playerData;
+    public HashMap<String, PlayerData> getPlayersData(){
+        return playersData;
     }
 
     public InGameStatus getInGameStatus(){
         return inGameStatus;
+    }
+
+    public Location getLobby(){
+        return lobby;
     }
 
     public void setInGameStatus(InGameStatus inGameStatus){
