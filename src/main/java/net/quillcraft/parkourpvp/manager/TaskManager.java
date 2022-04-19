@@ -4,7 +4,7 @@ import net.quillcraft.core.task.CustomTaskManager;
 import net.quillcraft.parkourpvp.ParkourPvP;
 import net.quillcraft.parkourpvp.task.jump.JumpTaskManager;
 import net.quillcraft.parkourpvp.task.jumpwait.WaitJumpTaskManager;
-import net.quillcraft.parkourpvp.task.wait.LobbyTaskManager;
+import net.quillcraft.parkourpvp.task.lobby.LobbyTaskManager;
 
 public enum TaskManager{
 
