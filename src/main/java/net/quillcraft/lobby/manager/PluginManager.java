@@ -7,6 +7,7 @@ import net.quillcraft.lobby.command.NPCCommand;
 import net.quillcraft.lobby.command.SetLobbyCommand;
 import net.quillcraft.lobby.listener.FoodLevelChangeListener;
 import net.quillcraft.lobby.listener.WeatherChangeListener;
+import net.quillcraft.lobby.listener.block.BlockBreakListener;
 import net.quillcraft.lobby.listener.entity.EntityDamageListener;
 import net.quillcraft.lobby.listener.entity.ExplosionPrimeListener;
 import net.quillcraft.lobby.listener.inventory.InventoryClickListener;
@@ -18,9 +19,10 @@ public class PluginManager {
 
     //private final TaskManager taskManager;
     private final QuillCraftLobby main;
+    private final TaskManager taskManager;
     public PluginManager(QuillCraftLobby main){
         this.main = main;
-        //this.taskManager = new TaskManager(main);
+        this.taskManager = new TaskManager(main);
         registerEvents(main.getServer().getPluginManager());
         registerPluginMessage(main.getServer().getMessenger());
         registerCommands();
@@ -31,6 +33,8 @@ public class PluginManager {
     }
 
     private void registerEvents(org.bukkit.plugin.PluginManager pluginManager){
+        pluginManager.registerEvents(new BlockBreakListener(), main);
+
         pluginManager.registerEvents(new PlayerJoinListener(main), main);
         pluginManager.registerEvents(new PlayerQuitListener(), main);
         pluginManager.registerEvents(new PlayerItemListener(), main);
@@ -56,8 +60,8 @@ public class PluginManager {
         main.getCommand("head").setExecutor(new HeadCommand(main));
     }
 
-    /*public void onDisable(){
+    public void onDisable(){
         taskManager.onDisableTasks();
-    }*/
+    }
 
 }
