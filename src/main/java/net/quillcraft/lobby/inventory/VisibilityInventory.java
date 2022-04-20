@@ -38,6 +38,7 @@ public class VisibilityInventory {
             case EVERYONE -> setVisibilityItemBuilderName(languageManager, Text.STATUS_VISIBILITY_EVERYONE, new ItemBuilder(Material.LIME_DYE));
             case FRIENDS -> setVisibilityItemBuilderName(languageManager, Text.STATUS_VISIBILITY_FRIENDS, new ItemBuilder(Material.CYAN_DYE));
             case NOBODY -> setVisibilityItemBuilderName(languageManager, Text.STATUS_VISIBILITY_NOBODY, new ItemBuilder(Material.GRAY_DYE));
+            case PARTY -> setVisibilityItemBuilderName(languageManager, Text.STATUS_VISIBILITY_EVERYONE, new ItemBuilder(Material.BLUE_DYE));
         };
     }
 

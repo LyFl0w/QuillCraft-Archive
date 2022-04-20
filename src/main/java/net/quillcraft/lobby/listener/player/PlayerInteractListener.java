@@ -46,10 +46,10 @@ public class PlayerInteractListener implements Listener {
                         final List<Integer> list = headFinderProvider.getHeadlist();
                         if(!list.contains(i)){
                             list.add(i);
-                            final int quillcoins = configurationSection.getInt(i + ".quillcoins");
+                            final int quillcoins = configurationSection.getInt(i + ".coins");
                             headFinderProvider.updateHeadList(player, quillcoins);
 
-                            player.sendMessage("Nouvelle tête trouvée, vous gagnez " + quillcoins + "quillcoins" );
+                            player.sendMessage("Nouvelle tête trouvée, vous gagnez " + quillcoins + " quillcoins" );
                         }else{
                             player.sendMessage("Tête déjà trouvée");
                         }

@@ -2,7 +2,7 @@ package net.quillcraft.lobby.inventory;
 
 import net.quillcraft.commons.account.Account;
 import net.quillcraft.commons.game.Game;
-import net.quillcraft.commons.game.GameStatus;
+import net.quillcraft.commons.game.GeneralGameStatus;
 import net.quillcraft.commons.game.ParkourPvPGame;
 import net.quillcraft.core.data.management.redis.RedisManager;
 import net.quillcraft.core.manager.LanguageManager;
@@ -48,7 +48,7 @@ public class MenuInventory {
         return Math.toIntExact(redisClient.getKeys().getKeysStreamByPattern("ParkourPvPGame:*").parallel().filter(key -> {
             final RBucket<ParkourPvPGame> gameRBucket = redisClient.getBucket(key);
             Bukkit.getLogger().info(key+" / "+gameRBucket.get().getGameStatus().name());
-            return gameRBucket.get().actualGameStatusIs(GameStatus.PLAYER_WAITING);
+            return gameRBucket.get().actualGameStatusIs(GeneralGameStatus.PLAYER_WAITING);
         }).count());
     }
 }
