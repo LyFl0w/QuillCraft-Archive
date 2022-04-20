@@ -2,13 +2,14 @@ package net.quillcraft.lobby;
 
 import me.arcaniax.hdb.api.DatabaseLoadEvent;
 import me.arcaniax.hdb.api.HeadDatabaseAPI;
+
 import net.lyflow.songapi.manager.SongManager;
 import net.quillcraft.lobby.manager.PluginManager;
 import net.quillcraft.lobby.npc.NPCManager;
+
 import org.bukkit.command.PluginCommand;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
-import org.bukkit.inventory.ItemStack;
 import org.bukkit.plugin.java.JavaPlugin;
 
 import javax.annotation.Nonnull;
