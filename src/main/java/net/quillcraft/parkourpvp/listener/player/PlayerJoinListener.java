@@ -4,7 +4,7 @@ import net.quillcraft.commons.game.GameProperties;
 import net.quillcraft.commons.game.GeneralGameStatus;
 import net.quillcraft.commons.game.ParkourPvPGame;
 import net.quillcraft.core.exception.TaskOverflowException;
-import net.quillcraft.parkourpvp.GameData;
+import net.quillcraft.parkourpvp.manager.GameManager;
 import net.quillcraft.parkourpvp.ParkourPvP;
 import net.quillcraft.parkourpvp.manager.TaskManager;
 import net.quillcraft.parkourpvp.scoreboard.LobbyScoreboard;
@@ -30,13 +30,16 @@ public class PlayerJoinListener implements Listener{
     }
 
     @EventHandler
-    public void playerJoinEvent(PlayerJoinEvent event) throws TaskOverflowException{
+    public void onPlayerJoinEvent(PlayerJoinEvent event) throws TaskOverflowException{
         final Player player = event.getPlayer();
-        final GameData gameData = parkourPvP.getGameData();
+        final GameManager gameManager = parkourPvP.getGameData();
         final ParkourPvPGame parkourPvPGame = parkourPvP.getParkourPvPGame();
 
-        if(gameData.getInGameStatus().actualInGameStatusIs(InGameStatus.WAIT)){
-            player.teleport(gameData.getLobby());
+        if(gameManager.getInGameStatus().actualInGameStatusIs(InGameStatus.WAIT)){
+            player.teleport(gameManager.getLobby());
+            player.setGameMode(GameMode.SURVIVAL);
+            player.setFoodLevel(20);
+            player.setHealth(20);
         }
 
         if(parkourPvPGame.actualGameStatusIs(GeneralGameStatus.PLAYER_WAITING_FULL) || parkourPvPGame.actualGameStatusIs(GeneralGameStatus.IN_GAME)){

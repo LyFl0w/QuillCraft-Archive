@@ -4,6 +4,7 @@ import net.quillcraft.commons.game.GameProperties;
 import net.quillcraft.commons.game.GeneralGameStatus;
 import net.quillcraft.commons.game.ParkourPvPGame;
 import net.quillcraft.core.utils.builders.YamlConfigurationBuilder;
+import net.quillcraft.parkourpvp.manager.GameManager;
 import net.quillcraft.parkourpvp.manager.PluginManager;
 
 import org.bukkit.plugin.java.JavaPlugin;
@@ -12,7 +13,7 @@ public class ParkourPvP extends JavaPlugin{
 
     private static ParkourPvP INSTANCE;
 
-    private GameData gameData;
+    private GameManager gameManager;
 
     private ParkourPvPGame parkourPvPGame;
 
@@ -24,7 +25,7 @@ public class ParkourPvP extends JavaPlugin{
                 new YamlConfigurationBuilder(this, "default_game_setting.yml", true).getConfig().getInt("id"),
                 new GameProperties(new YamlConfigurationBuilder(this, "game_properties.yml", true).getConfig()));
 
-        gameData = new GameData(this);
+        gameManager = new GameManager(this);
 
         new PluginManager(this);
 
@@ -50,7 +51,7 @@ public class ParkourPvP extends JavaPlugin{
         return INSTANCE;
     }
 
-    public GameData getGameData(){
-        return gameData;
+    public GameManager getGameData(){
+        return gameManager;
     }
 }
