@@ -1,6 +1,7 @@
 package net.quillcraft.parkourpvp.manager;
 
 import net.quillcraft.parkourpvp.ParkourPvP;
+import net.quillcraft.parkourpvp.listener.entity.EntityDamageListener;
 import net.quillcraft.parkourpvp.listener.player.PlayerInteractListener;
 import net.quillcraft.parkourpvp.listener.player.PlayerJoinListener;
 
@@ -26,6 +27,8 @@ public class PluginManager{
         pluginManager.registerEvents(new PlayerQuitListener(main), main);
         pluginManager.registerEvents(new PlayerMoveListener(main), main);
         pluginManager.registerEvents(new PlayerInteractListener(main), main);
+
+        pluginManager.registerEvents(new EntityDamageListener(main), main);
     }
 
     private void registerPluginMessage(Messenger messenger){}
