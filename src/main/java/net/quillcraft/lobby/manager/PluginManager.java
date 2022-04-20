@@ -12,6 +12,7 @@ import net.quillcraft.lobby.listener.entity.ExplosionPrimeListener;
 import net.quillcraft.lobby.listener.inventory.InventoryClickListener;
 import net.quillcraft.lobby.listener.player.*;
 import net.quillcraft.lobby.listener.player.PlayerChangeLanguageListener;
+import org.bukkit.plugin.messaging.Messenger;
 
 public class PluginManager {
 
@@ -21,7 +22,12 @@ public class PluginManager {
         this.main = main;
         //this.taskManager = new TaskManager(main);
         registerEvents(main.getServer().getPluginManager());
+        registerPluginMessage(main.getServer().getMessenger());
         registerCommands();
+    }
+
+    private void registerPluginMessage(Messenger messenger){
+        messenger.registerOutgoingPluginChannel(main, "quillcraft:game");
     }
 
     private void registerEvents(org.bukkit.plugin.PluginManager pluginManager){

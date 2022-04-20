@@ -20,7 +20,6 @@ import org.lumy.api.text.TextList;
 
 public class PlayerJoinListener implements Listener {
 
-
     private final QuillCraftLobby quillCraftLobby;
     public PlayerJoinListener(QuillCraftLobby quillCraftLobby){
         this.quillCraftLobby = quillCraftLobby;
@@ -29,6 +28,9 @@ public class PlayerJoinListener implements Listener {
     @EventHandler
     public void onPlayerJoin(PlayerJoinEvent event){
         final Player player = event.getPlayer();
+
+        player.teleport(LocationEnum.LOBBY_SPAWN.getLocation());
+        player.playSound(player.getLocation(), Sound.ENTITY_EXPERIENCE_ORB_PICKUP, 1, 1);
 
         quillCraftLobby.getServer().getScheduler().runTaskAsynchronously(quillCraftLobby, () -> {
             final AccountProvider accountProvider = new AccountProvider(player);
@@ -43,8 +45,8 @@ public class PlayerJoinListener implements Listener {
                         sendTablistTitle(languageManager.getMessage(TextList.TABLIST_DEFAULT));
 
                 if(accountProvider.hasAutoLanguage()){
-                    Bukkit.getScheduler().runTaskAsynchronously(quillCraftLobby, () -> quillCraftLobby.getServer().getScheduler().runTask(quillCraftLobby, () ->
-                            accountProvider.setLocaleLanguage(account)));
+                    Bukkit.getScheduler().runTaskAsynchronously(quillCraftLobby, () ->
+                            quillCraftLobby.getServer().getScheduler().runTask(quillCraftLobby, () -> accountProvider.setLocaleLanguage(account)));
                 }
 
                 Bukkit.getScheduler().runTask(quillCraftLobby, () -> {
@@ -63,6 +65,12 @@ public class PlayerJoinListener implements Listener {
             }
         });
 
+        quillCraftLobby.getServer().getScheduler().runTaskAsynchronously(quillCraftLobby,
+                () -> Bukkit.getOnlinePlayers().stream().parallel()
+                        .filter(players -> !players.getUniqueId().equals(player.getUniqueId()))
+                        .forEach(players -> players.sendMessage(LanguageManager.getLanguage(players)
+                                .getMessage(Text.LOBBY_PLAYER_JOIN).replace("%PLAYER%", player.getDisplayName()))));
+
         /* Exemple Song
         final SongManager songManager = quillCraftLobby.getSongManager();
         final Song song = songManager.getSong("overtaken");
@@ -70,12 +78,6 @@ public class PlayerJoinListener implements Listener {
         final RadioPlayer radioPlayer = new RadioPlayer(quillCraftLobby, true, true, true, song, song2);
         radioPlayer.addPlayer(player);
         Bukkit.getScheduler().runTaskLater(quillCraftLobby, radioPlayer::playRadio,20L*6);*/
-
-        player.teleport(LocationEnum.LOBBY_SPAWN.getLocation());
-        player.playSound(player.getLocation(), Sound.ENTITY_EXPERIENCE_ORB_PICKUP, 1, 1);
-
-        Bukkit.getOnlinePlayers().stream().parallel().filter(players -> !players.getUniqueId().equals(player.getUniqueId())).forEach(players ->
-                players.sendMessage(LanguageManager.getLanguage(players).getMessage(Text.LOBBY_PLAYER_JOIN).replace("%PLAYER%", player.getDisplayName())));
 
         event.setJoinMessage("");
     }

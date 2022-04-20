@@ -1,8 +1,14 @@
 package net.quillcraft.lobby.listener.inventory;
 
+import com.google.common.io.ByteArrayDataOutput;
+import com.google.common.io.ByteStreams;
+
 import net.quillcraft.commons.account.Account;
 import net.quillcraft.commons.account.AccountProvider;
 import net.quillcraft.commons.exception.AccountNotFoundException;
+import net.quillcraft.commons.exception.PartyNotFoundException;
+import net.quillcraft.commons.game.GameEnum;
+import net.quillcraft.commons.party.PartyProvider;
 import net.quillcraft.core.manager.LanguageManager;
 import net.quillcraft.lobby.QuillCraftLobby;
 import net.quillcraft.lobby.inventory.VisibilityInventory;
@@ -43,10 +49,16 @@ public class InventoryClickListener implements Listener {
             final LanguageManager languageManager = LanguageManager.getLanguage(account);
 
             if(title.equals(languageManager.getMessage(Text.INVENTORY_NAME_MENU))){
-                if(item.getType() == Material.IRON_BOOTS){
-
+                if(account.hasParty() && !new PartyProvider(account).getParty().getOwnerUUID().equals(player.getUniqueId())){
+                    player.sendMessage("§cVous devez être l'owner de votre party pour pouvoir lancer un jeu");
                     return;
                 }
+
+                final ByteArrayDataOutput out = ByteStreams.newDataOutput();
+                out.writeUTF(GameItemToGameEnum.valueOf(item.getType().name()).getGameEnum().name());
+                out.writeBoolean(account.hasParty());
+
+                player.sendPluginMessage(quillCraftLobby, "quillcraft:game", out.toByteArray());
                 return;
             }
 
@@ -60,8 +72,22 @@ public class InventoryClickListener implements Listener {
                 return;
             }
 
-        }catch(AccountNotFoundException e){
+        }catch(AccountNotFoundException | PartyNotFoundException e){
             e.printStackTrace();
+        }
+    }
+
+    private enum GameItemToGameEnum{
+
+        IRON_BOOTS(GameEnum.PARKOUR_PVP_SOLO);
+
+        private final GameEnum gameEnum;
+        GameItemToGameEnum(GameEnum gameEnum){
+            this.gameEnum = gameEnum;
+        }
+
+        public GameEnum getGameEnum(){
+            return gameEnum;
         }
     }
 
