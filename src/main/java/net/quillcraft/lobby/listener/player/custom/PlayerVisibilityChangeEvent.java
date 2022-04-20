@@ -18,7 +18,6 @@ public class PlayerVisibilityChangeEvent extends Event implements Cancellable {
 
     private final Player player;
     private final AccountProvider accountProvider;
-    private Account account;
     private final Account.Visibility visibility;
 
     private boolean isCancelled = false;
@@ -65,10 +64,6 @@ public class PlayerVisibilityChangeEvent extends Event implements Cancellable {
 
     public final AccountProvider getAccountProvider(){
         return accountProvider;
-    }
-
-    public final Account getAccount(){
-        return account;
     }
 
     public final Account.Visibility getVisibility(){

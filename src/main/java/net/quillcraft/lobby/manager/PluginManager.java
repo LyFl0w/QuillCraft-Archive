@@ -53,7 +53,7 @@ public class PluginManager {
         main.getCommand("lobby").setExecutor(new LobbyCommand());
         main.getCommand("setlobby").setExecutor(new SetLobbyCommand());
         main.getCommand("npc").setExecutor(new NPCCommand(main));
-        main.getCommand("head").setExecutor(new HeadCommand());
+        main.getCommand("head").setExecutor(new HeadCommand(main));
     }
 
     /*public void onDisable(){

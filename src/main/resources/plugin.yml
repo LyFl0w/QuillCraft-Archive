@@ -1,12 +1,12 @@
 name: QuillCraftLobby
 version: 1.0
-author: LyFlow
+authors: [LyFlow, Finkitpiat]
 main: net.quillcraft.lobby.QuillCraftLobby
 api-version: 1.18
 prefix: Lobby
 description: Plugin dedicated to QuillCraft
 website: https://quillcraft.fr
-depend: [QuillCraftCore]
+depend: [QuillCraftCore, HeadDatabase]
 commands:
   lobby:
     description: Cette commande permet de retourner au spawn principale
@@ -21,4 +21,4 @@ commands:
   head:
     description: Cette commande permet de créer une tete interractive
     permission: quillcraftlobby.head
-    usage: §c/head <head-id>
+    usage: §c/head <YAW> <coins> <ID>
