@@ -5,7 +5,8 @@ import net.quillcraft.commons.game.ParkourPvPGame;
 import net.quillcraft.core.exception.TaskOverflowException;
 import net.quillcraft.core.task.CustomTask;
 import net.quillcraft.core.task.CustomTaskManager;
-import net.quillcraft.parkourpvp.GameData;
+import net.quillcraft.core.utils.builders.ItemBuilder;
+import net.quillcraft.parkourpvp.manager.GameManager;
 import net.quillcraft.parkourpvp.ParkourPvP;
 import net.quillcraft.parkourpvp.game.PlayerData;
 import net.quillcraft.parkourpvp.manager.TaskManager;
@@ -13,8 +14,10 @@ import net.quillcraft.parkourpvp.scoreboard.JumpScoreboard;
 import net.quillcraft.parkourpvp.status.InGameStatus;
 
 import org.bukkit.Location;
+import org.bukkit.Material;
 import org.bukkit.Server;
 import org.bukkit.entity.Player;
+import org.bukkit.inventory.ItemStack;
 
 import java.util.List;
 import java.util.UUID;
@@ -37,10 +40,10 @@ public class LobbyTask extends CustomTask{
 
         if(time == 0){
             final Server server = parkourPvP.getServer();
-            final GameData gameData = parkourPvP.getGameData();
+            final GameManager gameManager = parkourPvP.getGameData();
             final ParkourPvPGame parkourPvPGame = parkourPvP.getParkourPvPGame();
 
-            gameData.setInGameStatus(InGameStatus.WAITING_BEFORE_JUMP);
+            gameManager.setInGameStatus(InGameStatus.WAITING_BEFORE_JUMP);
 
             parkourPvPGame.setGameStatus(GeneralGameStatus.IN_GAME);
             parkourPvPGame.updateRedis();
@@ -55,14 +58,15 @@ public class LobbyTask extends CustomTask{
             }
 
             final List<UUID> playersUUID = parkourPvPGame.getPlayerUUIDList();
-            final Location startLocation = gameData.getCheckPoints().get(0).getLocation();
+            final Location startLocation = gameManager.getCheckPoints().get(0).getLocation();
             playersUUID.forEach(playerUUID -> {
                 final Player player = server.getPlayer(playerUUID);
 
-                //Teleport players
                 player.teleport(startLocation);
-                gameData.getPlayersData().put(player.getName(), new PlayerData(playerUUID));
-                gameData.getCheckPoints().get(0).getPlayers().add(playerUUID);
+                player.getInventory().setItem(4, new ItemBuilder(Material.SLIME_BALL).setName("§bRespawn").toItemStack());
+
+                gameManager.getPlayersData().put(player.getName(), new PlayerData(playerUUID));
+                gameManager.getCheckPoints().get(0).getPlayers().add(playerUUID);
 
                 //Hide players
                 playersUUID.forEach(otherPlayersUUID -> player.hidePlayer(parkourPvP, server.getPlayer(otherPlayersUUID)));
