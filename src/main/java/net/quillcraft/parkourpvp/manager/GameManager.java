@@ -1,7 +1,8 @@
-package net.quillcraft.parkourpvp;
+package net.quillcraft.parkourpvp.manager;
 
 import net.quillcraft.core.utils.builders.YamlConfigurationBuilder;
 import net.quillcraft.core.utils.builders.scoreboard.ScoreboardBuilder;
+import net.quillcraft.parkourpvp.ParkourPvP;
 import net.quillcraft.parkourpvp.game.CheckPoint;
 import net.quillcraft.parkourpvp.game.CheckPointCoinsBonus;
 import net.quillcraft.parkourpvp.game.PlayerData;
@@ -22,7 +23,7 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 
-public class GameData{
+public class GameManager{
 
     private final ParkourPvP parkourPvP;
 
@@ -39,7 +40,7 @@ public class GameData{
     private final World[] worlds;
     private final FileConfiguration fileConfiguration;
 
-    public GameData(ParkourPvP parkourPvP){
+    public GameManager(ParkourPvP parkourPvP){
         this.parkourPvP = parkourPvP;
         this.lobby = new Location(parkourPvP.getServer().getWorld("Lobby-ParkourPvP"), 0, -59, 0, 0, 0);
         // TODO : DELETE COMMENTS WHEN WE HAVE MORE THAN ONE MAP
