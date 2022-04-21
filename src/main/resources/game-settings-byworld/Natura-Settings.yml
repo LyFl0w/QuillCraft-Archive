@@ -5,6 +5,9 @@ checkpoint_data:
     second: 2
     third: 1
 
+pvp:
+  get-max-y: -1
+
 checkpoints:
   0:
     x: -5.26
