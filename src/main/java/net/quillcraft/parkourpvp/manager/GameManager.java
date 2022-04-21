@@ -93,8 +93,6 @@ public class GameManager{
     }
 
     private void loadCheckPoints(){
-        final FileConfiguration fileConfiguration = getFileConfiguration();
-
         final ConfigurationSection configurationSection = fileConfiguration.getConfigurationSection("checkpoints");
 
         configurationSection.getKeys(false).forEach(key -> {
