@@ -3,8 +3,6 @@ package net.quillcraft.core.utils;
 import org.bukkit.ChatColor;
 
 import java.util.Arrays;
-import java.util.Optional;
-import java.util.stream.Stream;
 
 public class MessageUtils {
 
@@ -27,9 +25,12 @@ public class MessageUtils {
         return centeredMessage(message, 154);
     }
 
-    public static String chatCenteredMessages(final String... messages){
+    public static String chatCenteredMessages(boolean withSpace, final String... messages){
         final StringBuilder sb = new StringBuilder();
-        Arrays.stream(messages).forEach(message -> sb.append(chatCenteredMessage(message)).append("§r").append("\n"));
+        for(int i=0; i<=messages.length; i++){
+            sb.append(chatCenteredMessage(messages[i])).append("§r");
+            if(i+1 != messages.length) sb.append((withSpace) ? " " : "\n");
+        }
         return sb.toString();
     }
 
