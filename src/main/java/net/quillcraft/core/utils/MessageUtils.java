@@ -7,7 +7,7 @@ import java.util.Arrays;
 public class MessageUtils {
 
     public static String line(){
-        return "§m"+"-".repeat(53)+"§r";
+        return "§m"+" ".repeat(80)+"§r";
     }
 
     public static String compact(final String... strings){
