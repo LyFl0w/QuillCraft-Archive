@@ -1,7 +1,10 @@
 package net.quillcraft.parkourpvp.manager;
 
 import net.quillcraft.parkourpvp.ParkourPvP;
+import net.quillcraft.parkourpvp.listener.block.BlockBreakListener;
+import net.quillcraft.parkourpvp.listener.block.BlockPlaceListener;
 import net.quillcraft.parkourpvp.listener.entity.EntityDamageListener;
+import net.quillcraft.parkourpvp.listener.entity.EntityFoodLevelChangeListener;
 import net.quillcraft.parkourpvp.listener.player.PlayerInteractListener;
 import net.quillcraft.parkourpvp.listener.player.PlayerJoinListener;
 
@@ -29,6 +32,12 @@ public class PluginManager{
         pluginManager.registerEvents(new PlayerInteractListener(main), main);
 
         pluginManager.registerEvents(new EntityDamageListener(main), main);
+        pluginManager.registerEvents(new EntityFoodLevelChangeListener(main), main);
+
+        final BlockPlaceListener blockPlaceListener = new BlockPlaceListener(main);
+        pluginManager.registerEvents(blockPlaceListener, main);
+        pluginManager.registerEvents(new BlockBreakListener(main, blockPlaceListener), main);
+
     }
 
     private void registerPluginMessage(Messenger messenger){}
