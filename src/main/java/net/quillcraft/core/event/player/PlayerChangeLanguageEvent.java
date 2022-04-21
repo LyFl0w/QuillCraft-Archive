@@ -63,8 +63,12 @@ public class PlayerChangeLanguageEvent extends PlayerEvent implements Cancellabl
         isCancelled = setCancelled;
     }
 
-    @Nonnull
-    public HandlerList getHandlers() {
+    @Override
+    public HandlerList getHandlers(){
+        return HANDLERS;
+    }
+
+    public static HandlerList getHandlerList() {
         return HANDLERS;
     }
 
