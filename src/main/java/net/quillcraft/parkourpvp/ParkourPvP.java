@@ -51,7 +51,7 @@ public class ParkourPvP extends JavaPlugin{
         return INSTANCE;
     }
 
-    public GameManager getGameData(){
+    public GameManager getGameManager(){
         return gameManager;
     }
 }

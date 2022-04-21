@@ -42,12 +42,12 @@ public class JumpScoreboard implements ScoreboardManager{
         scoreboardBuilder.addPlayer(player);
         scoreboardBuilder.updateScoreboard();
 
-        parkourPvP.getGameData().getScoreboardBuilderHashMap().put(player.getName(), scoreboardBuilder);
+        parkourPvP.getGameManager().getScoreboardBuilderHashMap().put(player.getName(), scoreboardBuilder);
     }
 
     public void updatePlayersSize(){
         final String newLine = getPlayerSizeLine();
-        parkourPvP.getGameData().getScoreboardBuilderHashMap().values().stream().parallel()
+        parkourPvP.getGameManager().getScoreboardBuilderHashMap().values().stream().parallel()
                 .forEach(scoreboardBuilder -> scoreboardBuilder.updateScore("sbs", 13, newLine).updateScoreboard());
     }
 
@@ -58,7 +58,7 @@ public class JumpScoreboard implements ScoreboardManager{
 
     public void updateTime(){
         final String newLine = getTimeLine();
-        parkourPvP.getGameData().getScoreboardBuilderHashMap().values().stream().parallel()
+        parkourPvP.getGameManager().getScoreboardBuilderHashMap().values().stream().parallel()
                 .forEach(scoreboardBuilder -> scoreboardBuilder.updateScore("sbs", 10, newLine).updateScoreboard());
     }
 

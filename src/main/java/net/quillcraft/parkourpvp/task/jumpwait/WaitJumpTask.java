@@ -39,7 +39,7 @@ public class WaitJumpTask extends CustomTask{
         }
 
         if(time == 0){
-            parkourPvP.getGameData().setInGameStatus(InGameStatus.JUMP);
+            parkourPvP.getGameManager().setInGameStatus(InGameStatus.JUMP);
 
             try{
                 //Start Wait Jump timer

@@ -32,7 +32,7 @@ public class PlayerQuitListener implements Listener{
 
         playerList.remove(player.getUniqueId());
 
-        final GameManager gameManager = parkourPvP.getGameData();
+        final GameManager gameManager = parkourPvP.getGameManager();
         final String playerName = player.getName();
         gameManager.getScoreboardBuilderHashMap().remove(playerName);
 

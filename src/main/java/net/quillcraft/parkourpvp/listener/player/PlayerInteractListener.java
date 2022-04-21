@@ -26,7 +26,7 @@ public class PlayerInteractListener implements Listener{
         if(itemStack == null || itemStack.getType() == Material.AIR) return;
 
         final Player player = event.getPlayer();
-        final GameManager gameManager = parkourPvP.getGameData();
+        final GameManager gameManager = parkourPvP.getGameManager();
 
         switch(gameManager.getInGameStatus()){
             // Interaction with respawn item

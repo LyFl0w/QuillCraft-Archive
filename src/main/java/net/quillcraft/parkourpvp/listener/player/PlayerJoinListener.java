@@ -32,7 +32,7 @@ public class PlayerJoinListener implements Listener{
     @EventHandler
     public void onPlayerJoinEvent(PlayerJoinEvent event) throws TaskOverflowException{
         final Player player = event.getPlayer();
-        final GameManager gameManager = parkourPvP.getGameData();
+        final GameManager gameManager = parkourPvP.getGameManager();
         final ParkourPvPGame parkourPvPGame = parkourPvP.getParkourPvPGame();
 
         if(gameManager.getInGameStatus().actualInGameStatusIs(InGameStatus.WAIT)){

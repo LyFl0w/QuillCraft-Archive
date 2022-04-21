@@ -17,7 +17,6 @@ import org.bukkit.Location;
 import org.bukkit.Material;
 import org.bukkit.Server;
 import org.bukkit.entity.Player;
-import org.bukkit.inventory.ItemStack;
 
 import java.util.List;
 import java.util.UUID;
@@ -40,7 +39,7 @@ public class LobbyTask extends CustomTask{
 
         if(time == 0){
             final Server server = parkourPvP.getServer();
-            final GameManager gameManager = parkourPvP.getGameData();
+            final GameManager gameManager = parkourPvP.getGameManager();
             final ParkourPvPGame parkourPvPGame = parkourPvP.getParkourPvPGame();
 
             gameManager.setInGameStatus(InGameStatus.WAITING_BEFORE_JUMP);
