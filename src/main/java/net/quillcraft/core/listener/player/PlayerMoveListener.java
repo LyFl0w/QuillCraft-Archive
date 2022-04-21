@@ -9,9 +9,12 @@ import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
 import org.bukkit.event.player.PlayerMoveEvent;
 
+import java.math.BigDecimal;
+import java.math.RoundingMode;
+
 public class PlayerMoveListener implements Listener{
 
-    private final static double jumpVelocity = 0.45d;
+    private final static double jumpVelocity = 0.42d;
 
     private final QuillCraftCore quillCraftCore;
     public PlayerMoveListener(QuillCraftCore quillCraftCore){
@@ -26,7 +29,10 @@ public class PlayerMoveListener implements Listener{
         if(velocityY > 0){
             final Material blockMaterial = player.getLocation().getBlock().getType();
             if(!player.isOnGround() && !(blockMaterial == Material.LADDER || blockMaterial == Material.SCAFFOLDING || blockMaterial == Material.WATER || blockMaterial == Material.LAVA)){
-                if(Double.compare(velocityY, jumpVelocity) == 0) quillCraftCore.getServer().getPluginManager().callEvent(new PlayerJumpEvent(player, event.getFrom(), event.getTo()));
+
+                if(Double.compare(new BigDecimal(velocityY).setScale(2, RoundingMode.HALF_UP).doubleValue(), jumpVelocity) == 0) {
+                    quillCraftCore.getServer().getPluginManager().callEvent(new PlayerJumpEvent(player, event.getFrom(), event.getTo()));
+                }
             }
         }
     }
