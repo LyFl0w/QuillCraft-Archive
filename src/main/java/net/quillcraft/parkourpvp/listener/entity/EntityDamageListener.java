@@ -18,13 +18,14 @@ public class EntityDamageListener implements Listener{
 
     @EventHandler
     public void onEntityDamageEvent(EntityDamageEvent event){
-
         if(event.getEntity() instanceof final Player player){
-            final GameManager gameManager = parkourPvP.getGameData();
+            final GameManager gameManager = parkourPvP.getGameManager();
 
             if(gameManager.getInGameStatus().actualInGameStatusIs(InGameStatus.PVP)) return;
 
-            player.teleport(gameManager.getCheckPoints().get(gameManager.getPlayersData().get(player.getName()).getCheckPointID()).getLocation());
+            if(event.getDamage() > 1.0d)
+                player.teleport(gameManager.getCheckPoints().get(gameManager.getPlayersData().get(player.getName()).getCheckPointID()).getLocation());
+
             event.setCancelled(true);
         }
     }
