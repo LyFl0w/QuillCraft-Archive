@@ -8,6 +8,7 @@ import net.quillcraft.parkourpvp.game.PlayerData;
 
 import org.bukkit.GameMode;
 import org.bukkit.Location;
+import org.bukkit.Server;
 import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
@@ -26,7 +27,7 @@ public class PlayerMoveListener implements Listener{
     public void onPLayerMoveEvent(PlayerMoveEvent event){
         if(event.getPlayer().getGameMode() != GameMode.SURVIVAL) return;
 
-        final GameManager gameManager = parkourPvP.getGameData();
+        final GameManager gameManager = parkourPvP.getGameManager();
 
         switch(gameManager.getInGameStatus()){
             case WAITING_BEFORE_JUMP, WAITING_BEFORE_PVP -> {
@@ -64,6 +65,16 @@ public class PlayerMoveListener implements Listener{
                 final CheckPoint checkPoint = checkPointOptional.get();
                 final String nextMessage = checkPoint.addPlayer(playerData);
                 final int position = checkPoint.getPlayers().size();
+
+                // FIN DU PARKOUR
+                if(checkPoint.getId()+1 == gameManager.getCheckPoints().size()){
+                    final Server server = parkourPvP.getServer();
+
+                    player.setGameMode(GameMode.SPECTATOR);
+                    player.getInventory().clear();
+
+                    parkourPvP.getParkourPvPGame().getPlayerUUIDList().forEach(otherPlayersUUID -> player.showPlayer(parkourPvP, server.getPlayer(otherPlayersUUID)));
+                }
 
                 playerData.setCheckPointID(checkPoint.getId());
 
