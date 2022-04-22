@@ -34,12 +34,15 @@ public class PlayerQuitListener implements Listener{
 
         final GameManager gameManager = parkourPvP.getGameManager();
         final String playerName = player.getName();
+
         gameManager.getScoreboardBuilderHashMap().remove(playerName);
+        gameManager.getPlayersData().remove(playerName);
 
         if(parkourPvPGame.actualGameStatusIs(GeneralGameStatus.PLAYER_WAITING_FULL)){
             if(!parkourPvPGame.isFullyFilled()) parkourPvPGame.setGameStatus(GeneralGameStatus.PLAYER_WAITING);
         }else if(parkourPvPGame.actualGameStatusIs(GeneralGameStatus.IN_GAME)){
             parkourPvP.getServer().broadcastMessage("§c"+playerName+" a quitté le jeu !");
+
             switch(gameManager.getInGameStatus()){
                 case JUMP, WAITING_BEFORE_JUMP, WAITING_AFTER_JUMP -> new JumpScoreboard(parkourPvP).updatePlayersSize();
                 //TODO : UPDATE SCOREBOARD PVP
@@ -53,6 +56,8 @@ public class PlayerQuitListener implements Listener{
             new LobbyScoreboard(parkourPvP).updatePlayersSize();
             parkourPvPGame.searchPlayer();
         }
+
+        event.setQuitMessage("");
     }
 
 }

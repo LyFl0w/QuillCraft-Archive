@@ -5,7 +5,7 @@ import net.quillcraft.core.utils.builders.scoreboard.ScoreboardBuilder;
 import net.quillcraft.parkourpvp.ParkourPvP;
 import net.quillcraft.parkourpvp.game.CheckPoint;
 import net.quillcraft.parkourpvp.game.CheckPointCoinsBonus;
-import net.quillcraft.parkourpvp.game.PlayerData;
+import net.quillcraft.parkourpvp.game.PlayerDataGame;
 
 import net.quillcraft.parkourpvp.status.InGameStatus;
 import org.apache.commons.io.FileUtils;
@@ -27,10 +27,10 @@ public class GameManager{
 
     private final ParkourPvP parkourPvP;
 
-    private InGameStatus inGameStatus = InGameStatus.WAIT;
+    private InGameStatus inGameStatus = InGameStatus.WAIT_LOBBY;
 
     private final HashMap<String, ScoreboardBuilder> scoreboardBuilderHashMap = new HashMap<>();
-    private final HashMap<String, PlayerData> playersData = new HashMap<>();
+    private final HashMap<String, PlayerDataGame> playersData = new HashMap<>();
 
     private final ArrayList<CheckPoint> checkPoints = new ArrayList<>();
 
@@ -118,7 +118,7 @@ public class GameManager{
         return checkPoints;
     }
 
-    public HashMap<String, PlayerData> getPlayersData(){
+    public HashMap<String, PlayerDataGame> getPlayersData(){
         return playersData;
     }
 

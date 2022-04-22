@@ -1,56 +1,56 @@
-package net.quillcraft.parkourpvp.task.jumpwait;
+package net.quillcraft.parkourpvp.task.pvp.wait.before;
 
-import net.quillcraft.core.exception.TaskOverflowException;
 import net.quillcraft.core.task.CustomTask;
 import net.quillcraft.core.task.CustomTaskManager;
 import net.quillcraft.core.utils.Title;
 import net.quillcraft.parkourpvp.ParkourPvP;
-import net.quillcraft.parkourpvp.manager.TaskManager;
-
 import net.quillcraft.parkourpvp.status.InGameStatus;
+
 import org.bukkit.entity.Player;
 
-public class WaitJumpTask extends CustomTask{
+public class WaitBeforePvPTask extends CustomTask{
 
     private final ParkourPvP parkourPvP;
     private int time;
 
-    public WaitJumpTask(CustomTaskManager customTaskManager){
+    public WaitBeforePvPTask(CustomTaskManager customTaskManager){
         super(customTaskManager);
-        this.parkourPvP = ((WaitJumpTaskManager)customTaskManager).getJavaPlugin();
-        this.time = 15;
+        this.parkourPvP = ((WaitBeforePvPTaskManager)customTaskManager).getJavaPlugin();
+        this.time = 180;
     }
 
     @Override
     public void run(){
 
-        if(time % 5 == 0 && time >= 5){
+        // Minute by minute
+        if(time % 60 == 0 && time >= 60){
             parkourPvP.getParkourPvPGame().getPlayerUUIDList().forEach(uuid -> {
                 final Player player = parkourPvP.getServer().getPlayer(uuid);
-                new Title(player).sendFullTitle(1, 1, 1, "Le jump commence", "dans "+time+" secondes");
+                final int timeToDraw = time/60;
+                new Title(player).sendFullTitle(1, 1, 1, "Le PvP commence", "dans "+timeToDraw+" minute"+((timeToDraw > 1) ? "s" : ""));
             });
         }
 
-        if(time % 5 == 0 || time < 5 && time > 0){
+        if((time % 5 == 0 && time <= 15) || time < 5 && time > 0){
             parkourPvP.getParkourPvPGame().getPlayerUUIDList().forEach(uuid -> {
                 final Player player = parkourPvP.getServer().getPlayer(uuid);
-                new Title(player).sendActionBar("Le jump commence dans "+time+"'s");
+                new Title(player).sendActionBar("Le PvP commence dans "+time+"'s");
             });
         }
 
         if(time == 0){
-            parkourPvP.getGameManager().setInGameStatus(InGameStatus.JUMP);
+            parkourPvP.getGameManager().setInGameStatus(InGameStatus.PVP);
 
-            try{
-                //Start Wait Jump timer
-                TaskManager.JUMP_TASK_MANAGER.getCustomTaskManager().runTaskTimer(0L, 20L);
+            /*try{
+                //TODO: Start PvP Timer
+                //TaskManager.JUMP_TASK_MANAGER.getCustomTaskManager().runTaskTimer(0L, 20L);
             }catch(TaskOverflowException e){
                 e.printStackTrace();
-            }
+            }*/
 
             parkourPvP.getParkourPvPGame().getPlayerUUIDList().forEach(uuid -> {
                 final Player player = parkourPvP.getServer().getPlayer(uuid);
-                new Title(player).sendActionBar("C'est parti !");
+                new Title(player).sendActionBar("Que le meilleur gagne");
             });
 
             cancel();

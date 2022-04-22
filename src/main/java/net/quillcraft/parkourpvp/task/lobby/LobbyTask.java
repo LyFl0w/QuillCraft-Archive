@@ -8,14 +8,12 @@ import net.quillcraft.core.task.CustomTaskManager;
 import net.quillcraft.core.utils.builders.ItemBuilder;
 import net.quillcraft.parkourpvp.manager.GameManager;
 import net.quillcraft.parkourpvp.ParkourPvP;
-import net.quillcraft.parkourpvp.game.PlayerData;
+import net.quillcraft.parkourpvp.game.PlayerDataGame;
 import net.quillcraft.parkourpvp.manager.TaskManager;
 import net.quillcraft.parkourpvp.scoreboard.JumpScoreboard;
 import net.quillcraft.parkourpvp.status.InGameStatus;
 
-import org.bukkit.Location;
-import org.bukkit.Material;
-import org.bukkit.Server;
+import org.bukkit.*;
 import org.bukkit.entity.Player;
 
 import java.util.List;
@@ -37,6 +35,24 @@ public class LobbyTask extends CustomTask{
     @Override
     public void run(){
 
+        if((time <= 5 && time > 0) || time == 10 || time == 15 || time == 30 || time == 60){
+            final Server server = parkourPvP.getServer();
+            final ParkourPvPGame parkourPvPGame = parkourPvP.getParkourPvPGame();
+            final List<UUID> playersUUID = parkourPvPGame.getPlayerUUIDList();
+
+            playersUUID.forEach(playerUUID -> {
+                final Player player = server.getPlayer(playerUUID);
+
+                if(time == 10 || time == 15 || time == 30 || time == 60){
+                    player.playSound(player.getLocation(), Sound.ENTITY_EXPERIENCE_ORB_PICKUP, SoundCategory.AMBIENT, 1.0f, 0.1f);
+                }else{
+                    player.playSound(player.getLocation(), Sound.UI_BUTTON_CLICK, SoundCategory.AMBIENT, 0.5f, 2.0f);
+                }
+            });
+
+            server.broadcastMessage("§6Le jeu démarre dans §b"+time+"§6's");
+        }
+
         if(time == 0){
             final Server server = parkourPvP.getServer();
             final GameManager gameManager = parkourPvP.getGameManager();
@@ -51,7 +67,7 @@ public class LobbyTask extends CustomTask{
 
             try{
                 //Start Wait Jump timer
-                TaskManager.WAIT_JUMP_TASK_MANAGER.getCustomTaskManager().runTaskTimer(0L, 20L);
+                TaskManager.WAIT_BEFORE_JUMP_TASK_MANAGER.getCustomTaskManager().runTaskTimer(0L, 20L);
             }catch(TaskOverflowException e){
                 e.printStackTrace();
             }
@@ -62,9 +78,10 @@ public class LobbyTask extends CustomTask{
                 final Player player = server.getPlayer(playerUUID);
 
                 player.teleport(startLocation);
+                player.playSound(player.getLocation(), Sound.ENTITY_EXPERIENCE_ORB_PICKUP, SoundCategory.AMBIENT, 1.0f, 1.0f);
                 player.getInventory().setItem(4, new ItemBuilder(Material.SLIME_BALL).setName("§bRespawn").toItemStack());
 
-                gameManager.getPlayersData().put(player.getName(), new PlayerData(playerUUID));
+                gameManager.getPlayersData().put(player.getName(), new PlayerDataGame(playerUUID, gameManager.getDefaultWorldName()));
                 gameManager.getCheckPoints().get(0).getPlayers().add(playerUUID);
 
                 //Hide players
@@ -77,10 +94,6 @@ public class LobbyTask extends CustomTask{
             //Stop Lobby timer
             cancel();
             return;
-        }
-
-        if((time <= 5 && time > 0) || time == 10 || time == 15 || time == 30 || time == 60){
-            parkourPvP.getServer().broadcastMessage("§6Le jeu démarre dans §b"+time+"§6's");
         }
 
         time--;

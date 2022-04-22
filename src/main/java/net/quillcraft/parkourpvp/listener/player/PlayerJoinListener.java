@@ -35,11 +35,12 @@ public class PlayerJoinListener implements Listener{
         final GameManager gameManager = parkourPvP.getGameManager();
         final ParkourPvPGame parkourPvPGame = parkourPvP.getParkourPvPGame();
 
-        if(gameManager.getInGameStatus().actualInGameStatusIs(InGameStatus.WAIT)){
+        if(gameManager.getInGameStatus().actualInGameStatusIs(InGameStatus.WAIT_LOBBY)){
             player.teleport(gameManager.getLobby());
             player.setGameMode(GameMode.SURVIVAL);
+            player.getInventory().clear();
             player.setFoodLevel(20);
-            player.setHealth(20);
+            player.setHealth(20.0D);
         }
 
         if(parkourPvPGame.actualGameStatusIs(GeneralGameStatus.PLAYER_WAITING_FULL) || parkourPvPGame.actualGameStatusIs(GeneralGameStatus.IN_GAME)){

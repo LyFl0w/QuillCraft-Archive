@@ -31,11 +31,11 @@ public class CheckPoint{
         return id;
     }
 
-    public String addPlayer(PlayerData playerData){
+    public String addPlayer(PlayerDataGame playerDataGame){
         final StringBuilder message = new StringBuilder();
 
-        players.add(playerData.getUuid());
-        playerData.addCoins(coins);
+        players.add(playerDataGame.getUuid());
+        playerDataGame.addCoins(coins);
 
         message.append(coins).append(" coins");
 
@@ -43,7 +43,7 @@ public class CheckPoint{
         if(size <= 3){
             final int bonus = CheckPointCoinsBonus.getBonus(size);
             if(bonus != 0){
-                playerData.addCoins(bonus);
+                playerDataGame.addCoins(bonus);
                 message.append(" + ").append(bonus).append(" coins for bonus position");
             }
         }

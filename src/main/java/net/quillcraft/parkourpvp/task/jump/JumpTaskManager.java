@@ -19,5 +19,8 @@ public class JumpTaskManager extends CustomTaskManager{
         return (ParkourPvP) javaPlugin;
     }
 
-
+    public JumpTaskManager setStartedAtTimeMillis(){
+        getTask().updateCurrentTimeMillis();
+        return this;
+    }
 }
