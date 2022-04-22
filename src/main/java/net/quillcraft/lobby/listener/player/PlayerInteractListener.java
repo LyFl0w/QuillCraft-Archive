@@ -5,7 +5,7 @@ import net.quillcraft.commons.exception.AccountNotFoundException;
 import net.quillcraft.core.manager.LanguageManager;
 import net.quillcraft.core.utils.ActionUtils;
 import net.quillcraft.core.utils.builders.ItemBuilder;
-import net.quillcraft.lobby.headfinder.HeadFinderProvider;
+import net.quillcraft.lobby.provider.HeadFinderProvider;
 import net.quillcraft.lobby.inventory.MenuInventory;
 import net.quillcraft.lobby.inventory.VisibilityInventory;
 import net.quillcraft.lobby.manager.ConfigurationManager;

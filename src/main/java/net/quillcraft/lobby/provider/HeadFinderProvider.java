@@ -1,4 +1,4 @@
-package net.quillcraft.lobby.headfinder;
+package net.quillcraft.lobby.provider;
 
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
@@ -24,7 +24,7 @@ public class HeadFinderProvider{
 
     private final String uuid, keyHeadList;
     private final List<Integer> headlist;
-    private final static RedissonClient redissonClient = RedisManager.ACCOUNT.getRedisAccess().getRedissonClient();
+    private final static RedissonClient redissonClient = RedisManager.MESSAGE.getRedisAccess().getRedissonClient();
 
     public HeadFinderProvider(Player player){
         uuid = player.getUniqueId().toString();
