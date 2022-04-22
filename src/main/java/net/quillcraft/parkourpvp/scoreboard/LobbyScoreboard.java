@@ -24,7 +24,7 @@ public class LobbyScoreboard implements ScoreboardManager{
         final ScoreboardBuilder scoreboardBuilder = new ScoreboardBuilder(parkourPvP);
 
         scoreboardBuilder.addObjective(new ObjectiveBuilder("sbs", "§lParkourPvP", DisplaySlot.SIDEBAR)
-                .addScore(14, "§c")
+                .addScore(14, "§a")
                 .addScore(13, "§b§lStats")
                 .addScore(12, "Total Jumps: ?")
                 .addScore(11, "Parkour Fini: ?")
@@ -32,10 +32,12 @@ public class LobbyScoreboard implements ScoreboardManager{
                 .addScore(9, "§b")
                 .addScore(8, "Total Kills: ?")
                 .addScore(7, "Victoires: ?")
-                .addScore(6, "§e")
+                .addScore(6, "§c")
                 .addScore(5, getPlayerSizeLine())
-                .addScore(4, "§f")
-                .addScore(3, "§6mc.quillcraft.fr"));
+                .addScore(4, "§d")
+                .addScore(3, "Map : "+parkourPvP.getGameManager().getDefaultWorldName())
+                .addScore(2, "§e")
+                .addScore(1, "§6mc.quillcraft.fr"));
 
         scoreboardBuilder.addPlayer(player);
         scoreboardBuilder.updateScoreboard();

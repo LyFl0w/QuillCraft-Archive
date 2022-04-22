@@ -1,20 +1,23 @@
 package net.quillcraft.parkourpvp.listener.player;
 
 import net.quillcraft.core.utils.Title;
-import net.quillcraft.parkourpvp.manager.GameManager;
 import net.quillcraft.parkourpvp.ParkourPvP;
 import net.quillcraft.parkourpvp.game.CheckPoint;
-import net.quillcraft.parkourpvp.game.PlayerData;
-
-import org.bukkit.GameMode;
-import org.bukkit.Location;
-import org.bukkit.Server;
+import net.quillcraft.parkourpvp.game.PlayerDataGame;
+import net.quillcraft.parkourpvp.manager.GameManager;
+import net.quillcraft.parkourpvp.manager.TaskManager;
+import net.quillcraft.parkourpvp.scoreboard.JumpScoreboard;
+import net.quillcraft.parkourpvp.task.jump.JumpTask;
+import net.quillcraft.parkourpvp.task.jump.wait.after.WaitAfterJumpTaskManager;
+import org.bukkit.*;
 import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
 import org.bukkit.event.player.PlayerMoveEvent;
 
+import java.util.List;
 import java.util.Optional;
+import java.util.UUID;
 
 public class PlayerMoveListener implements Listener{
 
@@ -39,11 +42,13 @@ public class PlayerMoveListener implements Listener{
 
                 if(from.getBlockY() > to.getBlockY()){
                     final Player player = event.getPlayer();
-                    final PlayerData playerData = gameManager.getPlayersData().get(player.getName());
+                    final PlayerDataGame playerDataGame = gameManager.getPlayersData().get(player.getName());
 
                     // AUTO RESPAWN
-                    final Location currentCheckPointLocation = gameManager.getCheckPoints().get(playerData.getCheckPointID()).getLocation();
-                    if((gameManager.getCheckPoints().get(playerData.getCheckPointID()+1).getLocation().getBlockY()-player.getLocation().getBlockY()) >= 10 && (currentCheckPointLocation.getBlockY()-player.getLocation().getBlockY()) >= 10 && player.getFallDistance() >= 10.0F){
+                    final Location currentCheckPointLocation = gameManager.getCheckPoints().get(playerDataGame.getCheckPointID()).getLocation();
+                    if((gameManager.getCheckPoints().get(playerDataGame.getCheckPointID()+1).getLocation().getBlockY()-player.getLocation().getBlockY()) >= 10
+                            && (currentCheckPointLocation.getBlockY()-player.getLocation().getBlockY()) >= 10 && player.getFallDistance() >= 10.0F){
+                        playerDataGame.addRespawn();
                         player.setFallDistance(0.0F);
                         player.teleport(currentCheckPointLocation);
                         return;
@@ -54,32 +59,49 @@ public class PlayerMoveListener implements Listener{
                 if(!(from.getBlockX() != to.getBlockX() || from.getBlockZ() != to.getBlockZ() || from.getBlockY() > to.getBlockY())) return;
 
                 final Player player = event.getPlayer();
-                final PlayerData playerData = gameManager.getPlayersData().get(player.getName());
+                final PlayerDataGame playerDataGame = gameManager.getPlayersData().get(player.getName());
                 final Optional<CheckPoint> checkPointOptional = gameManager.getCheckPoints().stream().parallel()
-                        .filter(checkPoint -> checkPoint.getId() > playerData.getCheckPointID() && checkPoint.getLocation().distanceSquared(player.getLocation()) <= 2)
+                        .filter(checkPoint -> checkPoint.getId() > playerDataGame.getCheckPointID() && checkPoint.getLocation().distanceSquared(player.getLocation()) <= 2)
                         .findAny();
 
                 // Si il n'y pas de checkpoint, alors ne rien faire
                 if(checkPointOptional.isEmpty()) return;
 
                 final CheckPoint checkPoint = checkPointOptional.get();
-                final String nextMessage = checkPoint.addPlayer(playerData);
+                final String nextMessage = checkPoint.addPlayer(playerDataGame);
                 final int position = checkPoint.getPlayers().size();
+
+                playerDataGame.setCheckPointID(checkPoint.getId());
+
+                player.sendMessage("Vous êtes arrivé en "+(position > 1 ? position+"ième" : position+"er")+" au checkpoint n°"+checkPoint.getId());
+                player.playSound(player.getLocation(), Sound.BLOCK_AMETHYST_BLOCK_CHIME, SoundCategory.AMBIENT, 10.0f, 2.0f);
+
+                new Title(player).sendActionBar(nextMessage);
+                new JumpScoreboard(parkourPvP).updateCoins(player.getName());
 
                 // FIN DU PARKOUR
                 if(checkPoint.getId()+1 == gameManager.getCheckPoints().size()){
                     final Server server = parkourPvP.getServer();
+                    final List<UUID> playersUUID = parkourPvP.getParkourPvPGame().getPlayerUUIDList();
+
+                    playerDataGame.setTimeToFinishParkour(System.currentTimeMillis()-((JumpTask)TaskManager.JUMP_TASK_MANAGER.getCustomTaskManager().getTask()).getStartedAtTimeMillis());
 
                     player.setGameMode(GameMode.SPECTATOR);
                     player.getInventory().clear();
 
-                    parkourPvP.getParkourPvPGame().getPlayerUUIDList().forEach(otherPlayersUUID -> player.showPlayer(parkourPvP, server.getPlayer(otherPlayersUUID)));
+                    playersUUID.forEach(otherPlayersUUID -> player.showPlayer(parkourPvP, server.getPlayer(otherPlayersUUID)));
+
+                    // EVERYONE HAS FINISHED PARKOUR
+                    if(checkPoint.getPlayers().size() == playersUUID.size()){
+                        // STOP JUMP TASK
+                        TaskManager.JUMP_TASK_MANAGER.getCustomTaskManager().cancel();
+
+                        // START JUMP END
+                        server.broadcastMessage("\n§bTout le monde a finit le parkour dans les temps impartis");
+
+                        ((WaitAfterJumpTaskManager)TaskManager.WAIT_AFTER_JUMP_TASK_MANAGER.getCustomTaskManager()).startDefaultTask();
+                    }
                 }
-
-                playerData.setCheckPointID(checkPoint.getId());
-
-                player.sendMessage("Vous êtes arrivé en "+(position > 1 ? position+"ième" : position+"er")+" au checkpoint n°"+checkPoint.getId());
-                new Title(player).sendActionBar(nextMessage);
             }
         }
 

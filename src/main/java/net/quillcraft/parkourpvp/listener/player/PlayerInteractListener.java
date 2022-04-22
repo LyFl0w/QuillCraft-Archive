@@ -32,6 +32,7 @@ public class PlayerInteractListener implements Listener{
             // Interaction with respawn item
             case JUMP -> {
                 if(itemStack.getType() == Material.SLIME_BALL){
+                    gameManager.getPlayersData().get(player.getName()).addRespawn();
                     player.teleport(gameManager.getCheckPoints().get(gameManager.getPlayersData().get(player.getName()).getCheckPointID()).getLocation());
                 }
             }

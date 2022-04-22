@@ -29,20 +29,30 @@ public class JumpScoreboard implements ScoreboardManager{
 
         scoreboardBuilder.addObjective(new ObjectiveBuilder("sbs", "§lParkourPvP", DisplaySlot.SIDEBAR)
                 .addScore(14, "§a")
-                .addScore(13, getPlayerSizeLine())
-                .addScore(12, "Coins : §e0")
-                .addScore(11, "§b")
-                .addScore(10, getTimeLine())
-                .addScore(9, "1er : ?")
-                .addScore(8, "2ème : ?")
-                .addScore(7, "3ème : ?")
-                .addScore(6, "§l")
-                .addScore(5, "§6mc.quillcraft.fr"));
+                .addScore(13, "Map : "+parkourPvP.getGameManager().getDefaultWorldName())
+                .addScore(12, getPlayerSizeLine())
+                .addScore(11, getCoinsLine(player.getName()))
+                .addScore(10, "§b")
+                .addScore(9, getTimeLine())
+                .addScore(8, "1er : ?")
+                .addScore(7, "2ème : ?")
+                .addScore(6, "3ème : ?")
+                .addScore(5, "§c")
+                .addScore(4, "§6mc.quillcraft.fr"));
 
         scoreboardBuilder.addPlayer(player);
         scoreboardBuilder.updateScoreboard();
 
         parkourPvP.getGameManager().getScoreboardBuilderHashMap().put(player.getName(), scoreboardBuilder);
+    }
+
+    public void updateCoins(String playerName){
+        parkourPvP.getGameManager().getScoreboardBuilderHashMap().get(playerName)
+                .updateScore("sbs", 12, getCoinsLine(playerName)).updateScoreboard();
+    }
+
+    private String getCoinsLine(String playerName){
+        return  "Coins : §e"+parkourPvP.getGameManager().getPlayersData().get(playerName).getCoins();
     }
 
     public void updatePlayersSize(){
