@@ -68,7 +68,7 @@ public class PlayerInteractListener implements Listener {
             }
 
             //TODO : Anti Spamm door
-            if(block.getBlockData() instanceof Door door && door.isOpen()){
+            if(block.getBlockData() instanceof Door door){
 
                 return;
             }
