@@ -6,10 +6,10 @@
 
     <groupId>net.quillcraft</groupId>
     <artifactId>ParkourPvP</artifactId>
-    <version>1.0-dev</version>
+    <version>1.0-dev-fix</version>
 
     <properties>
-        <file.project>dev</file.project>
+        <file.project>dev/fix</file.project>
         <java.version>17</java.version>
         <file.encoding>UTF-8</file.encoding>
     </properties>
