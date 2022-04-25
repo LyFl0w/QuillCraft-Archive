@@ -11,14 +11,14 @@ import org.bukkit.scoreboard.DisplaySlot;
 
 public class LobbyScoreboard implements ScoreboardManager{
 
-    // FIXME: 20/02/2022 REMOVE LOBBY FOR WAITING SALLE ( LOBBY IS JUST FOR THE BETA)
+    // FIXME: 20/02/2022 REMOVE LOBBY FOR WAITING SALLE (LOBBY IS JUST FOR THE BETA)
 
     private final ParkourPvP parkourPvP;
     public LobbyScoreboard(ParkourPvP parkourPvP){
         this.parkourPvP = parkourPvP;
     }
 
-    //TODO : SPECTATOR SCOREBOARD IN GAME (SAME AS GameScoreboard but without the lines 11 and 12)
+    //TODO : SPECTATOR SCOREBOARD IN GAME (SAME AS GameScoreboard but without some lines)
 
     public void setScoreboard(Player player){
         final ScoreboardBuilder scoreboardBuilder = new ScoreboardBuilder(parkourPvP);

@@ -2,8 +2,8 @@ package net.quillcraft.parkourpvp.listener.player;
 
 import net.quillcraft.core.utils.Title;
 import net.quillcraft.parkourpvp.ParkourPvP;
-import net.quillcraft.parkourpvp.game.CheckPoint;
-import net.quillcraft.parkourpvp.game.PlayerDataGame;
+import net.quillcraft.parkourpvp.game.checkpoint.CheckPoint;
+import net.quillcraft.parkourpvp.game.player.PlayerDataGame;
 import net.quillcraft.parkourpvp.manager.GameManager;
 import net.quillcraft.parkourpvp.manager.TaskManager;
 import net.quillcraft.parkourpvp.scoreboard.JumpScoreboard;
@@ -74,7 +74,7 @@ public class PlayerMoveListener implements Listener{
                 playerDataGame.setCheckPointID(checkPoint.getId());
 
                 player.sendMessage("Vous êtes arrivé en "+(position > 1 ? position+"ième" : position+"er")+" au checkpoint n°"+checkPoint.getId());
-                player.playSound(player.getLocation(), Sound.BLOCK_AMETHYST_BLOCK_CHIME, SoundCategory.AMBIENT, 10.0f, 2.0f);
+                player.playSound(player.getLocation(), Sound.BLOCK_AMETHYST_BLOCK_CHIME, SoundCategory.AMBIENT, 10.0f, 1.0f);
 
                 new Title(player).sendActionBar(nextMessage);
                 new JumpScoreboard(parkourPvP).updateCoins(player.getName());

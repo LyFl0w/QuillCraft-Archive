@@ -2,7 +2,7 @@ package net.quillcraft.parkourpvp.task.pvp;
 
 import net.quillcraft.core.task.CustomTaskManager;
 import net.quillcraft.parkourpvp.ParkourPvP;
-import net.quillcraft.parkourpvp.game.PlayerDataGame;
+import net.quillcraft.parkourpvp.game.player.PlayerDataGame;
 import net.quillcraft.parkourpvp.manager.GameManager;
 
 import java.util.Collection;
