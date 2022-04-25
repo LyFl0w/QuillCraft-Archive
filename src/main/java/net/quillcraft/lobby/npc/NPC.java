@@ -248,11 +248,12 @@ public class NPC {
         try{
             final URL urlUUID = new URL("https://api.mojang.com/users/profiles/minecraft/"+playerName);
             final InputStreamReader readerUUID = new InputStreamReader(urlUUID.openStream());
-            final String uuid = new JsonParser().parse(readerUUID).getAsJsonObject().get("id").getAsString();
+
+            final String uuid = JsonParser.parseReader(readerUUID).getAsJsonObject().get("id").getAsString();
 
             final URL url = new URL("https://sessionserver.mojang.com/session/minecraft/profile/"+uuid+"?unsigned=false");
             final InputStreamReader reader = new InputStreamReader(url.openStream());
-            final JsonObject property = new JsonParser().parse(reader).getAsJsonObject().get("properties")
+            final JsonObject property = JsonParser.parseReader(reader).getAsJsonObject().get("properties")
                     .getAsJsonArray().get(0).getAsJsonObject();
 
             final String texture = property.get("value").getAsString();
