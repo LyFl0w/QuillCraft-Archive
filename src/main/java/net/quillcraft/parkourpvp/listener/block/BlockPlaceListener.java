@@ -1,7 +1,7 @@
 package net.quillcraft.parkourpvp.listener.block;
 
 import net.quillcraft.parkourpvp.ParkourPvP;
-import net.quillcraft.parkourpvp.status.InGameStatus;
+import net.quillcraft.parkourpvp.game.InGameStatus;
 
 import org.bukkit.Location;
 import org.bukkit.event.EventHandler;

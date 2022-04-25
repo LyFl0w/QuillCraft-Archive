@@ -8,7 +8,7 @@ import net.quillcraft.parkourpvp.manager.GameManager;
 import net.quillcraft.parkourpvp.ParkourPvP;
 import net.quillcraft.parkourpvp.manager.TaskManager;
 import net.quillcraft.parkourpvp.scoreboard.LobbyScoreboard;
-import net.quillcraft.parkourpvp.status.InGameStatus;
+import net.quillcraft.parkourpvp.game.InGameStatus;
 import net.quillcraft.parkourpvp.task.lobby.LobbyTaskManager;
 import net.quillcraft.parkourpvp.task.lobby.LobbyTask;
 

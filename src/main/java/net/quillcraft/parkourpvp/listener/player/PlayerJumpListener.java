@@ -3,7 +3,7 @@ package net.quillcraft.parkourpvp.listener.player;
 import net.quillcraft.core.event.player.PlayerJumpEvent;
 import net.quillcraft.parkourpvp.ParkourPvP;
 import net.quillcraft.parkourpvp.manager.GameManager;
-import net.quillcraft.parkourpvp.status.InGameStatus;
+import net.quillcraft.parkourpvp.game.InGameStatus;
 
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;

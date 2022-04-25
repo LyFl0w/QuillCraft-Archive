@@ -11,7 +11,7 @@ import net.quillcraft.parkourpvp.ParkourPvP;
 import net.quillcraft.parkourpvp.game.player.PlayerDataGame;
 import net.quillcraft.parkourpvp.manager.TaskManager;
 import net.quillcraft.parkourpvp.scoreboard.JumpScoreboard;
-import net.quillcraft.parkourpvp.status.InGameStatus;
+import net.quillcraft.parkourpvp.game.InGameStatus;
 
 import org.bukkit.*;
 import org.bukkit.entity.Player;

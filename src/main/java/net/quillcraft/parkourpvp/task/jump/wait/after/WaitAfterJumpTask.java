@@ -12,7 +12,7 @@ import net.quillcraft.parkourpvp.inventory.shop.ShopCategoriesInventory;
 import net.quillcraft.parkourpvp.manager.GameManager;
 import net.quillcraft.parkourpvp.manager.TaskManager;
 import net.quillcraft.parkourpvp.scoreboard.PvPScoreboard;
-import net.quillcraft.parkourpvp.status.InGameStatus;
+import net.quillcraft.parkourpvp.game.InGameStatus;
 import org.bukkit.*;
 import org.bukkit.entity.Player;
 import org.bukkit.inventory.ItemStack;

@@ -1,7 +1,7 @@
 package net.quillcraft.parkourpvp.listener.entity;
 
 import net.quillcraft.parkourpvp.ParkourPvP;
-import net.quillcraft.parkourpvp.status.InGameStatus;
+import net.quillcraft.parkourpvp.game.InGameStatus;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
 import org.bukkit.event.entity.FoodLevelChangeEvent;

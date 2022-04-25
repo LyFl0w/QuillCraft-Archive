@@ -5,7 +5,7 @@ import net.quillcraft.core.task.CustomTaskManager;
 import net.quillcraft.parkourpvp.ParkourPvP;
 import net.quillcraft.parkourpvp.game.player.PlayerDataGame;
 import net.quillcraft.parkourpvp.manager.GameManager;
-import net.quillcraft.parkourpvp.status.InGameStatus;
+import net.quillcraft.parkourpvp.game.InGameStatus;
 import org.bukkit.GameMode;
 import org.bukkit.Server;
 import org.bukkit.entity.Player;
