@@ -91,7 +91,7 @@ public class NPCCommand implements CommandExecutor {
                             player.sendMessage("NPC body rotate");
                             return true;
                         }
-                        System.out.println("§CHEAD OR BODY");
+                        player.sendMessage("§CHEAD OR BODY");
                         return true;
                     }
                     player.sendMessage("Le NPC n'existe pas");

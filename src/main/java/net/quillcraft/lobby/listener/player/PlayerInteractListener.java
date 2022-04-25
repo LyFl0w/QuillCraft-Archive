@@ -5,11 +5,10 @@ import net.quillcraft.commons.exception.AccountNotFoundException;
 import net.quillcraft.core.manager.LanguageManager;
 import net.quillcraft.core.utils.ActionUtils;
 import net.quillcraft.core.utils.builders.ItemBuilder;
-import net.quillcraft.lobby.headfinder.HeadFinderProvider;
 import net.quillcraft.lobby.inventory.MenuInventory;
 import net.quillcraft.lobby.inventory.VisibilityInventory;
 import net.quillcraft.lobby.manager.ConfigurationManager;
-
+import net.quillcraft.lobby.provider.HeadFinderProvider;
 import org.bukkit.Material;
 import org.bukkit.block.Block;
 import org.bukkit.block.data.type.Door;
@@ -35,13 +34,21 @@ public class PlayerInteractListener implements Listener {
 
         if(event.getHand() == EquipmentSlot.OFF_HAND) return;
 
+        // https://bukkit.org/threads/how-to-stop-breaking-crops-via-jump.362145/#post-3120378
+        if(action == Action.PHYSICAL){
+            if(event.getClickedBlock().getType() == Material.FARMLAND){
+                event.setCancelled(true);
+            }
+            return;
+        }
+
         if(action == Action.RIGHT_CLICK_BLOCK){
-            final Block clickedBlock = event.getClickedBlock();
-            if(clickedBlock.getType() == Material.PLAYER_HEAD) {
+            final Block block = event.getClickedBlock();
+            if(block.getType() == Material.PLAYER_HEAD) {
                 final FileConfiguration headConfiguration = ConfigurationManager.HEAD.getConfiguration();
                 ConfigurationSection configurationSection =  headConfiguration.getConfigurationSection(player.getLocation().getWorld().getName());
                 for (int i = 0; i < configurationSection.getKeys(false).size(); i++) {
-                    if(clickedBlock.getX() == configurationSection.getInt( i +".x") && (clickedBlock.getZ() == configurationSection.getInt( i +".z") && clickedBlock.getY() == configurationSection.getInt( i +".y"))){
+                    if(block.getX() == configurationSection.getInt( i +".x") && (block.getZ() == configurationSection.getInt( i +".z") && block.getY() == configurationSection.getInt( i +".y"))){
                         final HeadFinderProvider headFinderProvider = new HeadFinderProvider(player);
                         final List<Integer> list = headFinderProvider.getHeadlist();
                         if(!list.contains(i)){
@@ -56,6 +63,13 @@ public class PlayerInteractListener implements Listener {
                         break;
                     }
                 }
+                event.setCancelled(true);
+                return;
+            }
+
+            //TODO : Anti Spamm door
+            if(block.getBlockData() instanceof Door door && door.isOpen()){
+
                 return;
             }
         }
@@ -63,27 +77,23 @@ public class PlayerInteractListener implements Listener {
         if(ActionUtils.hasRight(action)){
             final ItemStack item = event.getItem();
 
-            if(item == null) return;
+            if(item == null) {
+                event.setCancelled(true);
+                return;
+            }
             //Check action with item into inventory
             switch(item.getType()){
                 //Menu
                 case FEATHER -> {
                     player.openInventory(new MenuInventory().getMenuInventory(LanguageManager.getLanguage(player)));
                     event.setCancelled(true);
-                    return;
                 }
                 //Boutique      Informations   Amis       Paramètres
-                case GOLD_INGOT, PLAYER_HEAD, PUFFERFISH, COMPARATOR -> {
-                    player.sendMessage(LanguageManager.getLanguage(player).getMessage(Text.WORKING_PROGRESS));
-                    event.setCancelled(true);
-                    return;
-                }
+                case GOLD_INGOT, PLAYER_HEAD, PUFFERFISH, COMPARATOR -> player.sendMessage(LanguageManager.getLanguage(player).getMessage(Text.WORKING_PROGRESS));
                 //Particules
                 case EXPERIENCE_BOTTLE -> {
                     player.updateInventory();
                     player.sendMessage(LanguageManager.getLanguage(player).getMessage(Text.WORKING_PROGRESS));
-                    event.setCancelled(true);
-                    return;
                 }
                 //Visibility
                 default -> {
@@ -92,19 +102,11 @@ public class PlayerInteractListener implements Listener {
                             player.openInventory(new VisibilityInventory().getVisibilityInventory(new AccountProvider(player).getAccount()));
                         }catch(AccountNotFoundException e){
                             e.printStackTrace();
-                        }finally{
-                            event.setCancelled(true);
                         }
                     }
                 }
             }
-        }
-        //TODO : Anti Spamm door
-        if(action == Action.LEFT_CLICK_BLOCK){
-            final Block block = event.getClickedBlock();
-            if(block.getBlockData() instanceof Door door && door.isOpen()){
-
-            }
+            event.setCancelled(true);
         }
     }
 }

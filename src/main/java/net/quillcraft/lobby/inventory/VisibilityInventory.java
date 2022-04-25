@@ -4,8 +4,6 @@ import net.quillcraft.commons.account.Account;
 import net.quillcraft.core.manager.LanguageManager;
 import net.quillcraft.core.utils.builders.InventoryBuilder;
 import net.quillcraft.core.utils.builders.ItemBuilder;
-
-import org.bukkit.Material;
 import org.bukkit.enchantments.Enchantment;
 import org.bukkit.inventory.Inventory;
 import org.bukkit.inventory.ItemFlag;

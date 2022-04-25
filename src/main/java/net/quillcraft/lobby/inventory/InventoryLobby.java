@@ -3,7 +3,6 @@ package net.quillcraft.lobby.inventory;
 import net.quillcraft.commons.account.Account;
 import net.quillcraft.core.manager.LanguageManager;
 import net.quillcraft.core.utils.builders.ItemBuilder;
-
 import org.bukkit.Material;
 import org.bukkit.entity.Player;
 import org.bukkit.inventory.PlayerInventory;

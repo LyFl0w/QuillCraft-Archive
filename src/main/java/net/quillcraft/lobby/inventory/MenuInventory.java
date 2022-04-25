@@ -1,14 +1,12 @@
 package net.quillcraft.lobby.inventory;
 
 import net.quillcraft.commons.account.Account;
-import net.quillcraft.commons.game.Game;
 import net.quillcraft.commons.game.GeneralGameStatus;
 import net.quillcraft.commons.game.ParkourPvPGame;
 import net.quillcraft.core.data.management.redis.RedisManager;
 import net.quillcraft.core.manager.LanguageManager;
 import net.quillcraft.core.utils.builders.InventoryBuilder;
 import net.quillcraft.core.utils.builders.ItemBuilder;
-
 import org.bukkit.Bukkit;
 import org.bukkit.Material;
 import org.bukkit.entity.Player;
@@ -18,9 +16,6 @@ import org.lumy.api.text.Text;
 import org.lumy.api.text.TextList;
 import org.redisson.api.RBucket;
 import org.redisson.api.RedissonClient;
-
-import java.util.logging.LogManager;
-import java.util.logging.Logger;
 
 public class MenuInventory {
 
