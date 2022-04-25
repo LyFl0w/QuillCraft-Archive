@@ -39,10 +39,11 @@ public class PluginManager{
         final BlockPlaceListener blockPlaceListener = new BlockPlaceListener(main);
         pluginManager.registerEvents(blockPlaceListener, main);
         pluginManager.registerEvents(new BlockBreakListener(main, blockPlaceListener), main);
-
     }
 
-    private void registerPluginMessage(Messenger messenger){}
+    private void registerPluginMessage(Messenger messenger){
+        messenger.registerOutgoingPluginChannel(main, "Bungeecord");
+    }
 
     private void registerCommands(){}
 
