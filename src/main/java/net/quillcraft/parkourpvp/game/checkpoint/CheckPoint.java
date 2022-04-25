@@ -1,5 +1,6 @@
-package net.quillcraft.parkourpvp.game;
+package net.quillcraft.parkourpvp.game.checkpoint;
 
+import net.quillcraft.parkourpvp.game.player.PlayerDataGame;
 import org.bukkit.Location;
 
 import java.util.ArrayList;
@@ -44,7 +45,7 @@ public class CheckPoint{
             final int bonus = CheckPointCoinsBonus.getBonus(size);
             if(bonus != 0){
                 playerDataGame.addCoins(bonus);
-                message.append(" + ").append(bonus).append(" coins for bonus position");
+                message.append(" + ").append(bonus).append(" Coins pour votre classement");
             }
         }
 

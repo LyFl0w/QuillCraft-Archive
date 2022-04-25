@@ -1,4 +1,4 @@
-package net.quillcraft.parkourpvp.game;
+package net.quillcraft.parkourpvp.game.checkpoint;
 
 import java.util.Arrays;
 

@@ -1,4 +1,4 @@
-package net.quillcraft.parkourpvp.game;
+package net.quillcraft.parkourpvp.game.player;
 
 import java.text.DecimalFormat;
 import java.util.UUID;
