@@ -3,6 +3,7 @@ package net.quillcraft.core.manager;
 import net.quillcraft.core.QuillCraftCore;
 import net.quillcraft.core.command.*;
 
+import net.quillcraft.core.listener.player.PlayerMoveListener;
 import org.bukkit.Server;
 import org.bukkit.plugin.messaging.Messenger;
 
@@ -18,6 +19,7 @@ public class PluginManager {
     }
 
     private void registerEvents(org.bukkit.plugin.PluginManager pluginManager){
+        pluginManager.registerEvents(new PlayerMoveListener(main), main);
     }
 
     private void registerPluginMessage(Messenger messenger){

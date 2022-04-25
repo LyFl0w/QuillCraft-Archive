@@ -46,6 +46,8 @@ public class AccountProvider {
         if(account == null){
             account = getAccountFromDatabase();
             sendAccountToRedis(account);
+        }else{
+            account.setSQLRequest();
         }
 
         return account;

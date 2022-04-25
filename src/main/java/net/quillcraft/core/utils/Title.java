@@ -6,12 +6,17 @@ import net.minecraft.network.protocol.Packet;
 import net.minecraft.network.protocol.game.*;
 import net.minecraft.server.network.PlayerConnection;
 
-import org.bukkit.craftbukkit.v1_18_R1.entity.CraftPlayer;
+import org.bukkit.craftbukkit.v1_18_R2.entity.CraftPlayer;
 import org.bukkit.entity.Player;
 
 import java.util.List;
 
-public record Title(Player player) {
+public class Title {
+
+    private final Player player;
+    public Title(Player player){
+        this.player = player;
+    }
 
     public Title sendTitle(final int fadeIn, final int stay, final int fadeOut, final String message){
         return sendTitle(fadeIn, stay, fadeOut, message, null);

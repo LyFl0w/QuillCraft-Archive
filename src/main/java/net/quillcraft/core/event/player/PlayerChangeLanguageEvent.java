@@ -14,6 +14,8 @@ import javax.annotation.Nonnull;
 
 public class PlayerChangeLanguageEvent extends PlayerEvent implements Cancellable {
 
+    private static final HandlerList HANDLERS = new HandlerList();
+
     private boolean isCancelled = false;
 
     private final String languageISO;
@@ -61,14 +63,13 @@ public class PlayerChangeLanguageEvent extends PlayerEvent implements Cancellabl
         isCancelled = setCancelled;
     }
 
-    private static final HandlerList HANDLERS = new HandlerList();
-
-    @Nonnull
-    public HandlerList getHandlers() {
+    @Override
+    public HandlerList getHandlers(){
         return HANDLERS;
     }
 
     public static HandlerList getHandlerList() {
         return HANDLERS;
     }
+
 }

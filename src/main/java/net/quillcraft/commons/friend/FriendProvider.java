@@ -39,8 +39,6 @@ public class FriendProvider{
         if (friends == null) {
             friends = getFriendsFromDatabase();
             sendFriendsToRedis(friends);
-        }else{
-            redissonClient.getBucket(keyFriends).clearExpire();
         }
 
         return friends;

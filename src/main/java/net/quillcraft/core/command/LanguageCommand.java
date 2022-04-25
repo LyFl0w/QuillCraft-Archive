@@ -19,12 +19,13 @@ import javax.annotation.Nonnull;
 import java.util.Arrays;
 import java.util.Collections;
 import java.util.List;
+import java.util.Optional;
 import java.util.stream.Collectors;
 
 public class LanguageCommand implements CommandExecutor, TabCompleter {
 
     private final QuillCraftCore quillCraftCore;
-    private final static String languages = "§cLanguage values : AUTO, "+Arrays.stream(LanguageManager.values()).parallel().map(Object::toString).collect(Collectors.joining(", "));;
+    private final static String languages = "§cLanguage values : AUTO, "+Arrays.stream(LanguageManager.values()).parallel().map(Object::toString).collect(Collectors.joining(", "));
 
     public LanguageCommand(final QuillCraftCore quillCraftCore){
         this.quillCraftCore = quillCraftCore;
@@ -51,16 +52,22 @@ public class LanguageCommand implements CommandExecutor, TabCompleter {
                                 player.getLocale()));
                         return true;
                     }
-                    Arrays.stream(LanguageManager.values()).parallel().forEach(language -> {
 
-                    });
-                    for(LanguageManager languageManager : LanguageManager.values()){
+                    final Optional<LanguageManager> optionalLanguageManager = Arrays.stream(LanguageManager.values()).parallel()
+                            .filter(languageManager -> languageManager.name().equalsIgnoreCase(arg)).findFirst();
+
+                    if(optionalLanguageManager.isPresent()){
+                        quillCraftCore.getServer().getPluginManager().callEvent(new PlayerChangeLanguageEvent(player, accountProvider, account,
+                                optionalLanguageManager.get().getISO()));
+                        return true;
+                    }
+                    /*for(LanguageManager languageManager : LanguageManager.values()){
                         if(languageManager.name().equalsIgnoreCase(arg)){
                             quillCraftCore.getServer().getPluginManager().callEvent(new PlayerChangeLanguageEvent(player, accountProvider, account,
                                     languageManager.getISO()));
                             return true;
                         }
-                    }
+                    }*/
                     player.sendMessage(languages);
                     return true;
                 }

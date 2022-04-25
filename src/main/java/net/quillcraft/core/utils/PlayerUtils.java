@@ -5,8 +5,12 @@ import org.bukkit.entity.Player;
 
 public class PlayerUtils {
 
-    public static void resetDefaultParmetersPlayer(final Player player){
-        player.setGameMode(GameMode.ADVENTURE);
+    public static void resetDefaultParmetersPlayer(Player player){
+        resetDefaultParmetersPlayer(player, GameMode.ADVENTURE);
+    }
+
+    public static void resetDefaultParmetersPlayer(Player player, GameMode gameMode){
+        player.setGameMode(gameMode);
         player.setHealth(20.0D);
         player.setFoodLevel(20);
         player.setTotalExperience(0);
