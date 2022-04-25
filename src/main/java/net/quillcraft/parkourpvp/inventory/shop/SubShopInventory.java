@@ -1,7 +1,6 @@
 package net.quillcraft.parkourpvp.inventory.shop;
 
 import net.quillcraft.core.utils.builders.InventoryBuilder;
-import net.quillcraft.parkourpvp.ParkourPvP;
 import net.quillcraft.parkourpvp.game.shop.ShopCategory;
 import net.quillcraft.parkourpvp.game.shop.items.ShopItem;
 import org.bukkit.entity.Player;
@@ -18,7 +17,6 @@ public abstract class SubShopInventory extends ShopInventory{
     public SubShopInventory(ShopCategory shopCategory){
         this.shopCategory = shopCategory;
         this.inventoryName = "Shop/"+shopCategory.getCategoryName();
-        ParkourPvP.getInstance().getLogger().warning("Log : "+getClass().getName());
     }
 
     @Override
