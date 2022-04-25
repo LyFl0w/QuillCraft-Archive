@@ -1,5 +1,6 @@
 package net.quillcraft.commons.account;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import net.lyflow.sqlrequest.SQLRequest;
 import net.quillcraft.commons.exception.AccountNotFoundException;
 import net.quillcraft.commons.exception.FriendNotFoundException;
