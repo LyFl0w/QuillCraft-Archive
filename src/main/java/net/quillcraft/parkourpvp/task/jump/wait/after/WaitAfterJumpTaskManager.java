@@ -3,7 +3,7 @@ package net.quillcraft.parkourpvp.task.jump.wait.after;
 import net.quillcraft.core.exception.TaskOverflowException;
 import net.quillcraft.core.task.CustomTaskManager;
 import net.quillcraft.parkourpvp.ParkourPvP;
-import net.quillcraft.parkourpvp.game.PlayerDataGame;
+import net.quillcraft.parkourpvp.game.player.PlayerDataGame;
 import net.quillcraft.parkourpvp.manager.GameManager;
 import net.quillcraft.parkourpvp.status.InGameStatus;
 import org.bukkit.GameMode;
@@ -42,12 +42,12 @@ public class WaitAfterJumpTaskManager extends CustomTaskManager{
         playersData.get().filter(playerData -> !playerData.hasFinishParkour()).forEach(playerData -> {
             final Player player = server.getPlayer(playerData.getUuid());
             player.setGameMode(GameMode.SPECTATOR);
+            player.getInventory().clear();
 
             playersData.get().forEach(otherPlayerData -> player.showPlayer(parkourPvP, server.getPlayer(otherPlayerData.getUuid())));
         });
 
         final Supplier<Stream<PlayerDataGame>> playersFinishParkour = () -> playersData.get().filter(PlayerDataGame::hasFinishParkour);
-
 
         if(playersFinishParkour.get().findAny().isPresent()){
             final StringBuilder whoFinishParkour = new StringBuilder("\nVoici la liste des joueurs qui ont finit le parcours :");
