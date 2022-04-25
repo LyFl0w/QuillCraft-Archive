@@ -6,10 +6,10 @@
 
     <groupId>net.quillcraft</groupId>
     <artifactId>QuillCraftLobby</artifactId>
-    <version>1.0-dev-muguet</version>
+    <version>1.0-dev</version>
 
     <properties>
-        <file.project>dev/muguet</file.project>
+        <file.project>dev</file.project>
         <java.version>17</java.version>
         <file.encoding>UTF-8</file.encoding>
     </properties>
