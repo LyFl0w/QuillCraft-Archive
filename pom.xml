@@ -6,10 +6,10 @@
 
     <groupId>net.quillcraft</groupId>
     <artifactId>QuillCraftCore</artifactId>
-    <version>1.0</version>
+    <version>1.0-dev</version>
 
     <properties>
-        <sub.version.1>dev</sub.version.1>
+        <file.project>dev</file.project>
         <java.version>17</java.version>
         <file.encoding>UTF-8</file.encoding>
     </properties>
@@ -61,7 +61,7 @@
                                     </excludes>
                                 </filter>
                             </filters>
-                            <outputFile>../QuillCraftProjectOutPut/${sub.version.1}/${project.artifactId}-${project.version}-${sub.version.1}.jar</outputFile>
+                            <outputFile>../QuillCraftProjectOutPut/${file.project}/${project.artifactId}-${project.version}.jar</outputFile>
                         </configuration>
                     </execution>
                 </executions>
