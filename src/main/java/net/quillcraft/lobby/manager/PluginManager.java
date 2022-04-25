@@ -12,7 +12,6 @@ import net.quillcraft.lobby.listener.entity.EntityDamageListener;
 import net.quillcraft.lobby.listener.entity.ExplosionPrimeListener;
 import net.quillcraft.lobby.listener.inventory.InventoryClickListener;
 import net.quillcraft.lobby.listener.player.*;
-import net.quillcraft.lobby.listener.player.PlayerChangeLanguageListener;
 import org.bukkit.plugin.messaging.Messenger;
 
 public class PluginManager {
