@@ -5,6 +5,7 @@ import net.quillcraft.parkourpvp.listener.block.BlockBreakListener;
 import net.quillcraft.parkourpvp.listener.block.BlockPlaceListener;
 import net.quillcraft.parkourpvp.listener.entity.EntityDamageListener;
 import net.quillcraft.parkourpvp.listener.entity.EntityFoodLevelChangeListener;
+import net.quillcraft.parkourpvp.listener.inventory.InventoryClickListener;
 import net.quillcraft.parkourpvp.listener.player.*;
 import org.bukkit.Server;
 import org.bukkit.plugin.messaging.Messenger;
@@ -27,9 +28,13 @@ public class PluginManager{
         pluginManager.registerEvents(new PlayerMoveListener(main), main);
         pluginManager.registerEvents(new PlayerInteractListener(main), main);
         pluginManager.registerEvents(new PlayerJumpListener(main), main);
+        pluginManager.registerEvents(new PlayerDeathListener(main), main);
+        pluginManager.registerEvents(new PlayerDropItemListener(main), main);
 
         pluginManager.registerEvents(new EntityDamageListener(main), main);
         pluginManager.registerEvents(new EntityFoodLevelChangeListener(main), main);
+
+        pluginManager.registerEvents(new InventoryClickListener(main), main);
 
         final BlockPlaceListener blockPlaceListener = new BlockPlaceListener(main);
         pluginManager.registerEvents(blockPlaceListener, main);
