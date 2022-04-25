@@ -48,7 +48,7 @@ public class JumpScoreboard implements ScoreboardManager{
 
     public void updateCoins(String playerName){
         parkourPvP.getGameManager().getScoreboardBuilderHashMap().get(playerName)
-                .updateScore("sbs", 12, getCoinsLine(playerName)).updateScoreboard();
+                .updateScore("sbs", 11, getCoinsLine(playerName)).updateScoreboard();
     }
 
     private String getCoinsLine(String playerName){
@@ -58,7 +58,7 @@ public class JumpScoreboard implements ScoreboardManager{
     public void updatePlayersSize(){
         final String newLine = getPlayerSizeLine();
         parkourPvP.getGameManager().getScoreboardBuilderHashMap().values().stream().parallel()
-                .forEach(scoreboardBuilder -> scoreboardBuilder.updateScore("sbs", 13, newLine).updateScoreboard());
+                .forEach(scoreboardBuilder -> scoreboardBuilder.updateScore("sbs", 12, newLine).updateScoreboard());
     }
 
     private String getPlayerSizeLine(){
@@ -69,7 +69,7 @@ public class JumpScoreboard implements ScoreboardManager{
     public void updateTime(){
         final String newLine = getTimeLine();
         parkourPvP.getGameManager().getScoreboardBuilderHashMap().values().stream().parallel()
-                .forEach(scoreboardBuilder -> scoreboardBuilder.updateScore("sbs", 10, newLine).updateScoreboard());
+                .forEach(scoreboardBuilder -> scoreboardBuilder.updateScore("sbs", 9, newLine).updateScoreboard());
     }
 
     private String getTimeLine(){
