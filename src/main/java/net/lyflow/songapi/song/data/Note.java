@@ -1,9 +1,10 @@
 package net.lyflow.songapi.song.data;
 
-public class Note {
+public class Note{
 
     private byte instrument, key, velocity;
     private short pitch;
+
     public Note(byte instrument, byte key, byte velocity, short pitch){
         this.instrument = instrument;
         this.key = key;
@@ -42,4 +43,5 @@ public class Note {
     public void setPitch(short pitch){
         this.pitch = pitch;
     }
+
 }

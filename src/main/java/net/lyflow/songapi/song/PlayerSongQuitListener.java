@@ -12,10 +12,7 @@ public class PlayerSongQuitListener implements Listener {
     private void playerQuitEvent(PlayerQuitEvent event){
         final Player player = event.getPlayer();
         if(RadioPlayer.playerListenRadio(player)){
-            System.out.println("Player listen a radio");
             RadioPlayer.getRadioPlayer(player).removePlayer(player);
-        }else{
-            System.out.println("Player dont listen a radio");
         }
     }
 

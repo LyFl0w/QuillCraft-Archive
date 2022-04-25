@@ -34,4 +34,5 @@ public enum InstrumentNBS {
         }
         return PIANO.sound;
     }
+
 }

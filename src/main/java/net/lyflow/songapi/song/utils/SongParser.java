@@ -7,10 +7,11 @@ import net.lyflow.songapi.song.data.Note;
 import java.io.*;
 import java.util.HashMap;
 
-public class SongParser {
+public class SongParser{
 
     private final DataInputStream dataInputStream;
     private final String fileName;
+
     public SongParser(File file) throws FileNotFoundException{
         this.fileName = file.getName();
         dataInputStream = new DataInputStream(new FileInputStream(file));
@@ -75,14 +76,15 @@ public class SongParser {
         final HashMap<Integer, Layer> layersHashMap = new HashMap<>();
 
         short tick = -1;
-        label : while(true){
+        label:
+        while(true){
             final short jumpTick = readShort();
-            if (jumpTick == 0) break;
+            if(jumpTick == 0) break;
             tick += jumpTick;
             short layer = -1;
             while(true){
                 final short jumpLayer = readShort();
-                if (jumpLayer == 0) continue label;
+                if(jumpLayer == 0) continue label;
                 layer += jumpLayer;
                 final byte instrument = dataInputStream.readByte();
                 final byte key = dataInputStream.readByte();
@@ -105,7 +107,7 @@ public class SongParser {
          * @Source : https://opennbs.org/nbs
          */
 
-        for(int i=0; i<layerCount; i++){
+        for(int i = 0; i < layerCount; i++){
             final Layer layer = layersHashMap.get(i);
             final String name = readString();
 
@@ -125,32 +127,31 @@ public class SongParser {
     private String readString() throws IOException{
         int length = readInt();
         final StringBuilder builder = new StringBuilder(length);
-        for (; length > 0; length--) {
-            char c = (char)dataInputStream.readByte();
-            if (c == '\r')
-                c = ' ';
+        for(; length > 0; length--){
+            char c = (char) dataInputStream.readByte();
+            if(c == '\r') c = ' ';
             builder.append(c);
         }
         return builder.toString();
     }
 
-    private int readInt() throws IOException {
+    private int readInt() throws IOException{
         final int byte1 = dataInputStream.readUnsignedByte();
         final int byte2 = dataInputStream.readUnsignedByte();
         final int byte3 = dataInputStream.readUnsignedByte();
         final int byte4 = dataInputStream.readUnsignedByte();
-        return byte1 + (byte2 << 8) + (byte3 << 16) + (byte4 << 24);
+        return byte1+(byte2<<8)+(byte3<<16)+(byte4<<24);
     }
 
-    private short readShort() throws IOException {
+    private short readShort() throws IOException{
         final int byte1 = dataInputStream.readUnsignedByte();
         final int byte2 = dataInputStream.readUnsignedByte();
-        return (short)(byte1 + (byte2 << 8));
+        return (short) (byte1+(byte2<<8));
     }
 
-    private void setNote(int layerIndex, int ticks, Note note, HashMap<Integer, Layer> layerHashMap) {
+    private void setNote(int layerIndex, int ticks, Note note, HashMap<Integer, Layer> layerHashMap){
         Layer layer = layerHashMap.get(layerIndex);
-        if (layer == null) {
+        if(layer == null){
             layer = new Layer();
             layerHashMap.put(layerIndex, layer);
         }

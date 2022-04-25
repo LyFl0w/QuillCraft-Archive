@@ -14,13 +14,12 @@ import java.util.Arrays;
 import java.util.Collections;
 import java.util.List;
 
-public class RadioPlayer {
+public class RadioPlayer{
 
     protected static final ArrayList<RadioPlayer> radiosPlayers = new ArrayList<>();
 
     private final JavaPlugin javaPlugin;
 
-    private final RadioPlayer radioPlayer;
     private List<Song> playListSongs;
     private final List<Song> songs;
     private final ArrayList<String> players;
@@ -41,7 +40,6 @@ public class RadioPlayer {
         this.random = random;
         this.autoRemove = autoRemove;
         players.forEach(player -> this.players.add(player.getName()));
-        this.radioPlayer = this;
 
         radiosPlayers.add(this);
     }
@@ -87,7 +85,7 @@ public class RadioPlayer {
         songPlayerScheduler.stop();
     }
 
-    public void pauseRadio() {
+    public void pauseRadio(){
         if(songPlayerScheduler == null) try{
             throw new Exception("The radio is not on");
         }catch(Exception e){
@@ -182,31 +180,31 @@ public class RadioPlayer {
         });
     }
 
-    private float getPitchInOctave(byte key, short pitch) {
+    private float getPitchInOctave(byte key, short pitch){
         float[] pitches = new float[2401];
 
-        for(int i = 0; i < 2401; ++i) {
-            pitches[i] = (float)Math.pow(2.0D, ((double)i - 1200.0D) / 1200.0D);
+        for(int i = 0; i < 2401; ++i){
+            pitches[i] = (float) Math.pow(2.0D, ((double) i-1200.0D)/1200.0D);
         }
 
-        key = (byte)(key + pitch / 100);
-        pitch = (short)(pitch % 100);
-        if (key < 9) {
-            key = (byte)(key + 15);
-        } else if (key < 33) {
-            key = (byte)(key - 9);
-        } else if (key < 57) {
-            key = (byte)(key - 33);
-        } else if (key < 81) {
-            key = (byte)(key - 57);
-        } else if (key < 105) {
-            key = (byte)(key - 81);
+        key = (byte) (key+pitch/100);
+        pitch = (short) (pitch%100);
+        if(key < 9){
+            key = (byte) (key+15);
+        }else if(key < 33){
+            key = (byte) (key-9);
+        }else if(key < 57){
+            key = (byte) (key-33);
+        }else if(key < 81){
+            key = (byte) (key-57);
+        }else if(key < 105){
+            key = (byte) (key-81);
         }
 
-        return pitches[key * 100 + pitch];
+        return pitches[key*100+pitch];
     }
 
-    private class SongPlayerScheduler extends BukkitRunnable {
+    private class SongPlayerScheduler extends BukkitRunnable{
 
         private final Song songPlaying;
         private int tick;

@@ -11,7 +11,7 @@ import java.util.HashMap;
 import java.util.Objects;
 import java.util.logging.Logger;
 
-public class SongManager {
+public class SongManager{
 
     private final HashMap<String, Song> songs;
 
@@ -25,9 +25,9 @@ public class SongManager {
         final File folderSongs = new File(javaPlugin.getDataFolder(), "/songs");
         if(!folderSongs.exists()){
             logger.severe("""
-                            The songs directory does not exist
-                            Songs files can't be loaded
-                            """);
+                    The songs directory does not exist
+                    Songs files can't be loaded
+                    """);
             return;
         }
 
