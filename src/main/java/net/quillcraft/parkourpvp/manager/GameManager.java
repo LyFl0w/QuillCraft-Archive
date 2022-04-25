@@ -3,9 +3,9 @@ package net.quillcraft.parkourpvp.manager;
 import net.quillcraft.core.utils.builders.YamlConfigurationBuilder;
 import net.quillcraft.core.utils.builders.scoreboard.ScoreboardBuilder;
 import net.quillcraft.parkourpvp.ParkourPvP;
-import net.quillcraft.parkourpvp.game.CheckPoint;
-import net.quillcraft.parkourpvp.game.CheckPointCoinsBonus;
-import net.quillcraft.parkourpvp.game.PlayerDataGame;
+import net.quillcraft.parkourpvp.game.checkpoint.CheckPoint;
+import net.quillcraft.parkourpvp.game.checkpoint.CheckPointCoinsBonus;
+import net.quillcraft.parkourpvp.game.player.PlayerDataGame;
 
 import net.quillcraft.parkourpvp.status.InGameStatus;
 import org.apache.commons.io.FileUtils;
@@ -20,6 +20,7 @@ import java.io.File;
 import java.io.IOException;
 import java.security.SecureRandom;
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.HashMap;
 import java.util.List;
 
@@ -33,6 +34,7 @@ public class GameManager{
     private final HashMap<String, PlayerDataGame> playersData = new HashMap<>();
 
     private final ArrayList<CheckPoint> checkPoints = new ArrayList<>();
+    private final ArrayList<Location> spawnPvP = new ArrayList<>();
 
     private final Location lobby;
 
@@ -42,7 +44,7 @@ public class GameManager{
 
     public GameManager(ParkourPvP parkourPvP){
         this.parkourPvP = parkourPvP;
-        this.lobby = new Location(parkourPvP.getServer().getWorld("Lobby-ParkourPvP"), 0, -59, 0, 0, 0);
+        this.lobby = new Location(parkourPvP.getServer().getWorld("LobbyParkourPvP"), 8.5, 103, 9.5, 135, 0);
         // TODO : DELETE COMMENTS WHEN WE HAVE MORE THAN ONE MAP
         //final List<String> worldsName = Arrays.asList("Natura", "Chronos", "Biomia");
         final List<String> worldsName = List.of("Natura");
@@ -53,7 +55,10 @@ public class GameManager{
                 parkourPvP.getServer().createWorld(createNewWorld(defaultWorldName+"-PvP"))};
         this.fileConfiguration = new YamlConfigurationBuilder(parkourPvP,
                 "game-settings-byworld/"+defaultWorldName+"-Settings.yml", true).getConfig();
+
+        setWorldBorder();
         loadCheckPoints();
+        loadSpawnPvP();
     }
 
     public void onDisable(){
@@ -110,12 +115,40 @@ public class GameManager{
         CheckPointCoinsBonus.BONUS_THIRD.setAdditionalCoins(coins_conf.getInt("bonus.third"));
     }
 
+    private void loadSpawnPvP(){
+        final ConfigurationSection configurationSection = fileConfiguration.getConfigurationSection("pvp.spawn");
+
+        configurationSection.getKeys(false).forEach(key -> {
+            final ConfigurationSection configurationPosition = configurationSection.getConfigurationSection(key);
+            spawnPvP.add(new Location(worlds[1], configurationPosition.getDouble("x"),
+                    configurationPosition.getDouble("y"), configurationPosition.getDouble("z"),
+                    (float) configurationPosition.getDouble("yaw"), (float) configurationPosition.getDouble("pitch")));
+        });
+
+        Collections.shuffle(spawnPvP, new SecureRandom());
+    }
+
+    private void setWorldBorder(){
+        final ConfigurationSection configurationSection = fileConfiguration.getConfigurationSection("pvp.worldborder");
+        final WorldBorder worldBorders = worlds[1].getWorldBorder();
+
+        worldBorders.setCenter(configurationSection.getDouble("center.x"), configurationSection.getDouble("center.y"));
+        worldBorders.setSize(configurationSection.getDouble("size"));
+        worldBorders.setDamageBuffer(0.0d);
+        worldBorders.setDamageAmount(1.0d);
+        worldBorders.setWarningDistance(10);
+    }
+
     public HashMap<String, ScoreboardBuilder> getScoreboardBuilderHashMap(){
         return scoreboardBuilderHashMap;
     }
 
     public ArrayList<CheckPoint> getCheckPoints(){
         return checkPoints;
+    }
+
+    public ArrayList<Location> getSpawnPvP(){
+        return spawnPvP;
     }
 
     public HashMap<String, PlayerDataGame> getPlayersData(){
