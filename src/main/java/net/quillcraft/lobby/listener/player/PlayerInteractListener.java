@@ -60,11 +60,11 @@ public class PlayerInteractListener implements Listener {
                         }else{
                             player.sendMessage("Tête déjà trouvée");
                         }
-                        break;
+
+                        event.setCancelled(true);
+                        return;
                     }
                 }
-                event.setCancelled(true);
-                return;
             }
 
             //TODO : Anti Spamm door
