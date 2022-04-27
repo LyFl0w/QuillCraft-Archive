@@ -32,7 +32,9 @@ public class TaskManager {
                     for(String i : muguetConfiguration.getConfigurationSection(timer+ ".").getKeys(false)){
                         Location location = muguetConfiguration.getLocation(timer + "." + i);
                         location.getWorld().getBlockAt(location).setType(Material.LILY_OF_THE_VALLEY);
+                        quillCraftLobby.getLogger().warning("timer path : "+timer);
                         muguetConfiguration.set(timer, null);
+                        quillCraftLobby.getLogger().warning("timer key : "+muguetConfiguration.get(timer));
                     }
                     ConfigurationManager.MUGUET.saveFile();
                 }

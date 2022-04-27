@@ -84,10 +84,7 @@ public class PlayerInteractListener implements Listener {
             //Check action with item into inventory
             switch(item.getType()){
                 //Menu
-                case FEATHER -> {
-                    player.openInventory(new MenuInventory().getMenuInventory(LanguageManager.getLanguage(player)));
-                    event.setCancelled(true);
-                }
+                case FEATHER -> player.openInventory(new MenuInventory().getMenuInventory(LanguageManager.getLanguage(player)));
                 //Boutique      Informations   Amis       Paramètres
                 case GOLD_INGOT, PLAYER_HEAD, PUFFERFISH, COMPARATOR -> player.sendMessage(LanguageManager.getLanguage(player).getMessage(Text.WORKING_PROGRESS));
                 //Particules
@@ -107,6 +104,17 @@ public class PlayerInteractListener implements Listener {
                 }
             }
             event.setCancelled(true);
+            return;
         }
+
+        // Else has left
+        if(action == Action.LEFT_CLICK_BLOCK){
+            if(event.getClickedBlock().getType() == Material.DRAGON_EGG){
+                event.setCancelled(true);
+            }
+        }
+
+
+
     }
 }
