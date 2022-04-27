@@ -1,13 +1,14 @@
 package net.quillcraft.parkourpvp.listener.inventory;
 
+import net.quillcraft.core.utils.builders.ItemBuilder;
 import net.quillcraft.parkourpvp.ParkourPvP;
+import net.quillcraft.parkourpvp.game.InGameStatus;
 import net.quillcraft.parkourpvp.game.player.PlayerDataGame;
 import net.quillcraft.parkourpvp.game.shop.ShopCategory;
 import net.quillcraft.parkourpvp.game.shop.items.ShopItem;
 import net.quillcraft.parkourpvp.inventory.shop.ShopCategoriesInventory;
 import net.quillcraft.parkourpvp.manager.GameManager;
 import net.quillcraft.parkourpvp.scoreboard.PvPScoreboard;
-import net.quillcraft.parkourpvp.game.InGameStatus;
 import org.bukkit.Material;
 import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
@@ -15,6 +16,7 @@ import org.bukkit.event.Listener;
 import org.bukkit.event.inventory.InventoryClickEvent;
 import org.bukkit.inventory.Inventory;
 import org.bukkit.inventory.ItemStack;
+import org.bukkit.inventory.meta.PotionMeta;
 
 public class InventoryClickListener implements Listener{
 
@@ -57,7 +59,7 @@ public class InventoryClickListener implements Listener{
             }
             if(title.contains("Shop")){
                 final ShopItem shopItem = ShopItem.getShopItem(item.getType());
-                final PlayerDataGame playerDataGame = gameManager.getPlayersData().get(player.getName());
+                final PlayerDataGame playerDataGame = gameManager.getPlayersDataGame().get(player.getName());
 
                 if(shopItem.getPrice() > playerDataGame.getCoins()){
                     player.sendMessage("§cVous n'avez pas assez de Coins pour pouvoir acheter cette objet !");
@@ -65,7 +67,9 @@ public class InventoryClickListener implements Listener{
                     return;
                 }
                 playerDataGame.removeCoins(shopItem.getPrice());
-                player.getInventory().addItem(new ItemStack(item.getType(), item.getAmount()));
+                final ItemBuilder itemBuilder = new ItemBuilder(item.getType(), item.getAmount());
+                if(item.getType() == Material.POTION || item.getType() == Material.SPLASH_POTION) itemBuilder.setPotionData(((PotionMeta) item.getItemMeta()).getBasePotionData());
+                player.getInventory().addItem(itemBuilder.toItemStack());
 
                 new PvPScoreboard(parkourPvP).updateCoins(player.getName());
 

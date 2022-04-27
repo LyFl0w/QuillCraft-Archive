@@ -35,7 +35,7 @@ public class WaitAfterJumpTaskManager extends CustomTaskManager{
         final ParkourPvP parkourPvP = getJavaPlugin();
         final Server server = parkourPvP.getServer();
         final GameManager gameManager = parkourPvP.getGameManager();
-        final Supplier<Stream<PlayerDataGame>> playersData = () -> gameManager.getPlayersData().values().stream();
+        final Supplier<Stream<PlayerDataGame>> playersData = () -> gameManager.getPlayersDataGame().values().stream();
 
         gameManager.setInGameStatus(InGameStatus.WAITING_AFTER_JUMP);
 

@@ -5,14 +5,15 @@ import java.util.UUID;
 
 public class PlayerDataGame{
 
-    private final String mapName;
+    private final String mapName, playerName;
     private final UUID uuid;
     private int checkPointID, jump, kill, respawn, coins;
-    private boolean hasWin, hasFinishParkour, isDead;
+    private boolean hasWin, hasFinishParkour, isDead, isBestKiller, isWorstKiller;
     private long timeToFinishParkour;
 
-    public PlayerDataGame(UUID uuid, String mapName, int checkPointID, int jump, int kill, int respawn, int coins, boolean hasWin, boolean hasFinishParkour, boolean isDead, long timeToFinishParkour){
+    public PlayerDataGame(UUID uuid, String playerName, String mapName, int checkPointID, int jump, int kill, int respawn, int coins, boolean hasWin, boolean hasFinishParkour, boolean isDead, boolean isBestKiller, boolean isWorstKiller, long timeToFinishParkour){
         this.uuid = uuid;
+        this.playerName = playerName;
         this.mapName = mapName;
         this.checkPointID = checkPointID;
         this.jump = jump;
@@ -25,8 +26,8 @@ public class PlayerDataGame{
         this.coins = coins;
     }
 
-    public PlayerDataGame(UUID uuid, String mapName){
-        this(uuid, mapName,0, 0, 0, 0, 0, false, false, false, -1L);
+    public PlayerDataGame(UUID uuid, String playerName, String mapName){
+        this(uuid, playerName, mapName,0, 0, 0, 0, 0, false, false, false, false, false, -1L);
     }
 
     public UUID getUuid(){
@@ -71,6 +72,26 @@ public class PlayerDataGame{
 
     public long getTimeToFinishParkour(){
         return timeToFinishParkour;
+    }
+
+    public String getPlayerName(){
+        return playerName;
+    }
+
+    public boolean isBestKiller(){
+        return isBestKiller;
+    }
+
+    public boolean isWorstKiller(){
+        return isWorstKiller;
+    }
+
+    public void setBestKiller(){
+        isBestKiller = true;
+    }
+
+    public void setWorstKiller(){
+        isWorstKiller = true;
     }
 
     public void setTimeToFinishParkour(long timeToFinishParkour){

@@ -21,7 +21,7 @@ public class PlayerJumpListener implements Listener{
         final GameManager gameManager = parkourPvP.getGameManager();
 
         if(gameManager.getInGameStatus().actualInGameStatusIs(InGameStatus.JUMP))
-            gameManager.getPlayersData().get(event.getPlayer().getName()).addJump();
+            gameManager.getPlayersDataGame().get(event.getPlayer().getName()).addJump();
     }
 
 }

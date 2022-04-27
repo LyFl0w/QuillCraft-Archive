@@ -31,7 +31,7 @@ public class GameManager{
     private InGameStatus inGameStatus = InGameStatus.WAIT_LOBBY;
 
     private final HashMap<String, ScoreboardBuilder> scoreboardBuilderHashMap = new HashMap<>();
-    private final HashMap<String, PlayerDataGame> playersData = new HashMap<>();
+    private final HashMap<String, PlayerDataGame> playersDataGame = new HashMap<>();
 
     private final ArrayList<CheckPoint> checkPoints = new ArrayList<>();
     private final ArrayList<Location> spawnPvP = new ArrayList<>();
@@ -151,8 +151,8 @@ public class GameManager{
         return spawnPvP;
     }
 
-    public HashMap<String, PlayerDataGame> getPlayersData(){
-        return playersData;
+    public HashMap<String, PlayerDataGame> getPlayersDataGame(){
+        return playersDataGame;
     }
 
     public InGameStatus getInGameStatus(){

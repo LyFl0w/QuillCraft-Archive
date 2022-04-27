@@ -81,7 +81,7 @@ public class LobbyTask extends CustomTask{
                 player.playSound(player.getLocation(), Sound.ENTITY_EXPERIENCE_ORB_PICKUP, SoundCategory.AMBIENT, 1.0f, 1.0f);
                 player.getInventory().setItem(4, new ItemBuilder(Material.SLIME_BALL).setName("§bRespawn").toItemStack());
 
-                gameManager.getPlayersData().put(player.getName(), new PlayerDataGame(playerUUID, gameManager.getDefaultWorldName()));
+                gameManager.getPlayersDataGame().put(player.getName(), new PlayerDataGame(playerUUID, player.getName(), gameManager.getDefaultWorldName()));
                 gameManager.getCheckPoints().get(0).getPlayers().add(playerUUID);
 
                 //Hide players

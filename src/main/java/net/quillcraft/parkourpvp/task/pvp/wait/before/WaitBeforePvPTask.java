@@ -49,6 +49,7 @@ public class WaitBeforePvPTask extends CustomTask{
             parkourPvP.getParkourPvPGame().getPlayerUUIDList().forEach(uuid -> {
                 final Player player = parkourPvP.getServer().getPlayer(uuid);
                 player.getInventory().clear(17);
+                player.updateInventory();
                 player.playSound(player.getLocation(), Sound.ENTITY_LIGHTNING_BOLT_THUNDER, SoundCategory.AMBIENT, 1.0f, 1.0f);
                 new Title(player).sendActionBar("Que le meilleur gagne");
             });

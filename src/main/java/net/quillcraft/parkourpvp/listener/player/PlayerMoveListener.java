@@ -42,7 +42,7 @@ public class PlayerMoveListener implements Listener{
 
                 if(from.getBlockY() > to.getBlockY()){
                     final Player player = event.getPlayer();
-                    final PlayerDataGame playerDataGame = gameManager.getPlayersData().get(player.getName());
+                    final PlayerDataGame playerDataGame = gameManager.getPlayersDataGame().get(player.getName());
 
                     // AUTO RESPAWN
                     final Location currentCheckPointLocation = gameManager.getCheckPoints().get(playerDataGame.getCheckPointID()).getLocation();
@@ -59,7 +59,7 @@ public class PlayerMoveListener implements Listener{
                 if(!(from.getBlockX() != to.getBlockX() || from.getBlockZ() != to.getBlockZ() || from.getBlockY() > to.getBlockY())) return;
 
                 final Player player = event.getPlayer();
-                final PlayerDataGame playerDataGame = gameManager.getPlayersData().get(player.getName());
+                final PlayerDataGame playerDataGame = gameManager.getPlayersDataGame().get(player.getName());
                 final Optional<CheckPoint> checkPointOptional = gameManager.getCheckPoints().stream().parallel()
                         .filter(checkPoint -> checkPoint.getId() > playerDataGame.getCheckPointID() && checkPoint.getLocation().distanceSquared(player.getLocation()) <= 2)
                         .findAny();
@@ -92,7 +92,7 @@ public class PlayerMoveListener implements Listener{
                     playersUUID.forEach(otherPlayersUUID -> player.showPlayer(parkourPvP, server.getPlayer(otherPlayersUUID)));
 
                     // EVERYONE HAS FINISHED PARKOUR
-                    if(checkPoint.getPlayers().size() == playersUUID.size()){
+                    if(checkPoint.getPlayers().size() >= playersUUID.size()){
                         // STOP JUMP TASK
                         TaskManager.JUMP_TASK_MANAGER.getCustomTaskManager().cancel();
 

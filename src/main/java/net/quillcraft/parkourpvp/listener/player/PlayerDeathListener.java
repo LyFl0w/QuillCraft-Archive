@@ -29,7 +29,7 @@ public class PlayerDeathListener implements Listener{
     public void onPlayerDeath(PlayerDeathEvent event){
         final Player player = event.getEntity();
         final GameManager gameManager = parkourPvP.getGameManager();
-        final HashMap<String, PlayerDataGame> playersDataGame = gameManager.getPlayersData();
+        final HashMap<String, PlayerDataGame> playersDataGame = gameManager.getPlayersDataGame();
 
         if(!gameManager.getInGameStatus().actualInGameStatusIs(InGameStatus.PVP)) return;
 
@@ -53,11 +53,12 @@ public class PlayerDeathListener implements Listener{
             playersDataGame.get(winner.getName()).setWin();
 
             winner.setGameMode(GameMode.CREATIVE);
-            winner.sendMessage("You win");
-
+            parkourPvP.getServer().broadcastMessage(winner.getName()+" a gagné la partie !");
         }else if(survivePlayers.get().findAny().isEmpty()){
             parkourPvP.getServer().broadcastMessage("§cTout le monde est mort !\nPersonne n'a gagné ");
         }
+
+        gameManager.setInGameStatus(InGameStatus.END);
 
         try{
             TaskManager.END_TASK_MANAGER.getCustomTaskManager().runTaskTimer(0L, 20L);

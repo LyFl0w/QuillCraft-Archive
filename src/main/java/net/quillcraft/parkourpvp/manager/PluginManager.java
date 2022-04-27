@@ -1,12 +1,10 @@
 package net.quillcraft.parkourpvp.manager;
 
 import net.quillcraft.parkourpvp.ParkourPvP;
-import net.quillcraft.parkourpvp.listener.block.BlockBreakListener;
-import net.quillcraft.parkourpvp.listener.block.BlockPlaceListener;
-import net.quillcraft.parkourpvp.listener.entity.EntityDamageListener;
-import net.quillcraft.parkourpvp.listener.entity.EntityFoodLevelChangeListener;
-import net.quillcraft.parkourpvp.listener.inventory.InventoryClickListener;
+import net.quillcraft.parkourpvp.listener.inventory.*;
 import net.quillcraft.parkourpvp.listener.player.*;
+import net.quillcraft.parkourpvp.listener.entity.*;
+import net.quillcraft.parkourpvp.listener.block.*;
 import org.bukkit.Server;
 import org.bukkit.plugin.messaging.Messenger;
 
@@ -42,7 +40,7 @@ public class PluginManager{
     }
 
     private void registerPluginMessage(Messenger messenger){
-        messenger.registerOutgoingPluginChannel(main, "Bungeecord");
+        messenger.registerOutgoingPluginChannel(main, "BungeeCord");
     }
 
     private void registerCommands(){}
