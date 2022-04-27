@@ -58,6 +58,11 @@ public class LobbyTask extends CustomTask{
             final GameManager gameManager = parkourPvP.getGameManager();
             final ParkourPvPGame parkourPvPGame = parkourPvP.getParkourPvPGame();
 
+            if(parkourPvPGame.getPlayerUUIDList().size() < parkourPvPGame.getGameProperties().getMinPlayer()){
+                server.broadcastMessage("§cLe jeu n'a pas pu se lancer car il manque des joueurs");
+                cancel();
+            }
+
             gameManager.setInGameStatus(InGameStatus.WAITING_BEFORE_JUMP);
 
             parkourPvPGame.setGameStatus(GeneralGameStatus.IN_GAME);
