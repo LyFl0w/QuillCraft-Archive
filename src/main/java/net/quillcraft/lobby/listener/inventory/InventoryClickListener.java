@@ -2,7 +2,6 @@ package net.quillcraft.lobby.listener.inventory;
 
 import com.google.common.io.ByteArrayDataOutput;
 import com.google.common.io.ByteStreams;
-
 import net.quillcraft.commons.account.Account;
 import net.quillcraft.commons.account.AccountProvider;
 import net.quillcraft.commons.exception.AccountNotFoundException;
@@ -13,7 +12,6 @@ import net.quillcraft.core.manager.LanguageManager;
 import net.quillcraft.lobby.QuillCraftLobby;
 import net.quillcraft.lobby.inventory.VisibilityInventory;
 import net.quillcraft.lobby.listener.player.custom.PlayerVisibilityChangeEvent;
-
 import org.bukkit.Material;
 import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
@@ -23,9 +21,10 @@ import org.bukkit.inventory.Inventory;
 import org.bukkit.inventory.ItemStack;
 import org.lumy.api.text.Text;
 
-public class InventoryClickListener implements Listener {
+public class InventoryClickListener implements Listener{
 
     private final QuillCraftLobby quillCraftLobby;
+
     public InventoryClickListener(QuillCraftLobby quillCraftLobby){
         this.quillCraftLobby = quillCraftLobby;
     }
@@ -42,6 +41,8 @@ public class InventoryClickListener implements Listener {
         event.setCancelled(true);
 
         if(item == null || item.getType() == Material.AIR) return;
+
+        if(inventory == player.getInventory()) return;
 
         final AccountProvider accountProvider = new AccountProvider(player);
         try{
@@ -63,8 +64,7 @@ public class InventoryClickListener implements Listener {
             }
 
             if(title.equals(languageManager.getMessage(Text.INVENTORY_NAME_VISIBILITY))){
-                final PlayerVisibilityChangeEvent playerVisibilityChangeEvent =
-                        new PlayerVisibilityChangeEvent(player, accountProvider, account, Account.Visibility.getVisibilityByData(item.getType()));
+                final PlayerVisibilityChangeEvent playerVisibilityChangeEvent = new PlayerVisibilityChangeEvent(player, accountProvider, account, Account.Visibility.getVisibilityByData(item.getType()));
                 quillCraftLobby.getServer().getPluginManager().callEvent(playerVisibilityChangeEvent);
                 if(!playerVisibilityChangeEvent.isCancelled()){
                     player.openInventory(new VisibilityInventory().getVisibilityInventory(account));
@@ -72,7 +72,7 @@ public class InventoryClickListener implements Listener {
                 return;
             }
 
-        }catch(AccountNotFoundException | PartyNotFoundException e){
+        }catch(AccountNotFoundException|PartyNotFoundException e){
             e.printStackTrace();
         }
     }
@@ -82,6 +82,7 @@ public class InventoryClickListener implements Listener {
         IRON_BOOTS(GameEnum.PARKOUR_PVP_SOLO);
 
         private final GameEnum gameEnum;
+
         GameItemToGameEnum(GameEnum gameEnum){
             this.gameEnum = gameEnum;
         }
