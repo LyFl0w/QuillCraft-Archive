@@ -2,11 +2,11 @@ package net.quillcraft.parkourpvp.listener.player;
 
 import net.quillcraft.core.exception.TaskOverflowException;
 import net.quillcraft.parkourpvp.ParkourPvP;
+import net.quillcraft.parkourpvp.game.InGameStatus;
 import net.quillcraft.parkourpvp.game.player.PlayerDataGame;
 import net.quillcraft.parkourpvp.manager.GameManager;
 import net.quillcraft.parkourpvp.manager.TaskManager;
 import net.quillcraft.parkourpvp.scoreboard.PvPScoreboard;
-import net.quillcraft.parkourpvp.game.InGameStatus;
 import org.bukkit.GameMode;
 import org.bukkit.Location;
 import org.bukkit.entity.Player;
@@ -54,9 +54,17 @@ public class PlayerDeathListener implements Listener{
 
             winner.setGameMode(GameMode.CREATIVE);
             parkourPvP.getServer().broadcastMessage(winner.getName()+" a gagné la partie !");
+            playEndOfTheGame(gameManager);
         }else if(survivePlayers.get().findAny().isEmpty()){
             parkourPvP.getServer().broadcastMessage("§cTout le monde est mort !\nPersonne n'a gagné ");
+            playEndOfTheGame(gameManager);
         }
+
+        event.setDeathMessage("");
+    }
+
+    private void playEndOfTheGame(GameManager gameManager){
+        TaskManager.PVP_TASK_MANAGER.getCustomTaskManager().cancel();
 
         gameManager.setInGameStatus(InGameStatus.END);
 
@@ -65,7 +73,5 @@ public class PlayerDeathListener implements Listener{
         }catch(TaskOverflowException e){
             e.printStackTrace();
         }
-
-        event.setDeathMessage("");
     }
 }
