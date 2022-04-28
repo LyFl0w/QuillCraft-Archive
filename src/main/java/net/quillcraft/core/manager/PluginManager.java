@@ -2,7 +2,6 @@ package net.quillcraft.core.manager;
 
 import net.quillcraft.core.QuillCraftCore;
 import net.quillcraft.core.command.*;
-
 import net.quillcraft.core.listener.player.PlayerMoveListener;
 import org.bukkit.Server;
 import org.bukkit.plugin.messaging.Messenger;
@@ -23,6 +22,7 @@ public class PluginManager {
     }
 
     private void registerPluginMessage(Messenger messenger){
+        messenger.registerOutgoingPluginChannel(main, "BungeeCord");
         messenger.registerOutgoingPluginChannel(main, "quillcraft:party");
         messenger.registerOutgoingPluginChannel(main, "quillcraft:message");
         messenger.registerOutgoingPluginChannel(main, "quillcraft:friend");
@@ -43,6 +43,8 @@ public class PluginManager {
 
         main.getCommand("msg").setExecutor(new MessageCommand(main));
         main.getCommand("r").setExecutor(new ReponseMessageCommand(main));
+
+        main.getCommand("lobby").setExecutor(new LobbyCommand(main));
     }
 
 }

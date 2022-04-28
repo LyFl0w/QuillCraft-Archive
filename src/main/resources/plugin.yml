@@ -26,3 +26,6 @@ commands:
   reloadlang:
     usage: §c/reloadlang
     aliases: [rll, reloadlanguage]
+  lobby:
+    usage: §c/lobby
+    aliases: [hub]
