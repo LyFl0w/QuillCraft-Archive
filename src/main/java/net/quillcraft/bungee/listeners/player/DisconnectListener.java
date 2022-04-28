@@ -15,15 +15,17 @@ import net.quillcraft.commons.exception.AccountNotFoundException;
 import net.quillcraft.commons.exception.FriendNotFoundException;
 import net.quillcraft.commons.exception.PartyNotFoundException;
 import net.quillcraft.commons.friend.FriendProvider;
+import net.quillcraft.commons.game.GameEnum;
 import net.quillcraft.commons.party.PartyProvider;
 
 import org.lumy.api.text.Text;
 import org.redisson.api.RedissonClient;
 
-public class DisconnectListener implements Listener {
+public class DisconnectListener implements Listener{
 
     private final RedissonClient redissonClient;
     private final QuillCraftBungee quillCraftBungee;
+
     public DisconnectListener(QuillCraftBungee quillCraftBungee){
         this.quillCraftBungee = quillCraftBungee;
         this.redissonClient = RedisManager.WEB_API.getRedisAccess().getRedissonClient();
@@ -37,18 +39,8 @@ public class DisconnectListener implements Listener {
         redissonClient.getAtomicLong("players.size").decrementAndGet();
         redissonClient.getTopic("players.size.update").publish(0);
 
-        taskScheduler.runAsync(quillCraftBungee, () ->  {
-            final FriendProvider friendProvider = new FriendProvider(player);
-            try{
-                friendProvider.getFriends().getOnlineFriends().stream().parallel().forEach(onlineFriend ->
-                        onlineFriend.sendMessage(LanguageManager.getLanguage(onlineFriend).getMessageComponentReplace(Text.FRIEND_LEFT_SERVER, "%PLAYER%", player.getName())));
-            }catch(FriendNotFoundException exception){
-                exception.printStackTrace();
-            }
-            friendProvider.expireRedis();
-        });
-
         taskScheduler.runAsync(quillCraftBungee, () -> {
+
             final AccountProvider accountProvider = new AccountProvider(player);
             try{
                 final Account account = accountProvider.getAccount();
@@ -60,11 +52,24 @@ public class DisconnectListener implements Listener {
                         partyProvider.expireRedis();
                     }
                 }
-            }catch(AccountNotFoundException | PartyNotFoundException exception){
+            }catch(AccountNotFoundException|PartyNotFoundException exception){
                 exception.printStackTrace();
             }
             accountProvider.expireRedis();
+
+
+            final FriendProvider friendProvider = new FriendProvider(player);
+            try{
+                friendProvider.getFriends().getOnlineFriends().stream().parallel().forEach(onlineFriend -> onlineFriend.sendMessage(LanguageManager.getLanguage(onlineFriend).getMessageComponentReplace(Text.FRIEND_LEFT_SERVER, "%PLAYER%", player.getName())));
+            }catch(FriendNotFoundException exception){
+                exception.printStackTrace();
+            }
+            friendProvider.expireRedis();
+
+
+            GameEnum.removePlayerWaiting(player.getUniqueId());
         });
+
     }
 
 }

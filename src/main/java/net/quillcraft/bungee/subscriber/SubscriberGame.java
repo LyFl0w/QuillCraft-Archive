@@ -15,6 +15,7 @@ import net.quillcraft.commons.party.PartyProvider;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Objects;
 import java.util.concurrent.ConcurrentLinkedQueue;
 
 public class SubscriberGame extends Subscriber{
@@ -56,17 +57,20 @@ public class SubscriberGame extends Subscriber{
                 for(Waiter waiter : waitingList.getWaitersList()){
                     if(maxPlayer == futurPlayers.size()) break;
 
-                    if(waiter.hasParty()){
-                        try{
-                            final List<ProxiedPlayer> playerStream = new PartyProvider(new AccountProvider(waiter.getPlayerUUID()).getAccount()).getParty().getOnlinePlayers().stream().filter(proxiedPlayer -> !proxiedPlayer.getServer().getInfo().getName().equalsIgnoreCase(message)).toList();
-                            if(maxPlayer < futurPlayers.size()+playerStream.size()) continue;
-                            futurPlayers.addAll(playerStream);
-                        }catch(AccountNotFoundException|PartyNotFoundException e){
-                            e.printStackTrace();
+                    final ProxiedPlayer proxiedPlayer = proxyServer.getPlayer(waiter.getPlayerUUID());
+                    //if(proxiedPlayer != null){
+                        if(waiter.hasParty()){
+                            try{
+                                final List<ProxiedPlayer> playerStream = new PartyProvider(new AccountProvider(waiter.getPlayerUUID()).getAccount()).getParty().getOnlinePlayers().stream().filter(proxiedPlayers -> !proxiedPlayers.getServer().getInfo().getName().equalsIgnoreCase(message)).toList();
+                                if(maxPlayer < futurPlayers.size()+playerStream.size()) continue;
+                                futurPlayers.addAll(playerStream);
+                            }catch(AccountNotFoundException|PartyNotFoundException e){
+                                e.printStackTrace();
+                            }
+                        }else{
+                            futurPlayers.add(proxiedPlayer);
                         }
-                    }else{
-                        futurPlayers.add(proxyServer.getPlayer(waiter.getPlayerUUID()));
-                    }
+                    //}
                     toRemove.add(waiter);
                 }
                 linkedQueue.poll();
@@ -75,7 +79,7 @@ public class SubscriberGame extends Subscriber{
                 waitingList.updateWaitersListRedis();
 
                 final ServerInfo serverInfo = proxyServer.getServerInfo(message);
-                futurPlayers.stream().parallel().forEach(proxiedPlayer -> proxiedPlayer.connect(serverInfo));
+                futurPlayers.stream().parallel().filter(Objects::nonNull).forEach(proxiedPlayer -> proxiedPlayer.connect(serverInfo));
             }
         }).start();
     }
