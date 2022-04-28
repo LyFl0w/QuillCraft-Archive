@@ -8,6 +8,7 @@ import net.quillcraft.lobby.command.SetLobbyCommand;
 import net.quillcraft.lobby.listener.FoodLevelChangeListener;
 import net.quillcraft.lobby.listener.WeatherChangeListener;
 import net.quillcraft.lobby.listener.block.BlockBreakListener;
+import net.quillcraft.lobby.listener.entity.EntityDamageByEntityListener;
 import net.quillcraft.lobby.listener.entity.EntityDamageListener;
 import net.quillcraft.lobby.listener.entity.ExplosionPrimeListener;
 import net.quillcraft.lobby.listener.inventory.InventoryClickListener;
@@ -43,6 +44,7 @@ public class PluginManager {
         pluginManager.registerEvents(new PlayerInteractEntityListener(), main);
 
         pluginManager.registerEvents(new EntityDamageListener(), main);
+        pluginManager.registerEvents(new EntityDamageByEntityListener(), main);
         pluginManager.registerEvents(new ExplosionPrimeListener(), main);
 
         pluginManager.registerEvents(new InventoryClickListener(main), main);
