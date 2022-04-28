@@ -32,12 +32,15 @@ public class PlayerInteractListener implements Listener {
         final Player player = event.getPlayer();
         final Action action = event.getAction();
 
-        if(event.getHand() == EquipmentSlot.OFF_HAND) return;
+        if(event.getHand() == EquipmentSlot.OFF_HAND){
+            event.setCancelled(true);
+            return;
+        }
 
         // https://bukkit.org/threads/how-to-stop-breaking-crops-via-jump.362145/#post-3120378
         if(action == Action.PHYSICAL){
-            if(event.getClickedBlock().getType() == Material.FARMLAND){
-                event.setCancelled(true);
+            switch(event.getClickedBlock().getType()){
+                case FARMLAND, TURTLE_EGG -> event.setCancelled(true);
             }
             return;
         }
