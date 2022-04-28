@@ -9,6 +9,7 @@ website: https://quillcraft.fr
 depend: [QuillCraftCore, HeadDatabase]
 commands:
   lobby:
+    usage: §c/lobby
     description: Cette commande permet de retourner au spawn principale
     aliases: [hub]
   setlobby:
@@ -18,7 +19,10 @@ commands:
     permission-message: Unknown command. Type "/help" for help.
   npc:
     usage: §c/npc <add> <displayName> (<skinname>) or /npc <remove> <name> <reference> or /npc <list>
+    permission: quillcraftlobby.npc
+    permission-message: Unknown command. Type "/help" for help.
   head:
     description: Cette commande permet de créer une tete interractive
-    permission: quillcraftlobby.head
     usage: §c/head <YAW> <coins> <ID>
+    permission: quillcraftlobby.head
+    permission-message: Unknown command. Type "/help" for help.
