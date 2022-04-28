@@ -1,6 +1,9 @@
 package net.quillcraft.lobby.manager;
 
+import net.quillcraft.core.utils.builders.scoreboard.ScoreboardBuilder;
 import net.quillcraft.lobby.QuillCraftLobby;
+import net.quillcraft.lobby.listener.player.PlayerJoinListener;
+import net.quillcraft.lobby.provider.MuguetProvider;
 import org.bukkit.Location;
 import org.bukkit.Material;
 import org.bukkit.configuration.file.FileConfiguration;
@@ -23,7 +26,7 @@ public class TaskManager {
     private void onEnableTasks(){
         // TODO : ADD NEW SYSTEM TASK
         // taskInProcess.add(new AutoMessageTask(quillCraftLobby).runTaskTimerAsynchronously(quillCraftLobby, 120L, 20L*60));
-        taskInProcess.add(quillCraftLobby.getServer().getScheduler().runTaskTimer(quillCraftLobby, ()->{
+        taskInProcess.add(quillCraftLobby.getServer().getScheduler().runTaskTimer(quillCraftLobby, () -> {
             final FileConfiguration muguetConfiguration = ConfigurationManager.MUGUET.getConfiguration();
             final Set<String> timers =  muguetConfiguration.getKeys(false);
             for(String timer : timers){
@@ -39,6 +42,18 @@ public class TaskManager {
                     ConfigurationManager.MUGUET.saveFile();
                 }
             }
+
+            // UPDATE SCOREBOARD
+            final ScoreboardBuilder scoreboardBuilder = PlayerJoinListener.scoreboardBuilder;
+            final List<String> playersTop = MuguetProvider.getTop(5);
+            final int cursorStart = 14;
+
+            for(int i=0; i<playersTop.size(); i++){
+                final int place = i+1;
+                scoreboardBuilder.updateScore("muguet", cursorStart-i, place+((place > 1) ? "eme" : "er")+" : "+playersTop.get(i));
+            }
+            scoreboardBuilder.updateScoreboard();
+
         },0L, 1200L));
 
     }

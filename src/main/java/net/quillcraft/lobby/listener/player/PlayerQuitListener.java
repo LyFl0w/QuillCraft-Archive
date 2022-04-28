@@ -19,6 +19,8 @@ public class PlayerQuitListener implements Listener {
         Bukkit.getOnlinePlayers().stream().parallel().forEach(players ->
                 players.sendMessage(LanguageManager.getLanguage(players).getMessage(Text.LOBBY_PLAYER_LEAVE).replace("%PLAYER%", player.getDisplayName())));
 
+        PlayerJoinListener.scoreboardBuilder.removePlayer(player);
+
         event.setQuitMessage("");
     }
 
