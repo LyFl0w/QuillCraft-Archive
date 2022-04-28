@@ -45,14 +45,16 @@ public class EndTask extends CustomTask{
 
             if(bestKillerOptional.isPresent()){
                 final PlayerDataGame bestKiller = bestKillerOptional.get();
+                if(bestKiller.getKill() == 0) return;
                 bestKiller.setBestKiller();
                 server.broadcastMessage(bestKiller.getPlayerName()+" a été le plus meurtrier est avec "+bestKiller.getKill()+" Kill"+(bestKiller.getKill() > 1 ? "s" : ""));
-            }
 
-            if(worstKillerOptional.isPresent()){
-                final PlayerDataGame worstKiller = worstKillerOptional.get();
-                worstKiller.setWorstKiller();
-                server.broadcastMessage(worstKiller.getPlayerName()+" a été le moins meurtrier est avec "+worstKiller.getKill()+" Kill"+(worstKiller.getKill() > 1 ? "s" : ""));
+
+                if(worstKillerOptional.isPresent()){
+                    final PlayerDataGame worstKiller = worstKillerOptional.get();
+                    worstKiller.setWorstKiller();
+                    server.broadcastMessage(worstKiller.getPlayerName()+" a été le moins meurtrier est avec "+worstKiller.getKill()+" Kill"+(worstKiller.getKill() > 1 ? "s" : ""));
+                }
             }
         }
 
