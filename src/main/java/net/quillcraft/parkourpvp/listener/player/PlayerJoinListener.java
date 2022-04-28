@@ -38,10 +38,12 @@ public class PlayerJoinListener implements Listener{
         if(gameManager.getInGameStatus().actualInGameStatusIs(InGameStatus.WAIT_LOBBY)){
             player.teleport(gameManager.getLobby());
             player.setGameMode(GameMode.SURVIVAL);
-            player.getInventory().clear();
-            player.setFoodLevel(20);
-            player.setHealth(20.0D);
         }
+        player.setFoodLevel(20);
+        player.setHealth(20.0D);
+        player.getInventory().clear();
+        player.getActivePotionEffects().forEach(potionEffect -> player.removePotionEffect(potionEffect.getType()));
+
 
         if(parkourPvPGame.actualGameStatusIs(GeneralGameStatus.PLAYER_WAITING_FULL) || parkourPvPGame.actualGameStatusIs(GeneralGameStatus.IN_GAME)){
             // TODO : SPECTATOR MODE
