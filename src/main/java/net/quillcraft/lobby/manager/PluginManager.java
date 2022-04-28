@@ -40,6 +40,7 @@ public class PluginManager {
         pluginManager.registerEvents(new PlayerInteractListener(), main);
         pluginManager.registerEvents(new PlayerItemHeldListener(), main);
         pluginManager.registerEvents(new PlayerGameModeChangeListener(), main);
+        pluginManager.registerEvents(new PlayerInteractEntityListener(), main);
 
         pluginManager.registerEvents(new EntityDamageListener(), main);
         pluginManager.registerEvents(new ExplosionPrimeListener(), main);
