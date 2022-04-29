@@ -26,7 +26,7 @@ public class PvPTaskManager extends CustomTaskManager{
     public void startDefaultTask(){
         final ParkourPvP parkourPvP = getJavaPlugin();
         final GameManager gameManager = parkourPvP.getGameManager();
-        final Collection<PlayerDataGame> playersData = gameManager.getPlayersData().values();
+        final Collection<PlayerDataGame> playersData = gameManager.getPlayersDataGame().values();
 
         playersData.stream().filter(playerData -> !playerData.hasFinishParkour()).forEach(playerData ->
                 playersData.forEach(otherPlayerData -> parkourPvP.getServer().getPlayer(playerData.getUuid())

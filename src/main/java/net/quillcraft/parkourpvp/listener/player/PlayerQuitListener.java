@@ -2,21 +2,26 @@ package net.quillcraft.parkourpvp.listener.player;
 
 import net.quillcraft.commons.game.GeneralGameStatus;
 import net.quillcraft.commons.game.ParkourPvPGame;
+import net.quillcraft.core.exception.TaskOverflowException;
 import net.quillcraft.parkourpvp.ParkourPvP;
+import net.quillcraft.parkourpvp.game.InGameStatus;
+import net.quillcraft.parkourpvp.game.player.PlayerDataGame;
 import net.quillcraft.parkourpvp.manager.GameManager;
+import net.quillcraft.parkourpvp.manager.TaskManager;
 import net.quillcraft.parkourpvp.scoreboard.JumpScoreboard;
 import net.quillcraft.parkourpvp.scoreboard.LobbyScoreboard;
 import net.quillcraft.parkourpvp.scoreboard.PvPScoreboard;
+import net.quillcraft.parkourpvp.task.jump.wait.after.WaitAfterJumpTaskManager;
 import org.bukkit.GameMode;
+import org.bukkit.Server;
 import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
 import org.bukkit.event.player.PlayerQuitEvent;
 
+import java.util.HashMap;
 import java.util.List;
 import java.util.UUID;
-import java.util.function.Supplier;
-import java.util.stream.Stream;
 
 public class PlayerQuitListener implements Listener{
 
@@ -46,27 +51,67 @@ public class PlayerQuitListener implements Listener{
             parkourPvP.getServer().broadcastMessage("§c"+playerName+" a quitté le jeu !");
 
             switch(gameManager.getInGameStatus()){
-                case WAITING_BEFORE_JUMP -> {
-                    gameManager.getPlayersData().remove(playerName);
+                case WAITING_BEFORE_JUMP, JUMP -> {
+                    final HashMap<String, PlayerDataGame> playersDataGame = gameManager.getPlayersDataGame();
+                    playersDataGame.remove(playerName);
+
                     new JumpScoreboard(parkourPvP).updatePlayersSize();
+
+                    if(playersDataGame.size() == 0){
+                        try{
+                            TaskManager.END_TASK_MANAGER.getCustomTaskManager().runTaskTimer(0L, 20L);
+                        }catch(TaskOverflowException e){
+                            e.printStackTrace();
+                        }
+                        return;
+                    }
+
+                    final Server server = parkourPvP.getServer();
+
+                    // EVERYONE HAS FINISHED PARKOUR
+                    if(gameManager.getCheckPoints().get(gameManager.getCheckPoints().size()).getPlayers().size() >= parkourPvPGame.getPlayerUUIDList().size()){
+                        // STOP JUMP TASK
+                        TaskManager.JUMP_TASK_MANAGER.getCustomTaskManager().cancel();
+
+                        // START JUMP END
+                        server.broadcastMessage("\n§bTout le monde a finit le parkour dans les temps impartis");
+
+                        ((WaitAfterJumpTaskManager)TaskManager.WAIT_AFTER_JUMP_TASK_MANAGER.getCustomTaskManager()).startDefaultTask();
+                    }
                 }
-                case JUMP, WAITING_AFTER_JUMP -> new JumpScoreboard(parkourPvP).updatePlayersSize();
+
+                case WAITING_AFTER_JUMP -> new JumpScoreboard(parkourPvP).updatePlayersSize();
+
                 case PVP, WAITING_BEFORE_PVP -> {
                     new PvPScoreboard(parkourPvP).updatePlayersSize();
 
-                    final Supplier<Stream<? extends Player>> survivePlayers = () -> parkourPvP.getServer().getOnlinePlayers().stream().filter(players -> players.getGameMode() == GameMode.SURVIVAL);
-                    if(survivePlayers.get().count() == 1){
-                        final Player winner = survivePlayers.get().findFirst().get();
-                        parkourPvP.getGameManager().getPlayersData().get(winner.getName()).setWin();
+                    final List<UUID> playerUUIDList = parkourPvPGame.getPlayerUUIDList();
 
-                        winner.setGameMode(GameMode.CREATIVE);
-                        winner.sendMessage("You win");
-                    }else if(survivePlayers.get().count() == 0){
-                        parkourPvP.getServer().broadcastMessage("§cTout le monde est mort !\nPersonne n'a gagné ");
+                    if(playerUUIDList.size() <= 1){
+                        if(playerUUIDList.size() == 1){
+                            final Player winner = parkourPvP.getServer().getPlayer(playerUUIDList.get(0));
+                            parkourPvP.getGameManager().getPlayersDataGame().get(winner.getName()).setWin();
+
+                            winner.setGameMode(GameMode.CREATIVE);
+                            parkourPvP.getServer().broadcastMessage(winner.getName()+" a gagné la partie !");
+                        }else{
+                            parkourPvP.getServer().broadcastMessage("§cTout le monde est mort !\nPersonne n'a gagné ");
+                        }
+
+                        if(gameManager.getInGameStatus().actualInGameStatusIs(InGameStatus.PVP)){
+                            TaskManager.PVP_TASK_MANAGER.getCustomTaskManager().cancel();
+                        }else{
+                            TaskManager.WAIT_BEFORE_PVP_TASK_MANAGER.getCustomTaskManager().cancel();
+                        }
+
+                        try{
+                            TaskManager.END_TASK_MANAGER.getCustomTaskManager().runTaskTimer(0L, 20L);
+                        }catch(TaskOverflowException e){
+                            e.printStackTrace();
+                        }
                     }
                 }
             }
-
         }
         parkourPvPGame.updateRedis();
 

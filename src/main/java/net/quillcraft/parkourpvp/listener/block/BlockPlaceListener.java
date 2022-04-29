@@ -1,7 +1,7 @@
 package net.quillcraft.parkourpvp.listener.block;
 
 import net.quillcraft.parkourpvp.ParkourPvP;
-import net.quillcraft.parkourpvp.status.InGameStatus;
+import net.quillcraft.parkourpvp.game.InGameStatus;
 
 import org.bukkit.Location;
 import org.bukkit.event.EventHandler;
@@ -29,7 +29,7 @@ public class BlockPlaceListener implements Listener{
         }
 
         final Location location = event.getBlockPlaced().getLocation();
-        if(getMaxY < 0 || location.getBlockY() > getMaxY){
+        if(location.getBlockY() > getMaxY){
             event.getPlayer().sendMessage("§cVous ne pouvez pas poser de blocs au dessus de cette hauteur");
             event.setCancelled(true);
         }

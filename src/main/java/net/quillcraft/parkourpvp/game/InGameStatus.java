@@ -1,4 +1,4 @@
-package net.quillcraft.parkourpvp.status;
+package net.quillcraft.parkourpvp.game;
 
 public enum InGameStatus{
 

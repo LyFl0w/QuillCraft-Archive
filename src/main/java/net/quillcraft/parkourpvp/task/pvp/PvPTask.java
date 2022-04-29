@@ -4,6 +4,11 @@ import net.quillcraft.core.task.CustomTask;
 import net.quillcraft.core.task.CustomTaskManager;
 import net.quillcraft.parkourpvp.ParkourPvP;
 import net.quillcraft.parkourpvp.scoreboard.PvPScoreboard;
+import org.bukkit.GameMode;
+import org.bukkit.entity.Player;
+
+import java.util.function.Supplier;
+import java.util.stream.Stream;
 
 public class PvPTask extends CustomTask{
 
@@ -23,8 +28,6 @@ public class PvPTask extends CustomTask{
     @Override
     public void run(){
 
-        new PvPScoreboard(parkourPvP).updateTime();
-
         // WORLDBORDER REDUCE
         if(time == worldBorderTime){
             parkourPvP.getGameManager().getWorlds()[1].getWorldBorder().setSize(0.0d, timeToReach-worldBorderTime);
@@ -32,10 +35,16 @@ public class PvPTask extends CustomTask{
         }
 
         if(time == timeToReach){
-
+            final Supplier<Stream<? extends Player>> players = () -> parkourPvP.getServer().getOnlinePlayers().stream().filter(player -> player.getGameMode() == GameMode.SURVIVAL);
+            if(players.get().count() > 1){
+                players.get().forEach(player -> player.damage(0.5d));
+                return;
+            }
             cancel();
             return;
         }
+
+        new PvPScoreboard(parkourPvP).updateTime();
 
         time++;
     }

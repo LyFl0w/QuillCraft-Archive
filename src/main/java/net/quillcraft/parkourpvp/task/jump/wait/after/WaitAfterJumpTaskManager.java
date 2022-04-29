@@ -5,7 +5,7 @@ import net.quillcraft.core.task.CustomTaskManager;
 import net.quillcraft.parkourpvp.ParkourPvP;
 import net.quillcraft.parkourpvp.game.player.PlayerDataGame;
 import net.quillcraft.parkourpvp.manager.GameManager;
-import net.quillcraft.parkourpvp.status.InGameStatus;
+import net.quillcraft.parkourpvp.game.InGameStatus;
 import org.bukkit.GameMode;
 import org.bukkit.Server;
 import org.bukkit.entity.Player;
@@ -35,7 +35,7 @@ public class WaitAfterJumpTaskManager extends CustomTaskManager{
         final ParkourPvP parkourPvP = getJavaPlugin();
         final Server server = parkourPvP.getServer();
         final GameManager gameManager = parkourPvP.getGameManager();
-        final Supplier<Stream<PlayerDataGame>> playersData = () -> gameManager.getPlayersData().values().stream();
+        final Supplier<Stream<PlayerDataGame>> playersData = () -> gameManager.getPlayersDataGame().values().stream();
 
         gameManager.setInGameStatus(InGameStatus.WAITING_AFTER_JUMP);
 

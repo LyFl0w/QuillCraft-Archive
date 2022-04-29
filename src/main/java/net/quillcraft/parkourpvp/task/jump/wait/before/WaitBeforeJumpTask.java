@@ -7,7 +7,7 @@ import net.quillcraft.core.utils.Title;
 import net.quillcraft.parkourpvp.ParkourPvP;
 import net.quillcraft.parkourpvp.manager.TaskManager;
 
-import net.quillcraft.parkourpvp.status.InGameStatus;
+import net.quillcraft.parkourpvp.game.InGameStatus;
 import net.quillcraft.parkourpvp.task.jump.JumpTaskManager;
 import org.bukkit.Sound;
 import org.bukkit.SoundCategory;

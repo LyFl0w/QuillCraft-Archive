@@ -5,8 +5,8 @@ import net.quillcraft.core.task.CustomTask;
 import net.quillcraft.core.task.CustomTaskManager;
 import net.quillcraft.core.utils.Title;
 import net.quillcraft.parkourpvp.ParkourPvP;
+import net.quillcraft.parkourpvp.game.InGameStatus;
 import net.quillcraft.parkourpvp.manager.TaskManager;
-import net.quillcraft.parkourpvp.status.InGameStatus;
 import org.bukkit.Sound;
 import org.bukkit.SoundCategory;
 import org.bukkit.entity.Player;
@@ -44,14 +44,17 @@ public class WaitBeforePvPTask extends CustomTask{
         }
 
         if(time == 0){
-            parkourPvP.getGameManager().setInGameStatus(InGameStatus.PVP);
 
             parkourPvP.getParkourPvPGame().getPlayerUUIDList().forEach(uuid -> {
                 final Player player = parkourPvP.getServer().getPlayer(uuid);
                 player.getInventory().clear(17);
+                player.closeInventory();
+                player.updateInventory();
                 player.playSound(player.getLocation(), Sound.ENTITY_LIGHTNING_BOLT_THUNDER, SoundCategory.AMBIENT, 1.0f, 1.0f);
                 new Title(player).sendActionBar("Que le meilleur gagne");
             });
+
+            parkourPvP.getGameManager().setInGameStatus(InGameStatus.PVP);
 
             try{
                 // Start PvP Timer

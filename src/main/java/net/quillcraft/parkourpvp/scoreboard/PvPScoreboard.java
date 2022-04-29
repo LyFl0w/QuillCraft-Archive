@@ -48,7 +48,7 @@ public class PvPScoreboard implements ScoreboardManager{
     }
 
     private String getCoinsLine(String playerName){
-        return  "Coins : §e"+parkourPvP.getGameManager().getPlayersData().get(playerName).getCoins();
+        return  "Coins : §e"+parkourPvP.getGameManager().getPlayersDataGame().get(playerName).getCoins();
     }
 
     public void updatePlayersSize(){
@@ -68,7 +68,7 @@ public class PvPScoreboard implements ScoreboardManager{
     }
 
     private String getKillLine(String playerName){
-        return  "Kill : §e"+parkourPvP.getGameManager().getPlayersData().get(playerName).getKill();
+        return  "Kill : §e"+parkourPvP.getGameManager().getPlayersDataGame().get(playerName).getKill();
     }
 
     public void updateTime(){

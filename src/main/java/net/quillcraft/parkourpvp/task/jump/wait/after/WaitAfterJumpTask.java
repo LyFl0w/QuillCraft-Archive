@@ -12,10 +12,11 @@ import net.quillcraft.parkourpvp.inventory.shop.ShopCategoriesInventory;
 import net.quillcraft.parkourpvp.manager.GameManager;
 import net.quillcraft.parkourpvp.manager.TaskManager;
 import net.quillcraft.parkourpvp.scoreboard.PvPScoreboard;
-import net.quillcraft.parkourpvp.status.InGameStatus;
+import net.quillcraft.parkourpvp.game.InGameStatus;
 import org.bukkit.*;
 import org.bukkit.entity.Player;
 import org.bukkit.inventory.ItemStack;
+import org.bukkit.scheduler.BukkitScheduler;
 
 import java.util.ArrayList;
 import java.util.concurrent.atomic.AtomicInteger;
@@ -38,7 +39,7 @@ public class WaitAfterJumpTask extends CustomTask{
             final Server server = parkourPvP.getServer();
 
             final String line = MessageUtils.line();
-            parkourPvP.getGameManager().getPlayersData().values().forEach(playerData -> {
+            parkourPvP.getGameManager().getPlayersDataGame().values().forEach(playerData -> {
                 final Player player = server.getPlayer(playerData.getUuid());
                 final StringBuilder jumpStatsDescribe = new StringBuilder(MessageUtils.chatCenteredMessage("§lStatistiques§f\n"));
 
@@ -83,20 +84,21 @@ public class WaitAfterJumpTask extends CustomTask{
             final ArrayList<Location> spawnPvP = gameManager.getSpawnPvP();
             final ItemStack itemStack = new ItemBuilder(Material.NETHER_STAR).setName("§b§eSHOP").toItemStack();
             final AtomicInteger index = new AtomicInteger();
+            final BukkitScheduler scheduler = parkourPvP.getServer().getScheduler();
+
+            gameManager.setInGameStatus(InGameStatus.WAITING_BEFORE_PVP);
 
             parkourPvP.getParkourPvPGame().getPlayerUUIDList().forEach(playerUUID -> {
                 final Player player = server.getPlayer(playerUUID);
 
                 new PvPScoreboard(parkourPvP).setScoreboard(player);
+                scheduler.runTaskLater(parkourPvP, () -> player.setGameMode(GameMode.SURVIVAL), 20L);
 
-                player.setGameMode(GameMode.SURVIVAL);
                 player.getInventory().setItem(17, itemStack);
                 player.teleport(spawnPvP.get(index.getAndIncrement()));
                 player.openInventory(new ShopCategoriesInventory().getInventory(player));
                 if(index.get() > spawnPvP.size()) index.set(0);
             });
-
-            gameManager.setInGameStatus(InGameStatus.WAITING_BEFORE_PVP);
 
             try{
                 //Start Jump timer

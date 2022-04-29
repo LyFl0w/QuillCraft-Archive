@@ -2,11 +2,11 @@ package net.quillcraft.parkourpvp.listener.player;
 
 import net.quillcraft.core.exception.TaskOverflowException;
 import net.quillcraft.parkourpvp.ParkourPvP;
+import net.quillcraft.parkourpvp.game.InGameStatus;
 import net.quillcraft.parkourpvp.game.player.PlayerDataGame;
 import net.quillcraft.parkourpvp.manager.GameManager;
 import net.quillcraft.parkourpvp.manager.TaskManager;
 import net.quillcraft.parkourpvp.scoreboard.PvPScoreboard;
-import net.quillcraft.parkourpvp.status.InGameStatus;
 import org.bukkit.GameMode;
 import org.bukkit.Location;
 import org.bukkit.entity.Player;
@@ -29,7 +29,7 @@ public class PlayerDeathListener implements Listener{
     public void onPlayerDeath(PlayerDeathEvent event){
         final Player player = event.getEntity();
         final GameManager gameManager = parkourPvP.getGameManager();
-        final HashMap<String, PlayerDataGame> playersDataGame = gameManager.getPlayersData();
+        final HashMap<String, PlayerDataGame> playersDataGame = gameManager.getPlayersDataGame();
 
         if(!gameManager.getInGameStatus().actualInGameStatusIs(InGameStatus.PVP)) return;
 
@@ -53,18 +53,25 @@ public class PlayerDeathListener implements Listener{
             playersDataGame.get(winner.getName()).setWin();
 
             winner.setGameMode(GameMode.CREATIVE);
-            winner.sendMessage("You win");
-
+            parkourPvP.getServer().broadcastMessage(winner.getName()+" a gagné la partie !");
+            playEndOfTheGame(gameManager);
         }else if(survivePlayers.get().findAny().isEmpty()){
             parkourPvP.getServer().broadcastMessage("§cTout le monde est mort !\nPersonne n'a gagné ");
+            playEndOfTheGame(gameManager);
         }
+
+        event.setDeathMessage("");
+    }
+
+    private void playEndOfTheGame(GameManager gameManager){
+        TaskManager.PVP_TASK_MANAGER.getCustomTaskManager().cancel();
+
+        gameManager.setInGameStatus(InGameStatus.END);
 
         try{
             TaskManager.END_TASK_MANAGER.getCustomTaskManager().runTaskTimer(0L, 20L);
         }catch(TaskOverflowException e){
             e.printStackTrace();
         }
-
-        event.setDeathMessage("");
     }
 }

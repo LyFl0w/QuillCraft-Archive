@@ -52,7 +52,7 @@ public class JumpScoreboard implements ScoreboardManager{
     }
 
     private String getCoinsLine(String playerName){
-        return  "Coins : §e"+parkourPvP.getGameManager().getPlayersData().get(playerName).getCoins();
+        return  "Coins : §e"+parkourPvP.getGameManager().getPlayersDataGame().get(playerName).getCoins();
     }
 
     public void updatePlayersSize(){

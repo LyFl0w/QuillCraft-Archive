@@ -8,7 +8,7 @@ import net.quillcraft.parkourpvp.manager.GameManager;
 import net.quillcraft.parkourpvp.ParkourPvP;
 import net.quillcraft.parkourpvp.manager.TaskManager;
 import net.quillcraft.parkourpvp.scoreboard.LobbyScoreboard;
-import net.quillcraft.parkourpvp.status.InGameStatus;
+import net.quillcraft.parkourpvp.game.InGameStatus;
 import net.quillcraft.parkourpvp.task.lobby.LobbyTaskManager;
 import net.quillcraft.parkourpvp.task.lobby.LobbyTask;
 
@@ -38,10 +38,12 @@ public class PlayerJoinListener implements Listener{
         if(gameManager.getInGameStatus().actualInGameStatusIs(InGameStatus.WAIT_LOBBY)){
             player.teleport(gameManager.getLobby());
             player.setGameMode(GameMode.SURVIVAL);
-            player.getInventory().clear();
-            player.setFoodLevel(20);
-            player.setHealth(20.0D);
         }
+        player.setFoodLevel(20);
+        player.setHealth(20.0D);
+        player.getInventory().clear();
+        player.getActivePotionEffects().forEach(potionEffect -> player.removePotionEffect(potionEffect.getType()));
+
 
         if(parkourPvPGame.actualGameStatusIs(GeneralGameStatus.PLAYER_WAITING_FULL) || parkourPvPGame.actualGameStatusIs(GeneralGameStatus.IN_GAME)){
             // TODO : SPECTATOR MODE
