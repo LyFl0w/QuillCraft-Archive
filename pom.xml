@@ -78,7 +78,7 @@
         <dependency>
             <groupId>net.quillcraft</groupId>
             <artifactId>QuillCraftCore</artifactId>
-            <version>1.0-dev</version>
+            <version>1.0-dev-stats</version>
             <scope>provided</scope>
         </dependency>
 
