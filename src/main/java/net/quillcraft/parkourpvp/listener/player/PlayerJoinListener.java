@@ -42,8 +42,7 @@ public class PlayerJoinListener implements Listener{
         player.setFoodLevel(20);
         player.setHealth(20.0D);
         player.getInventory().clear();
-        player.getActivePotionEffects().forEach(potionEffect -> player.removePotionEffect(potionEffect.getType()));
-
+        parkourPvP.getServer().getScheduler().runTaskLater(parkourPvP, () -> player.getActivePotionEffects().forEach(potionEffect -> player.removePotionEffect(potionEffect.getType())), 20L);
 
         if(parkourPvPGame.actualGameStatusIs(GeneralGameStatus.PLAYER_WAITING_FULL) || parkourPvPGame.actualGameStatusIs(GeneralGameStatus.IN_GAME)){
             // TODO : SPECTATOR MODE
