@@ -28,6 +28,8 @@ public class PvPTask extends CustomTask{
     @Override
     public void run(){
 
+        new PvPScoreboard(parkourPvP).updateTime();
+
         // WORLDBORDER REDUCE
         if(time == worldBorderTime){
             parkourPvP.getGameManager().getWorlds()[1].getWorldBorder().setSize(0.0d, timeToReach-worldBorderTime);
@@ -43,8 +45,6 @@ public class PvPTask extends CustomTask{
             cancel();
             return;
         }
-
-        new PvPScoreboard(parkourPvP).updateTime();
 
         time++;
     }
