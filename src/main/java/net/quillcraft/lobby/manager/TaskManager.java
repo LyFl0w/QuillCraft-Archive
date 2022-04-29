@@ -46,12 +46,12 @@ public class TaskManager {
             // UPDATE SCOREBOARD
             final ScoreboardBuilder scoreboardBuilder = PlayerJoinListener.scoreboardBuilder;
             final List<String> playersTop = MuguetProvider.getTop(5);
-            final int cursorStart = 14;
-
+            final int cursorStart = 12;
             for(int i=0; i<playersTop.size(); i++){
                 final int place = i+1;
                 scoreboardBuilder.updateScore("muguet", cursorStart-i, place+((place > 1) ? "eme" : "er")+" : "+playersTop.get(i));
             }
+            scoreboardBuilder.updateScore("muguet", 14, "Total : §e"+MuguetProvider.getSum()+" §6muguets");
             scoreboardBuilder.updateScoreboard();
 
         },0L, 1200L));

@@ -25,13 +25,15 @@ public class PlayerJoinListener implements Listener {
 
     public final static ScoreboardBuilder scoreboardBuilder = new ScoreboardBuilder(QuillCraftLobby.getInstance())
             .addObjective(new ObjectiveBuilder("muguet", "§eTop Chasseur de Muguet", DisplaySlot.SIDEBAR)
-                    .addScore(15, "§c")
-                    .addScore(14, "1er : ?")
-                    .addScore(13, "2eme : ?")
-                    .addScore(12, "3eme : ?")
-                    .addScore(11, "4eme : ?")
-                    .addScore(10, "5eme : ?")
-                    .addScore(9, "§f"));
+                    .addScore(15, "§a")
+                    .addScore(14, "Total : ?")
+                    .addScore(13, "§b")
+                    .addScore(12, "1er : ?")
+                    .addScore(11, "2eme : ?")
+                    .addScore(10, "3eme : ?")
+                    .addScore(9, "4eme : ?")
+                    .addScore(8, "5eme : ?")
+                    .addScore(7, "§f"));
 
     private final QuillCraftLobby quillCraftLobby;
     public PlayerJoinListener(QuillCraftLobby quillCraftLobby){

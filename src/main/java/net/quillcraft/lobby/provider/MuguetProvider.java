@@ -23,7 +23,6 @@ public class MuguetProvider {
         keyMuguetCount = "muguetCount:" + uuid;
     }
 
-
     public int getMuguetCount(){
         int tempMuguetCount = getMuguetCountFromRedis();
         if(tempMuguetCount == 0){
@@ -111,5 +110,23 @@ public class MuguetProvider {
         }
         return playersName;
     }
+
+    public static int getSum(){
+        try{
+            final Connection connection = DatabaseManager.MINECRAFT_SERVER.getDatabaseAccess().getConnection();
+            final PreparedStatement preparedStatement = connection.prepareStatement("SELECT SUM(muguetCounter) as sum from muguet"); // Précontruction d'une requète SQL
+            final ResultSet resultSet = preparedStatement.executeQuery();    // Recuperation des données
+
+            resultSet.next();
+            final int sum = resultSet.getInt("sum");
+            connection.close();
+
+            return sum;
+        }catch(SQLException e){
+            e.printStackTrace();
+        }
+        return 0;
+    }
+
 
 }
