@@ -6,6 +6,13 @@ mysql:
       password: "password"
     database_name: "db_name"
     port: 3306 #default port
+  statistiques:
+    host: "127.0.0.1"
+    user:
+      name: "username"
+      password: "password"
+    database_name: "db_name"
+    port: 3306 #default port
 
 
 redis:
