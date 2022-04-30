@@ -39,6 +39,15 @@ public class MessageGame extends Message{
 
     private static synchronized void synchronizedPlayerRep(ProxyServer proxyServer, ProxiedPlayer player, String sub, boolean hasParty){
 
+        final GameEnum gameEnum = GameEnum.getGamePlayerWaiting(player.getUniqueId());
+        if(gameEnum != null){
+            // Si il attend déjà sur le meme jeu, alors ne rien faire
+            if(gameEnum == GameEnum.valueOf(sub)) return;
+
+            GameEnum.removePlayerWaiting(player.getUniqueId());
+            player.sendMessage(new TextComponent("§cVous avez quitté la file d'attente de "+gameEnum.getGameName()));
+        }
+
         // Si un jeu est entrain ou va se faire traiter
         if(SubscriberGame.getPublishGameLinkedQueue().stream().parallel().anyMatch(s -> s.startsWith(sub+":"))){
             addPlayerToWaiter(sub, player, hasParty);
@@ -46,13 +55,12 @@ public class MessageGame extends Message{
         }
 
         try{
-
             final List<ProxiedPlayer> playerList = (hasParty) ? new PartyProvider(new AccountProvider(player).getAccount()).getParty().getOnlinePlayers() : Collections.singletonList(player);
 
             final Optional<String> serversName = redissonClient.getKeys().getKeysStreamByPattern(sub+":*").parallel().filter(key -> {
                 final Game game = (Game) redissonClient.getBucket(key).get();
                 return game.actualGameStatusIs(GeneralGameStatus.PLAYER_WAITING) && game.getGameProperties().getMaxPlayer()-game.getPlayerUUIDList().size() >= playerList.size();
-            }).min(Comparator.comparing(key -> ((Game) redissonClient.getBucket(key).get()).getPlayerUUIDList().size()));
+            }).max(Comparator.comparing(key -> ((Game) redissonClient.getBucket(key).get()).getPlayerUUIDList().size()));
 
             if(serversName.isPresent()){
                 final String serverName = serversName.get();

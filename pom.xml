@@ -6,7 +6,7 @@
 
     <groupId>net.quillcraft.bungee</groupId>
     <artifactId>QuillCraftBungee</artifactId>
-    <version>1.0dev-game</version>
+    <version>1.0dev-web_api_impl</version>
 
     <properties>
         <maven.compiler.source>17</maven.compiler.source>
@@ -56,7 +56,7 @@
                             </excludes>
                         </filter>
                     </filters>
-                    <outputFile>../QuillCraftProjectOutPut/dev/game/${project.artifactId}-${project.version}.jar</outputFile>
+                    <outputFile>../QuillCraftProjectOutPut/dev/web_api_impl/${project.artifactId}-${project.version}.jar</outputFile>
                 </configuration>
             </plugin>
         </plugins>
