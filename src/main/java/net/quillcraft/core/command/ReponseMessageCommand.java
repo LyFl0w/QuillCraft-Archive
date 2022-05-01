@@ -2,10 +2,8 @@ package net.quillcraft.core.command;
 
 import com.google.common.io.ByteArrayDataOutput;
 import com.google.common.io.ByteStreams;
-
 import net.quillcraft.core.QuillCraftCore;
 import net.quillcraft.core.data.management.redis.RedisManager;
-
 import org.bukkit.command.Command;
 import org.bukkit.command.CommandExecutor;
 import org.bukkit.command.CommandSender;
@@ -14,10 +12,10 @@ import org.redisson.api.RSet;
 import org.redisson.api.RedissonClient;
 
 import javax.annotation.Nonnull;
+import java.time.Duration;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.UUID;
-import java.util.concurrent.TimeUnit;
 
 public class ReponseMessageCommand implements CommandExecutor{
 
@@ -47,14 +45,14 @@ public class ReponseMessageCommand implements CommandExecutor{
                     targetPlayer.sendMessage("["+player.getName()+"->Moi]"+message);
                     player.sendMessage("[Moi->"+targetPlayerName+"]"+message);
 
-                    rSet.expire(2L, TimeUnit.HOURS);
+                    rSet.expire(Duration.ofHours(2));
 
                     final RSet<String> rSetTargetPlayer = redissonClient.getSet(uuidTargetPlayer.toString());
                     if(!rSetTargetPlayer.contains(playerUUID.toString())){
                         rSetTargetPlayer.clear();
                         rSetTargetPlayer.add(playerUUID.toString());
                     }
-                    rSetTargetPlayer.expire(2L, TimeUnit.HOURS);
+                    rSetTargetPlayer.expire(Duration.ofHours(2));
                     return true;
                 }
 

@@ -14,6 +14,7 @@ import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
+import java.time.Duration;
 import java.util.UUID;
 
 public class PlayerGameStatistiqueProvider<T extends PlayerGameStatistique>{
@@ -119,6 +120,10 @@ public class PlayerGameStatistiqueProvider<T extends PlayerGameStatistique>{
         }catch(SQLException e){
             e.printStackTrace();
         }
+    }
+
+    public void expireRedis(){
+        redissonClient.getBucket(key).expire(Duration.ofMinutes(5));
     }
 
 }
