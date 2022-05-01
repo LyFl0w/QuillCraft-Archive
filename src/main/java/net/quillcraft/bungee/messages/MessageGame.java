@@ -15,6 +15,9 @@ import net.quillcraft.commons.account.AccountProvider;
 import net.quillcraft.commons.exception.AccountNotFoundException;
 import net.quillcraft.commons.exception.PartyNotFoundException;
 import net.quillcraft.commons.game.*;
+import net.quillcraft.commons.game.status.GeneralGameStatus;
+import net.quillcraft.commons.game.waiter.Waiter;
+import net.quillcraft.commons.game.waiter.WaitingList;
 import net.quillcraft.commons.party.PartyProvider;
 
 import org.redisson.api.RedissonClient;

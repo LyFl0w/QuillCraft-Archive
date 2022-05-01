@@ -2,7 +2,7 @@ package net.quillcraft.bungee.subscriber;
 
 import net.quillcraft.bungee.QuillCraftBungee;
 import net.quillcraft.commons.game.GameEnum;
-import net.quillcraft.commons.game.WaitingList;
+import net.quillcraft.commons.game.waiter.WaitingList;
 
 import java.util.Arrays;
 
