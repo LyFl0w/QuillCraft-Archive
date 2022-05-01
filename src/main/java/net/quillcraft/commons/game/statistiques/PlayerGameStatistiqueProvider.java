@@ -94,14 +94,13 @@ public class PlayerGameStatistiqueProvider<T extends PlayerGameStatistique>{
                 plugin.getServer().getScheduler().runTaskAsynchronously(plugin, () -> createPlayerDataInDatabase(playerData));
                 return playerData;
             }
-        }catch(SQLException|NoSuchMethodException|InstantiationException|IllegalAccessException|InvocationTargetException e){
+        }catch(SQLException | NoSuchMethodException | InstantiationException | IllegalAccessException | InvocationTargetException e){
             e.printStackTrace();
         }
         return null;
     }
 
     private void createPlayerDataInDatabase(T playerData){
-        createTableIfNotExist();
         try{
             final Connection connection = DatabaseManager.STATISTIQUES.getDatabaseAccess().getConnection();
             final PreparedStatement preparedStatement = connection.prepareStatement("INSERT INTO "+gameName+" (uuid, statistique) VALUES (?, ?)");
@@ -114,18 +113,18 @@ public class PlayerGameStatistiqueProvider<T extends PlayerGameStatistique>{
         }
     }
 
-    private void createTableIfNotExist(){
+    public void expireRedis(){
+        redissonClient.getBucket(key).expire(Duration.ofMinutes(10));
+    }
+
+    public static void createTableIfNotExist(GameEnum gameEnum){
         try{
             final Connection connection = DatabaseManager.STATISTIQUES.getDatabaseAccess().getConnection();
-            connection.prepareStatement("CREATE TABLE IF NOT EXISTS "+gameName+" ( uuid VARCHAR(36) NOT NULL , statistique JSON NULL DEFAULT NULL , UNIQUE (uuid))").execute();
+            connection.prepareStatement("CREATE TABLE IF NOT EXISTS "+gameEnum.name().toLowerCase()+" ( uuid VARCHAR(36) NOT NULL , statistique JSON NULL DEFAULT NULL , UNIQUE (uuid))").execute();
             connection.close();
         }catch(SQLException e){
             e.printStackTrace();
         }
-    }
-
-    public void expireRedis(){
-        redissonClient.getBucket(key).expire(Duration.ofMinutes(10));
     }
 
 }
