@@ -1,9 +1,9 @@
 package net.quillcraft.parkourpvp.listener.player;
 
+import net.quillcraft.commons.game.statistiques.parkourpvp.PlayerParkourPvPData;
 import net.quillcraft.core.utils.Title;
 import net.quillcraft.parkourpvp.ParkourPvP;
 import net.quillcraft.parkourpvp.game.checkpoint.CheckPoint;
-import net.quillcraft.parkourpvp.game.player.PlayerDataGame;
 import net.quillcraft.parkourpvp.manager.GameManager;
 import net.quillcraft.parkourpvp.manager.TaskManager;
 import net.quillcraft.parkourpvp.scoreboard.JumpScoreboard;
@@ -42,13 +42,13 @@ public class PlayerMoveListener implements Listener{
 
                 if(from.getBlockY() > to.getBlockY()){
                     final Player player = event.getPlayer();
-                    final PlayerDataGame playerDataGame = gameManager.getPlayersDataGame().get(player.getName());
+                    final PlayerParkourPvPData PlayerParkourPvPData = gameManager.getPlayersDataGame().get(player.getName());
 
                     // AUTO RESPAWN
-                    final Location currentCheckPointLocation = gameManager.getCheckPoints().get(playerDataGame.getCheckPointID()).getLocation();
-                    if((gameManager.getCheckPoints().get(playerDataGame.getCheckPointID()+1).getLocation().getBlockY()-player.getLocation().getBlockY()) >= 10
+                    final Location currentCheckPointLocation = gameManager.getCheckPoints().get(PlayerParkourPvPData.getCheckPointID()).getLocation();
+                    if((gameManager.getCheckPoints().get(PlayerParkourPvPData.getCheckPointID()+1).getLocation().getBlockY()-player.getLocation().getBlockY()) >= 10
                             && (currentCheckPointLocation.getBlockY()-player.getLocation().getBlockY()) >= 10 && player.getFallDistance() >= 10.0F){
-                        playerDataGame.addRespawn();
+                        PlayerParkourPvPData.addRespawn();
                         player.setFallDistance(0.0F);
                         player.teleport(currentCheckPointLocation);
                         return;
@@ -59,19 +59,19 @@ public class PlayerMoveListener implements Listener{
                 if(!(from.getBlockX() != to.getBlockX() || from.getBlockZ() != to.getBlockZ() || from.getBlockY() > to.getBlockY())) return;
 
                 final Player player = event.getPlayer();
-                final PlayerDataGame playerDataGame = gameManager.getPlayersDataGame().get(player.getName());
+                final PlayerParkourPvPData PlayerParkourPvPData = gameManager.getPlayersDataGame().get(player.getName());
                 final Optional<CheckPoint> checkPointOptional = gameManager.getCheckPoints().stream().parallel()
-                        .filter(checkPoint -> checkPoint.getId() > playerDataGame.getCheckPointID() && checkPoint.getLocation().distanceSquared(player.getLocation()) <= 2)
+                        .filter(checkPoint -> checkPoint.getId() > PlayerParkourPvPData.getCheckPointID() && checkPoint.getLocation().distanceSquared(player.getLocation()) <= 2)
                         .findAny();
 
                 // Si il n'y pas de checkpoint, alors ne rien faire
                 if(checkPointOptional.isEmpty()) return;
 
                 final CheckPoint checkPoint = checkPointOptional.get();
-                final String nextMessage = checkPoint.addPlayer(playerDataGame);
+                final String nextMessage = checkPoint.addPlayer(PlayerParkourPvPData);
                 final int position = checkPoint.getPlayers().size();
 
-                playerDataGame.setCheckPointID(checkPoint.getId());
+                PlayerParkourPvPData.setCheckPointID(checkPoint.getId());
 
                 player.sendMessage("Vous êtes arrivé en "+(position > 1 ? position+"ième" : position+"er")+" au checkpoint n°"+checkPoint.getId());
                 player.playSound(player.getLocation(), Sound.BLOCK_AMETHYST_BLOCK_CHIME, SoundCategory.AMBIENT, 10.0f, 1.0f);
@@ -84,7 +84,7 @@ public class PlayerMoveListener implements Listener{
                     final Server server = parkourPvP.getServer();
                     final List<UUID> playersUUID = parkourPvP.getParkourPvPGame().getPlayerUUIDList();
 
-                    playerDataGame.setTimeToFinishParkour(System.currentTimeMillis()-((JumpTask)TaskManager.JUMP_TASK_MANAGER.getCustomTaskManager().getTask()).getStartedAtTimeMillis());
+                    PlayerParkourPvPData.setTimeToFinishParkour(System.currentTimeMillis()-((JumpTask)TaskManager.JUMP_TASK_MANAGER.getCustomTaskManager().getTask()).getStartedAtTimeMillis());
 
                     player.setGameMode(GameMode.SPECTATOR);
                     player.getInventory().clear();

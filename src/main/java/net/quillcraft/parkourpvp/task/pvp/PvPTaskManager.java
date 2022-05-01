@@ -2,7 +2,7 @@ package net.quillcraft.parkourpvp.task.pvp;
 
 import net.quillcraft.core.task.CustomTaskManager;
 import net.quillcraft.parkourpvp.ParkourPvP;
-import net.quillcraft.parkourpvp.game.player.PlayerDataGame;
+import net.quillcraft.commons.game.statistiques.parkourpvp.PlayerParkourPvPData;
 import net.quillcraft.parkourpvp.manager.GameManager;
 
 import java.util.Collection;
@@ -26,7 +26,7 @@ public class PvPTaskManager extends CustomTaskManager{
     public void startDefaultTask(){
         final ParkourPvP parkourPvP = getJavaPlugin();
         final GameManager gameManager = parkourPvP.getGameManager();
-        final Collection<PlayerDataGame> playersData = gameManager.getPlayersDataGame().values();
+        final Collection<PlayerParkourPvPData> playersData = gameManager.getPlayersDataGame().values();
 
         playersData.stream().filter(playerData -> !playerData.hasFinishParkour()).forEach(playerData ->
                 playersData.forEach(otherPlayerData -> parkourPvP.getServer().getPlayer(playerData.getUuid())

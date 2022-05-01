@@ -29,8 +29,9 @@ public class EntityDamageListener implements Listener{
                 return;
             }
 
-            if(event.getDamage() > 2.0d)
+            if(inGameStatus.actualInGameStatusIs(InGameStatus.JUMP) && event.getDamage() > 2.0d){
                 player.teleport(gameManager.getCheckPoints().get(gameManager.getPlayersDataGame().get(player.getName()).getCheckPointID()).getLocation());
+            }
 
             event.setCancelled(true);
         }

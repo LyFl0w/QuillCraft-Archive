@@ -1,6 +1,6 @@
 package net.quillcraft.parkourpvp.task.jump.wait.after;
 
-import net.quillcraft.commons.game.GeneralGameStatus;
+import net.quillcraft.commons.game.status.GeneralGameStatus;
 import net.quillcraft.commons.game.ParkourPvPGame;
 import net.quillcraft.core.exception.TaskOverflowException;
 import net.quillcraft.core.task.CustomTask;

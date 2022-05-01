@@ -1,18 +1,17 @@
 package net.quillcraft.parkourpvp.task.lobby;
 
-import net.quillcraft.commons.game.GeneralGameStatus;
 import net.quillcraft.commons.game.ParkourPvPGame;
+import net.quillcraft.commons.game.statistiques.parkourpvp.PlayerParkourPvPData;
+import net.quillcraft.commons.game.status.GeneralGameStatus;
 import net.quillcraft.core.exception.TaskOverflowException;
 import net.quillcraft.core.task.CustomTask;
 import net.quillcraft.core.task.CustomTaskManager;
 import net.quillcraft.core.utils.builders.ItemBuilder;
-import net.quillcraft.parkourpvp.manager.GameManager;
 import net.quillcraft.parkourpvp.ParkourPvP;
-import net.quillcraft.parkourpvp.game.player.PlayerDataGame;
+import net.quillcraft.parkourpvp.game.InGameStatus;
+import net.quillcraft.parkourpvp.manager.GameManager;
 import net.quillcraft.parkourpvp.manager.TaskManager;
 import net.quillcraft.parkourpvp.scoreboard.JumpScoreboard;
-import net.quillcraft.parkourpvp.game.InGameStatus;
-
 import org.bukkit.*;
 import org.bukkit.entity.Player;
 
@@ -87,7 +86,7 @@ public class LobbyTask extends CustomTask{
                 player.playSound(player.getLocation(), Sound.ENTITY_EXPERIENCE_ORB_PICKUP, SoundCategory.AMBIENT, 1.0f, 1.0f);
                 player.getInventory().setItem(4, new ItemBuilder(Material.SLIME_BALL).setName("§bRespawn").toItemStack());
 
-                gameManager.getPlayersDataGame().put(player.getName(), new PlayerDataGame(playerUUID, player.getName(), gameManager.getDefaultWorldName()));
+                gameManager.getPlayersDataGame().put(player.getName(), new PlayerParkourPvPData(playerUUID, player.getName(), gameManager.getDefaultWorldName()));
                 gameManager.getCheckPoints().get(0).getPlayers().add(playerUUID);
 
                 //Hide players

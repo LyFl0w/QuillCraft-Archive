@@ -1,6 +1,6 @@
 package net.quillcraft.parkourpvp.game.checkpoint;
 
-import net.quillcraft.parkourpvp.game.player.PlayerDataGame;
+import net.quillcraft.commons.game.statistiques.parkourpvp.PlayerParkourPvPData;
 import org.bukkit.Location;
 
 import java.util.ArrayList;
@@ -32,11 +32,11 @@ public class CheckPoint{
         return id;
     }
 
-    public String addPlayer(PlayerDataGame playerDataGame){
+    public String addPlayer(PlayerParkourPvPData PlayerParkourPvPData){
         final StringBuilder message = new StringBuilder();
 
-        players.add(playerDataGame.getUuid());
-        playerDataGame.addCoins(coins);
+        players.add(PlayerParkourPvPData.getUuid());
+        PlayerParkourPvPData.addCoins(coins);
 
         message.append(coins).append(" coins");
 
@@ -44,7 +44,7 @@ public class CheckPoint{
         if(size <= 3){
             final int bonus = CheckPointCoinsBonus.getBonus(size);
             if(bonus != 0){
-                playerDataGame.addCoins(bonus);
+                PlayerParkourPvPData.addCoins(bonus);
                 message.append(" + ").append(bonus).append(" Coins pour votre classement");
             }
         }
