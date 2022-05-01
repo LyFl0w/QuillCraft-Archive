@@ -1,12 +1,11 @@
 package net.quillcraft.commons.game;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
-
 import net.quillcraft.bungee.data.management.redis.RedisManager;
-
+import net.quillcraft.commons.game.properties.GameProperties;
+import net.quillcraft.commons.game.status.GeneralGameStatus;
 import org.redisson.api.RedissonClient;
 
-import java.util.ArrayList;
 import java.util.List;
 import java.util.UUID;
 
@@ -63,10 +62,6 @@ public abstract sealed class Game permits ParkourPvPGame{
 
     public void searchPlayer(){
         redissonClient.getTopic("game.searchplayer").publish(getRedisKey());
-    }
-
-    public GeneralGameStatus getGameStatus(){
-        return generalGameStatus;
     }
 
     public void setGameStatus(GeneralGameStatus generalGameStatus){
