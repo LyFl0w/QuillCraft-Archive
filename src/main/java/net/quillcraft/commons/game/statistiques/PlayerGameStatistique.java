@@ -27,4 +27,20 @@ public abstract class PlayerGameStatistique{
     protected void addSimpleStats(HashMap<String, Integer> hashMap, String mapName, boolean value){
         hashMap.put(mapName, hashMap.getOrDefault(mapName, 0)+(value ? 1 : 0));
     }
+
+    public HashMap<String, Integer> getTotalGamesPlayedByMap(){
+        return totalGamesPlayedByMap;
+    }
+
+    public HashMap<String, Integer> getTotalWinByMap(){
+        return totalWinByMap;
+    }
+
+    public int getTotalGamePlayed(){
+        return totalGamePlayed;
+    }
+
+    public int getTotalWin(){
+        return totalWin;
+    }
 }
