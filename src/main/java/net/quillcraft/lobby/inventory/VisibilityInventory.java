@@ -31,7 +31,8 @@ public class VisibilityInventory {
         return menuBuilder.toInventory();
     }
 
-    protected static ItemBuilder getItemVisibility(final Account.Visibility visibility, final LanguageManager languageManager){
+
+    public static ItemBuilder getItemVisibility(final Account.Visibility visibility, final LanguageManager languageManager){
         return switch(visibility){
             case EVERYONE -> setVisibilityItemBuilderName(languageManager, Text.STATUS_VISIBILITY_EVERYONE, Account.Visibility.EVERYONE);
             // TODO : CHANGE TEXT ITEM NAME FOR PARTY CASE
