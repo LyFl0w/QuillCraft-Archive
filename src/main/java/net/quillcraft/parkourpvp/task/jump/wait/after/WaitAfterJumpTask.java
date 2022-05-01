@@ -1,24 +1,26 @@
 package net.quillcraft.parkourpvp.task.jump.wait.after;
 
-import net.quillcraft.commons.game.status.GeneralGameStatus;
 import net.quillcraft.commons.game.ParkourPvPGame;
+import net.quillcraft.commons.game.status.GeneralGameStatus;
 import net.quillcraft.core.exception.TaskOverflowException;
 import net.quillcraft.core.task.CustomTask;
 import net.quillcraft.core.task.CustomTaskManager;
 import net.quillcraft.core.utils.MessageUtils;
 import net.quillcraft.core.utils.builders.ItemBuilder;
 import net.quillcraft.parkourpvp.ParkourPvP;
+import net.quillcraft.parkourpvp.game.InGameStatus;
 import net.quillcraft.parkourpvp.inventory.shop.ShopCategoriesInventory;
 import net.quillcraft.parkourpvp.manager.GameManager;
 import net.quillcraft.parkourpvp.manager.TaskManager;
 import net.quillcraft.parkourpvp.scoreboard.PvPScoreboard;
-import net.quillcraft.parkourpvp.game.InGameStatus;
 import org.bukkit.*;
 import org.bukkit.entity.Player;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.scheduler.BukkitScheduler;
 
 import java.util.ArrayList;
+import java.util.List;
+import java.util.UUID;
 import java.util.concurrent.atomic.AtomicInteger;
 
 public class WaitAfterJumpTask extends CustomTask{
@@ -61,8 +63,9 @@ public class WaitAfterJumpTask extends CustomTask{
             final Server server = parkourPvP.getServer();
             final GameManager gameManager = parkourPvP.getGameManager();
             final ParkourPvPGame parkourPvPGame = parkourPvP.getParkourPvPGame();
+            final List<UUID> playersUUID = parkourPvPGame.getPlayerUUIDList();
 
-            if(parkourPvPGame.getPlayerUUIDList().size() <= 1){
+            if(playersUUID.size() <= 1){
                 // un joueur ou personne a gagné
                 gameManager.setInGameStatus(InGameStatus.END);
                 parkourPvPGame.setGameStatus(GeneralGameStatus.END);
@@ -70,6 +73,8 @@ public class WaitAfterJumpTask extends CustomTask{
                 parkourPvPGame.updateRedis();
 
                 Bukkit.broadcastMessage("§cIl ne reste plus personne, vous avez gagné par forfait !");
+
+                gameManager.getPlayersDataGame().get(playersUUID.get(0)).setWin();
 
                 try{
                     TaskManager.END_TASK_MANAGER.getCustomTaskManager().runTaskTimer(0L, 20L);
