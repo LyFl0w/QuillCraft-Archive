@@ -9,7 +9,6 @@
     <version>2.0</version>
 
     <properties>
-        <file.project>dev</file.project>
         <java.version>17</java.version>
         <file.encoding>UTF-8</file.encoding>
     </properties>
@@ -56,7 +55,7 @@
                             </excludes>
                         </filter>
                     </filters>
-                    <outputFile>../QuillCraftProjectOutPut/${file.project}/${project.artifactId}-${project.version}.jar</outputFile>
+                    <outputFile>../QuillCraftProjectOutPut/${project.artifactId}-${project.version}.jar</outputFile>
                 </configuration>
             </plugin>
         </plugins>
