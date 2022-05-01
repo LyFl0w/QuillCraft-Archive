@@ -6,10 +6,10 @@ import net.quillcraft.commons.account.Account;
 import net.quillcraft.commons.account.AccountProvider;
 import net.quillcraft.commons.exception.AccountNotFoundException;
 import net.quillcraft.commons.exception.PartyNotFoundException;
-import net.quillcraft.commons.game.GameEnum;
 import net.quillcraft.commons.party.PartyProvider;
 import net.quillcraft.core.manager.LanguageManager;
 import net.quillcraft.lobby.QuillCraftLobby;
+import net.quillcraft.lobby.game.GameItemToGameEnum;
 import net.quillcraft.lobby.inventory.VisibilityInventory;
 import net.quillcraft.lobby.listener.player.custom.PlayerVisibilityChangeEvent;
 import org.bukkit.Material;
@@ -76,20 +76,4 @@ public class InventoryClickListener implements Listener{
             e.printStackTrace();
         }
     }
-
-    private enum GameItemToGameEnum{
-
-        IRON_BOOTS(GameEnum.PARKOUR_PVP_SOLO);
-
-        private final GameEnum gameEnum;
-
-        GameItemToGameEnum(GameEnum gameEnum){
-            this.gameEnum = gameEnum;
-        }
-
-        public GameEnum getGameEnum(){
-            return gameEnum;
-        }
-    }
-
 }
