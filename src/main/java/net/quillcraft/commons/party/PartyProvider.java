@@ -7,7 +7,6 @@ import net.md_5.bungee.api.chat.ComponentBuilder;
 import net.md_5.bungee.api.chat.HoverEvent;
 import net.md_5.bungee.api.chat.TextComponent;
 import net.md_5.bungee.api.connection.ProxiedPlayer;
-
 import net.quillcraft.bungee.data.management.redis.RedisManager;
 import net.quillcraft.bungee.data.management.sql.DatabaseAccess;
 import net.quillcraft.bungee.data.management.sql.DatabaseManager;
@@ -18,7 +17,6 @@ import net.quillcraft.commons.account.Account;
 import net.quillcraft.commons.account.AccountProvider;
 import net.quillcraft.commons.exception.AccountNotFoundException;
 import net.quillcraft.commons.exception.PartyNotFoundException;
-
 import org.lumy.api.text.Text;
 import org.lumy.api.text.TextList;
 import org.redisson.api.RBucket;
@@ -29,9 +27,9 @@ import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
+import java.time.Duration;
 import java.util.List;
 import java.util.UUID;
-import java.util.concurrent.TimeUnit;
 
 public class PartyProvider {
 
@@ -243,7 +241,7 @@ public class PartyProvider {
         if(inviteBucket.isExists()) return false;
 
         inviteBucket.add(0);
-        inviteBucket.expire(3, TimeUnit.MINUTES);
+        inviteBucket.expire(Duration.ofMinutes(3));
 
         final LanguageManager languageManager = LanguageManager.getLanguage(targetAccount);
         final TextComponent textComponent = languageManager.getMessageComponentReplace(Text.PARTY_INVITATION_RECEIVED, "%PLAYER%", player.getName());
@@ -256,7 +254,7 @@ public class PartyProvider {
     }
 
     public void expireRedis(){
-        redissonClient.getBucket(keyParty).expire(6, TimeUnit.HOURS);
+        redissonClient.getBucket(keyParty).expire(Duration.ofHours(6));
     }
 
     public String getKeyParty(){

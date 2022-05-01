@@ -10,8 +10,8 @@ import net.quillcraft.bungee.data.management.redis.RedisManager;
 import org.redisson.api.RSet;
 import org.redisson.api.RedissonClient;
 
+import java.time.Duration;
 import java.util.UUID;
-import java.util.concurrent.TimeUnit;
 
 public class MessageMessage extends Message{
 
@@ -34,25 +34,25 @@ public class MessageMessage extends Message{
                     return;
                 }
 
-                final UUID playerUUID = player.getUniqueId();
-                final UUID targetPlayerUUID = targetPlayer.getUniqueId();
+                final String playerUUID = player.getUniqueId().toString();
+                final String targetPlayerUUID = targetPlayer.getUniqueId().toString();
 
                 targetPlayer.sendMessage(new TextComponent("["+player.getName()+"->Moi]"+message));
                 player.sendMessage(new TextComponent("[Moi"+"->"+targetPlayer.getName()+"]"+message));
 
-                final RSet<String> rSet = redissonClient.getSet(playerUUID.toString());
-                if(!rSet.contains(targetPlayerUUID.toString())){
+                final RSet<String> rSet = redissonClient.getSet(playerUUID);
+                if(!rSet.contains(targetPlayerUUID)){
                     rSet.clear();
-                    rSet.add(targetPlayerUUID.toString());
+                    rSet.add(targetPlayerUUID);
                 }
-                rSet.expire(2L, TimeUnit.HOURS);
+                rSet.expire(Duration.ofHours(2));
 
-                final RSet<String> rSetTargetPlayer = redissonClient.getSet(targetPlayerUUID.toString());
-                if(!rSetTargetPlayer.contains(playerUUID.toString())){
+                final RSet<String> rSetTargetPlayer = redissonClient.getSet(targetPlayerUUID);
+                if(!rSetTargetPlayer.contains(playerUUID)){
                     rSetTargetPlayer.clear();
-                    rSetTargetPlayer.add(playerUUID.toString());
+                    rSetTargetPlayer.add(playerUUID);
                 }
-                rSetTargetPlayer.expire(2L, TimeUnit.HOURS);
+                rSetTargetPlayer.expire(Duration.ofHours(2));
                 return;
             }
             if(sub.equals("Reponse")){
@@ -65,21 +65,21 @@ public class MessageMessage extends Message{
                     player.sendMessage(new TextComponent("Le joueur n'est pas connecté !"));
                     return;
                 }
-                final UUID playerUUID = player.getUniqueId();
+                final String playerUUID = player.getUniqueId().toString();
 
                 final String message = in.readUTF();
 
                 targetPlayer.sendMessage(new TextComponent("["+player.getName()+"->Moi]"+message));
                 player.sendMessage(new TextComponent("[Moi"+"->"+targetPlayer.getName()+"]"+message));
 
-                rSet.expire(2L, TimeUnit.HOURS);
+                rSet.expire(Duration.ofHours(2));
 
                 final RSet<String> rSetTargetPlayer = redissonClient.getSet(uuidTargetPlayer.toString());
-                if(!rSetTargetPlayer.contains(playerUUID.toString())){
+                if(!rSetTargetPlayer.contains(playerUUID)){
                     rSetTargetPlayer.clear();
-                    rSetTargetPlayer.add(playerUUID.toString());
+                    rSetTargetPlayer.add(playerUUID);
                 }
-                rSetTargetPlayer.expire(2L, TimeUnit.HOURS);
+                rSetTargetPlayer.expire(Duration.ofHours(2));
 
                 return;
             }
