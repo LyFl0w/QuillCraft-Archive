@@ -35,6 +35,7 @@ public class PlayerJoinListener implements Listener{
         final ParkourPvPGame parkourPvPGame = parkourPvP.getParkourPvPGame();
 
         if(gameManager.getInGameStatus().actualInGameStatusIs(InGameStatus.WAIT_LOBBY)){
+            player.teleport(gameManager.getLobby());
             parkourPvP.getServer().getScheduler().runTaskLater(parkourPvP, () -> player.teleport(gameManager.getLobby()), 20L);
             player.setGameMode(GameMode.SURVIVAL);
         }
