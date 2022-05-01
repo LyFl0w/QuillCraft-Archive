@@ -18,7 +18,7 @@ public class Version {
 
     private enum ProtocolVersion {
 
-        A("1.7", 2, 5),
+        A("1.7", 3, 5),
         B("1.8", 47, 47),
         C("1.9", 107, 110),
         D("1.10", 210, 210),
@@ -27,19 +27,17 @@ public class Version {
         G("1.13", 393, 404),
         H("1.14", 477, 498),
         I("1.15", 573, 578),
-        J("1.16", 735, 753);
+        J("1.16", 735, 753),
+        K("1.17", 755, 756),
+        L("1.18", 757, 757);
 
-        private String version;
-        private int protocolVersionMin, protocolVersionMax;
+        private final String version;
+        private final int protocolVersionMin, protocolVersionMax;
 
         ProtocolVersion(String version, int protocolVersionMin, int protocolVersionMax){
             this.version = version;
             this.protocolVersionMin = protocolVersionMin;
             this.protocolVersionMax = protocolVersionMax;
-        }
-
-        public boolean hasProtocolVersion(){
-            return true;
         }
 
         public String getVersion(){

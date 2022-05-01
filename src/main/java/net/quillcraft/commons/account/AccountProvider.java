@@ -6,15 +6,14 @@ import net.quillcraft.bungee.data.management.sql.DatabaseManager;
 import net.quillcraft.bungee.data.management.sql.table.SQLTablesManager;
 import net.quillcraft.bungee.serialization.ProfileSerializationAccount;
 import net.quillcraft.commons.exception.AccountNotFoundException;
-
 import org.redisson.api.RBucket;
 import org.redisson.api.RSet;
 import org.redisson.api.RedissonClient;
 
 import java.sql.*;
+import java.time.Duration;
 import java.util.HashMap;
 import java.util.UUID;
-import java.util.concurrent.TimeUnit;
 
 public class AccountProvider {
 
@@ -41,6 +40,7 @@ public class AccountProvider {
             account = getAccountFromDatabase();
             sendAccountToRedis(account);
         }else{
+            account.setSQLRequest();
             redissonClient.getBucket(keyAccount).clearExpire();
         }
 
@@ -129,19 +129,19 @@ public class AccountProvider {
         }
         connection.close();
 
-        autoLangue();
+         autoLangue();
 
         return account;
     }
 
     public void expireRedis(){
-        redissonClient.getBucket(keyAccount).expire(6, TimeUnit.HOURS);
+        redissonClient.getBucket(keyAccount).expire(Duration.ofHours(4));
     }
 
     private void autoLangue(){
         final RSet<Integer> updateLanguage = redissonClient.getSet("autoLanguage:"+uuid.toString());
         updateLanguage.add(0);
-        updateLanguage.expire(10, TimeUnit.SECONDS);
+        updateLanguage.expire(Duration.ofSeconds(10));
     }
 
 }

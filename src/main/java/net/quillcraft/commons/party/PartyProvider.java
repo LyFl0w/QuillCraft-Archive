@@ -7,20 +7,18 @@ import net.md_5.bungee.api.chat.ComponentBuilder;
 import net.md_5.bungee.api.chat.HoverEvent;
 import net.md_5.bungee.api.chat.TextComponent;
 import net.md_5.bungee.api.connection.ProxiedPlayer;
-
 import net.quillcraft.bungee.data.management.redis.RedisManager;
 import net.quillcraft.bungee.data.management.sql.DatabaseAccess;
 import net.quillcraft.bungee.data.management.sql.DatabaseManager;
 import net.quillcraft.bungee.data.management.sql.table.SQLTablesManager;
 import net.quillcraft.bungee.manager.LanguageManager;
 import net.quillcraft.bungee.serialization.ProfileSerializationUtils;
-import net.quillcraft.bungee.text.Text;
-import net.quillcraft.bungee.text.TextList;
 import net.quillcraft.commons.account.Account;
 import net.quillcraft.commons.account.AccountProvider;
 import net.quillcraft.commons.exception.AccountNotFoundException;
 import net.quillcraft.commons.exception.PartyNotFoundException;
-
+import org.lumy.api.text.Text;
+import org.lumy.api.text.TextList;
 import org.redisson.api.RBucket;
 import org.redisson.api.RSet;
 import org.redisson.api.RedissonClient;
@@ -29,17 +27,18 @@ import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
+import java.time.Duration;
 import java.util.List;
 import java.util.UUID;
-import java.util.concurrent.TimeUnit;
 
 public class PartyProvider {
 
     private final RedissonClient redissonClient;
+    private final SQLTablesManager sqlTablesManager;
+
     private final ProxiedPlayer player;
     private UUID partyUUID;
     private String keyParty;
-    private final SQLTablesManager sqlTablesManager;
 
     public PartyProvider(Account account){
         this.player = ProxyServer.getInstance().getPlayer(account.getUUID());
@@ -59,6 +58,7 @@ public class PartyProvider {
             party = getPartyFromDatabase();
             sendPartyToRedis(party);
         }else{
+            party.setSQLRequest();
             redissonClient.getBucket(keyParty).clearExpire();
         }
 
@@ -91,7 +91,7 @@ public class PartyProvider {
                     account = accountProvider.getAccountFromDatabase();
                     hasAccountOnRedis = false;
                 }
-
+                account.setSQLRequest();
                 account.setPartyUUID(null);
                 if(hasAccountOnRedis){
                     accountProvider.updateAccount(account);
@@ -113,27 +113,25 @@ public class PartyProvider {
     }
 
     public void sendMessageToPlayers(Party party, TextList textList, String oldChar, String newChar){
-        party.getOnlinePlayers().stream().parallel().forEach(player -> {
-            LanguageManager.getLanguage(player).getMessage(textList).forEach(message ->
-                    player.sendMessage(new TextComponent(message.replace(oldChar, newChar))));
-        });
+        party.getOnlinePlayers().stream().parallel().forEach(player ->
+                LanguageManager.getLanguage(player).getMessage(textList).forEach(message ->
+                        player.sendMessage(new TextComponent(message.replace(oldChar, newChar)))));
     }
 
     public void sendMessageToPlayers(Party party, TextList textList){
-        party.getOnlinePlayers().stream().parallel().forEach(player -> {
-            LanguageManager.getLanguage(player).getMessage(textList).forEach(message ->
-                    player.sendMessage(new TextComponent(message)));
-        });
+        party.getOnlinePlayers().stream().parallel().forEach(player ->
+                LanguageManager.getLanguage(player).getMessage(textList).forEach(message ->
+                        player.sendMessage(new TextComponent(message))));
     }
 
     public void sendMessageToPlayers(Party party, Text text, String oldChar, String newChar){
         party.getOnlinePlayers().stream().parallel().forEach(player ->
-                player.sendMessage(new TextComponent(LanguageManager.getLanguage(player).getMessage(text).replace(oldChar, newChar))));
+                player.sendMessage(LanguageManager.getLanguage(player).getMessageComponentReplace(text, oldChar, newChar)));
     }
 
     public void sendMessageToPlayers(Party party, Text text){
         party.getOnlinePlayers().stream().parallel().forEach(player ->
-                player.sendMessage(new TextComponent(LanguageManager.getLanguage(player).getMessage(text))));
+                player.sendMessage(LanguageManager.getLanguage(player).getMessageComponent(text)));
     }
 
     public void sendMessageToPlayers(Party party, String message){
@@ -149,7 +147,8 @@ public class PartyProvider {
     private Party getPartyFromDatabase() throws PartyNotFoundException{
         try{
             final Connection connection = DatabaseManager.MINECRAFT_SERVER.getDatabaseAccess().getConnection();
-            final PreparedStatement preparedStatement = connection.prepareStatement("SELECT * FROM "+sqlTablesManager.getTable()+" WHERE "+sqlTablesManager.getKeyColumn()+" = ?");
+            final PreparedStatement preparedStatement =
+                    connection.prepareStatement("SELECT * FROM "+sqlTablesManager.getTable()+" WHERE "+sqlTablesManager.getKeyColumn()+" = ?");
 
             preparedStatement.setString(1, partyUUID.toString());
             preparedStatement.executeQuery();
@@ -190,7 +189,8 @@ public class PartyProvider {
     private void createPartyInDatabase(Party party){
         try{
             final Connection connection = DatabaseManager.MINECRAFT_SERVER.getDatabaseAccess().getConnection();
-            final PreparedStatement preparedStatement = connection.prepareStatement("INSERT INTO "+sqlTablesManager.getTable()+" (party_uuid, owner_uuid, owner_name, followers_uuid, followers_name) VALUES (?,?,?,?,?)");
+            final PreparedStatement preparedStatement = connection.prepareStatement(
+                    "INSERT INTO "+sqlTablesManager.getTable()+" (party_uuid, owner_uuid, owner_name, followers_uuid, followers_name) VALUES (?,?,?,?,?)");
 
             preparedStatement.setString(1, party.getPartyUUID().toString());
             preparedStatement.setString(2, player.getUniqueId().toString());
@@ -241,10 +241,10 @@ public class PartyProvider {
         if(inviteBucket.isExists()) return false;
 
         inviteBucket.add(0);
-        inviteBucket.expire(3, TimeUnit.MINUTES);
+        inviteBucket.expire(Duration.ofMinutes(3));
 
         final LanguageManager languageManager = LanguageManager.getLanguage(targetAccount);
-        final TextComponent textComponent = new TextComponent(languageManager.getMessage(Text.PARTY_INVITATION_RECEIVED).replace("%PLAYER%", player.getName()));
+        final TextComponent textComponent = languageManager.getMessageComponentReplace(Text.PARTY_INVITATION_RECEIVED, "%PLAYER%", player.getName());
         textComponent.setHoverEvent(new HoverEvent(HoverEvent.Action.SHOW_TEXT,
                 new net.md_5.bungee.api.chat.hover.content.Text(new ComponentBuilder(languageManager.getMessage(Text.PARTY_HOVER_INVITATION_RECEIVED)).create())));
         textComponent.setClickEvent(new ClickEvent(ClickEvent.Action.RUN_COMMAND, "/party accept "+player.getName()));
@@ -254,7 +254,7 @@ public class PartyProvider {
     }
 
     public void expireRedis(){
-        redissonClient.getBucket(keyParty).expire(6, TimeUnit.HOURS);
+        redissonClient.getBucket(keyParty).expire(Duration.ofHours(6));
     }
 
     public String getKeyParty(){

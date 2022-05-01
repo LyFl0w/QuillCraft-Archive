@@ -10,10 +10,9 @@ import net.quillcraft.bungee.data.management.sql.DatabaseManager;
 import net.quillcraft.bungee.data.management.sql.table.SQLTablesManager;
 import net.quillcraft.bungee.manager.LanguageManager;
 import net.quillcraft.bungee.serialization.ProfileSerializationUtils;
-import net.quillcraft.bungee.text.Text;
 import net.quillcraft.commons.account.Account;
-
 import net.quillcraft.commons.exception.FriendNotFoundException;
+import org.lumy.api.text.Text;
 import org.redisson.api.RBucket;
 import org.redisson.api.RSet;
 import org.redisson.api.RedissonClient;
@@ -23,9 +22,9 @@ import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
+import java.time.Duration;
 import java.util.List;
 import java.util.UUID;
-import java.util.concurrent.TimeUnit;
 
 public class FriendProvider {
 
@@ -58,6 +57,7 @@ public class FriendProvider {
             friends = getFriendsFromDatabase();
             sendFriendsToRedis(friends);
         }else{
+            friends.setSQLRequest(uuid);
             redissonClient.getBucket(keyFriends).clearExpire();
         }
 
@@ -150,7 +150,7 @@ public class FriendProvider {
         if(inviteBucket.isExists()) return false;
 
         inviteBucket.add(0);
-        inviteBucket.expire(3, TimeUnit.MINUTES);
+        inviteBucket.expire(Duration.ofMinutes(3));
 
         final String playerName = player.getName();
         final LanguageManager languageManager = LanguageManager.getLanguage(targetAccount);
@@ -164,6 +164,6 @@ public class FriendProvider {
     }
 
     public void expireRedis(){
-        redissonClient.getBucket(keyFriends).expire(6, TimeUnit.HOURS);
+        redissonClient.getBucket(keyFriends).expire(Duration.ofHours(6));
     }
 }

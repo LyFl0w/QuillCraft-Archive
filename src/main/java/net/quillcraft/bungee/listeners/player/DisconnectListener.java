@@ -1,49 +1,45 @@
 package net.quillcraft.bungee.listeners.player;
 
-import net.md_5.bungee.api.chat.TextComponent;
 import net.md_5.bungee.api.connection.ProxiedPlayer;
 import net.md_5.bungee.api.event.PlayerDisconnectEvent;
 import net.md_5.bungee.api.plugin.Listener;
 import net.md_5.bungee.api.scheduler.TaskScheduler;
 import net.md_5.bungee.event.EventHandler;
 import net.quillcraft.bungee.QuillCraftBungee;
+import net.quillcraft.bungee.data.management.redis.RedisManager;
 import net.quillcraft.bungee.manager.LanguageManager;
-import net.quillcraft.bungee.text.Text;
 import net.quillcraft.commons.account.Account;
 import net.quillcraft.commons.account.AccountProvider;
 import net.quillcraft.commons.exception.AccountNotFoundException;
 import net.quillcraft.commons.exception.FriendNotFoundException;
 import net.quillcraft.commons.exception.PartyNotFoundException;
-import net.quillcraft.commons.friend.Friend;
 import net.quillcraft.commons.friend.FriendProvider;
+import net.quillcraft.commons.game.GameEnum;
 import net.quillcraft.commons.party.PartyProvider;
+import org.lumy.api.text.Text;
+import org.redisson.api.RedissonClient;
 
-import java.util.List;
+public class DisconnectListener implements Listener{
 
-public class DisconnectListener implements Listener {
-
+    private final RedissonClient redissonClient;
     private final QuillCraftBungee quillCraftBungee;
+
     public DisconnectListener(QuillCraftBungee quillCraftBungee){
         this.quillCraftBungee = quillCraftBungee;
+        this.redissonClient = RedisManager.WEB_API.getRedisAccess().getRedissonClient();
     }
 
     @EventHandler
     public void onPlayerDisconnect(PlayerDisconnectEvent event){
         final ProxiedPlayer player = event.getPlayer();
-
         final TaskScheduler taskScheduler = quillCraftBungee.getProxy().getScheduler();
 
-        taskScheduler.runAsync(quillCraftBungee, () ->  {
-            final FriendProvider friendProvider = new FriendProvider(player);
-            try{
-                friendProvider.getFriends().getOnlineFriends().stream().parallel().forEach(onlineFriend ->
-                        onlineFriend.sendMessage(LanguageManager.getLanguage(onlineFriend).getMessageComponentReplace(Text.FRIEND_LEFT_SERVER, "%PLAYER%", player.getName())));
-            }catch(FriendNotFoundException exception){
-                exception.printStackTrace();
-            }
-            friendProvider.expireRedis();
-        });
+        redissonClient.getAtomicLong("players.size").decrementAndGet();
+        redissonClient.getTopic("players.size.update").publish(0);
+
         taskScheduler.runAsync(quillCraftBungee, () -> {
+            GameEnum.removePlayerWaiting(player.getUniqueId());
+
             final AccountProvider accountProvider = new AccountProvider(player);
             try{
                 final Account account = accountProvider.getAccount();
@@ -55,11 +51,22 @@ public class DisconnectListener implements Listener {
                         partyProvider.expireRedis();
                     }
                 }
-            }catch(AccountNotFoundException | PartyNotFoundException exception){
+            }catch(AccountNotFoundException|PartyNotFoundException exception){
                 exception.printStackTrace();
             }
             accountProvider.expireRedis();
+
+
+            final FriendProvider friendProvider = new FriendProvider(player);
+            try{
+                friendProvider.getFriends().getOnlineFriends().stream().parallel().forEach(onlineFriend -> onlineFriend.sendMessage(LanguageManager.getLanguage(onlineFriend).getMessageComponentReplace(Text.FRIEND_LEFT_SERVER, "%PLAYER%", player.getName())));
+            }catch(FriendNotFoundException exception){
+                exception.printStackTrace();
+            }
+            friendProvider.expireRedis();
+
         });
+
     }
 
 }

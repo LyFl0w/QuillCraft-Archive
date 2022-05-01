@@ -1,13 +1,12 @@
 package net.quillcraft.commons.account;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import net.lyflow.sqlrequest.SQLRequest;
 
 import net.md_5.bungee.api.connection.ProxiedPlayer;
 
 import net.quillcraft.bungee.data.management.sql.table.SQLTablesManager;
 import net.quillcraft.bungee.serialization.ProfileSerializationAccount;
-import net.quillcraft.commons.friend.Friend;
-import net.quillcraft.commons.friend.FriendProvider;
 
 import java.util.*;
 
@@ -21,10 +20,12 @@ public class Account {
     private Visibility visibility;
     private HashMap<Particles, Boolean> particles;
     private String languageISO;
+
+    @JsonIgnore
     private SQLRequest sqlRequest;
 
     //Redis
-    public Account(){}
+    private Account(){}
 
     public Account(ProxiedPlayer player){
         this(player.getUniqueId());
@@ -44,8 +45,8 @@ public class Account {
         this.visibility = visibility;
         this.particles = particles;
         this.languageISO = languageISO;
-        final SQLTablesManager sqlTablesManager = SQLTablesManager.PLAYER_ACCOUNT;
-        this.sqlRequest = new SQLRequest(sqlTablesManager.getTable(), sqlTablesManager.getKeyColumn(), uuid.toString());
+
+        setSQLRequest();
     }
 
     public int getId(){
@@ -122,6 +123,11 @@ public class Account {
         return sqlRequest;
     }
 
+    public void setSQLRequest(){
+        final SQLTablesManager sqlTablesManager = SQLTablesManager.PLAYER_ACCOUNT;
+        this.sqlRequest = new SQLRequest(sqlTablesManager.getTable(), sqlTablesManager.getKeyColumn(), uuid.toString());
+    }
+
     private static HashMap<Particles, Boolean> defaultParticles(){
         HashMap<Particles, Boolean> defaultParticles = new HashMap<>();
         for(Particles particles : Particles.values()){
@@ -131,26 +137,7 @@ public class Account {
     }
 
     public enum Visibility {
-        EVERYONE(2, (byte)10), FRIENDS(4, (byte)6), NOBODY(6, (byte)8);
-
-        private final int slot;
-        private final byte data;
-        Visibility(final int slot, final byte data){
-            this.slot = slot;
-            this.data = data;
-        }
-
-        public int getSlot(){
-            return slot;
-        }
-
-        public byte getData(){
-            return data;
-        }
-
-        public static Visibility getVisibilityByData(byte data){
-            return Arrays.stream(values()).parallel().filter(visibility -> visibility.getData() == data).findFirst().get();
-        }
+        EVERYONE, PARTY, FRIENDS, NOBODY
     }
 
     public enum Particles {

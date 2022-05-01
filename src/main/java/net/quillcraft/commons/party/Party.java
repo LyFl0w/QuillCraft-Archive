@@ -1,5 +1,6 @@
 package net.quillcraft.commons.party;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import net.lyflow.sqlrequest.SQLRequest;
 import net.md_5.bungee.api.ProxyServer;
 import net.md_5.bungee.api.connection.ProxiedPlayer;
@@ -17,12 +18,14 @@ public class Party {
 
     private UUID partyUUID, ownerUUID;
     private List<UUID> followersUUID;
-    private SQLRequest sqlRequest;
     private List<String> followersName;
     private String ownerName;
 
+    @JsonIgnore
+    private SQLRequest sqlRequest;
+
     // For Redis
-    public Party(){}
+    private Party(){}
 
     public Party(ProxiedPlayer player){
         this(player.getUniqueId(), player.getName());
@@ -43,8 +46,7 @@ public class Party {
         this.followersUUID = followersUUID;
         this.followersName = membersName;
 
-        final SQLTablesManager sqlTablesManager = SQLTablesManager.PARTY;
-        this.sqlRequest = new SQLRequest(sqlTablesManager.getTable(), sqlTablesManager.getKeyColumn(), partyUUID.toString());
+        setSQLRequest();
     }
 
     public UUID getPartyUUID(){
@@ -142,6 +144,11 @@ public class Party {
 
     public void setOwner(UUID uuid){
         setOwner(getNameByFollowerUUID(uuid), uuid);
+    }
+
+    protected void setSQLRequest(){
+        final SQLTablesManager sqlTablesManager = SQLTablesManager.PARTY;
+        this.sqlRequest = new SQLRequest(sqlTablesManager.getTable(), sqlTablesManager.getKeyColumn(), partyUUID.toString());
     }
 
     @Nullable
