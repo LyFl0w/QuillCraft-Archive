@@ -40,6 +40,8 @@ public class PlayerGameStatistiqueProvider<T extends PlayerGameStatistique>{
         if(playerData == null){
             playerData = getPlayerDataFromDatabase(plugin, classOfT);
             updatePlayerDataInRedis(playerData);
+        }else{
+            redissonClient.getBucket(key).clearExpire();
         }
         return playerData;
     }
@@ -123,7 +125,7 @@ public class PlayerGameStatistiqueProvider<T extends PlayerGameStatistique>{
     }
 
     public void expireRedis(){
-        redissonClient.getBucket(key).expire(Duration.ofMinutes(5));
+        redissonClient.getBucket(key).expire(Duration.ofMinutes(10));
     }
 
 }
