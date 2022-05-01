@@ -1,4 +1,4 @@
-package net.quillcraft.commons.game;
+package net.quillcraft.commons.game.waiter;
 
 import java.util.UUID;
 import java.util.concurrent.TimeUnit;
