@@ -1,11 +1,11 @@
 package net.quillcraft.parkourpvp.listener.player;
 
-import net.quillcraft.commons.game.GeneralGameStatus;
+import net.quillcraft.commons.game.status.GeneralGameStatus;
 import net.quillcraft.commons.game.ParkourPvPGame;
 import net.quillcraft.core.exception.TaskOverflowException;
 import net.quillcraft.parkourpvp.ParkourPvP;
 import net.quillcraft.parkourpvp.game.InGameStatus;
-import net.quillcraft.parkourpvp.game.player.PlayerDataGame;
+import net.quillcraft.commons.game.statistiques.parkourpvp.PlayerParkourPvPData;
 import net.quillcraft.parkourpvp.manager.GameManager;
 import net.quillcraft.parkourpvp.manager.TaskManager;
 import net.quillcraft.parkourpvp.scoreboard.JumpScoreboard;
@@ -52,7 +52,7 @@ public class PlayerQuitListener implements Listener{
 
             switch(gameManager.getInGameStatus()){
                 case WAITING_BEFORE_JUMP, JUMP -> {
-                    final HashMap<String, PlayerDataGame> playersDataGame = gameManager.getPlayersDataGame();
+                    final HashMap<String, PlayerParkourPvPData> playersDataGame = gameManager.getPlayersDataGame();
                     playersDataGame.remove(playerName);
 
                     new JumpScoreboard(parkourPvP).updatePlayersSize();

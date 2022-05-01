@@ -1,9 +1,9 @@
 package net.quillcraft.parkourpvp.listener.inventory;
 
+import net.quillcraft.commons.game.statistiques.parkourpvp.PlayerParkourPvPData;
 import net.quillcraft.core.utils.builders.ItemBuilder;
 import net.quillcraft.parkourpvp.ParkourPvP;
 import net.quillcraft.parkourpvp.game.InGameStatus;
-import net.quillcraft.parkourpvp.game.player.PlayerDataGame;
 import net.quillcraft.parkourpvp.game.shop.ShopCategory;
 import net.quillcraft.parkourpvp.game.shop.items.ShopItem;
 import net.quillcraft.parkourpvp.inventory.shop.ShopCategoriesInventory;
@@ -36,11 +36,12 @@ public class InventoryClickListener implements Listener{
         final ItemStack item = event.getCurrentItem();
         if(item == null || item.getType() == Material.AIR) return;
 
-        final Player player = (Player) event.getWhoClicked();
-        final String title = event.getView().getTitle();
         final InGameStatus inGameStatus = gameManager.getInGameStatus();
 
         if(inGameStatus.actualInGameStatusIs(InGameStatus.WAITING_BEFORE_PVP)){
+            final Player player = (Player) event.getWhoClicked();
+            final String title = event.getView().getTitle();
+
             if(inventory.equals(player.getInventory())){
                 if(item.getType() == Material.NETHER_STAR){
                     event.setCancelled(true);
@@ -59,17 +60,18 @@ public class InventoryClickListener implements Listener{
             }
             if(title.contains("Shop")){
                 final ShopItem shopItem = ShopItem.getShopItem(item.getType());
-                final PlayerDataGame playerDataGame = gameManager.getPlayersDataGame().get(player.getName());
+                final PlayerParkourPvPData PlayerParkourPvPData = gameManager.getPlayersDataGame().get(player.getName());
 
-                if(shopItem.getPrice() > playerDataGame.getCoins()){
+                if(shopItem.getPrice() > PlayerParkourPvPData.getCoins()){
                     player.sendMessage("§cVous n'avez pas assez de Coins pour pouvoir acheter cette objet !");
                     event.setCancelled(true);
                     return;
                 }
-                playerDataGame.removeCoins(shopItem.getPrice());
+                PlayerParkourPvPData.removeCoins(shopItem.getPrice());
                 final ItemBuilder itemBuilder = new ItemBuilder(item.getType(), item.getAmount());
                 if(item.getType() == Material.POTION || item.getType() == Material.SPLASH_POTION) itemBuilder.setPotionData(((PotionMeta) item.getItemMeta()).getBasePotionData());
                 player.getInventory().addItem(itemBuilder.toItemStack());
+                player.updateInventory();
 
                 new PvPScoreboard(parkourPvP).updateCoins(player.getName());
 

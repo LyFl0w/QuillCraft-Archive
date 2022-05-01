@@ -3,7 +3,7 @@ package net.quillcraft.parkourpvp.listener.player;
 import net.quillcraft.core.exception.TaskOverflowException;
 import net.quillcraft.parkourpvp.ParkourPvP;
 import net.quillcraft.parkourpvp.game.InGameStatus;
-import net.quillcraft.parkourpvp.game.player.PlayerDataGame;
+import net.quillcraft.commons.game.statistiques.parkourpvp.PlayerParkourPvPData;
 import net.quillcraft.parkourpvp.manager.GameManager;
 import net.quillcraft.parkourpvp.manager.TaskManager;
 import net.quillcraft.parkourpvp.scoreboard.PvPScoreboard;
@@ -29,7 +29,7 @@ public class PlayerDeathListener implements Listener{
     public void onPlayerDeath(PlayerDeathEvent event){
         final Player player = event.getEntity();
         final GameManager gameManager = parkourPvP.getGameManager();
-        final HashMap<String, PlayerDataGame> playersDataGame = gameManager.getPlayersDataGame();
+        final HashMap<String, PlayerParkourPvPData> playersDataGame = gameManager.getPlayersDataGame();
 
         if(!gameManager.getInGameStatus().actualInGameStatusIs(InGameStatus.PVP)) return;
 
@@ -41,9 +41,9 @@ public class PlayerDeathListener implements Listener{
         if(player.getKiller() != null){
             final Player killer = player.getKiller();
             final String killerName = killer.getName();
-            final PlayerDataGame playerDataGame = playersDataGame.get(killerName);
+            final PlayerParkourPvPData PlayerParkourPvPData = playersDataGame.get(killerName);
 
-            playerDataGame.addKill();
+            PlayerParkourPvPData.addKill();
             new PvPScoreboard(parkourPvP).updateKill(killerName);
         }
 

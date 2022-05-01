@@ -3,7 +3,7 @@ package net.quillcraft.parkourpvp.task.jump.wait.after;
 import net.quillcraft.core.exception.TaskOverflowException;
 import net.quillcraft.core.task.CustomTaskManager;
 import net.quillcraft.parkourpvp.ParkourPvP;
-import net.quillcraft.parkourpvp.game.player.PlayerDataGame;
+import net.quillcraft.commons.game.statistiques.parkourpvp.PlayerParkourPvPData;
 import net.quillcraft.parkourpvp.manager.GameManager;
 import net.quillcraft.parkourpvp.game.InGameStatus;
 import org.bukkit.GameMode;
@@ -35,7 +35,7 @@ public class WaitAfterJumpTaskManager extends CustomTaskManager{
         final ParkourPvP parkourPvP = getJavaPlugin();
         final Server server = parkourPvP.getServer();
         final GameManager gameManager = parkourPvP.getGameManager();
-        final Supplier<Stream<PlayerDataGame>> playersData = () -> gameManager.getPlayersDataGame().values().stream();
+        final Supplier<Stream<PlayerParkourPvPData>> playersData = () -> gameManager.getPlayersDataGame().values().stream();
 
         gameManager.setInGameStatus(InGameStatus.WAITING_AFTER_JUMP);
 
@@ -47,11 +47,11 @@ public class WaitAfterJumpTaskManager extends CustomTaskManager{
             playersData.get().forEach(otherPlayerData -> player.showPlayer(parkourPvP, server.getPlayer(otherPlayerData.getUuid())));
         });
 
-        final Supplier<Stream<PlayerDataGame>> playersFinishParkour = () -> playersData.get().filter(PlayerDataGame::hasFinishParkour);
+        final Supplier<Stream<PlayerParkourPvPData>> playersFinishParkour = () -> playersData.get().filter(PlayerParkourPvPData::hasFinishParkour);
 
         if(playersFinishParkour.get().findAny().isPresent()){
             final StringBuilder whoFinishParkour = new StringBuilder("\nVoici la liste des joueurs qui ont finit le parcours :");
-            playersFinishParkour.get().sorted(Comparator.comparing(PlayerDataGame::getTimeToFinishParkour)).forEach(playerData -> whoFinishParkour.append("\n • ").append(server.getPlayer(playerData.getUuid()).getName()).append(playerData.getFormatedTimeToFinishParkour(new StringBuilder(" → ")).toString()));
+            playersFinishParkour.get().sorted(Comparator.comparing(PlayerParkourPvPData::getTimeToFinishParkour)).forEach(playerData -> whoFinishParkour.append("\n • ").append(server.getPlayer(playerData.getUuid()).getName()).append(playerData.getFormatedTimeToFinishParkour(new StringBuilder(" → ")).toString()));
             server.getScheduler().runTaskLater(parkourPvP, () -> {
                 server.broadcastMessage(whoFinishParkour.append("\n").toString());
                 try{

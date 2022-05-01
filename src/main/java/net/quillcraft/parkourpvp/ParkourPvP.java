@@ -1,12 +1,11 @@
 package net.quillcraft.parkourpvp;
 
-import net.quillcraft.commons.game.GameProperties;
-import net.quillcraft.commons.game.GeneralGameStatus;
 import net.quillcraft.commons.game.ParkourPvPGame;
+import net.quillcraft.commons.game.properties.GameProperties;
+import net.quillcraft.commons.game.status.GeneralGameStatus;
 import net.quillcraft.core.utils.builders.YamlConfigurationBuilder;
 import net.quillcraft.parkourpvp.manager.GameManager;
 import net.quillcraft.parkourpvp.manager.PluginManager;
-
 import org.bukkit.plugin.java.JavaPlugin;
 
 public class ParkourPvP extends JavaPlugin{

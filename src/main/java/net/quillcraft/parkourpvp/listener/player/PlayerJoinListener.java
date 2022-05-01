@@ -1,17 +1,16 @@
 package net.quillcraft.parkourpvp.listener.player;
 
-import net.quillcraft.commons.game.GameProperties;
-import net.quillcraft.commons.game.GeneralGameStatus;
 import net.quillcraft.commons.game.ParkourPvPGame;
+import net.quillcraft.commons.game.properties.GameProperties;
+import net.quillcraft.commons.game.status.GeneralGameStatus;
 import net.quillcraft.core.exception.TaskOverflowException;
-import net.quillcraft.parkourpvp.manager.GameManager;
 import net.quillcraft.parkourpvp.ParkourPvP;
+import net.quillcraft.parkourpvp.game.InGameStatus;
+import net.quillcraft.parkourpvp.manager.GameManager;
 import net.quillcraft.parkourpvp.manager.TaskManager;
 import net.quillcraft.parkourpvp.scoreboard.LobbyScoreboard;
-import net.quillcraft.parkourpvp.game.InGameStatus;
-import net.quillcraft.parkourpvp.task.lobby.LobbyTaskManager;
 import net.quillcraft.parkourpvp.task.lobby.LobbyTask;
-
+import net.quillcraft.parkourpvp.task.lobby.LobbyTaskManager;
 import org.bukkit.GameMode;
 import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
