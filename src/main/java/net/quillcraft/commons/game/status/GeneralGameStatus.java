@@ -1,4 +1,4 @@
-package net.quillcraft.commons.game;
+package net.quillcraft.commons.game.status;
 
 public enum GeneralGameStatus{
 
