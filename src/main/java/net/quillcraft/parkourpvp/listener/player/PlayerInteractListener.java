@@ -25,6 +25,12 @@ public class PlayerInteractListener implements Listener{
         final GameManager gameManager = parkourPvP.getGameManager();
         final InGameStatus inGameStatus = gameManager.getInGameStatus();
 
+        if(inGameStatus.actualInGameStatusIs(InGameStatus.WAITING_BEFORE_JUMP)){
+            event.setCancelled(true);
+            return;
+        }
+
+        /* TODO : WAIT FIX https://github.com/PaperMC/Paper/pull/7341 */
         if(event.getHand() == EquipmentSlot.OFF_HAND){
             if(!inGameStatus.actualInGameStatusIs(InGameStatus.PVP)){
                 final Player player = event.getPlayer();
