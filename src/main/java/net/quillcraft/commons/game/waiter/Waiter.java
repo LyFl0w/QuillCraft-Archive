@@ -1,25 +1,25 @@
-package net.quillcraft.commons.game;
+package net.quillcraft.commons.game.waiter;
 
 import java.util.UUID;
 import java.util.concurrent.TimeUnit;
 
 public class Waiter{
 
-    private UUID player;
+    private UUID playerUUID;
     private boolean hasParty;
     private long time;
 
     //For redis
     private Waiter(){}
 
-    public Waiter(UUID player, boolean hasParty){
-        this.player = player;
+    public Waiter(UUID playerUUID, boolean hasParty){
+        this.playerUUID = playerUUID;
         this.hasParty = hasParty;
         this.time = System.currentTimeMillis();
     }
 
-    public UUID getPlayer(){
-        return player;
+    public UUID getPlayerUUID(){
+        return playerUUID;
     }
 
     public boolean hasParty(){

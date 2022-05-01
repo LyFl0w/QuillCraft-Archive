@@ -2,7 +2,6 @@ package net.quillcraft.core.listener.player;
 
 import net.quillcraft.core.QuillCraftCore;
 import net.quillcraft.core.event.player.PlayerJumpEvent;
-
 import org.bukkit.Material;
 import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;

@@ -1,4 +1,4 @@
-package net.quillcraft.commons.game;
+package net.quillcraft.commons.game.properties;
 
 import org.bukkit.configuration.file.FileConfiguration;
 

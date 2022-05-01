@@ -13,9 +13,9 @@ import org.redisson.api.RSet;
 import org.redisson.api.RedissonClient;
 
 import javax.annotation.Nonnull;
+import java.time.Duration;
 import java.util.Arrays;
 import java.util.UUID;
-import java.util.concurrent.TimeUnit;
 
 public class MessageCommand implements CommandExecutor {
 
@@ -54,14 +54,14 @@ public class MessageCommand implements CommandExecutor {
                         rSet.clear();
                         rSet.add(targetPlayerUUID.toString());
                     }
-                    rSet.expire(2L, TimeUnit.HOURS);
+                    rSet.expire(Duration.ofHours(2));
 
                     final RSet<String> rSetTargetPlayer = redissonClient.getSet(targetPlayer.getUniqueId().toString());
                     if(!rSetTargetPlayer.contains(playerUUID.toString())){
                         rSetTargetPlayer.clear();
                         rSetTargetPlayer.add(playerUUID.toString());
                     }
-                    rSetTargetPlayer.expire(2L, TimeUnit.HOURS);
+                    rSetTargetPlayer.expire(Duration.ofHours(2));
 
                     return true;
                 }

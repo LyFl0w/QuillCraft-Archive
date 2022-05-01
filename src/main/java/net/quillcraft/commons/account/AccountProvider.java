@@ -7,7 +7,6 @@ import net.quillcraft.core.data.management.sql.DatabaseManager;
 import net.quillcraft.core.data.management.sql.table.SQLTablesManager;
 import net.quillcraft.core.event.player.PlayerChangeLanguageEvent;
 import net.quillcraft.core.manager.LanguageManager;
-
 import net.quillcraft.core.serialization.ProfileSerializationAccount;
 import org.bukkit.entity.Player;
 import org.lumy.api.text.Text;
@@ -16,9 +15,9 @@ import org.redisson.api.RSet;
 import org.redisson.api.RedissonClient;
 
 import java.sql.*;
+import java.time.Duration;
 import java.util.HashMap;
 import java.util.UUID;
-import java.util.concurrent.TimeUnit;
 
 public class AccountProvider {
 
@@ -182,7 +181,7 @@ public class AccountProvider {
     private void updateKey(final String key){
         final RSet<Integer> updateLanguage = redissonClient.getSet(key);
         updateLanguage.add(0);
-        updateLanguage.expire(10, TimeUnit.SECONDS);
+        updateLanguage.expire(Duration.ofSeconds(10));
     }
 
     private boolean keyExist(final String key){

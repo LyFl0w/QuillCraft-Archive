@@ -1,5 +1,6 @@
 package net.quillcraft.commons.game;
 
+import net.quillcraft.commons.game.properties.GameProperties;
 import org.redisson.api.RBucket;
 
 public non-sealed class ParkourPvPGame extends Game{
