@@ -6,7 +6,7 @@
 
     <groupId>net.quillcraft</groupId>
     <artifactId>QuillCraftCore</artifactId>
-    <version>1.0-dev-stats</version>
+    <version>1.0.1-dev-stats</version>
 
     <properties>
         <file.project>dev/stats</file.project>
