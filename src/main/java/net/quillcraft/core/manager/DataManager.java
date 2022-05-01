@@ -13,7 +13,9 @@ public class DataManager {
         new LumyClient(quillCraftCore.getLogger(), quillCraftCore.getDataFolder());
         try{
             RedisManager.initAllRedisAccess();
+
             DatabaseManager.initAllDatabaseConnections();
+            DatabaseManager.createAllTable();
         }catch(Exception e){
             e.printStackTrace();
             Bukkit.shutdown();

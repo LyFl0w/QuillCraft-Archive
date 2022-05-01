@@ -1,7 +1,11 @@
 package net.quillcraft.core.data.management.sql;
 
+import net.quillcraft.commons.game.GameEnum;
+import net.quillcraft.commons.game.statistiques.PlayerGameStatistiqueProvider;
 import net.quillcraft.core.manager.ConfigurationManager;
 import org.bukkit.configuration.file.FileConfiguration;
+
+import java.util.Arrays;
 
 public enum DatabaseManager {
 
@@ -33,6 +37,10 @@ public enum DatabaseManager {
         for(DatabaseManager databaseManager : values()){
             databaseManager.getDatabaseAccess().closePool();
         }
+    }
+
+    public static void createAllTable(){
+        Arrays.stream(GameEnum.values()).parallel().forEach(PlayerGameStatistiqueProvider::createTableIfNotExist);
     }
 
     private static FileConfiguration getConfiguration(){
