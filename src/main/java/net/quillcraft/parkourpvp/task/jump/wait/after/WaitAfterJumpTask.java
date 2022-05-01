@@ -72,9 +72,13 @@ public class WaitAfterJumpTask extends CustomTask{
 
                 parkourPvPGame.updateRedis();
 
-                Bukkit.broadcastMessage("§cIl ne reste plus personne, vous avez gagné par forfait !");
+                if(playersUUID.size() == 1){
+                    final Player player = server.getPlayer(playersUUID.get(0));
 
-                gameManager.getPlayersDataGame().get(playersUUID.get(0)).setWin();
+                    player.sendMessage("§cIl ne reste plus personne, vous avez gagné par forfait !");
+
+                    gameManager.getPlayersDataGame().get(player.getName()).setWin();
+                }
 
                 try{
                     TaskManager.END_TASK_MANAGER.getCustomTaskManager().runTaskTimer(0L, 20L);

@@ -1,11 +1,14 @@
 package net.quillcraft.parkourpvp.listener.player;
 
-import net.quillcraft.commons.game.status.GeneralGameStatus;
+import net.quillcraft.commons.game.GameEnum;
 import net.quillcraft.commons.game.ParkourPvPGame;
+import net.quillcraft.commons.game.statistiques.PlayerGameStatistiqueProvider;
+import net.quillcraft.commons.game.statistiques.parkourpvp.PlayerParkourPvPData;
+import net.quillcraft.commons.game.statistiques.parkourpvp.PlayerParkourPvPStatistique;
+import net.quillcraft.commons.game.status.GeneralGameStatus;
 import net.quillcraft.core.exception.TaskOverflowException;
 import net.quillcraft.parkourpvp.ParkourPvP;
 import net.quillcraft.parkourpvp.game.InGameStatus;
-import net.quillcraft.commons.game.statistiques.parkourpvp.PlayerParkourPvPData;
 import net.quillcraft.parkourpvp.manager.GameManager;
 import net.quillcraft.parkourpvp.manager.TaskManager;
 import net.quillcraft.parkourpvp.scoreboard.JumpScoreboard;
@@ -45,6 +48,8 @@ public class PlayerQuitListener implements Listener{
 
         gameManager.getScoreboardBuilderHashMap().remove(playerName);
 
+        new PlayerGameStatistiqueProvider<PlayerParkourPvPStatistique>(parkourPvP, player.getUniqueId(), GameEnum.PARKOUR_PVP_SOLO).expireRedis();
+
         if(parkourPvPGame.actualGameStatusIs(GeneralGameStatus.PLAYER_WAITING_FULL)){
             if(!parkourPvPGame.isFullyFilled()) parkourPvPGame.setGameStatus(GeneralGameStatus.PLAYER_WAITING);
         }else if(parkourPvPGame.actualGameStatusIs(GeneralGameStatus.IN_GAME)){
@@ -52,6 +57,7 @@ public class PlayerQuitListener implements Listener{
 
             switch(gameManager.getInGameStatus()){
                 case WAITING_BEFORE_JUMP, JUMP -> {
+
                     final HashMap<String, PlayerParkourPvPData> playersDataGame = gameManager.getPlayersDataGame();
                     playersDataGame.remove(playerName);
 
@@ -69,7 +75,7 @@ public class PlayerQuitListener implements Listener{
                     final Server server = parkourPvP.getServer();
 
                     // EVERYONE HAS FINISHED PARKOUR
-                    if(gameManager.getCheckPoints().get(gameManager.getCheckPoints().size()).getPlayers().size() >= parkourPvPGame.getPlayerUUIDList().size()){
+                    if(gameManager.getCheckPoints().get(gameManager.getCheckPoints().size()-1).getPlayers().size() >= parkourPvPGame.getPlayerUUIDList().size()){
                         // STOP JUMP TASK
                         TaskManager.JUMP_TASK_MANAGER.getCustomTaskManager().cancel();
 
