@@ -11,7 +11,7 @@ import net.quillcraft.core.manager.LanguageManager;
 import net.quillcraft.lobby.QuillCraftLobby;
 import net.quillcraft.lobby.game.GameItemToGameEnum;
 import net.quillcraft.lobby.inventory.VisibilityInventory;
-import net.quillcraft.lobby.listener.player.custom.PlayerVisibilityChangeEvent;
+import net.quillcraft.lobby.player.PlayerVisibilityChangeEvent;
 import org.bukkit.Material;
 import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
