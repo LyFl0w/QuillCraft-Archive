@@ -35,7 +35,11 @@ public enum RedisManager {
 
     WEB_API(new RedisAccess(new RedisCredential(getDataConfig().getString("redis.web-api.host"),
             getDataConfig().getString("redis.web-api.user.name"), getDataConfig().getString("redis.web-api.user.password"),
-            getDataConfig().getInt("redis.web-api.database_number"), getDataConfig().getInt("redis.web-api.port"))));
+            getDataConfig().getInt("redis.web-api.database_number"), getDataConfig().getInt("redis.web-api.port")))),
+
+    STATISTIQUES(new RedisAccess(new RedisCredential(getDataConfig().getString("redis.statistiques.host"),
+            getDataConfig().getString("redis.statistiques.user.name"), getDataConfig().getString("redis.statistiques.user.password"),
+            getDataConfig().getInt("redis.statistiques.database_number"), getDataConfig().getInt("redis.statistiques.port"))));
 
     private final RedisAccess redisAccess;
     RedisManager(RedisAccess redisAccess){

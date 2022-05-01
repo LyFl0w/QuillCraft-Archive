@@ -1,5 +1,14 @@
 mysql:
+
   minecraft_data:
+    host: "127.0.0.1"
+    user:
+      name: "username"
+      password: "password"
+    database_name: "db_name"
+    port: 3306 #default port
+
+  statistiques:
     host: "127.0.0.1"
     user:
       name: "username"
@@ -9,6 +18,14 @@ mysql:
 
 
 redis:
+
+  statistiques:
+    host: "127.0.0.1"
+    user:
+      name: "username"
+      password: "password"
+    database_number: 8
+    port: 6379 #default
 
   web-api:
     host: "127.0.0.1"
