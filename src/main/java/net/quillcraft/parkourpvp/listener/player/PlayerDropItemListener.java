@@ -1,6 +1,7 @@
 package net.quillcraft.parkourpvp.listener.player;
 
 import net.quillcraft.parkourpvp.ParkourPvP;
+import net.quillcraft.parkourpvp.game.InGameStatus;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
 import org.bukkit.event.player.PlayerDropItemEvent;
@@ -14,10 +15,8 @@ public class PlayerDropItemListener implements Listener{
 
     @EventHandler
     public void onPlayerDropItem(PlayerDropItemEvent event){
-        switch(parkourPvP.getGameManager().getInGameStatus()){
-            case PVP, WAITING_BEFORE_PVP -> {}
-            default -> event.setCancelled(true);
-        }
+        if(parkourPvP.getGameManager().getInGameStatus().actualInGameStatusIs(InGameStatus.PVP)) return;
+        event.setCancelled(true);
     }
 
 }
