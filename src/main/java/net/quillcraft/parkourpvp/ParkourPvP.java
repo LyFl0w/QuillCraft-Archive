@@ -3,6 +3,7 @@ package net.quillcraft.parkourpvp;
 import net.quillcraft.commons.game.ParkourPvPGame;
 import net.quillcraft.commons.game.properties.GameProperties;
 import net.quillcraft.commons.game.status.GeneralGameStatus;
+import net.quillcraft.core.QuillCraftCore;
 import net.quillcraft.core.utils.builders.YamlConfigurationBuilder;
 import net.quillcraft.parkourpvp.manager.GameManager;
 import net.quillcraft.parkourpvp.manager.PluginManager;
@@ -25,6 +26,8 @@ public class ParkourPvP extends JavaPlugin{
                 new GameProperties(new YamlConfigurationBuilder(this, "game_properties.yml", true).getConfig()));
 
         gameManager = new GameManager(this);
+
+        QuillCraftCore.getInstance().getCommandManager().registerCommands(this, this.getFile());
 
         new PluginManager(this);
 
