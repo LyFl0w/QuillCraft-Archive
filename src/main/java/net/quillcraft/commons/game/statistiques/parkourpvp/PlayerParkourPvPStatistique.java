@@ -8,14 +8,14 @@ import java.util.HashMap;
 public class PlayerParkourPvPStatistique extends PlayerGameStatistique{
     
     private final HashMap<String, Integer> totalKillByMap,  totalRespawnByMap, totalFinishParkourByMap, totalDeathByMap, totalBestKillerByMap, totalWorstKillerByMap, totalJumpByMap, bestKillByMap;
-    private final HashMap<String, Long> timeToFinishParkourByMap, bestFinishParkourByMap;
+    private final HashMap<String, Long> bestFinishParkourByMap;
     private int totalKills, totalDeaths, totalRespawn, totalJump, totalBestKiller, totalWorstKiller, totalParkourFinish;
 
     public PlayerParkourPvPStatistique(){
-        this(new HashMap<>(), new HashMap<>(), new HashMap<>(), new HashMap<>(), new HashMap<>(), new HashMap<>(), new HashMap<>(), new HashMap<>(), new HashMap<>(), new HashMap<>(), new HashMap<>(), new HashMap<>(), 0, 0, 0, 0, 0, 0, 0, 0, 0);
+        this(new HashMap<>(), new HashMap<>(), new HashMap<>(), new HashMap<>(), new HashMap<>(), new HashMap<>(), new HashMap<>(), new HashMap<>(), new HashMap<>(), new HashMap<>(), new HashMap<>(), 0, 0, 0, 0, 0, 0, 0, 0, 0);
     }
 
-    protected PlayerParkourPvPStatistique(HashMap<String, Integer> totalGamesPlayedByMap, HashMap<String, Integer> totalWinByMap, HashMap<String, Integer> totalKillByMap, HashMap<String, Integer> totalRespawnByMap, HashMap<String, Integer> totalFinishParkourByMap, HashMap<String, Integer> totalDeathByMap, HashMap<String, Integer> totalBestKillerByMap, HashMap<String, Integer> totalWorstKillerByMap, HashMap<String, Integer> totalJumpByMap, HashMap<String, Integer> bestKillByMap,  HashMap<String, Long> timeToFinishParkourByMap, HashMap<String, Long> bestFinishParkourByMap, int totalGamePlayed, int totalKills, int totalDeaths, int totalWin, int totalRespawn, int totalJump, int totalBestKiller, int totalWorstKiller, int totalParkourFinish){
+    protected PlayerParkourPvPStatistique(HashMap<String, Integer> totalGamesPlayedByMap, HashMap<String, Integer> totalWinByMap, HashMap<String, Integer> totalKillByMap, HashMap<String, Integer> totalRespawnByMap, HashMap<String, Integer> totalFinishParkourByMap, HashMap<String, Integer> totalDeathByMap, HashMap<String, Integer> totalBestKillerByMap, HashMap<String, Integer> totalWorstKillerByMap, HashMap<String, Integer> totalJumpByMap, HashMap<String, Integer> bestKillByMap, HashMap<String, Long> bestFinishParkourByMap, int totalGamePlayed, int totalKills, int totalDeaths, int totalWin, int totalRespawn, int totalJump, int totalBestKiller, int totalWorstKiller, int totalParkourFinish){
         super(totalGamesPlayedByMap, totalWinByMap, totalGamePlayed, totalWin);
         this.totalKillByMap = totalKillByMap;
         this.totalRespawnByMap = totalRespawnByMap;
@@ -26,7 +26,6 @@ public class PlayerParkourPvPStatistique extends PlayerGameStatistique{
         this.totalWorstKillerByMap = totalWorstKillerByMap;
         this.totalJumpByMap = totalJumpByMap;
         this.bestKillByMap = bestKillByMap;
-        this.timeToFinishParkourByMap = timeToFinishParkourByMap;
         this.totalKills = totalKills;
         this.totalDeaths = totalDeaths;
         this.totalRespawn = totalRespawn;
@@ -48,10 +47,10 @@ public class PlayerParkourPvPStatistique extends PlayerGameStatistique{
         addSimpleStats(totalKillByMap, mapName, playerParkourPvPData.getKill());
         addSimpleStats(totalJumpByMap, mapName, playerParkourPvPData.getJump());
         addSimpleStats(totalRespawnByMap, mapName, playerParkourPvPData.getRespawn());
-        addSimpleStats(timeToFinishParkourByMap, mapName, playerParkourPvPData.getTimeToFinishParkour());
         addSimpleStats(totalGamesPlayedByMap, mapName, 1);
 
-        setBestStats(bestFinishParkourByMap, mapName, playerParkourPvPData.getTimeToFinishParkour());
+        addSimpleStatsTime(bestFinishParkourByMap, mapName, playerParkourPvPData.getTimeToFinishParkour());
+
         setBestStats(bestKillByMap, mapName, playerParkourPvPData.getKill());
 
 
@@ -66,22 +65,13 @@ public class PlayerParkourPvPStatistique extends PlayerGameStatistique{
         totalJump += playerParkourPvPData.getJump();
     }
 
-    private void addSimpleStats(HashMap<String, Long> timeHashMap, String mapName, long timeToFinish){
+    private void addSimpleStatsTime(HashMap<String, Long> timeHashMap, String mapName, long newTime){
         if(!timeHashMap.containsKey(mapName)){
-            timeHashMap.put(mapName, timeToFinish);
+            timeHashMap.put(mapName, newTime);
             return;
         }
-        final long time = timeHashMap.get(mapName);
-        if((time != -1) && time > timeToFinish) timeHashMap.put(mapName, timeToFinish);
-    }
-
-    private void setBestStats(HashMap<String, Long> timeHashMap, String mapName, long dataToAdd){
-        if(!timeHashMap.containsKey(mapName)){
-            timeHashMap.put(mapName, dataToAdd);
-            return;
-        }
-        final long actualData = timeHashMap.get(mapName);
-        if(actualData > dataToAdd) timeHashMap.put(mapName, dataToAdd);
+        final long actualTime = timeHashMap.get(mapName);
+        if((actualTime != -1) && actualTime > newTime) timeHashMap.put(mapName, newTime);
     }
 
     private void setBestStats(HashMap<String, Integer> timeHashMap, String mapName, int dataToAdd){
@@ -90,7 +80,7 @@ public class PlayerParkourPvPStatistique extends PlayerGameStatistique{
             return;
         }
         final long actualData = timeHashMap.get(mapName);
-        if(actualData > dataToAdd) timeHashMap.put(mapName, dataToAdd);
+        if(actualData < dataToAdd) timeHashMap.put(mapName, dataToAdd);
     }
 
     public HashMap<String, Integer> getTotalKillByMap(){
@@ -119,10 +109,6 @@ public class PlayerParkourPvPStatistique extends PlayerGameStatistique{
 
     public HashMap<String, Integer> getTotalJumpByMap(){
         return totalJumpByMap;
-    }
-
-    public HashMap<String, Long> getTimeToFinishParkourByMap(){
-        return timeToFinishParkourByMap;
     }
 
     public HashMap<String, Long> getBestFinishParkourByMap(){
