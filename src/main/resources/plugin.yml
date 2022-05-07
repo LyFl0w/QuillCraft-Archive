@@ -6,7 +6,7 @@ api-version: 1.18
 prefix: Lobby
 description: Plugin dedicated to QuillCraft
 website: https://quillcraft.fr
-depend: [QuillCraftCore, HeadDatabase]
+depend: [QuillCraftCore, HeadDatabase, ProtocolLib]
 commands:
   lobby:
     usage: §c/lobby
