@@ -12,6 +12,8 @@
         <file.project>dev</file.project>
         <java.version>17</java.version>
         <file.encoding>UTF-8</file.encoding>
+        <project.build.sourceEncoding>${file.encoding}</project.build.sourceEncoding>
+        <project.reporting.outputEncoding>${file.encoding}</project.reporting.outputEncoding>
     </properties>
 
     <repositories>
@@ -39,7 +41,6 @@
                     <artifactId>maven-compiler-plugin</artifactId>
                     <version>3.9.0</version>
                     <configuration>
-                        <encoding>${file.encoding}</encoding>
                         <source>${java.version}</source>
                         <target>${java.version}</target>
                     </configuration>
