@@ -6,7 +6,7 @@ api-version: 1.18
 prefix: Core
 description: Plugin dedicated to QuillCraft
 website: https://quillcraft.fr
-#depend: [ProtocolLib]
+depend: [ProtocolLib]
 commands:
   msg:
     usage: §c/msg <player> <message>
