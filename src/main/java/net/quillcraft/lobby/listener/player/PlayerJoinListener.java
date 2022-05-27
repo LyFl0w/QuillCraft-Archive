@@ -5,8 +5,6 @@ import net.quillcraft.commons.account.AccountProvider;
 import net.quillcraft.commons.exception.AccountNotFoundException;
 import net.quillcraft.core.manager.LanguageManager;
 import net.quillcraft.core.utils.Title;
-import net.quillcraft.core.utils.builders.scoreboard.ObjectiveBuilder;
-import net.quillcraft.core.utils.builders.scoreboard.ScoreboardBuilder;
 import net.quillcraft.lobby.QuillCraftLobby;
 import net.quillcraft.lobby.location.LocationEnum;
 import net.quillcraft.lobby.utils.PlayerUtils;
@@ -17,23 +15,10 @@ import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
 import org.bukkit.event.player.PlayerJoinEvent;
 import org.bukkit.scheduler.BukkitScheduler;
-import org.bukkit.scoreboard.DisplaySlot;
 import org.lumy.api.text.Text;
 import org.lumy.api.text.TextList;
 
 public class PlayerJoinListener implements Listener {
-
-    public final static ScoreboardBuilder scoreboardBuilder = new ScoreboardBuilder(QuillCraftLobby.getInstance())
-            .addObjective(new ObjectiveBuilder("muguet", "§eTop Chasseur de Muguet", DisplaySlot.SIDEBAR)
-                    .addScore(15, "§a")
-                    .addScore(14, "Total : ?")
-                    .addScore(13, "§b")
-                    .addScore(12, "1er : ?")
-                    .addScore(11, "2eme : ?")
-                    .addScore(10, "3eme : ?")
-                    .addScore(9, "4eme : ?")
-                    .addScore(8, "5eme : ?")
-                    .addScore(7, "§f"));
 
     private final QuillCraftLobby quillCraftLobby;
     public PlayerJoinListener(QuillCraftLobby quillCraftLobby){
@@ -89,10 +74,6 @@ public class PlayerJoinListener implements Listener {
                         .filter(players -> !players.getUniqueId().equals(player.getUniqueId()))
                         .forEach(players -> players.sendMessage(LanguageManager.getLanguage(players)
                                 .getMessage(Text.LOBBY_PLAYER_JOIN).replace("%PLAYER%", player.getDisplayName()))));
-
-
-        scoreboardBuilder.addPlayer(player);
-        scoreboardBuilder.updateScoreboard();
 
         /* Exemple Song
         final SongManager songManager = quillCraftLobby.getSongManager();
