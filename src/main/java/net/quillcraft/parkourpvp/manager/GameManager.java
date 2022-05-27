@@ -46,7 +46,7 @@ public class GameManager{
         this.lobby = new Location(parkourPvP.getServer().getWorld("LobbyParkourPvP"), 8.5, 103, 9.5, 135, 0);
         // TODO : DELETE COMMENTS WHEN WE HAVE MORE THAN ONE MAP
         //final List<String> worldsName = Arrays.asList("Natura", "Chronos", "Biomia");
-        final List<String> worldsName = List.of("Natura");
+        final List<String> worldsName = List.of("Biomia");
         //Collections.shuffle(worldsName);
         this.defaultWorldName = worldsName.get(new SecureRandom().nextInt(worldsName.size()));
         LogManager.getLogger("Minecraft").info("World chose is "+defaultWorldName);
@@ -131,7 +131,7 @@ public class GameManager{
         final ConfigurationSection configurationSection = fileConfiguration.getConfigurationSection("pvp.worldborder");
         final WorldBorder worldBorders = worlds[1].getWorldBorder();
 
-        worldBorders.setCenter(configurationSection.getDouble("center.x"), configurationSection.getDouble("center.y"));
+        worldBorders.setCenter(configurationSection.getDouble("center.x"), configurationSection.getDouble("center.z"));
         worldBorders.setSize(configurationSection.getDouble("size"));
         worldBorders.setDamageBuffer(0.0d);
         worldBorders.setDamageAmount(1.0d);

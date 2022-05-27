@@ -11,9 +11,8 @@ pvp:
   worldborder:
     center:
       x: -6.0
-      y: 9.0
+      z: 9.0
 
-    # 100
     size: 200
 
   spawn:
