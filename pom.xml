@@ -6,10 +6,10 @@
 
     <groupId>net.quillcraft</groupId>
     <artifactId>ParkourPvP</artifactId>
-    <version>1.0-dev</version>
+    <version>1.0-dev-hide-command</version>
 
     <properties>
-        <file.project>dev</file.project>
+        <file.project>dev/hide-command</file.project>
         <java.version>17</java.version>
         <file.encoding>UTF-8</file.encoding>
         <project.build.sourceEncoding>${file.encoding}</project.build.sourceEncoding>
@@ -79,7 +79,7 @@
         <dependency>
             <groupId>net.quillcraft</groupId>
             <artifactId>QuillCraftCore</artifactId>
-            <version>2.0-dev</version>
+            <version>2.0-dev-hide-command</version>
             <scope>provided</scope>
         </dependency>
 
@@ -107,28 +107,28 @@
         <dependency>
             <groupId>com.fasterxml.jackson.core</groupId>
             <artifactId>jackson-databind</artifactId>
-            <version>2.13.2.2</version>
+            <version>2.13.3</version>
             <scope>provided</scope>
         </dependency>
 
         <dependency>
             <groupId>com.fasterxml.jackson.core</groupId>
             <artifactId>jackson-core</artifactId>
-            <version>2.13.2</version>
+            <version>2.13.3</version>
             <scope>provided</scope>
         </dependency>
 
         <dependency>
             <groupId>com.fasterxml.jackson.dataformat</groupId>
             <artifactId>jackson-dataformat-yaml</artifactId>
-            <version>2.13.2</version>
+            <version>2.13.3</version>
             <scope>provided</scope>
         </dependency>
 
         <dependency>
             <groupId>com.fasterxml.jackson.core</groupId>
             <artifactId>jackson-annotations</artifactId>
-            <version>2.13.2</version>
+            <version>2.13.3</version>
             <scope>provided</scope>
         </dependency>
 
