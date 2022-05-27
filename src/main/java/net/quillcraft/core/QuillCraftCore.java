@@ -26,7 +26,6 @@ public class QuillCraftCore extends JavaPlugin {
         protocolManager = ProtocolLibrary.getProtocolManager();
         commandManager = new CommandManager(this, this.getFile());
 
-
         DataManager.initAllData(this);
 
         new PluginManager(this);

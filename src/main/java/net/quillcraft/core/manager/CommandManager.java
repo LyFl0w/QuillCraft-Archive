@@ -4,10 +4,7 @@ import org.bukkit.plugin.InvalidDescriptionException;
 import org.bukkit.plugin.Plugin;
 
 import java.io.File;
-import java.util.ArrayList;
-import java.util.Collection;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 
 public class CommandManager{
 
@@ -23,7 +20,7 @@ public class CommandManager{
             final Map<String, Map<String, Object>> commands = plugin.getPluginLoader().getPluginDescription(pluginFolder).getCommands();
             final ArrayList<String> commandsToReturn = new ArrayList<>(commands.keySet());
 
-            commands.values().stream().parallel().forEach(stringObjectMap -> commandsToReturn.addAll((Collection<? extends String>) stringObjectMap.get("aliases")));
+            commands.values().stream().parallel().filter(stringObjectMap -> stringObjectMap.containsKey("aliases")).forEach(stringObjectMap -> commandsToReturn.addAll((Collection<? extends String>) stringObjectMap.get("aliases")));
             return commandsToReturn;
         }catch(InvalidDescriptionException e){
             e.printStackTrace();

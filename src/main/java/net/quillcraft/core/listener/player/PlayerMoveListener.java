@@ -28,7 +28,6 @@ public class PlayerMoveListener implements Listener{
         if(velocityY > 0){
             final Material blockMaterial = player.getLocation().getBlock().getType();
             if(!player.isOnGround() && !(blockMaterial == Material.LADDER || blockMaterial == Material.SCAFFOLDING || blockMaterial == Material.WATER || blockMaterial == Material.LAVA)){
-
                 if(Double.compare(new BigDecimal(velocityY).setScale(2, RoundingMode.HALF_UP).doubleValue(), jumpVelocity) == 0) {
                     quillCraftCore.getServer().getPluginManager().callEvent(new PlayerJumpEvent(player, event.getFrom(), event.getTo()));
                 }

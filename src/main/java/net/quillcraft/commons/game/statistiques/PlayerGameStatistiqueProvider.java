@@ -85,7 +85,7 @@ public class PlayerGameStatistiqueProvider<T extends PlayerGameStatistique>{
             preparedStatement.setString(1, playerUUID);
             final ResultSet resultSet = preparedStatement.executeQuery();
             if(resultSet.next()){
-                final T playerData = new ProfileSerializationType().deserialize(resultSet.getString("statistique"), new TypeToken<T>(){});
+                final T playerData = new ProfileSerializationType().deserialize(resultSet.getString("statistique"), TypeToken.of(classOfT));
                 connection.close();
                 return playerData;
             }else{
