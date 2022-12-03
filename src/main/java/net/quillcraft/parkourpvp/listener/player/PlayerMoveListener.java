@@ -47,7 +47,7 @@ public class PlayerMoveListener implements Listener{
                     // AUTO RESPAWN
                     final Location currentCheckPointLocation = gameManager.getCheckPoints().get(PlayerParkourPvPData.getCheckPointID()).getLocation();
                     if((gameManager.getCheckPoints().get(PlayerParkourPvPData.getCheckPointID()+1).getLocation().getBlockY()-player.getLocation().getBlockY()) >= 10
-                            && (currentCheckPointLocation.getBlockY()-player.getLocation().getBlockY()) >= 10 && player.getFallDistance() >= 10.0F){
+                            && (currentCheckPointLocation.getBlockY()-player.getLocation().getBlockY()) >= 10 && player.getFallDistance() >= 20.0F){
                         PlayerParkourPvPData.addRespawn();
                         player.setFallDistance(0.0F);
                         player.teleport(currentCheckPointLocation);
