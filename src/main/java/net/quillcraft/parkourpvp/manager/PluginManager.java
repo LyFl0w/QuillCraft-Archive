@@ -28,6 +28,8 @@ public class PluginManager{
         pluginManager.registerEvents(new PlayerJumpListener(main), main);
         pluginManager.registerEvents(new PlayerDeathListener(main), main);
         pluginManager.registerEvents(new PlayerDropItemListener(main), main);
+        pluginManager.registerEvents(new PlayerTeleportListener(main), main);
+
 
         pluginManager.registerEvents(new EntityDamageListener(main), main);
         pluginManager.registerEvents(new EntityFoodLevelChangeListener(main), main);
