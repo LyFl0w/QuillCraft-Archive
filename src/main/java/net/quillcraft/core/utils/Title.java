@@ -4,7 +4,7 @@ import net.minecraft.network.chat.IChatBaseComponent;
 import net.minecraft.network.protocol.Packet;
 import net.minecraft.network.protocol.game.*;
 import net.minecraft.server.network.PlayerConnection;
-import org.bukkit.craftbukkit.v1_19_R3.entity.CraftPlayer;
+import org.bukkit.craftbukkit.v1_20_R1.entity.CraftPlayer;
 import org.bukkit.entity.Player;
 
 import java.util.List;
@@ -33,7 +33,7 @@ public class Title {
     }
 
     public Title sendTitle(final int fadeIn, final int stay, int fadeOut, final String title, final String subtitle){
-        final PlayerConnection playerConnection = ((CraftPlayer) player).getHandle().b;
+        final PlayerConnection playerConnection = ((CraftPlayer) player).getHandle().c;
 
         playerConnection.a(new ClientboundSetTitlesAnimationPacket(fadeIn*20, stay*20, fadeOut*20));
 
@@ -58,7 +58,7 @@ public class Title {
     }
 
     public Title sendActionBar(final String message){
-        final PlayerConnection connection = ((CraftPlayer) player).getHandle().b;
+        final PlayerConnection connection = ((CraftPlayer) player).getHandle().c;
         connection.a(new ClientboundSystemChatPacket(getChatSerializer(message), true));
         return this;
     }
