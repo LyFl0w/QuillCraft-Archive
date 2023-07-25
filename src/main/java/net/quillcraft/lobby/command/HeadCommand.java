@@ -26,8 +26,8 @@ public class HeadCommand implements CommandExecutor {
             BlockFace.SOUTH_SOUTH_WEST, BlockFace.WEST_SOUTH_WEST, BlockFace.SOUTH_WEST, BlockFace.WEST, BlockFace.WEST_NORTH_WEST, BlockFace.NORTH_WEST, BlockFace.NORTH_NORTH_WEST};
     private final QuillCraftLobby quillCraftLobby;
 
-    public HeadCommand(QuillCraftLobby main) {
-        this.quillCraftLobby = main;
+    public HeadCommand(QuillCraftLobby quillCraftLobby) {
+        this.quillCraftLobby = quillCraftLobby;
     }
 
     @Override

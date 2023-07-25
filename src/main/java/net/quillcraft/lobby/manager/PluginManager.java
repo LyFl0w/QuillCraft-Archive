@@ -19,48 +19,48 @@ import org.bukkit.plugin.messaging.Messenger;
 public class PluginManager {
 
     //private final TaskManager taskManager;
-    private final QuillCraftLobby main;
+    private final QuillCraftLobby quillCraftLobby;
     private final TaskManager taskManager;
-    public PluginManager(QuillCraftLobby main){
-        this.main = main;
-        this.taskManager = new TaskManager(main);
-        registerEvents(main.getServer().getPluginManager());
-        registerPluginMessage(main.getServer().getMessenger());
+    public PluginManager(QuillCraftLobby quillCraftLobby){
+        this.quillCraftLobby = quillCraftLobby;
+        this.taskManager = new TaskManager(quillCraftLobby);
+        registerEvents(quillCraftLobby.getServer().getPluginManager());
+        registerPluginMessage(quillCraftLobby.getServer().getMessenger());
         registerCommands();
     }
 
     private void registerPluginMessage(Messenger messenger){
-        messenger.registerOutgoingPluginChannel(main, "quillcraft:game");
+        messenger.registerOutgoingPluginChannel(quillCraftLobby, "quillcraft:game");
     }
 
     private void registerEvents(org.bukkit.plugin.PluginManager pluginManager){
-        pluginManager.registerEvents(new BlockBreakListener(), main);
+        pluginManager.registerEvents(new BlockBreakListener(), quillCraftLobby);
 
-        pluginManager.registerEvents(new PlayerJoinListener(main), main);
-        pluginManager.registerEvents(new PlayerQuitListener(), main);
-        pluginManager.registerEvents(new PlayerItemListener(), main);
-        pluginManager.registerEvents(new PlayerInteractListener(), main);
-        pluginManager.registerEvents(new PlayerItemHeldListener(), main);
-        pluginManager.registerEvents(new PlayerGameModeChangeListener(), main);
-        pluginManager.registerEvents(new PlayerInteractEntityListener(), main);
+        pluginManager.registerEvents(new PlayerJoinListener(quillCraftLobby), quillCraftLobby);
+        pluginManager.registerEvents(new PlayerQuitListener(quillCraftLobby), quillCraftLobby);
+        pluginManager.registerEvents(new PlayerItemListener(), quillCraftLobby);
+        pluginManager.registerEvents(new PlayerInteractListener(), quillCraftLobby);
+        pluginManager.registerEvents(new PlayerItemHeldListener(), quillCraftLobby);
+        pluginManager.registerEvents(new PlayerGameModeChangeListener(), quillCraftLobby);
+        pluginManager.registerEvents(new PlayerInteractEntityListener(), quillCraftLobby);
 
-        pluginManager.registerEvents(new EntityDamageListener(), main);
-        pluginManager.registerEvents(new HangingBreakByEntityListener(), main);
-        pluginManager.registerEvents(new ExplosionPrimeListener(), main);
+        pluginManager.registerEvents(new EntityDamageListener(), quillCraftLobby);
+        pluginManager.registerEvents(new HangingBreakByEntityListener(), quillCraftLobby);
+        pluginManager.registerEvents(new ExplosionPrimeListener(), quillCraftLobby);
 
-        pluginManager.registerEvents(new InventoryClickListener(main), main);
+        pluginManager.registerEvents(new InventoryClickListener(quillCraftLobby), quillCraftLobby);
 
-        pluginManager.registerEvents(new WeatherChangeListener(), main);
-        pluginManager.registerEvents(new FoodLevelChangeListener(), main);
+        pluginManager.registerEvents(new WeatherChangeListener(), quillCraftLobby);
+        pluginManager.registerEvents(new FoodLevelChangeListener(), quillCraftLobby);
 
-        pluginManager.registerEvents(new PlayerChangeLanguageListener(), main);
+        pluginManager.registerEvents(new PlayerChangeLanguageListener(), quillCraftLobby);
     }
 
     private void registerCommands(){
-        main.getCommand("lobby").setExecutor(new LobbyCommand());
-        main.getCommand("setlobby").setExecutor(new SetLobbyCommand());
-        main.getCommand("npc").setExecutor(new NPCCommand(main));
-        main.getCommand("head").setExecutor(new HeadCommand(main));
+        quillCraftLobby.getCommand("lobby").setExecutor(new LobbyCommand());
+        quillCraftLobby.getCommand("setlobby").setExecutor(new SetLobbyCommand());
+        quillCraftLobby.getCommand("npc").setExecutor(new NPCCommand(quillCraftLobby));
+        quillCraftLobby.getCommand("head").setExecutor(new HeadCommand(quillCraftLobby));
     }
 
     public void onDisable(){

@@ -31,14 +31,14 @@ public class NPCManager implements Listener {
 
     private int distance;
 
-    public NPCManager(JavaPlugin main, int distance) {
+    public NPCManager(JavaPlugin quillCraftLobby, int distance) {
         this.NPCList = new HashSet<>();
-        this.javaPlugin = main;
+        this.javaPlugin = quillCraftLobby;
         this.distance = (int) Math.pow(distance, 2);
 
         initNPC();
 
-        main.getServer().getPluginManager().registerEvents(this, main);
+        quillCraftLobby.getServer().getPluginManager().registerEvents(this, quillCraftLobby);
     }
 
     private void initNPC() {
