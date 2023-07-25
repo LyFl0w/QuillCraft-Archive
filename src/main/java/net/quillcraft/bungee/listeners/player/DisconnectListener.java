@@ -34,7 +34,7 @@ public class DisconnectListener implements Listener{
         final ProxiedPlayer player = event.getPlayer();
         final TaskScheduler taskScheduler = quillCraftBungee.getProxy().getScheduler();
 
-        redissonClient.getAtomicLong("players.size").set(quillCraftBungee.getProxy().getOnlineCount());
+        redissonClient.getAtomicLong("players.size").set(quillCraftBungee.getProxy().getOnlineCount()-1);
         redissonClient.getTopic("players.size.update").publish(0);
 
         taskScheduler.runAsync(quillCraftBungee, () -> {
