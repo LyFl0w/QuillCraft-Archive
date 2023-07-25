@@ -75,7 +75,6 @@ public class PlayerJoinListener implements Listener {
                     final ScoreboardBuilder scoreboardBuilder = new ScoreboardBuilder("QuillCraft").setLines(
                             DateFormat.getDateInstance(DateFormat.SHORT, new Locale(splitLang[0], splitLang[1])).format(new Date()),
                             "Lobby: 1",
-                            // TODO : USE OTHER METHOD TO GET NUMBER OF PLAYER
                             "Connecté: "+redissonClient.getAtomicLong("players.size").get(),
                             "",
                             "⟫ "+player.getName(),
