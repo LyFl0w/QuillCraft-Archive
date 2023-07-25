@@ -4,6 +4,7 @@ import com.google.gson.JsonObject;
 import com.google.gson.JsonParser;
 import com.mojang.authlib.GameProfile;
 import com.mojang.authlib.properties.Property;
+
 import net.minecraft.network.protocol.Packet;
 import net.minecraft.network.protocol.game.*;
 import net.minecraft.network.syncher.DataWatcher;
@@ -13,11 +14,12 @@ import net.minecraft.server.MinecraftServer;
 import net.minecraft.server.level.EntityPlayer;
 import net.minecraft.server.level.WorldServer;
 import net.quillcraft.core.utils.PacketUtils;
+
 import org.bukkit.Bukkit;
 import org.bukkit.Location;
 import org.bukkit.World;
-import org.bukkit.craftbukkit.v1_18_R2.CraftServer;
-import org.bukkit.craftbukkit.v1_18_R2.CraftWorld;
+import org.bukkit.craftbukkit.v1_20_R1.CraftServer;
+import org.bukkit.craftbukkit.v1_20_R1.CraftWorld;
 import org.bukkit.entity.Player;
 import org.bukkit.plugin.java.JavaPlugin;
 
@@ -38,8 +40,9 @@ public class NPC {
     private final int reference;
     private DataWatcher dataWatcher;
     private float yawHead;
+    private final UUID uuid;
 
-    private NPC(JavaPlugin javaPlugin, String name, int reference, Location location, float yawHead, GameProfile gameProfile){
+    private NPC(JavaPlugin javaPlugin, String name, int reference, Location location, float yawHead, GameProfile gameProfile) {
         this.receivers = new HashSet<>();
         this.javaPlugin = javaPlugin;
         this.name = name;
@@ -50,13 +53,15 @@ public class NPC {
         final WorldServer world = ((CraftWorld) location.getWorld()).getHandle();
         this.npc = new EntityPlayer(server, world, gameProfile);
 
+        this.uuid = this.npc.getBukkitEntity().getUniqueId();
+
         this.npc.getBukkitEntity().setPlayerListName("§8[NPC] §f"+npc.co());
     }
 
-    protected NPC(JavaPlugin javaPlugin, String name, List<String> skinPart, int reference, Location location, float yawHead, GameProfile gameProfile){
+    protected NPC(JavaPlugin javaPlugin, String name, List<String> skinPart, int reference, Location location, float yawHead, GameProfile gameProfile) {
         this(javaPlugin, name, reference, location, yawHead, gameProfile);
 
-        if(skinPart != null && skinPart.size() == 2){
+        if(skinPart != null && skinPart.size() == 2) {
             gameProfile.getProperties().put("textures", new Property("textures", skinPart.get(0), skinPart.get(1)));
 
             //DISPLAY 3D PART OF THE SKIN
@@ -67,12 +72,12 @@ public class NPC {
         updateBodyRotation();
     }
 
-    protected NPC(JavaPlugin javaPlugin, String name, String skinName, int reference, Location location, GameProfile gameProfile){
+    protected NPC(JavaPlugin javaPlugin, String name, String skinName, int reference, Location location, GameProfile gameProfile) {
         this(javaPlugin, name, reference, location, location.getYaw(), gameProfile);
 
-        if(!skinName.isBlank()){
+        if(!skinName.isBlank()) {
             final String[] skinsType = getSkin(skinName);
-            if(skinsType != null){
+            if(skinsType != null) {
                 gameProfile.getProperties().put("textures", new Property("textures", skinsType[0], skinsType[1]));
 
                 //DISPLAY 3D PART OF THE SKIN
@@ -83,12 +88,12 @@ public class NPC {
         updateBodyRotation();
     }
 
-    private void setDataWatcher(){
-        dataWatcher = npc.ai();
+    private void setDataWatcher() {
+        dataWatcher = npc.aj();
         dataWatcher.b(new DataWatcherObject<>(17, DataWatcherRegistry.a), (byte) 0xFF);
     }
 
-    public NPC setLocation(Location location){
+    public NPC setLocation(Location location) {
         this.location = location;
         this.world = location.getWorld();
 
@@ -96,156 +101,156 @@ public class NPC {
         return this;
     }
 
-    public NPC addReceiver(List<Player> players){
+    public NPC addReceiver(List<Player> players) {
         this.receivers.addAll(players);
         return this;
     }
 
-    public NPC addReceiver(Player player){
+    public NPC addReceiver(Player player) {
         this.receivers.add(player);
         return this;
     }
 
-    public NPC removeReceiver(List<Player> players){
+    public NPC removeReceiver(List<Player> players) {
         players.forEach(this.receivers::remove);
         return this;
     }
 
-    public NPC removeReceiver(Player player){
+    public NPC removeReceiver(Player player) {
         this.receivers.remove(player);
         return this;
     }
 
-    public boolean isReceiver(Player player){
+    public boolean isReceiver(Player player) {
         return this.receivers.contains(player);
     }
 
-    private ArrayList<Packet<?>> getSpawnPackets(){
+    private ArrayList<Packet<?>> getSpawnPackets() {
         final ArrayList<Packet<?>> packets = new ArrayList<>();
-        packets.add(new PacketPlayOutPlayerInfo(PacketPlayOutPlayerInfo.EnumPlayerInfoAction.a, npc)); //Display NPC
+        //packets.add(new PacketPlayOutPlayerInfo(PacketPlayOutPlayerInfo.EnumPlayerInfoAction.a, npc)); //Display NPC
+        packets.add(new ClientboundPlayerInfoUpdatePacket(ClientboundPlayerInfoUpdatePacket.a.a, npc)); //Display NPC
+
         packets.add(new PacketPlayOutNamedEntitySpawn(npc)); // Display NPC
-        if(dataWatcher != null) packets.add(new PacketPlayOutEntityMetadata(getId(), dataWatcher, true)); // Display 3D part of the Skin
+
+        //if(dataWatcher != null) packets.add(new PacketPlayOutEntityMetadata(getId(), dataWatcher, true)); // Display 3D part of the Skin
+        if(dataWatcher != null) packets.add(new PacketPlayOutEntityMetadata(getId(), dataWatcher.c())); // Display 3D part of the Skin
+
         packets.add(new PacketPlayOutAnimation(npc, 0)); // Rotate Correctly the body of NPC with left-click
         packets.add(new PacketPlayOutEntityHeadRotation(npc, (byte) (yawHead*256/360))); // Rotate head
         return packets;
     }
 
-    private ArrayList<Packet<?>> getFullLocationPacket(){
+    private ArrayList<Packet<?>> getFullLocationPacket() {
         final ArrayList<Packet<?>> packets = new ArrayList<>();
         packets.add(getLocationPacket());
         packets.add(getHeadPacket());
         return packets;
     }
 
-    private PacketPlayOutEntityHeadRotation getHeadPacket(){
+    private PacketPlayOutEntityHeadRotation getHeadPacket() {
         return new PacketPlayOutEntityHeadRotation(npc, (byte) (yawHead*256/360));
     }
 
-    private PacketPlayOutEntityTeleport getLocationPacket(){
+    private PacketPlayOutEntityTeleport getLocationPacket() {
         return new PacketPlayOutEntityTeleport(npc);
     }
 
-    private ArrayList<Packet<?>> getDestroyPackets(){
+    private ArrayList<Packet<?>> getDestroyPackets() {
         final ArrayList<Packet<?>> packets = new ArrayList<>();
-        packets.add(new PacketPlayOutPlayerInfo(PacketPlayOutPlayerInfo.EnumPlayerInfoAction.e, npc));
+        //packets.add(new ClientboundPlayerInfoRemovePacket(Collections.singletonList(uuid)));
         packets.add(new PacketPlayOutEntityDestroy(getId()));
 
         return packets;
     }
 
-    public void sendSpawnPacket(Player... players){
+    public void sendSpawnPacket(Player... players) {
         sendSpawnPacket(2, players);
     }
 
-    public void sendSpawnPacket(int time, Player... players){
+    public void sendSpawnPacket(int time, Player... players) {
         final List<Packet<?>> packets = getSpawnPackets();
 
         Arrays.stream(players).forEach(player -> {
             PacketUtils.sendPacket(player, packets);
-            Bukkit.getScheduler().runTaskLaterAsynchronously(javaPlugin, () ->
-                    PacketUtils.sendPacket(player, new PacketPlayOutPlayerInfo(PacketPlayOutPlayerInfo.EnumPlayerInfoAction.e, npc)), time*20L);
+            /*
+            Bukkit.getScheduler().runTaskLaterAsynchronously(javaPlugin, () -> {
+                    PacketUtils.sendPacket(player, new ClientboundPlayerInfoRemovePacket(Collections.singletonList(uuid)));
+                    player.sendMessage("destroy entity tab");
+            }, time*20L);*/
         });
     }
 
-    public void sendSpawnPacket(List<Player> players){
-        final List<Packet<?>> packets = getSpawnPackets();
-        players.forEach(player -> {
-            PacketUtils.sendPacket(player, packets);
-            Bukkit.getScheduler().runTaskLater(javaPlugin, () ->
-                    PacketUtils.sendPacket(player, new PacketPlayOutPlayerInfo(PacketPlayOutPlayerInfo.EnumPlayerInfoAction.e, npc)), 30L);
-        });
-    }
-
-
-    public void sendDespawnPacket(Player... players){
+    public void sendDespawnPacket(Player... players) {
         final List<Packet<?>> packets = getDestroyPackets();
         Arrays.stream(players).forEach(player -> PacketUtils.sendPacket(player, packets));
     }
 
-    public void sendDespawnPacket(List<Player> players){
+    public void sendDespawnPacket(List<Player> players) {
         final List<Packet<?>> packets = getDestroyPackets();
         players.forEach(player -> PacketUtils.sendPacket(player, packets));
     }
 
-    public void updateBodyRotation(){
+    public void updateBodyRotation() {
         getReceivers().forEach(player -> PacketUtils.sendPacket(player, getLocationPacket()));
     }
 
-    public void updateHeadRotation(){
+    public void updateHeadRotation() {
         getReceivers().forEach(player -> PacketUtils.sendPacket(player, getHeadPacket()));
     }
 
-    public int getId(){
-        return npc.ae();
+    public int getId() {
+        // return npc.ae();
+        // npc.hashCode() is generally equals to its ID
+        return npc.af();
     }
 
-    public Set<Player> getReceivers(){
+    public Set<Player> getReceivers() {
         return receivers;
     }
 
-    public EntityPlayer getNpc(){
+    public EntityPlayer getNpc() {
         return npc;
     }
 
-    public World getWorld(){
+    public World getWorld() {
         return world;
     }
 
-    public Location getLocation(){
+    public Location getLocation() {
         return location;
     }
 
-    public String getName(){
+    public String getName() {
         return name;
     }
 
-    public int getReference(){
+    public int getReference() {
         return reference;
     }
 
-    public void rotateBody(float yaw){
+    public void rotateBody(float yaw) {
         setBodyRotation(this.location.getYaw()+yaw);
     }
 
-    public void setBodyRotation(float yaw){
+    public void setBodyRotation(float yaw) {
         this.location.setYaw(yaw);
         npc.a(location.getX(), location.getY(), location.getZ(), location.getYaw(), location.getPitch());
     }
 
-    public float getYawHead(){
+    public float getYawHead() {
         return yawHead;
     }
 
-    public void setYawHeadRotation(float yawHead){
+    public void setYawHeadRotation(float yawHead) {
         this.yawHead = yawHead;
     }
 
-    public void rotateYawHead(float yaw){
+    public void rotateYawHead(float yaw) {
         setYawHeadRotation(yawHead+yaw);
     }
 
-    protected String[] getSkin(String playerName){
-        try{
+    protected String[] getSkin(String playerName) {
+        try {
             final URL urlUUID = new URL("https://api.mojang.com/users/profiles/minecraft/"+playerName);
             final InputStreamReader readerUUID = new InputStreamReader(urlUUID.openStream());
 
@@ -253,31 +258,15 @@ public class NPC {
 
             final URL url = new URL("https://sessionserver.mojang.com/session/minecraft/profile/"+uuid+"?unsigned=false");
             final InputStreamReader reader = new InputStreamReader(url.openStream());
-            final JsonObject property = JsonParser.parseReader(reader).getAsJsonObject().get("properties")
-                    .getAsJsonArray().get(0).getAsJsonObject();
+            final JsonObject property = JsonParser.parseReader(reader).getAsJsonObject().get("properties").getAsJsonArray().get(0).getAsJsonObject();
 
             final String texture = property.get("value").getAsString();
             final String signature = property.get("signature").getAsString();
 
             return new String[]{texture, signature};
-        }catch(Exception ignored){}
+        } catch(Exception ignored) {
+        }
         return null;
     }
-
-
-
-    /* TODO: WTF IS THIS
-    protected int getOnlinePlayer(){
-        try{
-            final URL url = new URL("https://api.quillcraft.storagehost.ch/minecraft/server/players/amount");
-            final InputStreamReader reader = new InputStreamReader(url.openStream());
-
-            return new JsonParser().parse(reader).getAsJsonObject().getAsInt();
-        }catch(Exception err){
-            err.printStackTrace();
-        }
-        return 0;
-    }*/
-
 
 }
