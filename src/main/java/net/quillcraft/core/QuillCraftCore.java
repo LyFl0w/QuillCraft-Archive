@@ -18,7 +18,6 @@ public class QuillCraftCore extends JavaPlugin {
     private ProtocolManager protocolManager;
     private CommandManager commandManager;
 
-
     @Override
     public void onEnable(){
         INSTANCE = this;
