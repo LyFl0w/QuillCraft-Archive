@@ -34,7 +34,7 @@ public class PostLoginListener implements Listener {
         final ProxiedPlayer player = event.getPlayer();
         final TaskScheduler taskScheduler = quillCraftBungee.getProxy().getScheduler();
 
-        redissonClient.getAtomicLong("players.size").incrementAndGet();
+        redissonClient.getAtomicLong("players.size").set(quillCraftBungee.getProxy().getOnlineCount());
         redissonClient.getTopic("players.size.update").publish(0);
 
         taskScheduler.runAsync(quillCraftBungee, () -> {
