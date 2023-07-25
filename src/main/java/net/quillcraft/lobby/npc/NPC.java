@@ -21,7 +21,6 @@ import org.bukkit.World;
 import org.bukkit.craftbukkit.v1_20_R1.CraftServer;
 import org.bukkit.craftbukkit.v1_20_R1.CraftWorld;
 import org.bukkit.entity.Player;
-import org.bukkit.plugin.java.JavaPlugin;
 
 import java.io.InputStreamReader;
 import java.net.URL;
@@ -31,8 +30,6 @@ public class NPC {
 
     private final Set<Player> receivers;
 
-    private final JavaPlugin javaPlugin;
-
     private final EntityPlayer npc;
     private World world;
     private Location location;
@@ -40,11 +37,9 @@ public class NPC {
     private final int reference;
     private DataWatcher dataWatcher;
     private float yawHead;
-    private final UUID uuid;
 
-    private NPC(JavaPlugin javaPlugin, String name, int reference, Location location, float yawHead, GameProfile gameProfile) {
+    private NPC(String name, int reference, Location location, float yawHead, GameProfile gameProfile) {
         this.receivers = new HashSet<>();
-        this.javaPlugin = javaPlugin;
         this.name = name;
         this.reference = reference;
         this.yawHead = yawHead;
@@ -53,13 +48,11 @@ public class NPC {
         final WorldServer world = ((CraftWorld) location.getWorld()).getHandle();
         this.npc = new EntityPlayer(server, world, gameProfile);
 
-        this.uuid = this.npc.getBukkitEntity().getUniqueId();
-
         this.npc.getBukkitEntity().setPlayerListName("§8[NPC] §f"+npc.co());
     }
 
-    protected NPC(JavaPlugin javaPlugin, String name, List<String> skinPart, int reference, Location location, float yawHead, GameProfile gameProfile) {
-        this(javaPlugin, name, reference, location, yawHead, gameProfile);
+    protected NPC(String name, List<String> skinPart, int reference, Location location, float yawHead, GameProfile gameProfile) {
+        this(name, reference, location, yawHead, gameProfile);
 
         if(skinPart != null && skinPart.size() == 2) {
             gameProfile.getProperties().put("textures", new Property("textures", skinPart.get(0), skinPart.get(1)));
@@ -72,8 +65,8 @@ public class NPC {
         updateBodyRotation();
     }
 
-    protected NPC(JavaPlugin javaPlugin, String name, String skinName, int reference, Location location, GameProfile gameProfile) {
-        this(javaPlugin, name, reference, location, location.getYaw(), gameProfile);
+    protected NPC(String name, String skinName, int reference, Location location, GameProfile gameProfile) {
+        this(name, reference, location, location.getYaw(), gameProfile);
 
         if(!skinName.isBlank()) {
             final String[] skinsType = getSkin(skinName);

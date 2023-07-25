@@ -31,7 +31,7 @@ public class NPCManager implements Listener {
 
     private int distance;
 
-    public NPCManager(JavaPlugin main, int distance){
+    public NPCManager(JavaPlugin main, int distance) {
         this.NPCList = new HashSet<>();
         this.javaPlugin = main;
         this.distance = (int) Math.pow(distance, 2);
@@ -41,7 +41,7 @@ public class NPCManager implements Listener {
         main.getServer().getPluginManager().registerEvents(this, main);
     }
 
-    private void initNPC(){
+    private void initNPC() {
         fileConfiguration.getKeys(false).forEach(name -> fileConfiguration.getConfigurationSection(name).getKeys(false).forEach(reference -> {
             final String path = name+"."+reference;
 
@@ -56,24 +56,24 @@ public class NPCManager implements Listener {
             final float pitch = (float) fileConfiguration.getDouble(path+".location.pitch");
 
             final GameProfile gameProfile = new GameProfile(UUID.randomUUID(), name);
-            final NPC npc = new NPC(javaPlugin, name, skin, Integer.parseInt(reference), new Location(world, x, y, z, yawBody, pitch), yawHead, gameProfile);
+            final NPC npc = new NPC(name, skin, Integer.parseInt(reference), new Location(world, x, y, z, yawBody, pitch), yawHead, gameProfile);
 
             this.NPCList.add(npc);
             updateAllPlayersNPC(npc);
         }));
     }
 
-    public NPC createNPC(String name, String skinName, Location location){
+    public NPC createNPC(String name, String skinName, Location location) {
         location = LocationUtils.roundCoordinates(location);
         final GameProfile gameProfile = new GameProfile(UUID.randomUUID(), name);
         final int reference = (int) NPCList.stream().filter(npcs -> npcs.getName().equalsIgnoreCase(name)).count();
-        final NPC npc = new NPC(javaPlugin, name, skinName, reference, location, gameProfile);
+        final NPC npc = new NPC(name, skinName, reference, location, gameProfile);
 
         this.NPCList.add(npc);
 
         final String path = name+"."+reference;
         final String[] skin = npc.getSkin(skinName);
-        if(skin!=null) fileConfiguration.set(path+".skin", skin);
+        if(skin != null) fileConfiguration.set(path+".skin", skin);
 
         fileConfiguration.set(path+".location.world", location.getWorld().getName());
         fileConfiguration.set(path+".location.x", location.getX());
@@ -90,16 +90,17 @@ public class NPCManager implements Listener {
         return npc;
     }
 
-    public boolean exists(String npcName){
+    public boolean exists(String npcName) {
         return this.NPCList.stream().anyMatch(npc -> npc.getName().equals(npcName));
     }
 
-    public boolean exists(String npcName, int reference){
+    public boolean exists(String npcName, int reference) {
         return this.NPCList.stream().anyMatch(npc -> npc.getName().equals(npcName) && npc.getReference() == reference);
     }
 
-    public void removeNPC(String name, int reference){
-        final NPC npc = NPCList.stream().parallel().filter(npcTarget -> npcTarget.getName().equalsIgnoreCase(name) && npcTarget.getReference() == reference).toList().get(0);
+    public void removeNPC(String name, int reference) {
+        final NPC npc = NPCList.stream().parallel().filter(npcTarget -> npcTarget.getName().equalsIgnoreCase(name)
+                && npcTarget.getReference() == reference).toList().get(0);
         npc.getWorld().getPlayers().forEach(npc::sendDespawnPacket);
         npc.getReceivers().clear();
 
@@ -114,17 +115,17 @@ public class NPCManager implements Listener {
     }
 
     @EventHandler
-    private void onPlayerMove(PlayerMoveEvent event){
+    private void onPlayerMove(PlayerMoveEvent event) {
         displayNPC(event);
     }
 
     @EventHandler
-    private void onPlayerTeleport(PlayerTeleportEvent event){
+    private void onPlayerTeleport(PlayerTeleportEvent event) {
         displayNPC(event);
     }
 
     @EventHandler(priority = EventPriority.HIGH)
-    private void onPlayerJoin(PlayerJoinEvent event){
+    private void onPlayerJoin(PlayerJoinEvent event) {
         final Player player = event.getPlayer();
 
         Bukkit.getScheduler().runTaskLaterAsynchronously(javaPlugin, () -> this.NPCList.stream().parallel().forEach(npc -> {
@@ -134,42 +135,43 @@ public class NPCManager implements Listener {
     }
 
     @EventHandler
-    private void onPlayerQuit(PlayerQuitEvent event){
+    private void onPlayerQuit(PlayerQuitEvent event) {
         final Player player = event.getPlayer();
 
-        NPCList.stream().parallel().filter(npc -> npc.isReceiver(player)).forEach(npc ->{
+        NPCList.stream().parallel().filter(npc -> npc.isReceiver(player)).forEach(npc -> {
             npc.removeReceiver(player);
             npc.sendDespawnPacket(player);
         });
     }
 
-    public void setViewDistance(int distance){
+    public void setViewDistance(int distance) {
         this.distance = (int) Math.pow(distance, 2);
     }
 
-    public HashSet<NPC> getNPCList(){
+    public HashSet<NPC> getNPCList() {
         return NPCList;
     }
 
-    private void displayNPC(PlayerMoveEvent event){
+    private void displayNPC(PlayerMoveEvent event) {
         final Player player = event.getPlayer();
 
         NPCList.stream().parallel().forEach(npc -> {
-            switch(this.canBeDisplayed(player, event.getFrom(), event.getTo(), npc)){
-                default -> {}
+            switch(this.canBeDisplayed(player, event.getFrom(), event.getTo(), npc)) {
+                default -> {
+                }
                 case 1 -> npc.sendSpawnPacket(player);
                 case 2 -> npc.sendDespawnPacket(player);
             }
         });
     }
 
-    private int canBeDisplayed(Player player, Location from, Location to, NPC npc){
+    private int canBeDisplayed(Player player, Location from, Location to, NPC npc) {
         if(!npc.isReceiver(player)) return 0;
 
-        if(npc.getWorld() == to.getWorld()){
-            if(from.distanceSquared(npc.getLocation()) > this.distance && to.distanceSquared(npc.getLocation()) < this.distance){
+        if(npc.getWorld() == to.getWorld()) {
+            if(from.distanceSquared(npc.getLocation()) > this.distance && to.distanceSquared(npc.getLocation()) < this.distance) {
                 return 1;
-            }else if(from.distanceSquared(npc.getLocation()) < this.distance && to.distanceSquared(npc.getLocation()) > this.distance){
+            } else if(from.distanceSquared(npc.getLocation()) < this.distance && to.distanceSquared(npc.getLocation()) > this.distance) {
                 return 2;
             }
         }
@@ -181,10 +183,11 @@ public class NPCManager implements Listener {
         NPCList.clear();
     }
 
-    private void updateAllPlayersNPC(NPC npc){
+    private void updateAllPlayersNPC(NPC npc) {
         npc.getWorld().getPlayers().forEach(player -> {
             npc.addReceiver(player);
             npc.sendSpawnPacket(player);
         });
     }
+
 }
