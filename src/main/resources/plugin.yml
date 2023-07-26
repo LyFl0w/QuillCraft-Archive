@@ -1,20 +1,20 @@
 name: QuillCraftLobby
 version: 2.0
-authors: [LyFlow, Finkitpiat]
+authors: [ LyFlow, Finkitpiat ]
 main: net.quillcraft.lobby.QuillCraftLobby
 api-version: 1.18
 prefix: Lobby
 description: Plugin dedicated to QuillCraft
 website: https://quillcraft.fr
-depend: [QuillCraftCore, HeadDatabase, ProtocolLib]
+depend: [ QuillCraftCore, HeadDatabase, ProtocolLib ]
 commands:
   lobby:
     usage: "§c/lobby"
     description: Cette commande permet de retourner au spawn principale
-    aliases: [hub]
+    aliases: [ hub ]
   setlobby:
     description: Cette commande permet de changer l'emplacement du spawn principale
-    aliases: [sethub]
+    aliases: [ sethub ]
     permission: quillcraftlobby.setlobby
     permission-message: Unknown command. Type \"/help\" for help.
   npc:

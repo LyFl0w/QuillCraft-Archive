@@ -18,10 +18,7 @@ public class ScoreboardSubscriber {
     }
 
     private void read() {
-        redissonClient.getTopic("players.size.update").addListener(Integer.class, (channel, message) ->
-                quillCraftLobby.getServer().getScheduler().runTask(quillCraftLobby, () ->
-                        quillCraftLobby.getScoreboardManager().getAllScoreboardBuilders().forEach(scoreboardBuilder ->
-                                scoreboardBuilder.setLine("Connecté: "+redissonClient.getAtomicLong("players.size").get(), 6))));
+        redissonClient.getTopic("players.size.update").addListener(Integer.class, (channel, message) -> quillCraftLobby.getServer().getScheduler().runTask(quillCraftLobby, () -> quillCraftLobby.getScoreboardManager().getAllScoreboardBuilders().forEach(scoreboardBuilder -> scoreboardBuilder.setLine("Connecté: "+redissonClient.getAtomicLong("players.size").get(), 6))));
     }
 
 

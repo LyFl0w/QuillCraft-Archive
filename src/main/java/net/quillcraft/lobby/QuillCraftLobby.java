@@ -28,14 +28,18 @@ public class QuillCraftLobby extends JavaPlugin implements Listener {
     private ProtocolManager protocolManager;
     private ScoreboardManager scoreboardManager;
 
+    public static QuillCraftLobby getInstance() {
+        return INSTANCE;
+    }
+
     @Override
-    public void onEnable(){
+    public void onEnable() {
         INSTANCE = this;
 
         saveDefaultConfig();
 
         this.protocolManager = ProtocolLibrary.getProtocolManager();
-        this.npcManager = new NPCManager(this,120);
+        this.npcManager = new NPCManager(this, 120);
         this.songManager = new SongManager(this);
         this.scoreboardManager = new ScoreboardManager();
         new ScoreboardSubscriber(this);
@@ -48,24 +52,20 @@ public class QuillCraftLobby extends JavaPlugin implements Listener {
     }
 
     @Override
-    public void onDisable(){
+    public void onDisable() {
         npcManager.onDisable();
 
     }
 
-    public static QuillCraftLobby getInstance(){
-        return INSTANCE;
-    }
-
-    public NPCManager getNpcManager(){
+    public NPCManager getNpcManager() {
         return npcManager;
     }
 
-    public SongManager getSongManager(){
+    public SongManager getSongManager() {
         return songManager;
     }
 
-    public ProtocolManager getProtocolManager(){
+    public ProtocolManager getProtocolManager() {
         return protocolManager;
     }
 
@@ -74,7 +74,7 @@ public class QuillCraftLobby extends JavaPlugin implements Listener {
     }
 
     @Nonnull
-    public PluginCommand getCommand(@Nonnull String name){
+    public PluginCommand getCommand(@Nonnull String name) {
         return Objects.requireNonNull(super.getCommand(name));
     }
 

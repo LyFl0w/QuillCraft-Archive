@@ -21,7 +21,8 @@ public class PluginManager {
     //private final TaskManager taskManager;
     private final QuillCraftLobby quillCraftLobby;
     private final TaskManager taskManager;
-    public PluginManager(QuillCraftLobby quillCraftLobby){
+
+    public PluginManager(QuillCraftLobby quillCraftLobby) {
         this.quillCraftLobby = quillCraftLobby;
         this.taskManager = new TaskManager(quillCraftLobby);
         registerEvents(quillCraftLobby.getServer().getPluginManager());
@@ -29,11 +30,11 @@ public class PluginManager {
         registerCommands();
     }
 
-    private void registerPluginMessage(Messenger messenger){
+    private void registerPluginMessage(Messenger messenger) {
         messenger.registerOutgoingPluginChannel(quillCraftLobby, "quillcraft:game");
     }
 
-    private void registerEvents(org.bukkit.plugin.PluginManager pluginManager){
+    private void registerEvents(org.bukkit.plugin.PluginManager pluginManager) {
         pluginManager.registerEvents(new BlockBreakListener(), quillCraftLobby);
 
         pluginManager.registerEvents(new PlayerJoinListener(quillCraftLobby), quillCraftLobby);
@@ -56,14 +57,14 @@ public class PluginManager {
         pluginManager.registerEvents(new PlayerChangeLanguageListener(), quillCraftLobby);
     }
 
-    private void registerCommands(){
+    private void registerCommands() {
         quillCraftLobby.getCommand("lobby").setExecutor(new LobbyCommand());
         quillCraftLobby.getCommand("setlobby").setExecutor(new SetLobbyCommand());
         quillCraftLobby.getCommand("npc").setExecutor(new NPCCommand(quillCraftLobby));
         quillCraftLobby.getCommand("head").setExecutor(new HeadCommand(quillCraftLobby));
     }
 
-    public void onDisable(){
+    public void onDisable() {
         taskManager.onDisableTasks();
     }
 

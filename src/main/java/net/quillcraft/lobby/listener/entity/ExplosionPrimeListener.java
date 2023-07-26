@@ -7,7 +7,7 @@ import org.bukkit.event.entity.ExplosionPrimeEvent;
 public class ExplosionPrimeListener implements Listener {
 
     @EventHandler
-    public void onEntityExplode(ExplosionPrimeEvent event){
+    public void onEntityExplode(ExplosionPrimeEvent event) {
         event.setRadius(0f);
         event.setFire(false);
     }

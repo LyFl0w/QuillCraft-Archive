@@ -99,8 +99,7 @@ public class NPCManager implements Listener {
     }
 
     public void removeNPC(String name, int reference) {
-        final NPC npc = NPCList.stream().parallel().filter(npcTarget -> npcTarget.getName().equalsIgnoreCase(name)
-                && npcTarget.getReference() == reference).toList().get(0);
+        final NPC npc = NPCList.stream().parallel().filter(npcTarget -> npcTarget.getName().equalsIgnoreCase(name) && npcTarget.getReference() == reference).toList().get(0);
         npc.getWorld().getPlayers().forEach(npc::sendDespawnPacket);
         npc.getReceivers().clear();
 

@@ -10,13 +10,14 @@ public class TaskManager {
 
     private final QuillCraftLobby quillCraftLobby;
     private final List<BukkitTask> taskInProcess;
-    public TaskManager(QuillCraftLobby quillCraftLobby){
+
+    public TaskManager(QuillCraftLobby quillCraftLobby) {
         this.quillCraftLobby = quillCraftLobby;
         this.taskInProcess = new ArrayList<>();
         onEnableTasks();
     }
 
-    private void onEnableTasks(){
+    private void onEnableTasks() {
         // TODO : ADD NEW SYSTEM TASK
         // taskInProcess.add(new AutoMessageTask(quillCraftLobby).runTaskTimerAsynchronously(quillCraftLobby, 120L, 20L*60));
         /*
@@ -52,7 +53,7 @@ public class TaskManager {
 
     }
 
-    public void onDisableTasks(){
+    public void onDisableTasks() {
         taskInProcess.forEach(BukkitTask::cancel);
     }
 
