@@ -14,21 +14,21 @@ public class Party {
     private String ownerName;
 
     // For Redis
-    private Party(){}
+    private Party() {}
 
-    public Party(Player player){
+    public Party(Player player) {
         this(player.getUniqueId(), player.getName());
     }
 
-    public Party(UUID ownerUUID, String ownerNames){
+    public Party(UUID ownerUUID, String ownerNames) {
         this(UUID.randomUUID(), ownerUUID, ownerNames);
     }
 
-    public Party(UUID partyUUID, UUID ownerUUID, String ownerName){
+    public Party(UUID partyUUID, UUID ownerUUID, String ownerName) {
         this(partyUUID, ownerUUID, ownerName, new ArrayList<>(), new ArrayList<>());
     }
 
-    public Party(UUID partyUUID, UUID ownerUUID, String ownerNames, List<UUID> followersUUID, List<String> membersName){
+    public Party(UUID partyUUID, UUID ownerUUID, String ownerNames, List<UUID> followersUUID, List<String> membersName) {
         this.partyUUID = partyUUID;
         this.ownerUUID = ownerUUID;
         this.ownerName = ownerNames;
@@ -36,27 +36,27 @@ public class Party {
         this.followersName = membersName;
     }
 
-    public UUID getPartyUUID(){
+    public UUID getPartyUUID() {
         return partyUUID;
     }
 
-    public UUID getOwnerUUID(){
+    public UUID getOwnerUUID() {
         return ownerUUID;
     }
 
-    public String getOwnerName(){
+    public String getOwnerName() {
         return ownerName;
     }
 
-    public List<String> getFollowersName(){
+    public List<String> getFollowersName() {
         return followersName;
     }
 
-    public List<UUID> getFollowersUUID(){
+    public List<UUID> getFollowersUUID() {
         return followersUUID;
     }
 
-    public List<UUID> getPlayersUUID(){
+    public List<UUID> getPlayersUUID() {
         final List<UUID> playersUUID = new ArrayList<>(followersUUID);
         playersUUID.add(ownerUUID);
         return playersUUID;

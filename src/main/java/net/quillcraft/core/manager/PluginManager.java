@@ -13,7 +13,8 @@ import java.util.List;
 public class PluginManager {
 
     private final QuillCraftCore quillCraftCore;
-    public PluginManager(QuillCraftCore quillCraftCore){
+
+    public PluginManager(QuillCraftCore quillCraftCore) {
         this.quillCraftCore = quillCraftCore;
         final Server server = quillCraftCore.getServer();
         registerEvents(server.getPluginManager());
@@ -21,7 +22,7 @@ public class PluginManager {
         registerCommands();
     }
 
-    private void registerEvents(org.bukkit.plugin.PluginManager pluginManager){
+    private void registerEvents(org.bukkit.plugin.PluginManager pluginManager) {
         pluginManager.registerEvents(new PlayerMoveListener(quillCraftCore), quillCraftCore);
 
         // Commands
@@ -30,14 +31,14 @@ public class PluginManager {
         pluginManager.registerEvents(new PlayerCommandSendListener(commands), quillCraftCore);
     }
 
-    private void registerPluginMessage(Messenger messenger){
+    private void registerPluginMessage(Messenger messenger) {
         messenger.registerOutgoingPluginChannel(quillCraftCore, "BungeeCord");
         messenger.registerOutgoingPluginChannel(quillCraftCore, "quillcraft:party");
         messenger.registerOutgoingPluginChannel(quillCraftCore, "quillcraft:message");
         messenger.registerOutgoingPluginChannel(quillCraftCore, "quillcraft:friend");
     }
 
-    private void registerCommands(){
+    private void registerCommands() {
         final LanguageCommand commandLanguage = new LanguageCommand(quillCraftCore);
         quillCraftCore.getCommand("lang").setExecutor(commandLanguage);
         quillCraftCore.getCommand("lang").setTabCompleter(commandLanguage);

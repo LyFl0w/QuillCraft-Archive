@@ -18,8 +18,12 @@ public class QuillCraftCore extends JavaPlugin {
     private ProtocolManager protocolManager;
     private CommandManager commandManager;
 
+    public static QuillCraftCore getInstance() {
+        return INSTANCE;
+    }
+
     @Override
-    public void onEnable(){
+    public void onEnable() {
         INSTANCE = this;
 
         protocolManager = ProtocolLibrary.getProtocolManager();
@@ -31,24 +35,20 @@ public class QuillCraftCore extends JavaPlugin {
     }
 
     @Override
-    public void onDisable(){
+    public void onDisable() {
         DataManager.closeAllData();
     }
 
-    public static QuillCraftCore getInstance(){
-        return INSTANCE;
-    }
-
-    public ProtocolManager getProtocolManager(){
+    public ProtocolManager getProtocolManager() {
         return protocolManager;
     }
 
-    public CommandManager getCommandManager(){
+    public CommandManager getCommandManager() {
         return commandManager;
     }
 
     @Nonnull
-    public PluginCommand getCommand(@Nonnull String name){
+    public PluginCommand getCommand(@Nonnull String name) {
         return Objects.requireNonNull(super.getCommand(name));
     }
 

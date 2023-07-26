@@ -6,7 +6,6 @@ import net.quillcraft.core.data.management.redis.RedisManager;
 import net.quillcraft.core.data.management.sql.DatabaseManager;
 import net.quillcraft.core.data.management.sql.table.SQLTablesManager;
 import net.quillcraft.core.serialization.ProfileSerializationUtils;
-
 import org.bukkit.Bukkit;
 import org.bukkit.entity.Player;
 import org.redisson.api.RBucket;
@@ -28,7 +27,7 @@ public class PartyProvider {
     private UUID partyUUID;
     private String keyParty;
 
-    public PartyProvider(Account account){
+    public PartyProvider(Account account) {
         this.player = Bukkit.getPlayer(account.getUUID());
         this.partyUUID = account.getPartyUUID();
         this.redissonClient = RedisManager.PARTY.getRedisAccess().getRedissonClient();
@@ -37,15 +36,15 @@ public class PartyProvider {
         updatePartyKeys(account);
     }
 
-    public Party getParty() throws PartyNotFoundException{
+    public Party getParty() throws PartyNotFoundException {
         if(keyParty == null) throw new PartyNotFoundException(player);
 
         Party party = getPartyFromRedis();
 
-        if(party == null){
+        if(party == null) {
             party = getPartyFromDatabase();
             sendPartyToRedis(party);
-        }else{
+        } else {
             //party.setSQLRequest();
             redissonClient.getBucket(keyParty).clearExpire();
         }
@@ -53,23 +52,22 @@ public class PartyProvider {
         return party;
     }
 
-    private Party getPartyFromRedis(){
+    private Party getPartyFromRedis() {
         final RBucket<Party> accountRBucket = redissonClient.getBucket(keyParty);
 
         return accountRBucket.get();
     }
 
-    private Party getPartyFromDatabase() throws PartyNotFoundException{
-        try{
+    private Party getPartyFromDatabase() throws PartyNotFoundException {
+        try {
             final Connection connection = DatabaseManager.MINECRAFT_SERVER.getDatabaseAccess().getConnection();
-            final PreparedStatement preparedStatement =
-                    connection.prepareStatement("SELECT * FROM "+sqlTablesManager.getTable()+" WHERE "+sqlTablesManager.getKeyColumn()+" = ?");
+            final PreparedStatement preparedStatement = connection.prepareStatement("SELECT * FROM "+sqlTablesManager.getTable()+" WHERE "+sqlTablesManager.getKeyColumn()+" = ?");
 
             preparedStatement.setString(1, partyUUID.toString());
             preparedStatement.executeQuery();
 
             final ResultSet resultSet = preparedStatement.getResultSet();
-            if(resultSet.next()){
+            if(resultSet.next()) {
                 final UUID ownerUUID = UUID.fromString(resultSet.getString("owner_uuid"));
                 final String ownerName = resultSet.getString("owner_name");
                 final List<UUID> followersUUID = new ProfileSerializationUtils.ListUUID().deserialize(resultSet.getString("followers_uuid"));
@@ -81,20 +79,20 @@ public class PartyProvider {
             }
             connection.close();
 
-        }catch(SQLException exception){
+        } catch(SQLException exception) {
             Bukkit.getLogger().severe(exception.getMessage());
         }
 
         throw new PartyNotFoundException(player);
     }
 
-    private void sendPartyToRedis(Party party){
+    private void sendPartyToRedis(Party party) {
         final RBucket<Party> partyRBucket = redissonClient.getBucket(keyParty);
         partyRBucket.set(party);
     }
 
-    private void updatePartyKeys(Account account){
-        if(account.hasParty()){
+    private void updatePartyKeys(Account account) {
+        if(account.hasParty()) {
             this.partyUUID = account.getPartyUUID();
             this.keyParty = "party:"+partyUUID.toString();
         }

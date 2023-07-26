@@ -17,21 +17,21 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.UUID;
 
-public class ReponseMessageCommand implements CommandExecutor{
+public class ReponseMessageCommand implements CommandExecutor {
 
     private final QuillCraftCore quillCraftCore;
     private final RedissonClient redissonClient;
 
-    public ReponseMessageCommand(QuillCraftCore quillCraftCore){
+    public ReponseMessageCommand(QuillCraftCore quillCraftCore) {
         this.quillCraftCore = quillCraftCore;
         this.redissonClient = RedisManager.MESSAGE.getRedisAccess().getRedissonClient();
     }
 
     @Override
-    public boolean onCommand(@Nonnull CommandSender commandSender, @Nonnull Command command, @Nonnull String label, @Nonnull String[] args){
-        if(commandSender instanceof Player player && args.length > 0){
+    public boolean onCommand(@Nonnull CommandSender commandSender, @Nonnull Command command, @Nonnull String label, @Nonnull String[] args) {
+        if(commandSender instanceof Player player && args.length > 0) {
             final RSet<String> rSet = redissonClient.getSet(player.getUniqueId().toString());
-            if(rSet.isExists()){
+            if(rSet.isExists()) {
                 final UUID playerUUID = player.getUniqueId();
                 final UUID uuidTargetPlayer = UUID.fromString(new ArrayList<>(rSet.readAll()).get(0));
                 final Player targetPlayer = quillCraftCore.getServer().getPlayer(uuidTargetPlayer);
@@ -40,7 +40,7 @@ public class ReponseMessageCommand implements CommandExecutor{
 
                 Arrays.stream(args).forEach(secanteMessage -> message.append(" ").append(secanteMessage));
 
-                if(targetPlayer != null && targetPlayer.isOnline()){
+                if(targetPlayer != null && targetPlayer.isOnline()) {
                     final String targetPlayerName = targetPlayer.getName();
                     targetPlayer.sendMessage("["+player.getName()+"->Moi]"+message);
                     player.sendMessage("[Moi->"+targetPlayerName+"]"+message);
@@ -48,7 +48,7 @@ public class ReponseMessageCommand implements CommandExecutor{
                     rSet.expire(Duration.ofHours(2));
 
                     final RSet<String> rSetTargetPlayer = redissonClient.getSet(uuidTargetPlayer.toString());
-                    if(!rSetTargetPlayer.contains(playerUUID.toString())){
+                    if(!rSetTargetPlayer.contains(playerUUID.toString())) {
                         rSetTargetPlayer.clear();
                         rSetTargetPlayer.add(playerUUID.toString());
                     }

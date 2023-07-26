@@ -9,20 +9,20 @@ import java.util.List;
 
 public class PacketUtils {
 
-    public static void sendPacket(List<Player> players, Packet<?> packets){
+    public static void sendPacket(List<Player> players, Packet<?> packets) {
         players.stream().parallel().forEach(player -> sendPacket(player, packets));
     }
 
-    public static void sendPacket(Player player, Packet<?> packet){
-        ((CraftPlayer)player).getHandle().c.a(packet);
+    public static void sendPacket(Player player, Packet<?> packet) {
+        ((CraftPlayer) player).getHandle().c.a(packet);
     }
 
-    public static void sendPacket(List<Player> players, List<Packet<?>> packets){
+    public static void sendPacket(List<Player> players, List<Packet<?>> packets) {
         players.stream().parallel().forEach(player -> sendPacket(player, packets));
     }
 
-    public static void sendPacket(Player player, List<Packet<?>> packets){
-        final PlayerConnection playerConnection = ((CraftPlayer)player).getHandle().c;
+    public static void sendPacket(Player player, List<Packet<?>> packets) {
+        final PlayerConnection playerConnection = ((CraftPlayer) player).getHandle().c;
 
         packets.forEach(playerConnection::a);
     }

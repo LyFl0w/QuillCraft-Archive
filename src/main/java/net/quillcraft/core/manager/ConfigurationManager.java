@@ -10,15 +10,15 @@ public enum ConfigurationManager {
 
     private final YamlConfigurationBuilder yamlConfigurationBuilder;
 
-    ConfigurationManager(YamlConfigurationBuilder yamlConfigurationBuilder){
+    ConfigurationManager(YamlConfigurationBuilder yamlConfigurationBuilder) {
         this.yamlConfigurationBuilder = yamlConfigurationBuilder;
     }
 
-    public FileConfiguration getConfiguration(){
+    public FileConfiguration getConfiguration() {
         return yamlConfigurationBuilder.getConfig();
     }
 
-    public void saveFile(){
+    public void saveFile() {
         yamlConfigurationBuilder.save();
     }
 

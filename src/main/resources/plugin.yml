@@ -6,26 +6,26 @@ api-version: '1.20'
 prefix: Core
 description: Plugin dedicated to QuillCraft
 website: https://quillcraft.fr
-depend: [ProtocolLib]
+depend: [ ProtocolLib ]
 commands:
   msg:
     usage: §c/msg <player> <message>
-    aliases: [m, message]
+    aliases: [ m, message ]
   r:
     usage: §c/r <message>
-    aliases: [rep, reponse]
+    aliases: [ rep, reponse ]
   friend:
     usage: §c/friend <add/remove/accept/deny> <player> or /friend <list>
-    aliases: [f, friends]
+    aliases: [ f, friends ]
   lang:
     usage: §c/lang <language>
-    aliases: [l, language]
+    aliases: [ l, language ]
   party:
     usage: §c/party <invite/accept/kick/setowner> <player> or /party <list/leave/delete>
-    aliases: [p]
+    aliases: [ p ]
   reloadlang:
     usage: §c/reloadlang
-    aliases: [rll, reloadlanguage]
+    aliases: [ rll, reloadlanguage ]
   lobby:
     usage: §c/lobby
-    aliases: [hub]
+    aliases: [ hub ]
