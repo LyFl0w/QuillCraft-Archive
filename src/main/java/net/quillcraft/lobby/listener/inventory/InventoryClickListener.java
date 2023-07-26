@@ -72,8 +72,8 @@ public class InventoryClickListener implements Listener {
                 return;
             }
 
-        } catch(AccountNotFoundException|PartyNotFoundException e) {
-            e.printStackTrace();
+        } catch(AccountNotFoundException|PartyNotFoundException exception) {
+            quillCraftLobby.getLogger().severe(exception.getMessage());
         }
     }
 }

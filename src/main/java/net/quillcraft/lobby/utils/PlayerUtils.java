@@ -13,7 +13,6 @@ public class PlayerUtils extends net.quillcraft.core.utils.PlayerUtils {
         resetDefaultParmetersPlayer(player, GameMode.SURVIVAL);
         player.getInventory().clear();
         InventoryLobby.setDefaultInventory(player, LanguageManager.getLanguageByISO(account.getLanguageISO()), account.getVisibility());
-        player.updateInventory();
     }
 
 }

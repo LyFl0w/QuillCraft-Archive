@@ -64,8 +64,8 @@ public class PlayerJoinListener implements Listener {
                         try {
                             final Account onlinePlayerAccount = new AccountProvider(players).getAccount();
                             onlinePlayerAccount.playVisibilityEffect();
-                        } catch(AccountNotFoundException e) {
-                            e.printStackTrace();
+                        } catch(AccountNotFoundException exception) {
+                            Bukkit.getLogger().severe(exception.getMessage());
                         }
                     });
 
@@ -81,8 +81,8 @@ public class PlayerJoinListener implements Listener {
 
                 player.playSound(player.getLocation(), Sound.ENTITY_EXPERIENCE_ORB_PICKUP, 1, 1);
 
-            } catch(AccountNotFoundException e) {
-                player.kickPlayer(e.getMessage());
+            } catch(AccountNotFoundException exception) {
+                player.kickPlayer(exception.getMessage());
             }
         });
 

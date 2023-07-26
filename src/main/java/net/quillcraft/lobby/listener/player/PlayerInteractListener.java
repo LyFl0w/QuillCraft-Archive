@@ -9,6 +9,7 @@ import net.quillcraft.lobby.inventory.MenuInventory;
 import net.quillcraft.lobby.inventory.VisibilityInventory;
 import net.quillcraft.lobby.manager.ConfigurationManager;
 import net.quillcraft.lobby.provider.HeadFinderProvider;
+import org.bukkit.Bukkit;
 import org.bukkit.Material;
 import org.bukkit.block.Block;
 import org.bukkit.block.data.type.Door;
@@ -71,7 +72,7 @@ public class PlayerInteractListener implements Listener {
             }
 
             //TODO : Anti Spamm door
-            if(block.getBlockData() instanceof Door door) {
+            if(block.getBlockData() instanceof final Door door) {
 
                 return;
             }
@@ -93,17 +94,14 @@ public class PlayerInteractListener implements Listener {
                 case GOLD_INGOT, PLAYER_HEAD, PUFFERFISH, COMPARATOR ->
                         player.sendMessage(LanguageManager.getLanguage(player).getMessage(Text.WORKING_PROGRESS));
                 //Particules
-                case EXPERIENCE_BOTTLE -> {
-                    player.updateInventory();
-                    player.sendMessage(LanguageManager.getLanguage(player).getMessage(Text.WORKING_PROGRESS));
-                }
+                case EXPERIENCE_BOTTLE -> player.sendMessage(LanguageManager.getLanguage(player).getMessage(Text.WORKING_PROGRESS));
                 //Visibility
                 default -> {
                     if(new ItemBuilder(item).isItemDye()) {
                         try {
                             player.openInventory(new VisibilityInventory().getVisibilityInventory(new AccountProvider(player).getAccount()));
-                        } catch(AccountNotFoundException e) {
-                            e.printStackTrace();
+                        } catch(AccountNotFoundException exception) {
+                            Bukkit.getLogger().severe(exception.getMessage());
                         }
                     }
                 }

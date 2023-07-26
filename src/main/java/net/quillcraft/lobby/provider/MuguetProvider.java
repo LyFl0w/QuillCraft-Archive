@@ -2,6 +2,7 @@ package net.quillcraft.lobby.provider;
 
 import net.quillcraft.core.data.management.redis.RedisManager;
 import net.quillcraft.core.data.management.sql.DatabaseManager;
+import org.bukkit.Bukkit;
 import org.bukkit.entity.Player;
 import org.redisson.api.RAtomicLong;
 import org.redisson.api.RedissonClient;
@@ -14,6 +15,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 public class MuguetProvider {
+
     private final static RedissonClient redissonClient = RedisManager.MESSAGE.getRedisAccess().getRedissonClient();
     private final String uuid, name, keyMuguetCount;
 
@@ -36,8 +38,8 @@ public class MuguetProvider {
             }
 
             connection.close();
-        } catch(SQLException e) {
-            e.printStackTrace();
+        } catch(SQLException exception) {
+            Bukkit.getLogger().severe(exception.getMessage());
         }
         return playersName;
     }
@@ -53,8 +55,8 @@ public class MuguetProvider {
             connection.close();
 
             return sum;
-        } catch(SQLException e) {
-            e.printStackTrace();
+        } catch(SQLException exception) {
+            Bukkit.getLogger().severe(exception.getMessage());
         }
         return 0;
     }
@@ -82,8 +84,8 @@ public class MuguetProvider {
             }
             connection.close();
             createMuguetCountInDatabase();
-        } catch(SQLException e) {
-            e.printStackTrace();
+        } catch(SQLException exception) {
+            Bukkit.getLogger().severe(exception.getMessage());
         }
         return 0;
     }
@@ -96,8 +98,8 @@ public class MuguetProvider {
             preparedStatement.setString(2, name); // Finilisation de la requête
             preparedStatement.execute();    //Execution de la requete
             connection.close();
-        } catch(SQLException e) {
-            e.printStackTrace();
+        } catch(SQLException exception) {
+            Bukkit.getLogger().severe(exception.getMessage());
         }
     }
 
@@ -114,8 +116,8 @@ public class MuguetProvider {
             preparedStatement.setString(2, uuid); // Finilisation de la requête
             preparedStatement.executeUpdate();    //Mise à jour de la liste dans la bdd
             connection.close();
-        } catch(SQLException e) {
-            e.printStackTrace();
+        } catch(SQLException exception) {
+            Bukkit.getLogger().severe(exception.getMessage());
         }
     }
 

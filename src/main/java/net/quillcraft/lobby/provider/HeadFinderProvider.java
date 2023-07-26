@@ -7,6 +7,7 @@ import net.quillcraft.commons.account.Account;
 import net.quillcraft.commons.account.AccountProvider;
 import net.quillcraft.core.data.management.redis.RedisManager;
 import net.quillcraft.core.data.management.sql.DatabaseManager;
+import org.bukkit.Bukkit;
 import org.bukkit.entity.Player;
 import org.redisson.api.RBucket;
 import org.redisson.api.RedissonClient;
@@ -61,8 +62,8 @@ public class HeadFinderProvider {
                 return new ArrayList<>();
             }
 
-        } catch(SQLException e) {
-            e.printStackTrace();
+        } catch(SQLException exception) {
+            Bukkit.getLogger().severe(exception.getMessage());
         }
         return null;
     }
@@ -79,8 +80,8 @@ public class HeadFinderProvider {
             preparedStatement.setObject(1, uuid); // Finilisation de la requête
             preparedStatement.execute();    //Execution de la requete
             connection.close();
-        } catch(SQLException e) {
-            e.printStackTrace();
+        } catch(SQLException exception) {
+            Bukkit.getLogger().severe(exception.getMessage());
         }
     }
 
@@ -93,8 +94,8 @@ public class HeadFinderProvider {
             preparedStatement.setObject(2, uuid); // Finilisation de la requête
             preparedStatement.executeUpdate();    //Mise à jour de la liste dans la bdd
             connection.close();
-        } catch(SQLException e) {
-            e.printStackTrace();
+        } catch(SQLException exception) {
+            Bukkit.getLogger().severe(exception.getMessage());
         }
     }
 
@@ -104,8 +105,8 @@ public class HeadFinderProvider {
             final Account account = accountProvider.getAccount();
             account.setQuillCoins(account.getQuillCoins()+quillcoins);
             accountProvider.updateAccount(account);
-        } catch(Exception e) {
-            e.printStackTrace();
+        } catch(Exception exception) {
+            Bukkit.getLogger().severe(exception.getMessage());
         }
     }
 

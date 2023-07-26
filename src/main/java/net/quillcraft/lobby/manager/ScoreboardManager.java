@@ -30,7 +30,6 @@ public class ScoreboardManager {
     }
 
     public Collection<ScoreboardBuilder> getAllScoreboardBuilders() {
-        System.out.println("debug");
         return scoreboardBuilderHashMap.values();
     }
 
