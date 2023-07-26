@@ -6,7 +6,7 @@
 
     <groupId>net.quillcraft</groupId>
     <artifactId>QuillCraftLobby</artifactId>
-    <version>2.1.2-dev</version>
+    <version>2.2-dev</version>
 
     <properties>
         <file.project>dev</file.project>
