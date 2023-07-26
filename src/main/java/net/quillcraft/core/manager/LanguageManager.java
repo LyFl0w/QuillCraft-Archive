@@ -5,6 +5,7 @@ import net.quillcraft.commons.account.AccountProvider;
 import net.quillcraft.commons.exception.AccountNotFoundException;
 import net.quillcraft.core.data.management.redis.RedisManager;
 
+import org.bukkit.Bukkit;
 import org.bukkit.entity.Player;
 import org.lumy.api.text.Text;
 import org.lumy.api.text.TextList;
@@ -19,6 +20,7 @@ public enum LanguageManager {
 
     ENGLISH_US("en_us"),
     FRENCH("fr_fr"),
+
     DEFAULT(ENGLISH_US.getISO());
 
     private final String iso;
@@ -37,7 +39,7 @@ public enum LanguageManager {
         try{
             return getLanguage(new AccountProvider(player).getAccount());
         }catch(AccountNotFoundException e){
-            e.printStackTrace();
+            Bukkit.getLogger().severe(e.getMessage());
         }
         return LanguageManager.DEFAULT;
     }
