@@ -2,10 +2,10 @@ package net.quillcraft.core.command;
 
 import net.quillcraft.commons.account.Account;
 import net.quillcraft.commons.account.AccountProvider;
-import net.quillcraft.core.QuillCraftCore;
-import net.quillcraft.core.manager.LanguageManager;
-import net.quillcraft.core.event.player.PlayerChangeLanguageEvent;
 import net.quillcraft.commons.exception.AccountNotFoundException;
+import net.quillcraft.core.QuillCraftCore;
+import net.quillcraft.core.event.player.PlayerChangeLanguageEvent;
+import net.quillcraft.core.manager.LanguageManager;
 import net.quillcraft.core.utils.CommandUtils;
 
 import org.bukkit.command.Command;
@@ -71,8 +71,8 @@ public class LanguageCommand implements CommandExecutor, TabCompleter {
                     player.sendMessage(languages);
                     return true;
                 }
-            }catch(AccountNotFoundException e){
-                e.printStackTrace();
+            }catch(AccountNotFoundException exception){
+                quillCraftCore.getLogger().severe(exception.getMessage());
             }
             return false;
         }

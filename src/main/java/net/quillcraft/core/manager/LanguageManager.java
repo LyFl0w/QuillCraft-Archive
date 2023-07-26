@@ -38,8 +38,8 @@ public enum LanguageManager {
     public static LanguageManager getLanguage(final Player player){
         try{
             return getLanguage(new AccountProvider(player).getAccount());
-        }catch(AccountNotFoundException e){
-            Bukkit.getLogger().severe(e.getMessage());
+        }catch(AccountNotFoundException exception){
+            Bukkit.getLogger().severe(exception.getMessage());
         }
         return LanguageManager.DEFAULT;
     }
