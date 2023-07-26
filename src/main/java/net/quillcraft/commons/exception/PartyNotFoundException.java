@@ -11,7 +11,5 @@ public class PartyNotFoundException extends Exception{
     }
 
     @Override
-    public void printStackTrace(){
-        return;
-    }
+    public void printStackTrace(){ }
 }

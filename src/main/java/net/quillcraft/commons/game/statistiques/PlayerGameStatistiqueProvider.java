@@ -1,13 +1,16 @@
 package net.quillcraft.commons.game.statistiques;
 
 import com.google.common.reflect.TypeToken;
+
 import net.quillcraft.commons.game.GameEnum;
 import net.quillcraft.core.data.management.redis.RedisManager;
 import net.quillcraft.core.data.management.sql.DatabaseManager;
 import net.quillcraft.core.serialization.ProfileSerializationType;
+
 import org.bukkit.plugin.Plugin;
 import org.redisson.api.RBucket;
 import org.redisson.api.RedissonClient;
+import org.bukkit.Bukkit;
 
 import java.lang.reflect.InvocationTargetException;
 import java.sql.Connection;
@@ -68,8 +71,8 @@ public class PlayerGameStatistiqueProvider<T extends PlayerGameStatistique>{
             preparedStatement.setString(2, playerUUID);
             preparedStatement.execute();
             connection.close();
-        }catch(SQLException e){
-            e.printStackTrace();
+        }catch(SQLException exception){
+            Bukkit.getLogger().severe(exception.getMessage());
         }
     }
 
@@ -94,8 +97,8 @@ public class PlayerGameStatistiqueProvider<T extends PlayerGameStatistique>{
                 plugin.getServer().getScheduler().runTaskAsynchronously(plugin, () -> createPlayerDataInDatabase(playerData));
                 return playerData;
             }
-        }catch(SQLException | NoSuchMethodException | InstantiationException | IllegalAccessException | InvocationTargetException e){
-            e.printStackTrace();
+        }catch(SQLException | NoSuchMethodException | InstantiationException | IllegalAccessException | InvocationTargetException exception){
+            Bukkit.getLogger().severe(exception.getMessage());
         }
         return null;
     }
@@ -108,8 +111,8 @@ public class PlayerGameStatistiqueProvider<T extends PlayerGameStatistique>{
             preparedStatement.setString(2, new ProfileSerializationType().serialize(playerData));
             preparedStatement.execute();
             connection.close();
-        }catch(SQLException e){
-            e.printStackTrace();
+        }catch(SQLException exception){
+            Bukkit.getLogger().severe(exception.getMessage());
         }
     }
 
@@ -122,8 +125,8 @@ public class PlayerGameStatistiqueProvider<T extends PlayerGameStatistique>{
             final Connection connection = DatabaseManager.STATISTIQUES.getDatabaseAccess().getConnection();
             connection.prepareStatement("CREATE TABLE IF NOT EXISTS "+gameEnum.name().toLowerCase()+" ( uuid VARCHAR(36) NOT NULL , statistique JSON NULL DEFAULT NULL , UNIQUE (uuid))").execute();
             connection.close();
-        }catch(SQLException e){
-            e.printStackTrace();
+        }catch(SQLException exception){
+            Bukkit.getLogger().severe(exception.getMessage());
         }
     }
 

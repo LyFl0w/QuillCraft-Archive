@@ -68,7 +68,7 @@ public class InventoryBuilder implements Cloneable{
         try{
             // TODO: copy mutable state here, so the clone can't change the internals of the original
             return (InventoryBuilder) super.clone();
-        }catch(CloneNotSupportedException e){
+        }catch(CloneNotSupportedException exception){
             throw new AssertionError("Error Inventory Clone");
         }
     }

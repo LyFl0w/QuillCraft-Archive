@@ -6,6 +6,7 @@ import net.quillcraft.core.data.management.redis.RedisManager;
 import net.quillcraft.core.data.management.sql.DatabaseManager;
 import net.quillcraft.core.data.management.sql.table.SQLTablesManager;
 import net.quillcraft.core.serialization.ProfileSerializationUtils;
+
 import org.bukkit.Bukkit;
 import org.bukkit.entity.Player;
 import org.redisson.api.RBucket;
@@ -17,7 +18,6 @@ import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.util.List;
 import java.util.UUID;
-import java.util.concurrent.TimeUnit;
 
 public class PartyProvider {
 
@@ -81,8 +81,8 @@ public class PartyProvider {
             }
             connection.close();
 
-        }catch(SQLException e){
-            e.printStackTrace();
+        }catch(SQLException exception){
+            Bukkit.getLogger().severe(exception.getMessage());
         }
 
         throw new PartyNotFoundException(player);

@@ -155,8 +155,8 @@ public class Account {
                             player.hidePlayer(quillCraftCore, players);
                         }
                     });
-                }catch(AccountNotFoundException e){
-                    e.printStackTrace();
+                }catch(AccountNotFoundException exception){
+                    Bukkit.getLogger().severe(exception.getMessage());
                 }catch(PartyNotFoundException ignored){}
             }
             case FRIENDS -> {
@@ -173,8 +173,8 @@ public class Account {
                             player.hidePlayer(quillCraftCore, players);
                         }
                     });
-                }catch(FriendNotFoundException e){
-                    e.printStackTrace();
+                }catch(FriendNotFoundException exception){
+                    Bukkit.getLogger().severe(exception.getMessage());
                 }
             }
             case EVERYONE -> Bukkit.getOnlinePlayers().forEach(players -> player.showPlayer(quillCraftCore, players));

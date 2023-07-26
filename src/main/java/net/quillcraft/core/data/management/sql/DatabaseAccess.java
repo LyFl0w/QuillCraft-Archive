@@ -2,7 +2,7 @@ package net.quillcraft.core.data.management.sql;
 
 import com.zaxxer.hikari.HikariConfig;
 import com.zaxxer.hikari.HikariDataSource;
-import net.quillcraft.core.QuillCraftCore;
+import org.bukkit.Bukkit;
 
 import java.sql.Connection;
 import java.sql.SQLException;
@@ -12,7 +12,7 @@ public class DatabaseAccess {
 
     private final DatabaseCredentials credentials;
     private HikariDataSource hikariDataSource;
-    private final Logger logger = QuillCraftCore.getInstance().getLogger();
+    private final Logger logger = Bukkit.getLogger();
 
     private final String JDBC_DRIVER = "relocated.private.com.mysql.jdbc.Driver";
 
@@ -24,7 +24,7 @@ public class DatabaseAccess {
         final HikariConfig hikariConfig = new HikariConfig();
         try{
             hikariConfig.setDriverClassName(Class.forName(JDBC_DRIVER).getName());
-        }catch(ClassNotFoundException e){
+        }catch(ClassNotFoundException exception){
             logger.warning("Default JDBC driver is used");
         }
         hikariConfig.setMaximumPoolSize(10);

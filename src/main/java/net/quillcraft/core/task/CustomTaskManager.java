@@ -33,8 +33,8 @@ public abstract class CustomTaskManager{
     protected void resetTask(){
         try{
             task = taskModel.getConstructor(CustomTaskManager.class).newInstance(this);
-        }catch(Exception e){
-            e.printStackTrace();
+        }catch(Exception exception){
+            javaPlugin.getLogger().severe(exception.getMessage());
         }
     }
 

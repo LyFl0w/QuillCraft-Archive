@@ -1,10 +1,14 @@
 package net.quillcraft.core.manager;
 
+import org.bukkit.Bukkit;
 import org.bukkit.plugin.InvalidDescriptionException;
 import org.bukkit.plugin.Plugin;
 
 import java.io.File;
-import java.util.*;
+import java.util.ArrayList;
+import java.util.Collection;
+import java.util.List;
+import java.util.Map;
 
 public class CommandManager{
 
@@ -22,8 +26,8 @@ public class CommandManager{
 
             commands.values().stream().parallel().filter(stringObjectMap -> stringObjectMap.containsKey("aliases")).forEach(stringObjectMap -> commandsToReturn.addAll((Collection<? extends String>) stringObjectMap.get("aliases")));
             return commandsToReturn;
-        }catch(InvalidDescriptionException e){
-            e.printStackTrace();
+        }catch(InvalidDescriptionException exception){
+            Bukkit.getLogger().severe(exception.getMessage());
         }
         return new ArrayList<>();
     }

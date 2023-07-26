@@ -4,7 +4,6 @@ import net.quillcraft.core.QuillCraftCore;
 import net.quillcraft.core.data.management.redis.RedisManager;
 import net.quillcraft.core.data.management.sql.DatabaseManager;
 
-import org.bukkit.Bukkit;
 import org.lumy.api.LumyClient;
 
 public class DataManager {
@@ -16,9 +15,9 @@ public class DataManager {
 
             DatabaseManager.initAllDatabaseConnections();
             DatabaseManager.createAllTable();
-        }catch(Exception e){
-            e.printStackTrace();
-            Bukkit.shutdown();
+        }catch(Exception exception){
+            quillCraftCore.getLogger().severe(exception.getMessage());
+            quillCraftCore.getServer().shutdown();
         }
     }
 
