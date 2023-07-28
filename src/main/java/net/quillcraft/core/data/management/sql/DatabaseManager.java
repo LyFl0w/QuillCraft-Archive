@@ -9,9 +9,8 @@ import java.util.Arrays;
 
 public enum DatabaseManager {
 
-    MINECRAFT_SERVER(new DatabaseCredentials(getConfiguration().getString("mysql.minecraft_data.host"), getConfiguration().getString("mysql.minecraft_data.user.name"), getConfiguration().getString("mysql.minecraft_data.user.password"), getConfiguration().getString("mysql.minecraft_data.database_name"), getConfiguration().getInt("mysql.minecraft_data.port"))),
-
-    STATISTIQUES(new DatabaseCredentials(getConfiguration().getString("mysql.statistiques.host"), getConfiguration().getString("mysql.statistiques.user.name"), getConfiguration().getString("mysql.statistiques.user.password"), getConfiguration().getString("mysql.statistiques.database_name"), getConfiguration().getInt("mysql.statistiques.port")));
+    MINECRAFT_SERVER(getDatabaseCredentials("minecraft_data")),
+    STATISTIQUES(getDatabaseCredentials("statistiques"));
 
     private final DatabaseAccess databaseAccess;
 
@@ -41,6 +40,17 @@ public enum DatabaseManager {
 
     public final DatabaseAccess getDatabaseAccess() {
         return databaseAccess;
+    }
+
+    private static DatabaseCredentials getDatabaseCredentials(String name) {
+        final String path = "mysql."+name+".";
+        return new DatabaseCredentials(
+                getConfiguration().getString(path+"host"),
+                getConfiguration().getString(path+"user.name"),
+                getConfiguration().getString(path+"user.password"),
+                getConfiguration().getString(path+"database_name"),
+                getConfiguration().getInt(path+"port")
+        );
     }
 
 }
