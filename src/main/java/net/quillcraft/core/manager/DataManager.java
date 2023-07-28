@@ -7,16 +7,25 @@ import org.lumy.api.LumyClient;
 
 public class DataManager {
 
-    public static void initAllData(QuillCraftCore quillCraftCore) {
-        final LumyClient lumyClient = new LumyClient(new String[]{"update", "absolute_path_data_access"},
-                quillCraftCore.getLogger(), quillCraftCore.getDataFolder());
+    private final QuillCraftCore quillCraftCore;
+    private final LumyClient lumyClient;
 
-        quillCraftCore.data_access_path = lumyClient.read();
+    private String dataAccessPath;
 
+    public DataManager(QuillCraftCore quillCraftCore) {
+        this.quillCraftCore = quillCraftCore;
+
+        lumyClient = new LumyClient(new String[]{"update", "absolute_path_data_access"}, quillCraftCore.getLogger(), quillCraftCore.getDataFolder());
+        dataAccessPath = lumyClient.read();
+    }
+
+    public void init() {
         try {
             RedisManager.initAllRedisAccess();
-
             DatabaseManager.initAllDatabaseConnections();
+
+            dataAccessPath = "";
+
             DatabaseManager.createAllTable();
         } catch(Exception exception) {
             quillCraftCore.getLogger().severe(exception.getMessage());
@@ -24,9 +33,16 @@ public class DataManager {
         }
     }
 
-    public static void closeAllData() {
+    public void close() {
         RedisManager.closeAllRedisAccess();
         DatabaseManager.closeAllDatabaseConnections();
     }
 
+    public LumyClient getLumyClient() {
+        return lumyClient;
+    }
+
+    public String getDataAccessPath() {
+        return dataAccessPath;
+    }
 }

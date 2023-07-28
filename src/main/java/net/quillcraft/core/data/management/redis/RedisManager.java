@@ -1,6 +1,6 @@
 package net.quillcraft.core.data.management.redis;
 
-import net.quillcraft.core.manager.ConfigurationManager;
+import net.quillcraft.core.manager.configuration.ConfigurationManager;
 import org.bukkit.configuration.file.FileConfiguration;
 
 import java.util.Arrays;

@@ -1,4 +1,4 @@
-package net.quillcraft.core.manager;
+package net.quillcraft.core.manager.configuration;
 
 import net.quillcraft.core.utils.builders.YamlConfigurationBuilder;
 import org.bukkit.configuration.file.FileConfiguration;

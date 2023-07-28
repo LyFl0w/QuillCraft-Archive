@@ -15,7 +15,7 @@ public class QuillCraftCore extends JavaPlugin {
 
     private static QuillCraftCore INSTANCE;
 
-    public String data_access_path = "";
+    private DataManager dataManager;
     private ProtocolManager protocolManager;
     private CommandManager commandManager;
 
@@ -28,16 +28,18 @@ public class QuillCraftCore extends JavaPlugin {
         INSTANCE = this;
 
         protocolManager = ProtocolLibrary.getProtocolManager();
-        commandManager = new CommandManager(this, this.getFile());
 
-        DataManager.initAllData(this);
+        commandManager = new CommandManager(this, this.getFile());
+        dataManager = new DataManager(this);
+
+        dataManager.init();
 
         new PluginManager(this);
     }
 
     @Override
     public void onDisable() {
-        DataManager.closeAllData();
+        dataManager.close();
     }
 
     public ProtocolManager getProtocolManager() {
@@ -46,6 +48,10 @@ public class QuillCraftCore extends JavaPlugin {
 
     public CommandManager getCommandManager() {
         return commandManager;
+    }
+
+    public DataManager getDataManager() {
+        return dataManager;
     }
 
     @Nonnull

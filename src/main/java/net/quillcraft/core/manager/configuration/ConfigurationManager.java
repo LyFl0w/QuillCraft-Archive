@@ -1,4 +1,4 @@
-package net.quillcraft.core.manager;
+package net.quillcraft.core.manager.configuration;
 
 import net.quillcraft.core.QuillCraftCore;
 import org.bukkit.Bukkit;
@@ -13,7 +13,7 @@ import java.util.logging.Level;
 
 public enum ConfigurationManager {
 
-    DATA_ACCESS(getFileConfiguration(QuillCraftCore.getInstance().data_access_path));
+    DATA_ACCESS(getFileConfiguration(QuillCraftCore.getInstance().getDataManager().getDataAccessPath()));
 
     private final FileConfiguration fileConfiguration;
 

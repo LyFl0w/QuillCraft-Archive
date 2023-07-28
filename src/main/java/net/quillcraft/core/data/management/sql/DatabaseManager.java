@@ -2,7 +2,7 @@ package net.quillcraft.core.data.management.sql;
 
 import net.quillcraft.commons.game.GameEnum;
 import net.quillcraft.commons.game.statistiques.PlayerGameStatistiqueProvider;
-import net.quillcraft.core.manager.ConfigurationManager;
+import net.quillcraft.core.manager.configuration.ConfigurationManager;
 import org.bukkit.configuration.file.FileConfiguration;
 
 import java.util.Arrays;
