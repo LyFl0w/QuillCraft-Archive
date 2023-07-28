@@ -142,7 +142,7 @@ public class LumyServer {
                                     printWriter.println(new String(Base64.getEncoder().encode(Files.readAllBytes(file.toPath())), StandardCharsets.UTF_8));
                                 } else {
                                     final String name = getClientName();
-                                    Lumy.logger.info((name.isEmpty() ? "" : name+" ")+getFullAddress()+" try to get file data");
+                                    Lumy.logger.info((name.isEmpty() ? "" : name+" ")+getFullAddress()+" try to get data_access.yml data");
                                     exit = true;
 
                                     sendDefaultRequest(printWriter, request);
@@ -154,7 +154,7 @@ public class LumyServer {
                                     printWriter.println(FileUtils.getFileFromResource("data_access.yml").getAbsolutePath());
                                 } else {
                                     final String name = getClientName();
-                                    Lumy.logger.info((name.isEmpty() ? "" : name+" ")+getFullAddress()+" try to get file path");
+                                    Lumy.logger.info((name.isEmpty() ? "" : name+" ")+getFullAddress()+" try to get data_access.yml path");
                                     exit = true;
 
                                     sendDefaultRequest(printWriter, request);
