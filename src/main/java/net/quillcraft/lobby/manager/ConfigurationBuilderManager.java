@@ -6,7 +6,9 @@ import org.bukkit.configuration.file.FileConfiguration;
 
 public enum ConfigurationBuilderManager {
 
-    NPC(new YamlConfigurationBuilder(QuillCraftLobby.getInstance(), "npc.yml", true)), HEAD(new YamlConfigurationBuilder(QuillCraftLobby.getInstance(), "head.yml", true)), MUGUET(new YamlConfigurationBuilder(QuillCraftLobby.getInstance(), "muguet.yml", true));
+    NPC(new YamlConfigurationBuilder(QuillCraftLobby.getInstance(), "npc.yml", true)),
+    HEAD(new YamlConfigurationBuilder(QuillCraftLobby.getInstance(), "head.yml", true)),
+    MUGUET(new YamlConfigurationBuilder(QuillCraftLobby.getInstance(), "muguet.yml", true));
 
     private final YamlConfigurationBuilder yamlConfigurationBuilder;
 
