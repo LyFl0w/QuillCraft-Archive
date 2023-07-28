@@ -181,7 +181,7 @@ public class LumyServer {
                 clientSocket.close();
                 bufferedReader.close();
 
-                Lumy.logger.info("Connection closed : "+getFullAddress());
+                Lumy.logger.info("Connection closed "+getClientName()+": "+getFullAddress());
             } catch(IOException error) {
                 Lumy.logger.log(Level.ERROR, error.getMessage(), error);
             }
