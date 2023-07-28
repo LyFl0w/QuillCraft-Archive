@@ -2,47 +2,81 @@ package org.lumy.api;
 
 import org.lumy.api.utils.FileUtils;
 
-import java.io.DataOutputStream;
-import java.io.File;
-import java.io.IOException;
+import java.io.*;
 import java.net.InetAddress;
 import java.net.Socket;
 import java.net.UnknownHostException;
+import java.util.*;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
 public class LumyClient{
 
-    public LumyClient(Logger logger, File dataFolder){
+    private final LinkedList<String> result;
+
+    public LumyClient(String[] args, Logger logger, File dataFolder){
+        this.result = new LinkedList<>();
+
         try{
             final LumyConfiguration lumyConfiguration = FileUtils.getObjectFromYamlFile(
                     FileUtils.getFileFromResource(dataFolder, "config-lumy.yml"), LumyConfiguration.class);
-            start(logger, lumyConfiguration.ip(), lumyConfiguration.port());
+            start(lumyConfiguration.name(), args, logger, lumyConfiguration.ip(), lumyConfiguration.port());
         }catch(IOException e){
             logger.log(Level.SEVERE, e.getMessage(), e);
         }
     }
 
-    private void start(Logger logger, String ip, int port){
+    private void start(String name, String[] actions, Logger logger, String ip, int port){
         try{
             logger.info("Attempting to connect to the Lumy server");
-            // getting ip -> InetAddress.getByName(ip)
-            // establish the connection with server port
+
+            if(Arrays.stream(actions).filter(action -> action.startsWith("name:")).count() > 1) {
+                logger.severe("You can't have multiple names");
+                return;
+            }
+
             final Socket socket = new Socket(InetAddress.getByName(ip), port);
 
-            logger.info("Successful connection to Lumy server");
-
             try{
-                // obtaining out streams
-                logger.info("Update request to Lumy server");
+                final BufferedReader bufferedReader = new BufferedReader(new InputStreamReader(socket.getInputStream()));
+                final PrintWriter printWriter = new PrintWriter(socket.getOutputStream(), true);
 
-                final DataOutputStream dataOutputStream = new DataOutputStream(socket.getOutputStream());
-                dataOutputStream.writeUTF("update");
+                if(name != null && !name.isBlank()) {
+                    printWriter.println("name:"+name);
+                    logger.info("Successful connection to Lumy server as "+name);
+                } else {
+                    logger.info("Successful connection to Lumy server");
+                }
 
-                logger.info("Request sent to Lumy server");
+                loop: for(String action : actions) {
+                    printWriter.println(action.toLowerCase());
+
+                    // obtaining out streams
+                    logger.info(action+" request sent to Lumy server");
+
+                    if(action.startsWith("name:")) continue;
+
+                    switch(action.toLowerCase()) {
+                        case "update" -> {}
+
+                        default -> {
+                            final String respond = bufferedReader.readLine();
+
+                            if(respond.startsWith("error:")) {
+                                logger.severe(respond);
+                                break loop;
+                            }
+                            if(respond.equals("closed")) break loop;
+
+                            result.addLast(respond);
+                        }
+                    }
+                }
+
+                printWriter.close();
+                bufferedReader.close();
 
                 socket.close();
-                dataOutputStream.close();
             }catch(IOException e){
                 logger.log(Level.SEVERE, e.getMessage(), e);
             }
@@ -54,6 +88,18 @@ public class LumyClient{
         }
     }
 
-    private record LumyConfiguration(String ip, int port){}
+    public int readInt() {
+        return Integer.parseInt(result.poll());
+    }
+
+    public byte[] readBytes() {
+        return Base64.getDecoder().decode(result.poll());
+    }
+
+    public String read() {
+        return result.poll();
+    }
+
+    private record LumyConfiguration(String name, String ip, int port){}
 
 }
