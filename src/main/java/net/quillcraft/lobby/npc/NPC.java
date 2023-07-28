@@ -4,7 +4,6 @@ import com.google.gson.JsonObject;
 import com.google.gson.JsonParser;
 import com.mojang.authlib.GameProfile;
 import com.mojang.authlib.properties.Property;
-
 import net.minecraft.network.protocol.Packet;
 import net.minecraft.network.protocol.game.*;
 import net.minecraft.network.syncher.DataWatcher;
@@ -14,7 +13,6 @@ import net.minecraft.server.MinecraftServer;
 import net.minecraft.server.level.EntityPlayer;
 import net.minecraft.server.level.WorldServer;
 import net.quillcraft.core.utils.PacketUtils;
-
 import org.bukkit.Bukkit;
 import org.bukkit.Location;
 import org.bukkit.World;
@@ -31,10 +29,10 @@ public class NPC {
     private final Set<Player> receivers;
 
     private final EntityPlayer npc;
-    private World world;
-    private Location location;
     private final String name;
     private final int reference;
+    private World world;
+    private Location location;
     private DataWatcher dataWatcher;
     private float yawHead;
 
@@ -86,14 +84,6 @@ public class NPC {
         dataWatcher.b(new DataWatcherObject<>(17, DataWatcherRegistry.a), (byte) 0xFF);
     }
 
-    public NPC setLocation(Location location) {
-        this.location = location;
-        this.world = location.getWorld();
-
-        npc.a(location.getX(), location.getY(), location.getZ(), location.getYaw(), location.getPitch());
-        return this;
-    }
-
     public NPC addReceiver(List<Player> players) {
         this.receivers.addAll(players);
         return this;
@@ -126,7 +116,8 @@ public class NPC {
         packets.add(new PacketPlayOutNamedEntitySpawn(npc)); // Display NPC
 
         //if(dataWatcher != null) packets.add(new PacketPlayOutEntityMetadata(getId(), dataWatcher, true)); // Display 3D part of the Skin
-        if(dataWatcher != null) packets.add(new PacketPlayOutEntityMetadata(getId(), dataWatcher.c())); // Display 3D part of the Skin
+        if(dataWatcher != null)
+            packets.add(new PacketPlayOutEntityMetadata(getId(), dataWatcher.c())); // Display 3D part of the Skin
 
         packets.add(new PacketPlayOutAnimation(npc, 0)); // Rotate Correctly the body of NPC with left-click
         packets.add(new PacketPlayOutEntityHeadRotation(npc, (byte) (yawHead*256/360))); // Rotate head
@@ -211,6 +202,14 @@ public class NPC {
 
     public Location getLocation() {
         return location;
+    }
+
+    public NPC setLocation(Location location) {
+        this.location = location;
+        this.world = location.getWorld();
+
+        npc.a(location.getX(), location.getY(), location.getZ(), location.getYaw(), location.getPitch());
+        return this;
     }
 
     public String getName() {

@@ -7,7 +7,7 @@ import org.bukkit.event.player.PlayerGameModeChangeEvent;
 public class PlayerGameModeChangeListener implements Listener {
 
     @EventHandler
-    public void onPlayerGameModeChange(PlayerGameModeChangeEvent event){
+    public void onPlayerGameModeChange(PlayerGameModeChangeEvent event) {
         //event.setCancelled(true);
     }
 

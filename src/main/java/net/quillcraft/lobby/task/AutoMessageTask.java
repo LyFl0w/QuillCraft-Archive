@@ -1,22 +1,5 @@
 package net.quillcraft.lobby.task;
 
-import net.md_5.bungee.api.chat.ClickEvent;
-import net.md_5.bungee.api.chat.ComponentBuilder;
-import net.md_5.bungee.api.chat.HoverEvent;
-import net.md_5.bungee.api.chat.TextComponent;
-import net.md_5.bungee.api.chat.hover.content.Text;
-import net.quillcraft.core.manager.LanguageManager;
-import net.quillcraft.lobby.QuillCraftLobby;
-
-import org.bukkit.Bukkit;
-import org.bukkit.configuration.ConfigurationSection;
-import org.bukkit.entity.Player;
-import org.bukkit.scheduler.BukkitRunnable;
-
-import java.security.SecureRandom;
-import java.util.HashMap;
-import java.util.HashSet;
-
 public class AutoMessageTask {
 
     /*private int lastChoice;

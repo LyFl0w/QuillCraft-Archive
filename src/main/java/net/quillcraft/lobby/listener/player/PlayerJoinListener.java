@@ -51,8 +51,7 @@ public class PlayerJoinListener implements Listener {
                 player.sendMessage(languageManager.getMessage(Text.LOBBY_PLAYER_JOIN).replace("%PLAYER%", player.getDisplayName()));
 
                 if(accountProvider.hasAutoLanguage()) {
-                    Bukkit.getScheduler().runTaskAsynchronously(quillCraftLobby, () ->
-                            quillCraftLobby.getServer().getScheduler().runTask(quillCraftLobby, () -> accountProvider.setLocaleLanguage(account)));
+                    Bukkit.getScheduler().runTaskAsynchronously(quillCraftLobby, () -> quillCraftLobby.getServer().getScheduler().runTask(quillCraftLobby, () -> accountProvider.setLocaleLanguage(account)));
                 }
 
                 scheduler.runTask(quillCraftLobby, () -> {
@@ -65,44 +64,29 @@ public class PlayerJoinListener implements Listener {
                         try {
                             final Account onlinePlayerAccount = new AccountProvider(players).getAccount();
                             onlinePlayerAccount.playVisibilityEffect();
-                        } catch(AccountNotFoundException e) {
-                            e.printStackTrace();
+                        } catch(AccountNotFoundException exception) {
+                            Bukkit.getLogger().severe(exception.getMessage());
                         }
                     });
 
                     // Display Scoreboard
                     final String[] splitLang = languageManager.getISO().split("_");
-                    final ScoreboardBuilder scoreboardBuilder = new ScoreboardBuilder("QuillCraft").setLines(
-                            DateFormat.getDateInstance(DateFormat.SHORT, new Locale(splitLang[0], splitLang[1])).format(new Date()),
-                            "Lobby: 1",
-                            "Connecté: "+redissonClient.getAtomicLong("players.size").get(),
-                            "",
-                            "⟫ "+player.getName(),
-                            "| Rank: "+account.getRankID(),
-                            "| QuillCoins: "+account.getQuillCoins(),
-                            "",
-                            "https://quillcraft.fr"
-                    );
+                    final ScoreboardBuilder scoreboardBuilder = new ScoreboardBuilder("QuillCraft").setLines(DateFormat.getDateInstance(DateFormat.SHORT, new Locale(splitLang[0], splitLang[1])).format(new Date()), "Lobby: 1", "Connecté: "+redissonClient.getAtomicLong("players.size").get(), "", "⟫ "+player.getName(), "| Rank: "+account.getRankID(), "| QuillCoins: "+account.getQuillCoins(), "", "https://quillcraft.fr");
 
                     quillCraftLobby.getScoreboardManager().addScoreboardBuilder(player, scoreboardBuilder);
                 });
 
 
-                new Title(player).sendTitle(1, 1, 1,
-                        languageManager.getMessage(TextList.TITLE_LOBBY_JOIN)).sendTablistTitle(languageManager.getMessage(TextList.TABLIST_DEFAULT));
+                new Title(player).sendTitle(1, 1, 1, languageManager.getMessage(TextList.TITLE_LOBBY_JOIN)).sendTablistTitle(languageManager.getMessage(TextList.TABLIST_DEFAULT));
 
                 player.playSound(player.getLocation(), Sound.ENTITY_EXPERIENCE_ORB_PICKUP, 1, 1);
 
-            } catch(AccountNotFoundException e) {
-                player.kickPlayer(e.getMessage());
+            } catch(AccountNotFoundException exception) {
+                player.kickPlayer(exception.getMessage());
             }
         });
 
-        scheduler.runTaskAsynchronously(quillCraftLobby, () ->
-                Bukkit.getOnlinePlayers().stream().parallel().filter(players ->
-                        !players.getUniqueId().equals(player.getUniqueId())).forEach(players ->
-                        players.sendMessage(LanguageManager.getLanguage(players).getMessage(Text.LOBBY_PLAYER_JOIN)
-                                .replace("%PLAYER%", player.getDisplayName()))));
+        scheduler.runTaskAsynchronously(quillCraftLobby, () -> Bukkit.getOnlinePlayers().stream().parallel().filter(players -> !players.getUniqueId().equals(player.getUniqueId())).forEach(players -> players.sendMessage(LanguageManager.getLanguage(players).getMessage(Text.LOBBY_PLAYER_JOIN).replace("%PLAYER%", player.getDisplayName()))));
 
         /* Exemple Song
         final SongManager songManager = quillCraftLobby.getSongManager();

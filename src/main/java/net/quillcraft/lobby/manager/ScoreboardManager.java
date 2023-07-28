@@ -3,7 +3,9 @@ package net.quillcraft.lobby.manager;
 import net.quillcraft.core.utils.builders.ScoreboardBuilder;
 import org.bukkit.entity.Player;
 
-import java.util.*;
+import java.util.Collection;
+import java.util.HashMap;
+import java.util.UUID;
 
 public class ScoreboardManager {
 
@@ -28,7 +30,6 @@ public class ScoreboardManager {
     }
 
     public Collection<ScoreboardBuilder> getAllScoreboardBuilders() {
-        System.out.println("debug");
         return scoreboardBuilderHashMap.values();
     }
 

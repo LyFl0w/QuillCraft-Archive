@@ -8,12 +8,12 @@ import org.bukkit.event.player.PlayerPickupItemEvent;
 public class PlayerItemListener implements Listener {
 
     @EventHandler
-    public void onPlayerDropItem(PlayerDropItemEvent event){
+    public void onPlayerDropItem(PlayerDropItemEvent event) {
         event.setCancelled(true);
     }
 
     @EventHandler
-    public void onPlayerPickupItem(PlayerPickupItemEvent event){
+    public void onPlayerPickupItem(PlayerPickupItemEvent event) {
         event.setCancelled(true);
     }
 

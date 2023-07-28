@@ -21,16 +21,16 @@ import org.bukkit.inventory.Inventory;
 import org.bukkit.inventory.ItemStack;
 import org.lumy.api.text.Text;
 
-public class InventoryClickListener implements Listener{
+public class InventoryClickListener implements Listener {
 
     private final QuillCraftLobby quillCraftLobby;
 
-    public InventoryClickListener(QuillCraftLobby quillCraftLobby){
+    public InventoryClickListener(QuillCraftLobby quillCraftLobby) {
         this.quillCraftLobby = quillCraftLobby;
     }
 
     @EventHandler
-    public void onInventoryClick(InventoryClickEvent event){
+    public void onInventoryClick(InventoryClickEvent event) {
         final Player player = (Player) event.getWhoClicked();
         final Inventory inventory = event.getClickedInventory();
         final String title = event.getView().getTitle();
@@ -45,12 +45,12 @@ public class InventoryClickListener implements Listener{
         if(inventory == player.getInventory()) return;
 
         final AccountProvider accountProvider = new AccountProvider(player);
-        try{
+        try {
             final Account account = accountProvider.getAccount();
             final LanguageManager languageManager = LanguageManager.getLanguage(account);
 
-            if(title.equals(languageManager.getMessage(Text.INVENTORY_NAME_MENU))){
-                if(account.hasParty() && !new PartyProvider(account).getParty().getOwnerUUID().equals(player.getUniqueId())){
+            if(title.equals(languageManager.getMessage(Text.INVENTORY_NAME_MENU))) {
+                if(account.hasParty() && !new PartyProvider(account).getParty().getOwnerUUID().equals(player.getUniqueId())) {
                     player.sendMessage("§cVous devez être l'owner de votre party pour pouvoir lancer un jeu");
                     return;
                 }
@@ -63,17 +63,17 @@ public class InventoryClickListener implements Listener{
                 return;
             }
 
-            if(title.equals(languageManager.getMessage(Text.INVENTORY_NAME_VISIBILITY))){
+            if(title.equals(languageManager.getMessage(Text.INVENTORY_NAME_VISIBILITY))) {
                 final PlayerVisibilityChangeEvent playerVisibilityChangeEvent = new PlayerVisibilityChangeEvent(player, accountProvider, account, Account.Visibility.getVisibilityByData(item.getType()));
                 quillCraftLobby.getServer().getPluginManager().callEvent(playerVisibilityChangeEvent);
-                if(!playerVisibilityChangeEvent.isCancelled()){
+                if(!playerVisibilityChangeEvent.isCancelled()) {
                     player.openInventory(new VisibilityInventory().getVisibilityInventory(account));
                 }
                 return;
             }
 
-        }catch(AccountNotFoundException|PartyNotFoundException e){
-            e.printStackTrace();
+        } catch(AccountNotFoundException|PartyNotFoundException exception) {
+            quillCraftLobby.getLogger().severe(exception.getMessage());
         }
     }
 }

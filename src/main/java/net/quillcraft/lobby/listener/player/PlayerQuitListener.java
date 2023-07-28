@@ -1,7 +1,6 @@
 package net.quillcraft.lobby.listener.player;
 
 import net.quillcraft.core.manager.LanguageManager;
-
 import net.quillcraft.lobby.QuillCraftLobby;
 import org.bukkit.Bukkit;
 import org.bukkit.entity.Player;
@@ -20,11 +19,10 @@ public class PlayerQuitListener implements Listener {
     }
 
     @EventHandler(priority = EventPriority.HIGHEST)
-    public void onPlayerQuit(PlayerQuitEvent event){
+    public void onPlayerQuit(PlayerQuitEvent event) {
         final Player player = event.getPlayer();
 
-        Bukkit.getOnlinePlayers().stream().parallel().forEach(players ->
-                players.sendMessage(LanguageManager.getLanguage(players).getMessage(Text.LOBBY_PLAYER_LEAVE).replace("%PLAYER%", player.getDisplayName())));
+        Bukkit.getOnlinePlayers().stream().parallel().forEach(players -> players.sendMessage(LanguageManager.getLanguage(players).getMessage(Text.LOBBY_PLAYER_LEAVE).replace("%PLAYER%", player.getDisplayName())));
 
         quillCraftLobby.getScoreboardManager().removeScoreboard(player.getUniqueId());
 

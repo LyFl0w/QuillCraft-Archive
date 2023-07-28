@@ -2,7 +2,7 @@ package net.quillcraft.lobby.npc;
 
 import com.mojang.authlib.GameProfile;
 import net.quillcraft.core.utils.LocationUtils;
-import net.quillcraft.lobby.manager.ConfigurationManager;
+import net.quillcraft.lobby.manager.ConfigurationBuilderManager;
 import org.bukkit.Bukkit;
 import org.bukkit.Location;
 import org.bukkit.World;
@@ -23,8 +23,8 @@ import java.util.UUID;
 
 public class NPCManager implements Listener {
 
-    private final ConfigurationManager configurationManager = ConfigurationManager.NPC;
-    private final FileConfiguration fileConfiguration = configurationManager.getConfiguration();
+    private final ConfigurationBuilderManager configurationBuilderManager = ConfigurationBuilderManager.NPC;
+    private final FileConfiguration fileConfiguration = configurationBuilderManager.getConfiguration();
 
     private final HashSet<NPC> NPCList;
     private final JavaPlugin javaPlugin;
@@ -83,7 +83,7 @@ public class NPCManager implements Listener {
         fileConfiguration.set(path+".location.yaw.body", location.getYaw());
         fileConfiguration.set(path+".location.pitch", location.getPitch());
 
-        configurationManager.saveFile();
+        configurationBuilderManager.saveFile();
 
         updateAllPlayersNPC(npc);
 
@@ -99,8 +99,7 @@ public class NPCManager implements Listener {
     }
 
     public void removeNPC(String name, int reference) {
-        final NPC npc = NPCList.stream().parallel().filter(npcTarget -> npcTarget.getName().equalsIgnoreCase(name)
-                && npcTarget.getReference() == reference).toList().get(0);
+        final NPC npc = NPCList.stream().parallel().filter(npcTarget -> npcTarget.getName().equalsIgnoreCase(name) && npcTarget.getReference() == reference).toList().get(0);
         npc.getWorld().getPlayers().forEach(npc::sendDespawnPacket);
         npc.getReceivers().clear();
 
@@ -110,7 +109,7 @@ public class NPCManager implements Listener {
 
         fileConfiguration.set(pathBuilder.toString(), null);
 
-        configurationManager.saveFile();
+        configurationBuilderManager.saveFile();
         NPCList.remove(npc);
     }
 
