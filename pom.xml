@@ -66,10 +66,11 @@
             <artifactId>jackson-dataformat-yaml</artifactId>
             <version>2.15.2</version>
         </dependency>
+
         <dependency>
             <groupId>org.jetbrains</groupId>
             <artifactId>annotations</artifactId>
-            <version>23.1.0</version>
+            <version>24.0.1</version>
             <scope>compile</scope>
         </dependency>
 
