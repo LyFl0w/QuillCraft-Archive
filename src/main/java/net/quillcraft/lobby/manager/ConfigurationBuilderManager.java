@@ -4,13 +4,13 @@ import net.quillcraft.core.utils.builders.YamlConfigurationBuilder;
 import net.quillcraft.lobby.QuillCraftLobby;
 import org.bukkit.configuration.file.FileConfiguration;
 
-public enum ConfigurationManager {
+public enum ConfigurationBuilderManager {
 
     NPC(new YamlConfigurationBuilder(QuillCraftLobby.getInstance(), "npc.yml", true)), HEAD(new YamlConfigurationBuilder(QuillCraftLobby.getInstance(), "head.yml", true)), MUGUET(new YamlConfigurationBuilder(QuillCraftLobby.getInstance(), "muguet.yml", true));
 
     private final YamlConfigurationBuilder yamlConfigurationBuilder;
 
-    ConfigurationManager(YamlConfigurationBuilder yamlConfigurationBuilder) {
+    ConfigurationBuilderManager(YamlConfigurationBuilder yamlConfigurationBuilder) {
         this.yamlConfigurationBuilder = yamlConfigurationBuilder;
     }
 

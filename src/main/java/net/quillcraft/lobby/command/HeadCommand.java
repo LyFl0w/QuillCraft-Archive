@@ -2,7 +2,7 @@ package net.quillcraft.lobby.command;
 
 import me.arcaniax.hdb.api.HeadDatabaseAPI;
 import net.quillcraft.lobby.QuillCraftLobby;
-import net.quillcraft.lobby.manager.ConfigurationManager;
+import net.quillcraft.lobby.manager.ConfigurationBuilderManager;
 import org.bukkit.Material;
 import org.bukkit.block.Block;
 import org.bukkit.block.BlockFace;
@@ -47,7 +47,7 @@ public class HeadCommand implements CommandExecutor {
                     if(block.getType() == Material.AIR) {
                         final String worldName = player.getWorld().getName();
                         final StringBuilder pathBuilder = new StringBuilder(worldName);
-                        final FileConfiguration headConfiguration = ConfigurationManager.HEAD.getConfiguration();
+                        final FileConfiguration headConfiguration = ConfigurationBuilderManager.HEAD.getConfiguration();
                         final ConfigurationSection configurationSection = headConfiguration.getConfigurationSection(worldName);
 
                         //Save head in config file
@@ -58,7 +58,7 @@ public class HeadCommand implements CommandExecutor {
                         headConfiguration.set(pathBuilder+"z", player.getLocation().getBlockZ());
                         headConfiguration.set(pathBuilder+"yaw", headYaw);
                         headConfiguration.set(pathBuilder+"coins", coins);
-                        ConfigurationManager.HEAD.saveFile();
+                        ConfigurationBuilderManager.HEAD.saveFile();
 
                         //Place head
                         block.setType(Material.PLAYER_HEAD);

@@ -7,7 +7,7 @@ import net.quillcraft.core.utils.ActionUtils;
 import net.quillcraft.core.utils.builders.ItemBuilder;
 import net.quillcraft.lobby.inventory.MenuInventory;
 import net.quillcraft.lobby.inventory.VisibilityInventory;
-import net.quillcraft.lobby.manager.ConfigurationManager;
+import net.quillcraft.lobby.manager.ConfigurationBuilderManager;
 import net.quillcraft.lobby.provider.HeadFinderProvider;
 import org.bukkit.Bukkit;
 import org.bukkit.Material;
@@ -49,7 +49,7 @@ public class PlayerInteractListener implements Listener {
         if(action == Action.RIGHT_CLICK_BLOCK) {
             final Block block = event.getClickedBlock();
             if(block.getType() == Material.PLAYER_HEAD) {
-                final FileConfiguration headConfiguration = ConfigurationManager.HEAD.getConfiguration();
+                final FileConfiguration headConfiguration = ConfigurationBuilderManager.HEAD.getConfiguration();
                 ConfigurationSection configurationSection = headConfiguration.getConfigurationSection(player.getLocation().getWorld().getName());
                 for(int i = 0; i < configurationSection.getKeys(false).size(); i++) {
                     if(block.getX() == configurationSection.getInt(i+".x") && (block.getZ() == configurationSection.getInt(i+".z") && block.getY() == configurationSection.getInt(i+".y"))) {

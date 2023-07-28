@@ -1,7 +1,7 @@
 package net.quillcraft.lobby.command;
 
 import net.quillcraft.lobby.QuillCraftLobby;
-import net.quillcraft.lobby.manager.ConfigurationManager;
+import net.quillcraft.lobby.manager.ConfigurationBuilderManager;
 import net.quillcraft.lobby.npc.NPC;
 import net.quillcraft.lobby.npc.NPCManager;
 import org.bukkit.Location;
@@ -72,22 +72,22 @@ public class NPCCommand implements CommandExecutor {
                     final NPCManager npcManager = quillCraftLobby.getNpcManager();
                     if(npcManager.exists(npcName, reference)) {
                         final NPC npc = npcManager.getNPCList().stream().parallel().filter(npcTarget -> npcTarget.getName().equalsIgnoreCase(npcName) && npcTarget.getReference() == reference).toList().get(0);
-                        final ConfigurationManager configurationManager = ConfigurationManager.NPC;
+                        final ConfigurationBuilderManager configurationBuilderManager = ConfigurationBuilderManager.NPC;
                         final String path = npcName+"."+reference+".location.yaw."+args[1].toLowerCase();
                         if(args[1].equalsIgnoreCase("head")) {
                             final float yaw = npc.getYawHead()+Integer.parseInt(args[4]);
                             npc.setYawHeadRotation(yaw);
                             npc.updateHeadRotation();
-                            configurationManager.getConfiguration().set(path, yaw);
-                            configurationManager.saveFile();
+                            configurationBuilderManager.getConfiguration().set(path, yaw);
+                            configurationBuilderManager.saveFile();
                             player.sendMessage("NPC Head rotate");
                             return true;
                         } else if(args[1].equalsIgnoreCase("body")) {
                             final float yaw = npc.getLocation().getYaw()+Integer.parseInt(args[4]);
                             npc.setBodyRotation(yaw);
                             npc.updateBodyRotation();
-                            configurationManager.getConfiguration().set(path, yaw);
-                            configurationManager.saveFile();
+                            configurationBuilderManager.getConfiguration().set(path, yaw);
+                            configurationBuilderManager.saveFile();
                             player.sendMessage("NPC body rotate");
                             return true;
                         }
