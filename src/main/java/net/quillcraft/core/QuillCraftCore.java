@@ -15,6 +15,7 @@ public class QuillCraftCore extends JavaPlugin {
 
     private static QuillCraftCore INSTANCE;
 
+    public String data_access_path = "";
     private ProtocolManager protocolManager;
     private CommandManager commandManager;
 

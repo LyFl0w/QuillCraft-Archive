@@ -1,25 +1,42 @@
 package net.quillcraft.core.manager;
 
 import net.quillcraft.core.QuillCraftCore;
-import net.quillcraft.core.utils.builders.YamlConfigurationBuilder;
+import org.bukkit.Bukkit;
+import org.bukkit.configuration.InvalidConfigurationException;
 import org.bukkit.configuration.file.FileConfiguration;
+import org.bukkit.configuration.file.YamlConfiguration;
+import org.jetbrains.annotations.Nullable;
+
+import java.io.File;
+import java.io.IOException;
+import java.util.logging.Level;
 
 public enum ConfigurationManager {
 
-    DATA_ACCESS(new YamlConfigurationBuilder(QuillCraftCore.getInstance(), "data_access.yml", true));
+    DATA_ACCESS(getFileConfiguration(QuillCraftCore.getInstance().data_access_path));
 
-    private final YamlConfigurationBuilder yamlConfigurationBuilder;
+    private final FileConfiguration fileConfiguration;
 
-    ConfigurationManager(YamlConfigurationBuilder yamlConfigurationBuilder) {
-        this.yamlConfigurationBuilder = yamlConfigurationBuilder;
+    ConfigurationManager(FileConfiguration fileConfiguration) {
+        this.fileConfiguration = fileConfiguration;
     }
 
     public FileConfiguration getConfiguration() {
-        return yamlConfigurationBuilder.getConfig();
+        return fileConfiguration;
     }
 
-    public void saveFile() {
-        yamlConfigurationBuilder.save();
+    @Nullable
+    private static FileConfiguration getFileConfiguration(String path) {
+        try {
+            final YamlConfiguration yamlConfiguration = new YamlConfiguration();
+            yamlConfiguration.load(new File(path));
+
+            return yamlConfiguration;
+        } catch(IOException|InvalidConfigurationException e) {
+            Bukkit.getLogger().log(Level.SEVERE, e.getMessage(), e);
+        }
+
+        return null;
     }
 
 }

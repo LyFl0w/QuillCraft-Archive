@@ -8,7 +8,11 @@ import org.lumy.api.LumyClient;
 public class DataManager {
 
     public static void initAllData(QuillCraftCore quillCraftCore) {
-        new LumyClient(quillCraftCore.getLogger(), quillCraftCore.getDataFolder());
+        final LumyClient lumyClient = new LumyClient(new String[]{"update", "absolute_path_data_access"},
+                quillCraftCore.getLogger(), quillCraftCore.getDataFolder());
+
+        quillCraftCore.data_access_path = lumyClient.read();
+
         try {
             RedisManager.initAllRedisAccess();
 
