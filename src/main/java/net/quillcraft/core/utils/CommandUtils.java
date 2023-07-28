@@ -9,7 +9,7 @@ import java.util.List;
 
 public class CommandUtils {
 
-    public static List<String> completionTable(String arg, List<String> completions){
+    public static List<String> completionTable(String arg, List<String> completions) {
         final List<String> completion = new ArrayList<>();
         //Copie les correspondances du premier argument de la liste (ex : si le premier argument est 'm', il retournera juste 'minecraft')
         StringUtil.copyPartialMatches(arg, completions, completion);
@@ -18,11 +18,11 @@ public class CommandUtils {
         return completion;
     }
 
-    public static List<String> completionTable(String arg, String[] completions){
+    public static List<String> completionTable(String arg, String[] completions) {
         return completionTable(arg, Arrays.asList(completions));
     }
 
-    public static List<String> completionTable(String arg, Enum[] completions){
+    public static List<String> completionTable(String arg, Enum[] completions) {
         List<String> enumName = new ArrayList<>();
         Arrays.stream(completions).parallel().forEach(anEnum -> {
             enumName.add(anEnum.name());
@@ -30,7 +30,7 @@ public class CommandUtils {
         return completionTable(arg, enumName);
     }
 
-    public static List<String> completionTable(String arg, Enum[] completions, List<String> subCompletition){
+    public static List<String> completionTable(String arg, Enum[] completions, List<String> subCompletition) {
         List<String> enumName = new ArrayList<>();
         Arrays.stream(completions).parallel().forEach(anEnum -> enumName.add(anEnum.name()));
         enumName.addAll(subCompletition);

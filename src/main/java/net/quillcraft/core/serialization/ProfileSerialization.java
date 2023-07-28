@@ -9,7 +9,7 @@ public abstract class ProfileSerialization {
 
     protected final Gson gson;
 
-    protected ProfileSerialization(){
+    protected ProfileSerialization() {
         this.gson = new GsonBuilder().serializeNulls().create();
     }
 
@@ -17,7 +17,7 @@ public abstract class ProfileSerialization {
      * @param object Object
      * @return object in json format.
      */
-    public String serialize(@NonNull Object object){
+    public String serialize(@NonNull Object object) {
         return gson.toJson(object);
     }
 

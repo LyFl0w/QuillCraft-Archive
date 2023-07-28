@@ -12,48 +12,49 @@ import java.util.List;
 
 public class PluginManager {
 
-    private final QuillCraftCore main;
-    public PluginManager(QuillCraftCore main){
-        this.main = main;
-        final Server server = main.getServer();
+    private final QuillCraftCore quillCraftCore;
+
+    public PluginManager(QuillCraftCore quillCraftCore) {
+        this.quillCraftCore = quillCraftCore;
+        final Server server = quillCraftCore.getServer();
         registerEvents(server.getPluginManager());
         registerPluginMessage(server.getMessenger());
         registerCommands();
     }
 
-    private void registerEvents(org.bukkit.plugin.PluginManager pluginManager){
-        pluginManager.registerEvents(new PlayerMoveListener(main), main);
+    private void registerEvents(org.bukkit.plugin.PluginManager pluginManager) {
+        pluginManager.registerEvents(new PlayerMoveListener(quillCraftCore), quillCraftCore);
 
         // Commands
-        final List<String> commands = main.getCommandManager().getCommands();
-        pluginManager.registerEvents(new PlayerCommandPreprocessListener(commands), main);
-        pluginManager.registerEvents(new PlayerCommandSendListener(commands), main);
+        final List<String> commands = quillCraftCore.getCommandManager().getCommands();
+        pluginManager.registerEvents(new PlayerCommandPreprocessListener(commands), quillCraftCore);
+        pluginManager.registerEvents(new PlayerCommandSendListener(commands), quillCraftCore);
     }
 
-    private void registerPluginMessage(Messenger messenger){
-        messenger.registerOutgoingPluginChannel(main, "BungeeCord");
-        messenger.registerOutgoingPluginChannel(main, "quillcraft:party");
-        messenger.registerOutgoingPluginChannel(main, "quillcraft:message");
-        messenger.registerOutgoingPluginChannel(main, "quillcraft:friend");
+    private void registerPluginMessage(Messenger messenger) {
+        messenger.registerOutgoingPluginChannel(quillCraftCore, "BungeeCord");
+        messenger.registerOutgoingPluginChannel(quillCraftCore, "quillcraft:party");
+        messenger.registerOutgoingPluginChannel(quillCraftCore, "quillcraft:message");
+        messenger.registerOutgoingPluginChannel(quillCraftCore, "quillcraft:friend");
     }
 
-    private void registerCommands(){
-        final LanguageCommand commandLanguage = new LanguageCommand(main);
-        main.getCommand("lang").setExecutor(commandLanguage);
-        main.getCommand("lang").setTabCompleter(commandLanguage);
+    private void registerCommands() {
+        final LanguageCommand commandLanguage = new LanguageCommand(quillCraftCore);
+        quillCraftCore.getCommand("lang").setExecutor(commandLanguage);
+        quillCraftCore.getCommand("lang").setTabCompleter(commandLanguage);
 
-        final PartyCommand partyCommand = new PartyCommand(main);
-        main.getCommand("party").setExecutor(partyCommand);
-        main.getCommand("party").setTabCompleter(partyCommand);
+        final PartyCommand partyCommand = new PartyCommand(quillCraftCore);
+        quillCraftCore.getCommand("party").setExecutor(partyCommand);
+        quillCraftCore.getCommand("party").setTabCompleter(partyCommand);
 
-        final FriendCommand friendCommand = new FriendCommand(main);
-        main.getCommand("friend").setExecutor(friendCommand);
-        main.getCommand("friend").setTabCompleter(friendCommand);
+        final FriendCommand friendCommand = new FriendCommand(quillCraftCore);
+        quillCraftCore.getCommand("friend").setExecutor(friendCommand);
+        quillCraftCore.getCommand("friend").setTabCompleter(friendCommand);
 
-        main.getCommand("msg").setExecutor(new MessageCommand(main));
-        main.getCommand("r").setExecutor(new ReponseMessageCommand(main));
+        quillCraftCore.getCommand("msg").setExecutor(new MessageCommand(quillCraftCore));
+        quillCraftCore.getCommand("r").setExecutor(new ReponseMessageCommand(quillCraftCore));
 
-        main.getCommand("lobby").setExecutor(new LobbyCommand(main));
+        quillCraftCore.getCommand("lobby").setExecutor(new LobbyCommand(quillCraftCore));
     }
 
 }

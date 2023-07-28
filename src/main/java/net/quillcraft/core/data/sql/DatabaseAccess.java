@@ -1,8 +1,8 @@
-package net.quillcraft.core.data.management.sql;
+package net.quillcraft.core.data.sql;
 
 import com.zaxxer.hikari.HikariConfig;
 import com.zaxxer.hikari.HikariDataSource;
-import net.quillcraft.core.QuillCraftCore;
+import org.bukkit.Bukkit;
 
 import java.sql.Connection;
 import java.sql.SQLException;
@@ -11,20 +11,19 @@ import java.util.logging.Logger;
 public class DatabaseAccess {
 
     private final DatabaseCredentials credentials;
-    private HikariDataSource hikariDataSource;
-    private final Logger logger = QuillCraftCore.getInstance().getLogger();
-
+    private final Logger logger = Bukkit.getLogger();
     private final String JDBC_DRIVER = "relocated.private.com.mysql.jdbc.Driver";
+    private HikariDataSource hikariDataSource;
 
-    public DatabaseAccess(DatabaseCredentials credentials){
+    public DatabaseAccess(DatabaseCredentials credentials) {
         this.credentials = credentials;
     }
 
-    private void setupHikariCP(){
+    private void setupHikariCP() {
         final HikariConfig hikariConfig = new HikariConfig();
-        try{
+        try {
             hikariConfig.setDriverClassName(Class.forName(JDBC_DRIVER).getName());
-        }catch(ClassNotFoundException e){
+        } catch(ClassNotFoundException exception) {
             logger.warning("Default JDBC driver is used");
         }
         hikariConfig.setMaximumPoolSize(10);
@@ -39,17 +38,17 @@ public class DatabaseAccess {
         this.hikariDataSource = new HikariDataSource(hikariConfig);
     }
 
-    public void initPool(){
+    public void initPool() {
         setupHikariCP();
         logger.info("JDBC init pool");
     }
 
-    public void closePool(){
+    public void closePool() {
         hikariDataSource.close();
     }
 
-    public Connection getConnection() throws SQLException{
-        if(this.hikariDataSource == null){
+    public Connection getConnection() throws SQLException {
+        if(this.hikariDataSource == null) {
             logger.warning("Not connected to Database");
             initPool();
         }

@@ -2,21 +2,22 @@ package net.quillcraft.core.utils;
 
 import java.util.concurrent.TimeUnit;
 
-public class TimeUtils{
+public class TimeUtils {
 
     private final long time;
     private final String pattern;
-    public TimeUtils(int time, TimeUnit timeUnit, String pattern){
+
+    public TimeUtils(int time, TimeUnit timeUnit, String pattern) {
         this.time = timeUnit.toSeconds(time);
         this.pattern = pattern;
     }
 
-    public String formatToTimer(){
+    public String formatToTimer() {
         final StringBuilder message = new StringBuilder();
         final String[] split = pattern.split(":");
         int i = 0;
-        for(String part : split){
-            switch(part){
+        for(String part : split) {
+            switch(part) {
                 case "h" -> message.append(time/3600);
                 case "hh" -> {
                     final long hour = time/3600;
@@ -33,11 +34,10 @@ public class TimeUtils{
                     message.append(((second < 10) ? "0"+second : second));
                 }
             }
-            if((i+=1) != split.length) message.append(":");
+            if((i += 1) != split.length) message.append(":");
         }
         return message.toString();
     }
-
 
 
 }

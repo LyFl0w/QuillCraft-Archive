@@ -1,24 +1,23 @@
-package net.quillcraft.core.manager;
+package net.quillcraft.core.manager.configuration;
 
-import net.quillcraft.core.QuillCraftCore;
 import net.quillcraft.core.utils.builders.YamlConfigurationBuilder;
 import org.bukkit.configuration.file.FileConfiguration;
 
-public enum ConfigurationManager {
+public enum ConfigurationBuilderManager {
 
-    DATA_ACCESS(new YamlConfigurationBuilder(QuillCraftCore.getInstance(), "data_access.yml", true));
+    ;
 
     private final YamlConfigurationBuilder yamlConfigurationBuilder;
 
-    ConfigurationManager(YamlConfigurationBuilder yamlConfigurationBuilder){
+    ConfigurationBuilderManager(YamlConfigurationBuilder yamlConfigurationBuilder) {
         this.yamlConfigurationBuilder = yamlConfigurationBuilder;
     }
 
-    public FileConfiguration getConfiguration(){
+    public FileConfiguration getConfiguration() {
         return yamlConfigurationBuilder.getConfig();
     }
 
-    public void saveFile(){
+    public void saveFile() {
         yamlConfigurationBuilder.save();
     }
 

@@ -1,20 +1,20 @@
-package net.quillcraft.core.data.management.redis;
+package net.quillcraft.core.data.redis;
 
 public record RedisCredential(String ip, String clientName, String password, int database, int port) {
 
-    public String getPassword(){
+    public String getPassword() {
         return password;
     }
 
-    public String getClientName(){
+    public String getClientName() {
         return clientName;
     }
 
-    public int getDatabase(){
+    public int getDatabase() {
         return database;
     }
 
-    public String getAdress(){
+    public String getAdress() {
         return "redis://"+ip+":"+port;
     }
 

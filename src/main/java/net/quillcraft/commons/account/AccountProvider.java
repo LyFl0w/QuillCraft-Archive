@@ -2,12 +2,13 @@ package net.quillcraft.commons.account;
 
 import net.quillcraft.commons.exception.AccountNotFoundException;
 import net.quillcraft.core.QuillCraftCore;
-import net.quillcraft.core.data.management.redis.RedisManager;
-import net.quillcraft.core.data.management.sql.DatabaseManager;
-import net.quillcraft.core.data.management.sql.table.SQLTablesManager;
+import net.quillcraft.core.data.redis.RedisManager;
+import net.quillcraft.core.data.sql.DatabaseManager;
+import net.quillcraft.core.data.sql.table.SQLTablesManager;
 import net.quillcraft.core.event.player.PlayerChangeLanguageEvent;
 import net.quillcraft.core.manager.LanguageManager;
 import net.quillcraft.core.serialization.ProfileSerializationAccount;
+import org.bukkit.Bukkit;
 import org.bukkit.entity.Player;
 import org.lumy.api.text.Text;
 import org.redisson.api.RBucket;
@@ -18,6 +19,7 @@ import java.sql.*;
 import java.time.Duration;
 import java.util.HashMap;
 import java.util.UUID;
+import java.util.logging.Level;
 
 public class AccountProvider {
 
@@ -27,7 +29,7 @@ public class AccountProvider {
     private final UUID uuid;
     private final SQLTablesManager sqlTablesManager;
 
-    public AccountProvider(Player player){
+    public AccountProvider(Player player) {
         this.player = player;
         this.uuid = player.getUniqueId();
         this.redissonClient = RedisManager.ACCOUNT.getRedisAccess().getRedissonClient();
@@ -39,44 +41,43 @@ public class AccountProvider {
         this.sqlTablesManager = SQLTablesManager.PLAYER_ACCOUNT;
     }
 
-    public final Account getAccount() throws AccountNotFoundException{
+    public final Account getAccount() throws AccountNotFoundException {
         Account account = getAccountFromRedis();
 
-        if(account == null){
+        if(account == null) {
             account = getAccountFromDatabase();
             sendAccountToRedis(account);
-        }else{
+        } else {
             account.setSQLRequest();
         }
 
         return account;
     }
 
-    private Account getAccountFromRedis(){
+    private Account getAccountFromRedis() {
         final RBucket<Account> accountRBucket = redissonClient.getBucket(keyAccount);
 
         return accountRBucket.get();
     }
 
-    public void updateAccount(final Account account){
+    public void updateAccount(final Account account) {
         PreparedStatement updateRequest = null;
-        try{
+        try {
             updateRequest = account.getSQLRequest().getUpdateRequest(DatabaseManager.MINECRAFT_SERVER.getDatabaseAccess().getConnection());
-            System.out.println(account.getSQLRequest());
-        }catch(Exception exception){
-            exception.printStackTrace();
+        } catch(Exception exception) {
+            Bukkit.getLogger().log(Level.SEVERE, exception.getMessage(), exception);
         }
         sendAccountToRedis(account);
         sendAccountToDatabase(updateRequest);
     }
 
-    private void sendAccountToRedis(final Account account){
+    private void sendAccountToRedis(final Account account) {
         final RBucket<Account> accountRBucket = redissonClient.getBucket(keyAccount);
         accountRBucket.set(account);
     }
 
-    private Account getAccountFromDatabase() throws AccountNotFoundException{
-        try{
+    private Account getAccountFromDatabase() throws AccountNotFoundException {
+        try {
             final Connection connection = DatabaseManager.MINECRAFT_SERVER.getDatabaseAccess().getConnection();
             final PreparedStatement preparedStatement = connection.prepareStatement("SELECT * FROM "+sqlTablesManager.getTable()+" WHERE "+sqlTablesManager.getKeyColumn()+" = ?");
 
@@ -84,7 +85,7 @@ public class AccountProvider {
             preparedStatement.executeQuery();
 
             final ResultSet resultSet = preparedStatement.getResultSet();
-            if(resultSet.next()){
+            if(resultSet.next()) {
                 final int id = resultSet.getInt("id");
                 final String partyUUID = resultSet.getString("party_uuid");
                 final int quillCoins = resultSet.getInt("quillcoins");
@@ -99,33 +100,33 @@ public class AccountProvider {
 
                 Account account;
                 account = new Account(id, uuid, quillCoins, rankID, visibility, particules, languageISO);
-                if(partyUUID != null){
+                if(partyUUID != null) {
                     account = new Account(id, uuid, UUID.fromString(partyUUID), quillCoins, rankID, visibility, particules, languageISO);
                 }
 
                 return account;
-            }else{
+            } else {
                 connection.close();
                 return createNewAccount();
             }
 
-        }catch(SQLException e){
-            e.printStackTrace();
+        } catch(SQLException exception) {
+            Bukkit.getLogger().severe(exception.getMessage());
         }
 
         throw new AccountNotFoundException(player);
     }
 
-    private void sendAccountToDatabase(final PreparedStatement updateRequest){
-        try{
+    private void sendAccountToDatabase(final PreparedStatement updateRequest) {
+        try {
             updateRequest.executeUpdate();
             updateRequest.getConnection().close();
-        }catch(Exception exception){
-            exception.printStackTrace();
+        } catch(Exception exception) {
+            Bukkit.getLogger().log(Level.SEVERE, exception.getMessage(), exception);
         }
     }
 
-    private Account createNewAccount() throws SQLException{
+    private Account createNewAccount() throws SQLException {
         final Account account = new Account(player);
         final Connection connection = DatabaseManager.MINECRAFT_SERVER.getDatabaseAccess().getConnection();
 
@@ -139,7 +140,7 @@ public class AccountProvider {
         final ResultSet resultSet = preparedStatement.getGeneratedKeys();
 
         //GET ID
-        if(row > 0 && resultSet.next()){
+        if(row > 0 && resultSet.next()) {
             account.setId(resultSet.getInt(1));
         }
         connection.close();
@@ -149,42 +150,42 @@ public class AccountProvider {
         return account;
     }
 
-    public void setLocaleLanguage(final Account account){
+    public void setLocaleLanguage(final Account account) {
         player.sendMessage(LanguageManager.DEFAULT.getMessage(Text.COMMAND_SETLANGUAGE_AUTO));
         QuillCraftCore.getInstance().getServer().getPluginManager().callEvent(new PlayerChangeLanguageEvent(player, this, account, player.getLocale()));
     }
 
-    private void cooldownLanguage(){
+    private void cooldownLanguage() {
         updateKey(keyAutoLanguage);
     }
 
-    public boolean hasAutoLanguage(){
+    public boolean hasAutoLanguage() {
         return redissonClient.getSet(keyAutoLanguage).delete();
     }
 
-    public void updateLanguage(){
+    public void updateLanguage() {
         updateKey(keyUpdateLanguage);
     }
 
-    public boolean hasUpdatedLanguage(){
+    public boolean hasUpdatedLanguage() {
         return keyExist(keyUpdateLanguage);
     }
 
-    public void updateVisibility(){
+    public void updateVisibility() {
         updateKey(keyUpdateVisibility);
     }
 
-    public boolean hasUpdatedVisibility(){
+    public boolean hasUpdatedVisibility() {
         return keyExist(keyUpdateVisibility);
     }
 
-    private void updateKey(final String key){
+    private void updateKey(final String key) {
         final RSet<Integer> updateLanguage = redissonClient.getSet(key);
         updateLanguage.add(0);
         updateLanguage.expire(Duration.ofSeconds(10));
     }
 
-    private boolean keyExist(final String key){
+    private boolean keyExist(final String key) {
         return redissonClient.getSet(key).isExists();
     }
 
