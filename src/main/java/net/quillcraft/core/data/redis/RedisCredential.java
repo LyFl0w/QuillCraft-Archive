@@ -1,4 +1,4 @@
-package net.quillcraft.core.data.management.redis;
+package net.quillcraft.core.data.redis;
 
 public record RedisCredential(String ip, String clientName, String password, int database, int port) {
 

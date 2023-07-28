@@ -2,9 +2,9 @@ package net.quillcraft.commons.party;
 
 import net.quillcraft.commons.account.Account;
 import net.quillcraft.commons.exception.PartyNotFoundException;
-import net.quillcraft.core.data.management.redis.RedisManager;
-import net.quillcraft.core.data.management.sql.DatabaseManager;
-import net.quillcraft.core.data.management.sql.table.SQLTablesManager;
+import net.quillcraft.core.data.redis.RedisManager;
+import net.quillcraft.core.data.sql.DatabaseManager;
+import net.quillcraft.core.data.sql.table.SQLTablesManager;
 import net.quillcraft.core.serialization.ProfileSerializationUtils;
 import org.bukkit.Bukkit;
 import org.bukkit.entity.Player;

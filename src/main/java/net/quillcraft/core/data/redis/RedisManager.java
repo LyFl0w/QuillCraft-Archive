@@ -1,4 +1,4 @@
-package net.quillcraft.core.data.management.redis;
+package net.quillcraft.core.data.redis;
 
 import net.quillcraft.core.manager.configuration.ConfigurationManager;
 import org.bukkit.configuration.file.FileConfiguration;

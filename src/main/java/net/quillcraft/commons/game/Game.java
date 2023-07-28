@@ -3,7 +3,7 @@ package net.quillcraft.commons.game;
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import net.quillcraft.commons.game.properties.GameProperties;
 import net.quillcraft.commons.game.status.GeneralGameStatus;
-import net.quillcraft.core.data.management.redis.RedisManager;
+import net.quillcraft.core.data.redis.RedisManager;
 import org.redisson.api.RedissonClient;
 
 import java.util.ArrayList;

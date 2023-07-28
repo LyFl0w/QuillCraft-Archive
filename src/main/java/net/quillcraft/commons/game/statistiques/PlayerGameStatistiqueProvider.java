@@ -2,8 +2,8 @@ package net.quillcraft.commons.game.statistiques;
 
 import com.google.common.reflect.TypeToken;
 import net.quillcraft.commons.game.GameEnum;
-import net.quillcraft.core.data.management.redis.RedisManager;
-import net.quillcraft.core.data.management.sql.DatabaseManager;
+import net.quillcraft.core.data.redis.RedisManager;
+import net.quillcraft.core.data.sql.DatabaseManager;
 import net.quillcraft.core.serialization.ProfileSerializationType;
 import org.bukkit.Bukkit;
 import org.bukkit.plugin.Plugin;

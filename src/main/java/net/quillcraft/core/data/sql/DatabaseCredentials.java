@@ -1,4 +1,4 @@
-package net.quillcraft.core.data.management.sql;
+package net.quillcraft.core.data.sql;
 
 public class DatabaseCredentials {
 

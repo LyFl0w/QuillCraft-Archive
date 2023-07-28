@@ -1,8 +1,8 @@
 package net.quillcraft.core.manager;
 
 import net.quillcraft.core.QuillCraftCore;
-import net.quillcraft.core.data.management.redis.RedisManager;
-import net.quillcraft.core.data.management.sql.DatabaseManager;
+import net.quillcraft.core.data.redis.RedisManager;
+import net.quillcraft.core.data.sql.DatabaseManager;
 import org.lumy.api.LumyClient;
 
 public class DataManager {

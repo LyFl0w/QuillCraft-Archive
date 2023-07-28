@@ -8,7 +8,7 @@ import net.quillcraft.commons.exception.PartyNotFoundException;
 import net.quillcraft.commons.friend.FriendProvider;
 import net.quillcraft.commons.party.PartyProvider;
 import net.quillcraft.core.QuillCraftCore;
-import net.quillcraft.core.data.management.sql.table.SQLTablesManager;
+import net.quillcraft.core.data.sql.table.SQLTablesManager;
 import net.quillcraft.core.serialization.ProfileSerializationAccount;
 import org.bukkit.Bukkit;
 import org.bukkit.Material;

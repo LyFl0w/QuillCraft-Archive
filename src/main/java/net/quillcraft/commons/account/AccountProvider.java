@@ -2,9 +2,9 @@ package net.quillcraft.commons.account;
 
 import net.quillcraft.commons.exception.AccountNotFoundException;
 import net.quillcraft.core.QuillCraftCore;
-import net.quillcraft.core.data.management.redis.RedisManager;
-import net.quillcraft.core.data.management.sql.DatabaseManager;
-import net.quillcraft.core.data.management.sql.table.SQLTablesManager;
+import net.quillcraft.core.data.redis.RedisManager;
+import net.quillcraft.core.data.sql.DatabaseManager;
+import net.quillcraft.core.data.sql.table.SQLTablesManager;
 import net.quillcraft.core.event.player.PlayerChangeLanguageEvent;
 import net.quillcraft.core.manager.LanguageManager;
 import net.quillcraft.core.serialization.ProfileSerializationAccount;
@@ -19,6 +19,7 @@ import java.sql.*;
 import java.time.Duration;
 import java.util.HashMap;
 import java.util.UUID;
+import java.util.logging.Level;
 
 public class AccountProvider {
 
@@ -63,9 +64,8 @@ public class AccountProvider {
         PreparedStatement updateRequest = null;
         try {
             updateRequest = account.getSQLRequest().getUpdateRequest(DatabaseManager.MINECRAFT_SERVER.getDatabaseAccess().getConnection());
-            System.out.println(account.getSQLRequest());
         } catch(Exception exception) {
-            exception.printStackTrace();
+            Bukkit.getLogger().log(Level.SEVERE, exception.getMessage(), exception);
         }
         sendAccountToRedis(account);
         sendAccountToDatabase(updateRequest);
@@ -122,7 +122,7 @@ public class AccountProvider {
             updateRequest.executeUpdate();
             updateRequest.getConnection().close();
         } catch(Exception exception) {
-            exception.printStackTrace();
+            Bukkit.getLogger().log(Level.SEVERE, exception.getMessage(), exception);
         }
     }
 

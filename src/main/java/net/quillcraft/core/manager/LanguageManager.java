@@ -3,7 +3,7 @@ package net.quillcraft.core.manager;
 import net.quillcraft.commons.account.Account;
 import net.quillcraft.commons.account.AccountProvider;
 import net.quillcraft.commons.exception.AccountNotFoundException;
-import net.quillcraft.core.data.management.redis.RedisManager;
+import net.quillcraft.core.data.redis.RedisManager;
 import org.bukkit.Bukkit;
 import org.bukkit.entity.Player;
 import org.lumy.api.text.Text;

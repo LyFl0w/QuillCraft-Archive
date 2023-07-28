@@ -1,10 +1,12 @@
 package net.quillcraft.commons.friend;
 
 import net.quillcraft.commons.exception.FriendNotFoundException;
-import net.quillcraft.core.data.management.redis.RedisManager;
-import net.quillcraft.core.data.management.sql.DatabaseManager;
-import net.quillcraft.core.data.management.sql.table.SQLTablesManager;
+import net.quillcraft.core.data.redis.RedisManager;
+import net.quillcraft.core.data.sql.DatabaseManager;
+import net.quillcraft.core.data.sql.table.SQLTablesManager;
 import net.quillcraft.core.serialization.ProfileSerializationUtils;
+
+import org.bukkit.Bukkit;
 import org.bukkit.entity.Player;
 import org.redisson.api.RBucket;
 import org.redisson.api.RedissonClient;
@@ -17,6 +19,7 @@ import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.UUID;
+import java.util.logging.Level;
 
 public class FriendProvider {
 
@@ -92,7 +95,7 @@ public class FriendProvider {
 
             connection.close();
         } catch(SQLException exception) {
-            exception.printStackTrace();
+            Bukkit.getLogger().log(Level.SEVERE, exception.getMessage(), exception);
         }
         return friend;
     }

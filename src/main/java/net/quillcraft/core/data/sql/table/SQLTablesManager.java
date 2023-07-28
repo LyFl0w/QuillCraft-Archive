@@ -1,4 +1,4 @@
-package net.quillcraft.core.data.management.sql.table;
+package net.quillcraft.core.data.sql.table;
 
 public enum SQLTablesManager {
 

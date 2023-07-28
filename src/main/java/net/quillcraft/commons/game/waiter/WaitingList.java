@@ -2,7 +2,7 @@ package net.quillcraft.commons.game.waiter;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import net.quillcraft.commons.game.GameEnum;
-import net.quillcraft.core.data.management.redis.RedisManager;
+import net.quillcraft.core.data.redis.RedisManager;
 import org.redisson.api.RBucket;
 import org.redisson.api.RedissonClient;
 

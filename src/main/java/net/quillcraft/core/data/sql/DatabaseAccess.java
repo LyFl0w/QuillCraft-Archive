@@ -1,4 +1,4 @@
-package net.quillcraft.core.data.management.sql;
+package net.quillcraft.core.data.sql;
 
 import com.zaxxer.hikari.HikariConfig;
 import com.zaxxer.hikari.HikariDataSource;
