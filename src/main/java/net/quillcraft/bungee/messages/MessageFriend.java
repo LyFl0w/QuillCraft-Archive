@@ -16,6 +16,7 @@ import net.quillcraft.commons.friend.FriendProvider;
 import org.lumy.api.text.Text;
 
 import java.util.UUID;
+import java.util.logging.Level;
 
 
 public class MessageFriend extends Message {

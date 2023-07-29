@@ -5,6 +5,7 @@ import net.md_5.bungee.api.chat.ComponentBuilder;
 import net.md_5.bungee.api.chat.HoverEvent;
 import net.md_5.bungee.api.chat.TextComponent;
 import net.md_5.bungee.api.connection.ProxiedPlayer;
+import net.quillcraft.bungee.QuillCraftBungee;
 import net.quillcraft.bungee.data.redis.RedisManager;
 import net.quillcraft.bungee.data.sql.DatabaseManager;
 import net.quillcraft.bungee.data.sql.table.SQLTablesManager;
@@ -25,6 +26,7 @@ import java.sql.SQLException;
 import java.time.Duration;
 import java.util.List;
 import java.util.UUID;
+import java.util.logging.Level;
 
 public class FriendProvider {
 

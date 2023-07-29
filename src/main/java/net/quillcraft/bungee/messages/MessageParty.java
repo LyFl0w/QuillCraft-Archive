@@ -19,6 +19,7 @@ import org.lumy.api.text.Text;
 import java.security.SecureRandom;
 import java.util.List;
 import java.util.UUID;
+import java.util.logging.Level;
 
 public class MessageParty extends Message {
 

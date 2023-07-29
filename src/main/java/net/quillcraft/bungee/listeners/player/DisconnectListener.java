@@ -19,6 +19,8 @@ import net.quillcraft.commons.party.PartyProvider;
 import org.lumy.api.text.Text;
 import org.redisson.api.RedissonClient;
 
+import java.util.logging.Level;
+
 public class DisconnectListener implements Listener {
 
     private final RedissonClient redissonClient;

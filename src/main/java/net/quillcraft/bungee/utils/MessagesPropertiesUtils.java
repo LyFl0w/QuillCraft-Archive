@@ -1,5 +1,7 @@
 package net.quillcraft.bungee.utils;
 
+import net.quillcraft.bungee.QuillCraftBungee;
+
 import java.io.File;
 import java.io.FileReader;
 import java.io.IOException;
@@ -8,6 +10,7 @@ import java.util.Locale;
 import java.util.MissingResourceException;
 import java.util.PropertyResourceBundle;
 import java.util.ResourceBundle;
+import java.util.logging.Level;
 
 public class MessagesPropertiesUtils {
 
