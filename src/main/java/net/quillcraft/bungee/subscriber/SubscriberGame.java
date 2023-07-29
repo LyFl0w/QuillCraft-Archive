@@ -6,7 +6,6 @@ import net.md_5.bungee.api.connection.ProxiedPlayer;
 import net.quillcraft.bungee.QuillCraftBungee;
 import net.quillcraft.commons.account.AccountProvider;
 import net.quillcraft.commons.exception.AccountNotFoundException;
-import net.quillcraft.commons.exception.PartyNotFoundException;
 import net.quillcraft.commons.game.Game;
 import net.quillcraft.commons.game.waiter.Waiter;
 import net.quillcraft.commons.game.waiter.WaitingList;
@@ -64,7 +63,7 @@ public class SubscriberGame extends Subscriber {
                             final List<ProxiedPlayer> playerStream = new PartyProvider(new AccountProvider(waiter.getPlayerUUID()).getAccount()).getParty().getOnlinePlayers().stream().filter(proxiedPlayers -> !proxiedPlayers.getServer().getInfo().getName().equalsIgnoreCase(message)).toList();
                             if(maxPlayer < futurPlayers.size()+playerStream.size()) continue;
                             futurPlayers.addAll(playerStream);
-                        } catch(AccountNotFoundException|PartyNotFoundException exception) {
+                        } catch(AccountNotFoundException exception) {
                             QuillCraftBungee.getInstance().getLogger().log(Level.SEVERE, exception.getMessage(), exception);
                         }
                     } else {

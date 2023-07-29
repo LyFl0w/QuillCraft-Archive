@@ -12,9 +12,9 @@ import net.quillcraft.commons.account.Account;
 import net.quillcraft.commons.account.AccountProvider;
 import net.quillcraft.commons.exception.AccountNotFoundException;
 import net.quillcraft.commons.exception.FriendNotFoundException;
-import net.quillcraft.commons.exception.PartyNotFoundException;
 import net.quillcraft.commons.friend.FriendProvider;
 import net.quillcraft.commons.game.GameEnum;
+import net.quillcraft.commons.party.Party;
 import net.quillcraft.commons.party.PartyProvider;
 import org.lumy.api.text.Text;
 import org.redisson.api.RedissonClient;
@@ -47,13 +47,12 @@ public class DisconnectListener implements Listener {
                 final Account account = accountProvider.getAccount();
                 if(account.hasParty()) {
                     final PartyProvider partyProvider = new PartyProvider(account);
-                    partyProvider.sendMessageToPlayers(partyProvider.getParty(), Text.PARTY_LEFT_SERVER, "%PLAYER%", player.getName());
+                    final Party party = partyProvider.getParty();
+                    partyProvider.sendMessageToPlayers(party, Text.PARTY_LEFT_SERVER, "%PLAYER%", player.getName());
                     //Temps delete party redis
-                    if(partyProvider.getParty().getOnlinePlayers().size()-1 <= 0) {
-                        partyProvider.expireRedis();
-                    }
+                    if(party.getOnlinePlayers().size()-1 <= 0) partyProvider.expireRedis();
                 }
-            } catch(AccountNotFoundException|PartyNotFoundException exception) {
+            } catch(AccountNotFoundException exception) {
                 QuillCraftBungee.getInstance().getLogger().log(Level.SEVERE, exception.getMessage(), exception);
             }
             accountProvider.expireRedis();

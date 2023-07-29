@@ -12,7 +12,6 @@ import net.quillcraft.commons.account.Account;
 import net.quillcraft.commons.account.AccountProvider;
 import net.quillcraft.commons.exception.AccountNotFoundException;
 import net.quillcraft.commons.exception.FriendNotFoundException;
-import net.quillcraft.commons.exception.PartyNotFoundException;
 import net.quillcraft.commons.friend.FriendProvider;
 import net.quillcraft.commons.party.PartyProvider;
 import org.lumy.api.text.Text;
@@ -42,10 +41,10 @@ public class PostLoginListener implements Listener {
             try {
                 final Account account = new AccountProvider(player).getAccount();
 
-                if(account.hasParty()) {
+                if(account.hasParty())
                     new PartyProvider(account).getParty().getOnlinePlayers().stream().filter(players -> !players.getUniqueId().equals(player.getUniqueId())).forEach(players -> players.sendMessage(LanguageManager.getLanguage(players).getMessageComponentReplace(Text.PARTY_JOIN_SERVER, "%PLAYER%", player.getName())));
-                }
-            } catch(AccountNotFoundException|PartyNotFoundException exception) {
+
+            } catch(AccountNotFoundException exception) {
                 QuillCraftBungee.getInstance().getLogger().log(Level.SEVERE, exception.getMessage(), exception);
             }
         });

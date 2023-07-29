@@ -1,6 +1,5 @@
 package net.quillcraft.commons.party;
 
-import net.md_5.bungee.api.ChatColor;
 import net.md_5.bungee.api.ProxyServer;
 import net.md_5.bungee.api.chat.ClickEvent;
 import net.md_5.bungee.api.chat.ComponentBuilder;
@@ -18,6 +17,7 @@ import net.quillcraft.commons.account.Account;
 import net.quillcraft.commons.account.AccountProvider;
 import net.quillcraft.commons.exception.AccountNotFoundException;
 import net.quillcraft.commons.exception.PartyNotFoundException;
+import org.jetbrains.annotations.Nullable;
 import org.lumy.api.text.Text;
 import org.lumy.api.text.TextList;
 import org.redisson.api.RBucket;
@@ -51,8 +51,12 @@ public class PartyProvider {
         updatePartyKeys(account);
     }
 
-    public Party getParty() throws PartyNotFoundException {
-        if(keyParty == null) throw new PartyNotFoundException(player);
+    @Nullable
+    public Party getParty() {
+        if(keyParty == null) {
+            player.sendMessage(LanguageManager.getLanguage(player).getMessageComponent(Text.PARTY_NO_PARTY));
+            return null;
+        }
 
         Party party = getPartyFromRedis();
 
@@ -140,7 +144,7 @@ public class PartyProvider {
         return accountRBucket.get();
     }
 
-    private Party getPartyFromDatabase() throws PartyNotFoundException {
+    private Party getPartyFromDatabase() {
         try {
             final Connection connection = DatabaseManager.MINECRAFT_SERVER.getDatabaseAccess().getConnection();
             final PreparedStatement preparedStatement = connection.prepareStatement("SELECT * FROM "+sqlTablesManager.getTable()+" WHERE "+sqlTablesManager.getKeyColumn()+" = ?");
@@ -150,8 +154,6 @@ public class PartyProvider {
 
             final ResultSet resultSet = preparedStatement.getResultSet();
             if(resultSet.next()) {
-                player.sendMessage(new TextComponent(ChatColor.GREEN+"Votre partie a bien été trouvé !"));
-
                 final UUID ownerUUID = UUID.fromString(resultSet.getString("owner_uuid"));
                 final String ownerName = resultSet.getString("owner_name");
                 final List<UUID> followersUUID = new ProfileSerializationUtils.ListUUID().deserialize(resultSet.getString("followers_uuid"));
