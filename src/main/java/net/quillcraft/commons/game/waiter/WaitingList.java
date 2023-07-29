@@ -34,7 +34,7 @@ public class WaitingList {
 
     public void updateWaitersListRedis() {
         final RBucket<List<Waiter>> listRBucket = getWaitersListBucket();
-        if(waiters.size() == 0 && listRBucket.isExists()) {
+        if(waiters.isEmpty() && listRBucket.isExists()) {
             listRBucket.delete();
             return;
         }

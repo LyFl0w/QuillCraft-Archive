@@ -10,8 +10,8 @@ import net.quillcraft.commons.party.PartyProvider;
 import net.quillcraft.core.QuillCraftCore;
 import net.quillcraft.core.data.sql.table.SQLTablesManager;
 import net.quillcraft.core.serialization.ProfileSerializationAccount;
-import org.bukkit.Bukkit;
 import org.bukkit.Material;
+import org.bukkit.Server;
 import org.bukkit.entity.Player;
 
 import java.util.Arrays;
@@ -139,39 +139,39 @@ public class Account {
     }
 
     public void playVisibilityEffect() {
-        final Player player = Bukkit.getPlayer(uuid);
         final QuillCraftCore quillCraftCore = QuillCraftCore.getInstance();
+        final Server server = quillCraftCore.getServer();
+        final Player player = server.getPlayer(uuid);
 
         switch(getVisibility()) {
-            case NOBODY -> Bukkit.getOnlinePlayers().forEach(players -> player.hidePlayer(quillCraftCore, players));
+            case NOBODY -> server.getOnlinePlayers().forEach(players -> player.hidePlayer(quillCraftCore, players));
             case PARTY -> {
                 try {
                     final List<UUID> playersUUID = new PartyProvider(new AccountProvider(player).getAccount()).getParty().getPlayersUUID();
                     playersUUID.remove(player);
-                    if(playersUUID.size() == 0) {
-                        Bukkit.getOnlinePlayers().forEach(players -> player.hidePlayer(quillCraftCore, players));
+                    if(playersUUID.isEmpty()) {
+                        server.getOnlinePlayers().forEach(players -> player.hidePlayer(quillCraftCore, players));
                         break;
                     }
-                    Bukkit.getOnlinePlayers().forEach(players -> {
+                    server.getOnlinePlayers().forEach(players -> {
                         if(playersUUID.contains(players.getUniqueId())) {
                             player.showPlayer(quillCraftCore, players);
                         } else {
                             player.hidePlayer(quillCraftCore, players);
                         }
                     });
-                } catch(AccountNotFoundException exception) {
-                    Bukkit.getLogger().severe(exception.getMessage());
-                } catch(PartyNotFoundException ignored) {
+                } catch(AccountNotFoundException|PartyNotFoundException exception) {
+                    quillCraftCore.getLogger().severe(exception.getMessage());
                 }
             }
             case FRIENDS -> {
                 try {
                     final List<UUID> friendListUUID = new FriendProvider(player).getFriends().getFriendsUUID();
-                    if(friendListUUID.size() == 0) {
-                        Bukkit.getOnlinePlayers().forEach(players -> player.hidePlayer(quillCraftCore, players));
+                    if(friendListUUID.isEmpty()) {
+                        server.getOnlinePlayers().forEach(players -> player.hidePlayer(quillCraftCore, players));
                         break;
                     }
-                    Bukkit.getOnlinePlayers().forEach(players -> {
+                    server.getOnlinePlayers().forEach(players -> {
                         if(friendListUUID.contains(players.getUniqueId())) {
                             player.showPlayer(quillCraftCore, players);
                         } else {
@@ -179,10 +179,10 @@ public class Account {
                         }
                     });
                 } catch(FriendNotFoundException exception) {
-                    Bukkit.getLogger().severe(exception.getMessage());
+                    server.getLogger().severe(exception.getMessage());
                 }
             }
-            case EVERYONE -> Bukkit.getOnlinePlayers().forEach(players -> player.showPlayer(quillCraftCore, players));
+            case EVERYONE -> server.getOnlinePlayers().forEach(players -> player.showPlayer(quillCraftCore, players));
         }
     }
 

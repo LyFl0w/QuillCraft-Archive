@@ -1,15 +1,11 @@
 package net.quillcraft.commons.exception;
 
-import net.quillcraft.core.manager.LanguageManager;
-import org.bukkit.entity.Player;
-import org.lumy.api.text.Text;
+import java.util.UUID;
 
 public class PartyNotFoundException extends Exception {
 
-    public PartyNotFoundException(Player player) {
-        player.sendMessage(LanguageManager.getLanguage(player).getMessage(Text.PARTY_NO_PARTY));
+    public PartyNotFoundException(UUID uuid){
+        super("The party of ("+uuid.toString()+") was not found");
     }
 
-    @Override
-    public void printStackTrace() {}
 }

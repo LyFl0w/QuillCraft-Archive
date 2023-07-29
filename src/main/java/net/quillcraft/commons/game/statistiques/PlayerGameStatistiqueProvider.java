@@ -2,10 +2,10 @@ package net.quillcraft.commons.game.statistiques;
 
 import com.google.common.reflect.TypeToken;
 import net.quillcraft.commons.game.GameEnum;
+import net.quillcraft.core.QuillCraftCore;
 import net.quillcraft.core.data.redis.RedisManager;
 import net.quillcraft.core.data.sql.DatabaseManager;
 import net.quillcraft.core.serialization.ProfileSerializationType;
-import org.bukkit.Bukkit;
 import org.bukkit.plugin.Plugin;
 import org.redisson.api.RBucket;
 import org.redisson.api.RedissonClient;
@@ -17,6 +17,7 @@ import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.time.Duration;
 import java.util.UUID;
+import java.util.logging.Level;
 
 public class PlayerGameStatistiqueProvider<T extends PlayerGameStatistique> {
 
@@ -38,7 +39,7 @@ public class PlayerGameStatistiqueProvider<T extends PlayerGameStatistique> {
             connection.prepareStatement("CREATE TABLE IF NOT EXISTS "+gameEnum.name().toLowerCase()+" ( uuid VARCHAR(36) NOT NULL , statistique JSON NULL DEFAULT NULL , UNIQUE (uuid))").execute();
             connection.close();
         } catch(SQLException exception) {
-            Bukkit.getLogger().severe(exception.getMessage());
+            QuillCraftCore.getInstance().getLogger().log(Level.SEVERE, exception.getMessage(), exception);
         }
     }
 
@@ -80,7 +81,7 @@ public class PlayerGameStatistiqueProvider<T extends PlayerGameStatistique> {
             preparedStatement.execute();
             connection.close();
         } catch(SQLException exception) {
-            Bukkit.getLogger().severe(exception.getMessage());
+            QuillCraftCore.getInstance().getLogger().log(Level.SEVERE, exception.getMessage(), exception);
         }
     }
 
@@ -107,7 +108,7 @@ public class PlayerGameStatistiqueProvider<T extends PlayerGameStatistique> {
             }
         } catch(SQLException|NoSuchMethodException|InstantiationException|IllegalAccessException|
                 InvocationTargetException exception) {
-            Bukkit.getLogger().severe(exception.getMessage());
+            QuillCraftCore.getInstance().getLogger().log(Level.SEVERE, exception.getMessage(), exception);
         }
         return null;
     }
@@ -121,7 +122,7 @@ public class PlayerGameStatistiqueProvider<T extends PlayerGameStatistique> {
             preparedStatement.execute();
             connection.close();
         } catch(SQLException exception) {
-            Bukkit.getLogger().severe(exception.getMessage());
+            QuillCraftCore.getInstance().getLogger().log(Level.SEVERE, exception.getMessage(), exception);
         }
     }
 

@@ -1,7 +1,6 @@
 package net.quillcraft.core.manager.configuration;
 
 import net.quillcraft.core.QuillCraftCore;
-import org.bukkit.Bukkit;
 import org.bukkit.configuration.InvalidConfigurationException;
 import org.bukkit.configuration.file.FileConfiguration;
 import org.bukkit.configuration.file.YamlConfiguration;
@@ -33,7 +32,7 @@ public enum ConfigurationManager {
 
             return yamlConfiguration;
         } catch(IOException|InvalidConfigurationException e) {
-            Bukkit.getLogger().log(Level.SEVERE, e.getMessage(), e);
+            QuillCraftCore.getInstance().getLogger().log(Level.SEVERE, e.getMessage(), e);
         }
 
         return null;

@@ -1,6 +1,6 @@
 package net.quillcraft.core.utils.builders;
 
-import org.bukkit.Bukkit;
+import net.quillcraft.core.QuillCraftCore;
 import org.bukkit.configuration.InvalidConfigurationException;
 import org.bukkit.configuration.file.FileConfiguration;
 import org.bukkit.configuration.file.YamlConfiguration;
@@ -8,6 +8,7 @@ import org.bukkit.plugin.java.JavaPlugin;
 
 import java.io.File;
 import java.io.IOException;
+import java.util.logging.Level;
 
 public class YamlConfigurationBuilder {
 
@@ -54,7 +55,7 @@ public class YamlConfigurationBuilder {
         try {
             yamlConfiguration.save(file);
         } catch(IOException exception) {
-            Bukkit.getLogger().severe(exception.getMessage());
+            QuillCraftCore.getInstance().getLogger().log(Level.SEVERE, exception.getMessage(), exception);
         }
     }
 }

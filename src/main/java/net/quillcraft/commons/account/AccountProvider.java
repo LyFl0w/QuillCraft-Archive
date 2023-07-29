@@ -8,7 +8,6 @@ import net.quillcraft.core.data.sql.table.SQLTablesManager;
 import net.quillcraft.core.event.player.PlayerChangeLanguageEvent;
 import net.quillcraft.core.manager.LanguageManager;
 import net.quillcraft.core.serialization.ProfileSerializationAccount;
-import org.bukkit.Bukkit;
 import org.bukkit.entity.Player;
 import org.lumy.api.text.Text;
 import org.redisson.api.RBucket;
@@ -33,11 +32,10 @@ public class AccountProvider {
         this.player = player;
         this.uuid = player.getUniqueId();
         this.redissonClient = RedisManager.ACCOUNT.getRedisAccess().getRedissonClient();
-        final String uuidString = uuid.toString();
-        this.keyAccount = "account:"+uuidString;
-        this.keyAutoLanguage = "autoLanguage:"+uuidString;
-        this.keyUpdateLanguage = "updateLanguage:"+uuidString;
-        this.keyUpdateVisibility = "updateVisibility:"+uuidString;
+        this.keyAccount = "account:"+uuid;
+        this.keyAutoLanguage = "autoLanguage:"+uuid;
+        this.keyUpdateLanguage = "updateLanguage:"+uuid;
+        this.keyUpdateVisibility = "updateVisibility:"+uuid;
         this.sqlTablesManager = SQLTablesManager.PLAYER_ACCOUNT;
     }
 
@@ -65,7 +63,7 @@ public class AccountProvider {
         try {
             updateRequest = account.getSQLRequest().getUpdateRequest(DatabaseManager.MINECRAFT_SERVER.getDatabaseAccess().getConnection());
         } catch(Exception exception) {
-            Bukkit.getLogger().log(Level.SEVERE, exception.getMessage(), exception);
+            QuillCraftCore.getInstance().getLogger().log(Level.SEVERE, exception.getMessage(), exception);
         }
         sendAccountToRedis(account);
         sendAccountToDatabase(updateRequest);
@@ -111,10 +109,10 @@ public class AccountProvider {
             }
 
         } catch(SQLException exception) {
-            Bukkit.getLogger().severe(exception.getMessage());
+            QuillCraftCore.getInstance().getLogger().log(Level.SEVERE, exception.getMessage(), exception);
         }
 
-        throw new AccountNotFoundException(player);
+        throw new AccountNotFoundException(uuid);
     }
 
     private void sendAccountToDatabase(final PreparedStatement updateRequest) {
@@ -122,7 +120,7 @@ public class AccountProvider {
             updateRequest.executeUpdate();
             updateRequest.getConnection().close();
         } catch(Exception exception) {
-            Bukkit.getLogger().log(Level.SEVERE, exception.getMessage(), exception);
+            QuillCraftCore.getInstance().getLogger().log(Level.SEVERE, exception.getMessage(), exception);
         }
     }
 

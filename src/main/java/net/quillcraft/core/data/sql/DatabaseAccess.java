@@ -2,7 +2,7 @@ package net.quillcraft.core.data.sql;
 
 import com.zaxxer.hikari.HikariConfig;
 import com.zaxxer.hikari.HikariDataSource;
-import org.bukkit.Bukkit;
+import net.quillcraft.core.QuillCraftCore;
 
 import java.sql.Connection;
 import java.sql.SQLException;
@@ -11,7 +11,7 @@ import java.util.logging.Logger;
 public class DatabaseAccess {
 
     private final DatabaseCredentials credentials;
-    private final Logger logger = Bukkit.getLogger();
+    private final Logger logger = QuillCraftCore.getInstance().getLogger();
     private final String JDBC_DRIVER = "relocated.private.com.mysql.jdbc.Driver";
     private HikariDataSource hikariDataSource;
 

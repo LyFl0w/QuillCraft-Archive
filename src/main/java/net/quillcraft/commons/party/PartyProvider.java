@@ -2,12 +2,16 @@ package net.quillcraft.commons.party;
 
 import net.quillcraft.commons.account.Account;
 import net.quillcraft.commons.exception.PartyNotFoundException;
+import net.quillcraft.core.QuillCraftCore;
 import net.quillcraft.core.data.redis.RedisManager;
 import net.quillcraft.core.data.sql.DatabaseManager;
 import net.quillcraft.core.data.sql.table.SQLTablesManager;
+import net.quillcraft.core.manager.LanguageManager;
 import net.quillcraft.core.serialization.ProfileSerializationUtils;
 import org.bukkit.Bukkit;
 import org.bukkit.entity.Player;
+import org.jetbrains.annotations.Nullable;
+import org.lumy.api.text.Text;
 import org.redisson.api.RBucket;
 import org.redisson.api.RedissonClient;
 
@@ -17,6 +21,7 @@ import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.util.List;
 import java.util.UUID;
+import java.util.logging.Level;
 
 public class PartyProvider {
 
@@ -36,8 +41,12 @@ public class PartyProvider {
         updatePartyKeys(account);
     }
 
+    @Nullable
     public Party getParty() throws PartyNotFoundException {
-        if(keyParty == null) throw new PartyNotFoundException(player);
+        if(keyParty == null) {
+            player.sendMessage(LanguageManager.getLanguage(player).getMessage(Text.PARTY_NO_PARTY));
+            return null;
+        }
 
         Party party = getPartyFromRedis();
 
@@ -80,10 +89,10 @@ public class PartyProvider {
             connection.close();
 
         } catch(SQLException exception) {
-            Bukkit.getLogger().severe(exception.getMessage());
+            QuillCraftCore.getInstance().getLogger().log(Level.SEVERE, exception.getMessage(), exception);
         }
 
-        throw new PartyNotFoundException(player);
+        throw new PartyNotFoundException(player.getUniqueId());
     }
 
     private void sendPartyToRedis(Party party) {

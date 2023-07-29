@@ -52,6 +52,7 @@ public class ItemBuilder implements Cloneable {
 
     @Override
     protected ItemBuilder clone() throws CloneNotSupportedException {
+        // TODO: copy mutable state here, so the clone can't change the internals of the original
         return (ItemBuilder) super.clone();
     }
 

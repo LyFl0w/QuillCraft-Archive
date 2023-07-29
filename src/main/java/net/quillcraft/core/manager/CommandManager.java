@@ -1,6 +1,7 @@
 package net.quillcraft.core.manager;
 
-import org.bukkit.Bukkit;
+import net.quillcraft.core.QuillCraftCore;
+
 import org.bukkit.plugin.InvalidDescriptionException;
 import org.bukkit.plugin.Plugin;
 
@@ -9,6 +10,7 @@ import java.util.ArrayList;
 import java.util.Collection;
 import java.util.List;
 import java.util.Map;
+import java.util.logging.Level;
 
 public class CommandManager {
 
@@ -24,10 +26,12 @@ public class CommandManager {
             final Map<String, Map<String, Object>> commands = plugin.getPluginLoader().getPluginDescription(pluginFolder).getCommands();
             final ArrayList<String> commandsToReturn = new ArrayList<>(commands.keySet());
 
-            commands.values().stream().parallel().filter(stringObjectMap -> stringObjectMap.containsKey("aliases")).forEach(stringObjectMap -> commandsToReturn.addAll((Collection<? extends String>) stringObjectMap.get("aliases")));
+            commands.values().stream().parallel().filter(stringObjectMap ->
+                    stringObjectMap.containsKey("aliases")).forEach(stringObjectMap ->
+                    commandsToReturn.addAll((Collection<? extends String>) stringObjectMap.get("aliases")));
             return commandsToReturn;
         } catch(InvalidDescriptionException exception) {
-            Bukkit.getLogger().severe(exception.getMessage());
+            QuillCraftCore.getInstance().getLogger().log(Level.SEVERE, exception.getMessage(), exception);
         }
         return new ArrayList<>();
     }

@@ -1,12 +1,11 @@
 package net.quillcraft.commons.exception;
 
-import org.bukkit.entity.Player;
+import java.util.UUID;
 
 public class AccountNotFoundException extends Exception {
 
-    public AccountNotFoundException(Player player) {
-        super("The account ("+player.getUniqueId()+") was not found");
-        player.sendMessage("§cError: Account Not Found Exception");
+    public AccountNotFoundException(UUID uuid) {
+        super("The account of ("+uuid.toString()+") was not found");
     }
 
 }
