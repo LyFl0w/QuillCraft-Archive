@@ -1,4 +1,4 @@
-package net.quillcraft.bungee.manager;
+package net.quillcraft.bungee.manager.configuration;
 
 import net.md_5.bungee.config.Configuration;
 import net.md_5.bungee.config.ConfigurationProvider;
@@ -20,18 +20,18 @@ public enum ConfigurationManager {
         this.fileConfiguration = fileConfiguration;
     }
 
-    public Configuration getConfiguration() {
-        return fileConfiguration;
-    }
-
     @Nullable
     private static Configuration getFileConfiguration(String path) {
         try {
             return ConfigurationProvider.getProvider(YamlConfiguration.class).load(new File(path));
-        } catch(IOException e) {
-            QuillCraftBungee.getInstance().getLogger().log(Level.SEVERE, e.getMessage(), e);
+        } catch(IOException exception) {
+            QuillCraftBungee.getInstance().getLogger().log(Level.SEVERE, exception.getMessage(), exception);
         }
         return null;
+    }
+
+    public Configuration getConfiguration() {
+        return fileConfiguration;
     }
 
 

@@ -1,9 +1,8 @@
 package net.quillcraft.bungee.manager;
 
 import net.quillcraft.bungee.QuillCraftBungee;
-import net.quillcraft.bungee.data.management.redis.RedisManager;
-import net.quillcraft.bungee.data.management.sql.DatabaseManager;
-
+import net.quillcraft.bungee.data.redis.RedisManager;
+import net.quillcraft.bungee.data.sql.DatabaseManager;
 import org.lumy.api.LumyClient;
 
 public class DataManager {

@@ -12,8 +12,12 @@ public class QuillCraftBungee extends Plugin {
 
     private DataManager dataManager;
 
+    public static QuillCraftBungee getInstance() {
+        return INSTANCE;
+    }
+
     @Override
-    public void onEnable(){
+    public void onEnable() {
         INSTANCE = this;
 
         dataManager = new DataManager(this);
@@ -27,16 +31,12 @@ public class QuillCraftBungee extends Plugin {
     }
 
     @Override
-    public void onDisable(){
+    public void onDisable() {
         SubscriberManager.removeAllSubscribersData();
         dataManager.close();
     }
 
     public DataManager getDataManager() {
         return dataManager;
-    }
-
-    public static QuillCraftBungee getInstance(){
-        return INSTANCE;
     }
 }

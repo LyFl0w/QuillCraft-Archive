@@ -13,8 +13,7 @@ public class ProfileSerializationAccount {
         @Override
         public HashMap<Account.Particles, Boolean> deserialize(@Nonnull String json) {
             final HashMap<Account.Particles, Boolean> particles = new HashMap<>();
-            ((HashMap<String, Boolean>)gson.fromJson(json, new TypeToken<HashMap<String, Boolean>>(){}.getType()))
-                    .forEach((key, value) -> particles.put(Account.Particles.valueOf(key), value));
+            ((HashMap<String, Boolean>) gson.fromJson(json, new TypeToken<HashMap<String, Boolean>>() {}.getType())).forEach((key, value) -> particles.put(Account.Particles.valueOf(key), value));
 
             return particles;
         }

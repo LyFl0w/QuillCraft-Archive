@@ -1,7 +1,6 @@
 package net.quillcraft.bungee.messages;
 
 import com.google.common.io.ByteArrayDataInput;
-
 import net.md_5.bungee.api.ProxyServer;
 import net.md_5.bungee.api.chat.TextComponent;
 import net.md_5.bungee.api.connection.ProxiedPlayer;
@@ -21,16 +20,16 @@ import java.security.SecureRandom;
 import java.util.List;
 import java.util.UUID;
 
-public class MessageParty extends Message{
+public class MessageParty extends Message {
 
-    public MessageParty(ProxyServer proxy, PluginMessageEvent event){
+    public MessageParty(ProxyServer proxy, PluginMessageEvent event) {
         super(proxy, event);
     }
 
     @Override
-    protected void onPluginMessageRepPlayer(ProxiedPlayer player, String sub, ByteArrayDataInput in){
+    protected void onPluginMessageRepPlayer(ProxiedPlayer player, String sub, ByteArrayDataInput in) {
         proxy.getScheduler().runAsync(QuillCraftBungee.getInstance(), () -> {
-            try{
+            try {
                 final AccountProvider accountProvider = new AccountProvider(player);
                 final Account account = accountProvider.getAccount();
 
@@ -38,20 +37,20 @@ public class MessageParty extends Message{
 
                 final LanguageManager languageManager = LanguageManager.getLanguage(account);
 
-                if(sub.equals("SetOwner")){
+                if(sub.equals("SetOwner")) {
                     final Party party = partyProvider.getParty();
-                    if(!party.getOwnerUUID().equals(player.getUniqueId())){
+                    if(!party.getOwnerUUID().equals(player.getUniqueId())) {
                         player.sendMessage(languageManager.getMessageComponent(Text.PARTY_NOT_OWNER));
                         return;
                     }
 
                     final String targetName = in.readUTF();
-                    if(player.getName().equalsIgnoreCase(targetName)){
+                    if(player.getName().equalsIgnoreCase(targetName)) {
                         player.sendMessage(languageManager.getMessageComponent(Text.PARTY_OWN_YOUR_SELF));
                         return;
                     }
 
-                    if(!StringUtils.containsIgnoreCase(party.getFollowersName(), targetName)){
+                    if(!StringUtils.containsIgnoreCase(party.getFollowersName(), targetName)) {
                         player.sendMessage(languageManager.getMessageComponentReplace(Text.PARTY_PLAYER_NOT_IN_YOUR_PARTY, "%PLAYER%", targetName));
                         return;
                     }
@@ -62,15 +61,16 @@ public class MessageParty extends Message{
                     partyProvider.updateParty(party);
 
                     final ProxiedPlayer proxiedPlayer = proxy.getPlayer(targetUUID);
-                    if(proxiedPlayer != null) proxiedPlayer.sendMessage(languageManager.getMessageComponent(Text.PARTY_PROMOTE_OWNER));
+                    if(proxiedPlayer != null)
+                        proxiedPlayer.sendMessage(languageManager.getMessageComponent(Text.PARTY_PROMOTE_OWNER));
                     player.sendMessage(languageManager.getMessageComponent(Text.PARTY_UNPROMOTE_OWNER));
                     return;
                 }
 
-                if(sub.equals("Kick")){
+                if(sub.equals("Kick")) {
                     final Party party = partyProvider.getParty();
                     final String targetName = in.readUTF();
-                    if(!StringUtils.containsIgnoreCase(party.getFollowersName(), targetName)){
+                    if(!StringUtils.containsIgnoreCase(party.getFollowersName(), targetName)) {
                         player.sendMessage(languageManager.getMessageComponent(Text.PARTY_PLAYER_NOT_IN_YOUR_PARTY));
                         return;
                     }
@@ -88,19 +88,20 @@ public class MessageParty extends Message{
                     partyProvider.updateParty(party);
 
                     final ProxiedPlayer proxiedPlayer = proxy.getPlayer(targetUUID);
-                    if(proxiedPlayer != null) proxiedPlayer.sendMessage(languageManager.getMessageComponent(Text.PARTY_PERSO_KICK));
+                    if(proxiedPlayer != null)
+                        proxiedPlayer.sendMessage(languageManager.getMessageComponent(Text.PARTY_PERSO_KICK));
                     partyProvider.sendMessageToPlayers(party, Text.PARTY_GENERAL_KICK, "%PLAYER%", targetName);
                     return;
                 }
 
-                if(sub.equals("Leave")){
+                if(sub.equals("Leave")) {
                     final Party party = partyProvider.getParty();
                     List<UUID> players = party.getOnlineFollowersUUID();
 
                     account.setPartyUUID(null);
                     accountProvider.updateAccount(account);
 
-                    if(!party.getOwnerUUID().equals(player.getUniqueId())){
+                    if(!party.getOwnerUUID().equals(player.getUniqueId())) {
                         party.removePlayer(player);
                         partyProvider.updateParty(party);
                         player.sendMessage(languageManager.getMessageComponent(Text.PARTY_PERSO_LEAVE));
@@ -108,9 +109,9 @@ public class MessageParty extends Message{
                         return;
                     }
 
-                    if(players.isEmpty()){
+                    if(players.isEmpty()) {
                         final List<UUID> offlineFollowersUUID = party.getOfflineFollowersUUID();
-                        if(offlineFollowersUUID.isEmpty()){
+                        if(offlineFollowersUUID.isEmpty()) {
                             partyProvider.deleteParty(party);
                             player.sendMessage(languageManager.getMessageComponent(Text.PARTY_PERSO_LEAVE));
                             return;
@@ -127,7 +128,8 @@ public class MessageParty extends Message{
                     party.setOwner(newOwnerUUID);
                     partyProvider.updateParty(party);
 
-                    if(newOwner != null) newOwner.sendMessage(languageManager.getMessageComponent(Text.PARTY_PROMOTE_OWNER));
+                    if(newOwner != null)
+                        newOwner.sendMessage(languageManager.getMessageComponent(Text.PARTY_PROMOTE_OWNER));
 
                     player.sendMessage(languageManager.getMessageComponent(Text.PARTY_PERSO_LEAVE));
 
@@ -135,9 +137,9 @@ public class MessageParty extends Message{
                     return;
                 }
 
-                if(sub.equals("Delete")){
+                if(sub.equals("Delete")) {
                     final Party party = partyProvider.getParty();
-                    if(!party.getOwnerUUID().equals(player.getUniqueId())){
+                    if(!party.getOwnerUUID().equals(player.getUniqueId())) {
                         player.sendMessage(languageManager.getMessageComponent(Text.PARTY_NOT_OWNER));
                         return;
                     }
@@ -147,17 +149,14 @@ public class MessageParty extends Message{
                     return;
                 }
 
-                if(sub.equals("List")){
+                if(sub.equals("List")) {
                     final Party party = partyProvider.getParty();
                     final ProxiedPlayer owner = proxy.getPlayer(party.getOwnerUUID());
 
                     final String textOnline = languageManager.getMessage(Text.STATUS_PLAYER_ONLINE);
                     final String textOffline = languageManager.getMessage(Text.STATUS_PLAYER_OFFLINE);
 
-                    final StringBuilder ownerPartMessage = new StringBuilder("§f\n[")
-                            .append(languageManager.getMessage(Text.STATUS_PLAYER_OWNER)).append("\\")
-                            .append((owner == null) ? textOffline : textOnline)
-                            .append("] §b").append(party.getOwnerName()).append("§f");
+                    final StringBuilder ownerPartMessage = new StringBuilder("§f\n[").append(languageManager.getMessage(Text.STATUS_PLAYER_OWNER)).append("\\").append((owner == null) ? textOffline : textOnline).append("] §b").append(party.getOwnerName()).append("§f");
 
                     final StringBuilder messageBuilder = new StringBuilder();
 
@@ -168,23 +167,21 @@ public class MessageParty extends Message{
 
                     party.getOfflineFollowersName().forEach(name -> messageBuilder.append("\n[").append(textOffline).append("] §b").append(name).append("§f"));
 
-                    player.sendMessage(new TextComponent(languageManager.getMessage(Text.PARTY_MEMBERS_LIST).
-                            replace("%COUNT%", Integer.toString(party.getPlayers().size()))
-                            +((owner == null) ? messageBuilder+ownerPartMessage.toString() : ownerPartMessage+messageBuilder.toString())));
+                    player.sendMessage(new TextComponent(languageManager.getMessage(Text.PARTY_MEMBERS_LIST).replace("%COUNT%", Integer.toString(party.getPlayers().size()))+((owner == null) ? messageBuilder+ownerPartMessage.toString() : ownerPartMessage+messageBuilder.toString())));
                     return;
                 }
 
-                if(sub.equals("Accept")){
-                    try{
+                if(sub.equals("Accept")) {
+                    try {
                         final String targetName = in.readUTF();
                         final ProxiedPlayer targetPlayer = proxy.getPlayer(targetName);
 
-                        if(targetPlayer == null){
-                            player.sendMessage(languageManager.getMessageComponentReplace(Text.PARTY_PLAYER_IS_OFFLINE,"%PLAYER%", targetName));
+                        if(targetPlayer == null) {
+                            player.sendMessage(languageManager.getMessageComponentReplace(Text.PARTY_PLAYER_IS_OFFLINE, "%PLAYER%", targetName));
                             return;
                         }
 
-                        if(account.hasParty()){
+                        if(account.hasParty()) {
                             player.sendMessage(languageManager.getMessageComponent(Text.PARTY_PLAYER_IS_ALREADY_IN_PARTY));
                             return;
                         }
@@ -192,14 +189,13 @@ public class MessageParty extends Message{
                         final AccountProvider targetAccountProvider = new AccountProvider(targetPlayer);
                         final Account targetAccount = targetAccountProvider.getAccount();
 
-                        if(!targetAccount.hasParty()){
-                            player.sendMessage(languageManager
-                                    .getMessageComponentReplace(Text.PARTY_PLAYER_IS_OFFLINE, "%PLAYER%", targetPlayer.getDisplayName()));
+                        if(!targetAccount.hasParty()) {
+                            player.sendMessage(languageManager.getMessageComponentReplace(Text.PARTY_PLAYER_IS_OFFLINE, "%PLAYER%", targetPlayer.getDisplayName()));
                             return;
                         }
 
                         final PartyProvider partyProviderTarget = new PartyProvider(targetAccount);
-                        if(!partyProviderTarget.hasInvited(player)){
+                        if(!partyProviderTarget.hasInvited(player)) {
                             player.sendMessage(languageManager.getMessageComponent(Text.PARTY_INVITATION_EXPIRED));
                             return;
                         }
@@ -212,17 +208,17 @@ public class MessageParty extends Message{
                         account.setPartyUUID(partyTarget.getPartyUUID());
                         accountProvider.updateAccount(account);
                         player.sendMessage(languageManager.getMessageComponentReplace(Text.PARTY_PERSO_JOIN, "%PLAYER%", targetPlayer.getDisplayName()));
-                    }catch(AccountNotFoundException e){
-                        e.printStackTrace();
+                    } catch(AccountNotFoundException exception) {
+                        QuillCraftBungee.getInstance().getLogger().log(Level.SEVERE, exception.getMessage(), exception);
                     }
                     return;
                 }
 
-                if(sub.equals("Invite")){
+                if(sub.equals("Invite")) {
                     final String targetName = in.readUTF();
                     final ProxiedPlayer targetPlayer = proxy.getPlayer(targetName);
 
-                    if(targetPlayer == null){
+                    if(targetPlayer == null) {
                         player.sendMessage(languageManager.getMessageComponentReplace(Text.PARTY_PLAYER_IS_OFFLINE, "%PLAYER%", targetName));
                         return;
                     }
@@ -230,32 +226,30 @@ public class MessageParty extends Message{
                     final Account targetAccount = targetAccountProvider.getAccount();
 
 
-                    if(targetAccount.hasParty()){
-                        if(targetAccount.getPartyUUID().equals(account.getPartyUUID())){
-                            player.sendMessage(languageManager
-                                    .getMessageComponentReplace(Text.PARTY_PLAYER_IS_ALREADY_IN_YOUR_PARTY, "%PLAYER%", targetPlayer.getDisplayName()));
+                    if(targetAccount.hasParty()) {
+                        if(targetAccount.getPartyUUID().equals(account.getPartyUUID())) {
+                            player.sendMessage(languageManager.getMessageComponentReplace(Text.PARTY_PLAYER_IS_ALREADY_IN_YOUR_PARTY, "%PLAYER%", targetPlayer.getDisplayName()));
                             return;
                         }
-                        player.sendMessage(languageManager
-                                .getMessageComponentReplace(Text.PARTY_PLAYER_IS_ALREADY_IN_ANOTHER_PARTY, "%PLAYER%", targetPlayer.getDisplayName()));
+                        player.sendMessage(languageManager.getMessageComponentReplace(Text.PARTY_PLAYER_IS_ALREADY_IN_ANOTHER_PARTY, "%PLAYER%", targetPlayer.getDisplayName()));
                         return;
                     }
 
-                    if(!account.hasParty()){
+                    if(!account.hasParty()) {
                         final Party party = partyProvider.createParty();
                         account.setPartyUUID(party.getPartyUUID());
                         accountProvider.updateAccount(account);
                     }
 
-                    if(partyProvider.sendInviteRequest(targetPlayer, targetAccount)){
+                    if(partyProvider.sendInviteRequest(targetPlayer, targetAccount)) {
                         player.sendMessage(languageManager.getMessageComponentReplace(Text.PARTY_INVITATION_SEND, "%PLAYER%", targetPlayer.getDisplayName()));
-                    }else{
+                    } else {
                         //TODO : METTRE EN ANGLAIS
                         player.sendMessage(new TextComponent("Vous avez déjà invité "+targetPlayer.getName()+" dans votre party !"));
                     }
                 }
-            }catch(PartyNotFoundException|AccountNotFoundException e){
-                e.printStackTrace();
+            } catch(PartyNotFoundException|AccountNotFoundException exception) {
+                QuillCraftBungee.getInstance().getLogger().log(Level.SEVERE, exception.getMessage(), exception);
             }
         });
     }
