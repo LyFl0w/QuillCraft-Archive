@@ -30,7 +30,6 @@ public enum LanguageManager {
         this.iso = isoLanguage;
     }
 
-
     public static LanguageManager getLanguageByISO(final String isoLanguage) {
         return Arrays.stream(values()).parallel().filter(textManager -> textManager.getISO().equalsIgnoreCase(isoLanguage)).findFirst().orElse(LanguageManager.ENGLISH_US);
     }

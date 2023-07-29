@@ -7,7 +7,7 @@ import java.util.List;
 public class StringUtils {
 
     public static boolean containsIgnoreCase(@NonNull List<String> strings, @NonNull String searchStr) {
-        if(searchStr.isBlank() || strings.size() == 0) return false;
+        if(searchStr.isBlank() || strings.isEmpty()) return false;
 
         return strings.stream().parallel().anyMatch(searchStr::equalsIgnoreCase);
     }

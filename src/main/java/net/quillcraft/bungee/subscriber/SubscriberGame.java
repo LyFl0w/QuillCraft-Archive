@@ -6,6 +6,7 @@ import net.md_5.bungee.api.connection.ProxiedPlayer;
 import net.quillcraft.bungee.QuillCraftBungee;
 import net.quillcraft.commons.account.AccountProvider;
 import net.quillcraft.commons.exception.AccountNotFoundException;
+import net.quillcraft.commons.exception.PartyNotFoundException;
 import net.quillcraft.commons.game.Game;
 import net.quillcraft.commons.game.waiter.Waiter;
 import net.quillcraft.commons.game.waiter.WaitingList;
@@ -34,7 +35,7 @@ public class SubscriberGame extends Subscriber {
 
         new Thread(() -> {
             while(true) {
-                if(linkedQueue.size() == 0) continue;
+                if(linkedQueue.isEmpty()) continue;
                 final String message = linkedQueue.peek();
 
                 QuillCraftBungee.getInstance().getLogger().info("Game server pub : "+message);
@@ -42,7 +43,7 @@ public class SubscriberGame extends Subscriber {
                 final Game game = (Game) redissonClient.getBucket(message).get();
                 final WaitingList waitingList = new WaitingList(game.getGameEnum());
 
-                if(waitingList.getWaitersList().size() == 0) {
+                if(waitingList.getWaitersList().isEmpty()) {
                     linkedQueue.poll();
                     continue;
                 }
@@ -63,7 +64,7 @@ public class SubscriberGame extends Subscriber {
                             final List<ProxiedPlayer> playerStream = new PartyProvider(new AccountProvider(waiter.getPlayerUUID()).getAccount()).getParty().getOnlinePlayers().stream().filter(proxiedPlayers -> !proxiedPlayers.getServer().getInfo().getName().equalsIgnoreCase(message)).toList();
                             if(maxPlayer < futurPlayers.size()+playerStream.size()) continue;
                             futurPlayers.addAll(playerStream);
-                        } catch(AccountNotFoundException exception) {
+                        } catch(AccountNotFoundException|PartyNotFoundException exception) {
                             QuillCraftBungee.getInstance().getLogger().log(Level.SEVERE, exception.getMessage(), exception);
                         }
                     } else {

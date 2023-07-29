@@ -12,6 +12,7 @@ import net.quillcraft.commons.account.Account;
 import net.quillcraft.commons.account.AccountProvider;
 import net.quillcraft.commons.exception.AccountNotFoundException;
 import net.quillcraft.commons.exception.FriendNotFoundException;
+import net.quillcraft.commons.exception.PartyNotFoundException;
 import net.quillcraft.commons.friend.FriendProvider;
 import net.quillcraft.commons.game.GameEnum;
 import net.quillcraft.commons.party.Party;
@@ -52,11 +53,10 @@ public class DisconnectListener implements Listener {
                     //Temps delete party redis
                     if(party.getOnlinePlayers().size()-1 <= 0) partyProvider.expireRedis();
                 }
-            } catch(AccountNotFoundException exception) {
+            } catch(AccountNotFoundException|PartyNotFoundException exception) {
                 QuillCraftBungee.getInstance().getLogger().log(Level.SEVERE, exception.getMessage(), exception);
             }
             accountProvider.expireRedis();
-
 
             final FriendProvider friendProvider = new FriendProvider(player);
             try {

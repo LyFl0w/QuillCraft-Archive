@@ -52,7 +52,7 @@ public class PartyProvider {
     }
 
     @Nullable
-    public Party getParty() {
+    public Party getParty() throws PartyNotFoundException {
         if(keyParty == null) {
             player.sendMessage(LanguageManager.getLanguage(player).getMessageComponent(Text.PARTY_NO_PARTY));
             return null;
@@ -144,7 +144,7 @@ public class PartyProvider {
         return accountRBucket.get();
     }
 
-    private Party getPartyFromDatabase() {
+    private Party getPartyFromDatabase() throws PartyNotFoundException {
         try {
             final Connection connection = DatabaseManager.MINECRAFT_SERVER.getDatabaseAccess().getConnection();
             final PreparedStatement preparedStatement = connection.prepareStatement("SELECT * FROM "+sqlTablesManager.getTable()+" WHERE "+sqlTablesManager.getKeyColumn()+" = ?");
@@ -169,7 +169,7 @@ public class PartyProvider {
             QuillCraftBungee.getInstance().getLogger().log(Level.SEVERE, exception.getMessage(), exception);
         }
 
-        throw new PartyNotFoundException(player);
+        throw new PartyNotFoundException(player.getUniqueId());
     }
 
     public void updateParty(Party party) {

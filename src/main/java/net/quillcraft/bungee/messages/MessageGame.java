@@ -11,6 +11,7 @@ import net.quillcraft.bungee.data.redis.RedisManager;
 import net.quillcraft.bungee.subscriber.SubscriberGame;
 import net.quillcraft.commons.account.AccountProvider;
 import net.quillcraft.commons.exception.AccountNotFoundException;
+import net.quillcraft.commons.exception.PartyNotFoundException;
 import net.quillcraft.commons.game.Game;
 import net.quillcraft.commons.game.GameEnum;
 import net.quillcraft.commons.game.status.GeneralGameStatus;
@@ -65,7 +66,7 @@ public class MessageGame extends Message {
             } else {
                 addPlayerToWaiter(sub, player, hasParty);
             }
-        } catch(AccountNotFoundException exception) {
+        } catch(AccountNotFoundException|PartyNotFoundException exception) {
             QuillCraftBungee.getInstance().getLogger().log(Level.SEVERE, exception.getMessage(), exception);
         }
     }

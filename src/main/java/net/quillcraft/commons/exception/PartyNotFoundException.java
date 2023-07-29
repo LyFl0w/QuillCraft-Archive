@@ -1,13 +1,11 @@
 package net.quillcraft.commons.exception;
 
-import net.md_5.bungee.api.connection.ProxiedPlayer;
-import net.quillcraft.bungee.manager.LanguageManager;
-import org.lumy.api.text.Text;
+import java.util.UUID;
 
-public class PartyNotFoundException extends RuntimeException {
+public class PartyNotFoundException extends Exception {
 
-    public PartyNotFoundException(ProxiedPlayer player){
-        player.sendMessage(LanguageManager.getLanguage(player).getMessageComponent(Text.PARTY_NO_PARTY));
+    public PartyNotFoundException(UUID uuid){
+        super("The party of ("+uuid.toString()+") was not found");
     }
 
 }
