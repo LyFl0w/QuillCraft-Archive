@@ -8,6 +8,7 @@ import net.quillcraft.bungee.QuillCraftBungee;
 import net.quillcraft.commons.account.Account;
 import net.quillcraft.commons.account.AccountProvider;
 import net.quillcraft.commons.exception.AccountNotFoundException;
+import net.quillcraft.commons.exception.PartyNotFoundException;
 import net.quillcraft.commons.party.PartyProvider;
 
 import java.util.logging.Level;
@@ -31,7 +32,7 @@ public class ChatListener implements Listener {
                         partyProvider.sendMessageToPlayers(partyProvider.getParty(), message.replaceFirst("&", messageBase));
                         event.setCancelled(true);
                     }
-                } catch(AccountNotFoundException exception) {
+                } catch(AccountNotFoundException|PartyNotFoundException exception) {
                     QuillCraftBungee.getInstance().getLogger().log(Level.SEVERE, exception.getMessage(), exception);
                 }
             }

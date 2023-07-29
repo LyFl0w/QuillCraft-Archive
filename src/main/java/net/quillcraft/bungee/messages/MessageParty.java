@@ -11,6 +11,7 @@ import net.quillcraft.bungee.utils.StringUtils;
 import net.quillcraft.commons.account.Account;
 import net.quillcraft.commons.account.AccountProvider;
 import net.quillcraft.commons.exception.AccountNotFoundException;
+import net.quillcraft.commons.exception.PartyNotFoundException;
 import net.quillcraft.commons.party.Party;
 import net.quillcraft.commons.party.PartyProvider;
 import org.lumy.api.text.Text;
@@ -36,8 +37,6 @@ public class MessageParty extends Message {
                 final PartyProvider partyProvider = new PartyProvider(account);
 
                 final LanguageManager languageManager = LanguageManager.getLanguage(account);
-
-
 
                 if(sub.equals("Accept")) {
                     try {
@@ -257,7 +256,7 @@ public class MessageParty extends Message {
                     player.sendMessage(new TextComponent(languageManager.getMessage(Text.PARTY_MEMBERS_LIST).replace("%COUNT%", Integer.toString(party.getPlayers().size()))+((owner == null) ? messageBuilder+ownerPartMessage.toString() : ownerPartMessage+messageBuilder.toString())));
                 }
 
-            } catch(AccountNotFoundException exception) {
+            } catch(AccountNotFoundException|PartyNotFoundException exception) {
                 QuillCraftBungee.getInstance().getLogger().log(Level.SEVERE, exception.getMessage(), exception);
             }
         });

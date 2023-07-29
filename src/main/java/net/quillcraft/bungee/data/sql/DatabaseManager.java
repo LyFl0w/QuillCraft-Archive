@@ -26,7 +26,6 @@ public enum DatabaseManager {
         }
     }
 
-
     private static Configuration getConfiguration() {
         return ConfigurationManager.DATA_ACCESS.getConfiguration();
     }
