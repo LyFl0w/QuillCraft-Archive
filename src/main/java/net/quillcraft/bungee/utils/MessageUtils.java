@@ -1,11 +1,80 @@
 package net.quillcraft.bungee.utils;
 
 import net.md_5.bungee.api.ChatColor;
+import net.quillcraft.bungee.QuillCraftBungee;
 
 import java.util.Arrays;
 import java.util.List;
+import java.util.logging.Level;
 
 public class MessageUtils {
+
+    public static String line() {
+        return "§m-".repeat(53)+"§r";
+    }
+
+    public static String compact(String... strings) {
+        final StringBuilder sb = new StringBuilder();
+        Arrays.stream(strings).forEach(string -> sb.append(string).append("\n"));
+        return sb.toString();
+    }
+
+    public static String motd(List<String> lines) {
+        if(lines.size() == 2) return motd(lines.get(0), lines.get(1));
+        try {
+            throw new Exception("the size of a motd is 2");
+        } catch(Exception exception) {
+            QuillCraftBungee.getInstance().getLogger().log(Level.SEVERE, exception.getMessage(), exception);
+        }
+        return null;
+    }
+
+    public static String motd(String firstLine, String secondLine) {
+        return centeredMessage(firstLine, 120)+"\n"+centeredMessage(secondLine, 120);
+    }
+
+    public static String chatCenteredMessage(String message) {
+        return centeredMessage(message, 154);
+    }
+
+    public static String chatCenteredMessage(String... messages) {
+        final StringBuilder sb = new StringBuilder();
+        Arrays.stream(messages).forEach(message -> sb.append(chatCenteredMessage(message)).append("§r").append("\n"));
+        return sb.toString();
+    }
+
+    private static String centeredMessage(String message, int center_px) {
+        if(message.isBlank()) return "";
+        message = ChatColor.translateAlternateColorCodes('&', message);
+
+        int messagePxSize = 0;
+        boolean previousCode = false;
+        boolean isBold = false;
+
+        for(char c : message.toCharArray()) {
+            if(c == '§') {
+                previousCode = true;
+            } else if(previousCode) {
+                previousCode = false;
+                isBold = c == 'l' || c == 'L';
+            } else {
+                final DefaultFontInfo dFI = DefaultFontInfo.getDefaultFontInfo(c);
+                messagePxSize += isBold ? dFI.getBoldLength() : dFI.getLength();
+                messagePxSize++;
+            }
+        }
+
+        final int halvedMessageSize = messagePxSize/2;
+        final int toCompensate = center_px-halvedMessageSize;
+        final int spaceLength = DefaultFontInfo.SPACE.getLength()+1;
+        int compensated = 0;
+        StringBuilder sb = new StringBuilder();
+        while(compensated < toCompensate) {
+            sb.append(" ");
+            compensated += spaceLength;
+        }
+        return sb+message;
+    }
 
     public enum DefaultFontInfo {
 
@@ -109,96 +178,29 @@ public class MessageUtils {
         private final char character;
         private final int length;
 
-        DefaultFontInfo(char character, int length){
+        DefaultFontInfo(char character, int length) {
             this.character = character;
             this.length = length;
         }
 
-        public char getCharacter(){
-            return this.character;
-        }
-
-        public int getLength(){
-            return this.length;
-        }
-
-        public int getBoldLength(){
-            if(this == DefaultFontInfo.SPACE) return this.getLength();
-            return this.length + 1;
-        }
-
-        public static DefaultFontInfo getDefaultFontInfo(char c){
-            for (DefaultFontInfo dFI : DefaultFontInfo.values()) {
+        public static DefaultFontInfo getDefaultFontInfo(char c) {
+            for(DefaultFontInfo dFI : DefaultFontInfo.values()) {
                 if(dFI.getCharacter() == c) return dFI;
             }
             return DefaultFontInfo.DEFAULT;
         }
-    }
 
-    public static String line(){
-        return "§m-".repeat(53)+ "§r";
-    }
-
-    public static String compact(String... strings){
-        final StringBuilder sb = new StringBuilder();
-        Arrays.stream(strings).forEach(string -> sb.append(string).append("\n"));
-        return sb.toString();
-    }
-
-    public static String motd(List<String> lines){
-        if(lines.size() == 2) return motd(lines.get(0), lines.get(1));
-        try{
-            throw new Exception("the size of a motd is 2");
-        }catch(Exception exception){
-            exception.printStackTrace();
-        }
-        return null;
-    }
-
-    public static String motd(String firstLine, String secondLine){
-        return centeredMessage(firstLine, 120) + "\n" + centeredMessage(secondLine, 120);
-    }
-
-    public static String chatCenteredMessage(String message){
-        return centeredMessage(message, 154);
-    }
-
-    public static String chatCenteredMessage(String... messages){
-        final StringBuilder sb = new StringBuilder();
-        Arrays.stream(messages).forEach(message -> sb.append(chatCenteredMessage(message)).append("§r").append("\n"));
-        return sb.toString();
-    }
-
-    private static String centeredMessage(String message, int center_px){
-        if(message.isBlank()) return "";
-        message = ChatColor.translateAlternateColorCodes('&', message);
-
-        int messagePxSize = 0;
-        boolean previousCode = false;
-        boolean isBold = false;
-
-        for (char c : message.toCharArray()) {
-            if(c == '§'){
-                previousCode = true;
-            } else if(previousCode){
-                previousCode = false;
-                isBold = c == 'l' || c == 'L';
-            } else {
-                final DefaultFontInfo dFI = DefaultFontInfo.getDefaultFontInfo(c);
-                messagePxSize += isBold ? dFI.getBoldLength() : dFI.getLength();
-                messagePxSize++;
-            }
+        public char getCharacter() {
+            return this.character;
         }
 
-        final int halvedMessageSize = messagePxSize / 2;
-        final int toCompensate = center_px - halvedMessageSize;
-        final int spaceLength = DefaultFontInfo.SPACE.getLength() + 1;
-        int compensated = 0;
-        StringBuilder sb = new StringBuilder();
-        while (compensated < toCompensate) {
-            sb.append(" ");
-            compensated += spaceLength;
+        public int getLength() {
+            return this.length;
         }
-        return sb+message;
+
+        public int getBoldLength() {
+            if(this == DefaultFontInfo.SPACE) return this.getLength();
+            return this.length+1;
+        }
     }
 }

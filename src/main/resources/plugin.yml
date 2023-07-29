@@ -1,8 +1,8 @@
 name: QuillCraftBungee
-version: 2.0
+version: 2.1
 author: LyFlow
 main: net.quillcraft.bungee.QuillCraftBungee
 prefix: QuillCraftBungee
 description: Plugin dedicated to the QuillCraf Bungee server
 website: https://quillcraft.fr
-api-version: 1.18
+api-version: '1.20'

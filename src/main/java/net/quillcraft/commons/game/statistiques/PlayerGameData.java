@@ -2,40 +2,40 @@ package net.quillcraft.commons.game.statistiques;
 
 import java.util.UUID;
 
-public class PlayerGameData{
+public class PlayerGameData {
 
     protected final String mapName, playerName;
     protected final UUID uuid;
     protected boolean hasWin;
 
-    public PlayerGameData(UUID uuid, String playerName, String mapName, boolean hasWin){
+    public PlayerGameData(UUID uuid, String playerName, String mapName, boolean hasWin) {
         this.mapName = mapName;
         this.playerName = playerName;
         this.uuid = uuid;
         this.hasWin = hasWin;
     }
 
-    public PlayerGameData(UUID uuid, String playerName, String mapName){
+    public PlayerGameData(UUID uuid, String playerName, String mapName) {
         this(uuid, playerName, mapName, false);
     }
 
-    public String getMapName(){
+    public String getMapName() {
         return mapName;
     }
 
-    public String getPlayerName(){
+    public String getPlayerName() {
         return playerName;
     }
 
-    public UUID getUuid(){
+    public UUID getUuid() {
         return uuid;
     }
 
-    public boolean hasWin(){
+    public boolean hasWin() {
         return hasWin;
     }
 
-    public void setWin(){
+    public void setWin() {
         this.hasWin = true;
     }
 }

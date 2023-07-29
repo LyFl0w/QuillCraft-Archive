@@ -5,14 +5,13 @@ import net.quillcraft.bungee.listeners.player.ChatListener;
 import net.quillcraft.bungee.listeners.player.DisconnectListener;
 import net.quillcraft.bungee.listeners.player.PostLoginListener;
 import net.quillcraft.bungee.listeners.proxy.ProxyPingListener;
-import net.quillcraft.bungee.subscriber.SubscriberManager;
 import net.quillcraft.bungee.utils.MessagesPropertiesUtils;
 
 public class PluginManager {
 
     private final QuillCraftBungee quillCraftBungee;
 
-    public PluginManager(QuillCraftBungee main){
+    public PluginManager(QuillCraftBungee main) {
         this.quillCraftBungee = main;
         new MessagesPropertiesUtils().generateNewBundleMessagesProperties(true);
 
@@ -20,7 +19,7 @@ public class PluginManager {
         registerCommand();
     }
 
-    private void registerListeners(net.md_5.bungee.api.plugin.PluginManager pluginManager){
+    private void registerListeners(net.md_5.bungee.api.plugin.PluginManager pluginManager) {
         pluginManager.registerListener(quillCraftBungee, new PostLoginListener(quillCraftBungee));
         pluginManager.registerListener(quillCraftBungee, new ChatListener());
         pluginManager.registerListener(quillCraftBungee, new DisconnectListener(quillCraftBungee));
@@ -31,7 +30,7 @@ public class PluginManager {
         pluginManager.registerListener(quillCraftBungee, new PluginMessageManager(quillCraftBungee));
     }
 
-    private void registerCommand(){
+    private void registerCommand() {
         //
     }
 

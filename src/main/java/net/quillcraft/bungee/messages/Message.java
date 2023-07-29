@@ -9,12 +9,13 @@ import net.md_5.bungee.api.event.PluginMessageEvent;
 public abstract class Message {
 
     protected final ProxyServer proxy;
-    public Message(ProxyServer proxyServer, PluginMessageEvent event){
+
+    public Message(ProxyServer proxyServer, PluginMessageEvent event) {
         this.proxy = proxyServer;
         onPluginMessagePlayer(event);
     }
 
-    private void onPluginMessagePlayer(PluginMessageEvent event){
+    private void onPluginMessagePlayer(PluginMessageEvent event) {
         final byte[] data = event.getData();
         final ProxiedPlayer player = proxy.getPlayer(event.getReceiver().toString());
 
