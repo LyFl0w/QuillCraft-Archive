@@ -10,11 +10,15 @@ public class QuillCraftBungee extends Plugin {
 
     private static QuillCraftBungee INSTANCE;
 
+    private DataManager dataManager;
+
     @Override
     public void onEnable(){
         INSTANCE = this;
 
-        DataManager.initAllData(this);
+        dataManager = new DataManager(this);
+        dataManager.init();
+
         SubscriberManager.initAllSubscribers();
 
         ProxyPingListener.updateProtocolVersion(getProxy().getProtocolVersion());
@@ -25,7 +29,11 @@ public class QuillCraftBungee extends Plugin {
     @Override
     public void onDisable(){
         SubscriberManager.removeAllSubscribersData();
-        DataManager.closeAllData();
+        dataManager.close();
+    }
+
+    public DataManager getDataManager() {
+        return dataManager;
     }
 
     public static QuillCraftBungee getInstance(){
