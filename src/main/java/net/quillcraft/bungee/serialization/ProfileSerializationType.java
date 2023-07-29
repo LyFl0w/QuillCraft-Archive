@@ -7,15 +7,15 @@ import com.google.gson.GsonBuilder;
 import java.util.HashMap;
 import java.util.List;
 
-public class ProfileSerializationType{
+public class ProfileSerializationType {
 
     private final Gson gson;
 
-    public ProfileSerializationType(){
+    public ProfileSerializationType() {
         this(new GsonBuilder().serializeNulls());
     }
 
-    public ProfileSerializationType(GsonBuilder gsonBuilder){
+    public ProfileSerializationType(GsonBuilder gsonBuilder) {
         this.gson = gsonBuilder.create();
     }
 
@@ -23,7 +23,7 @@ public class ProfileSerializationType{
      * @param object Object
      * @return object in json format.
      */
-    public String serialize(Object object){
+    public String serialize(Object object) {
         return gson.toJson(object);
     }
 
@@ -31,20 +31,20 @@ public class ProfileSerializationType{
      * @param json String
      * @return json information referenced in its object
      */
-    public <T> T deserialize(String json, Class<T> classOfT){
+    public <T> T deserialize(String json, Class<T> classOfT) {
         return gson.fromJson(json, classOfT);
     }
 
-    public <T> T deserialize(String json, TypeToken<T> typeToken){
+    public <T> T deserialize(String json, TypeToken<T> typeToken) {
         return gson.fromJson(json, typeToken.getType());
     }
 
-    public <T> List<T> deserializeList(String json, Class<T> classOfListT){
-        return gson.fromJson(json, new TypeToken<List<T>>(){}.getType());
+    public <T> List<T> deserializeList(String json, Class<T> classOfListT) {
+        return gson.fromJson(json, new TypeToken<List<T>>() {}.getType());
     }
 
-    public <K, V> HashMap<K, V> deserializeHashMap(String json, Class<K> classOfKeyT, Class<V> classOfValueT){
-        return gson.fromJson(json, new TypeToken<HashMap<K, V>>(){}.getType());
+    public <K, V> HashMap<K, V> deserializeHashMap(String json, Class<K> classOfKeyT, Class<V> classOfValueT) {
+        return gson.fromJson(json, new TypeToken<HashMap<K, V>>() {}.getType());
     }
 
 

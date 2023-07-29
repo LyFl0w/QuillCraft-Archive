@@ -3,11 +3,9 @@ package net.quillcraft.bungee.subscriber;
 import net.md_5.bungee.api.ProxyServer;
 import net.md_5.bungee.api.config.ServerInfo;
 import net.md_5.bungee.api.connection.ProxiedPlayer;
-
 import net.quillcraft.bungee.QuillCraftBungee;
 import net.quillcraft.commons.account.AccountProvider;
 import net.quillcraft.commons.exception.AccountNotFoundException;
-import net.quillcraft.commons.exception.PartyNotFoundException;
 import net.quillcraft.commons.game.Game;
 import net.quillcraft.commons.game.waiter.Waiter;
 import net.quillcraft.commons.game.waiter.WaitingList;
@@ -17,24 +15,25 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Objects;
 import java.util.concurrent.ConcurrentLinkedQueue;
+import java.util.logging.Level;
 
-public class SubscriberGame extends Subscriber{
+public class SubscriberGame extends Subscriber {
 
     private final static ConcurrentLinkedQueue<String> linkedQueue = new ConcurrentLinkedQueue<>();
 
-    public SubscriberGame(ProxyServer proxyServer){
+    public SubscriberGame(ProxyServer proxyServer) {
         super(proxyServer);
     }
 
-    public static ConcurrentLinkedQueue<String> getPublishGameLinkedQueue(){
+    public static ConcurrentLinkedQueue<String> getPublishGameLinkedQueue() {
         return linkedQueue;
     }
 
-    public void read(){
+    public void read() {
         redissonClient.getTopic("game.searchplayer").addListener(String.class, (channel, message) -> linkedQueue.offer(message));
 
         new Thread(() -> {
-            while(true){
+            while(true) {
                 if(linkedQueue.size() == 0) continue;
                 final String message = linkedQueue.peek();
 
@@ -43,7 +42,7 @@ public class SubscriberGame extends Subscriber{
                 final Game game = (Game) redissonClient.getBucket(message).get();
                 final WaitingList waitingList = new WaitingList(game.getGameEnum());
 
-                if(waitingList.getWaitersList().size() == 0){
+                if(waitingList.getWaitersList().size() == 0) {
                     linkedQueue.poll();
                     continue;
                 }
@@ -54,22 +53,22 @@ public class SubscriberGame extends Subscriber{
                 final int maxPlayer = game.getGameProperties().getMaxPlayer()-game.getPlayerUUIDList().size();
 
                 waitingList.sortWaitersList();
-                for(Waiter waiter : waitingList.getWaitersList()){
+                for(Waiter waiter : waitingList.getWaitersList()) {
                     if(maxPlayer == futurPlayers.size()) break;
 
                     final ProxiedPlayer proxiedPlayer = proxyServer.getPlayer(waiter.getPlayerUUID());
                     //if(proxiedPlayer != null){
-                        if(waiter.hasParty()){
-                            try{
-                                final List<ProxiedPlayer> playerStream = new PartyProvider(new AccountProvider(waiter.getPlayerUUID()).getAccount()).getParty().getOnlinePlayers().stream().filter(proxiedPlayers -> !proxiedPlayers.getServer().getInfo().getName().equalsIgnoreCase(message)).toList();
-                                if(maxPlayer < futurPlayers.size()+playerStream.size()) continue;
-                                futurPlayers.addAll(playerStream);
-                            }catch(AccountNotFoundException|PartyNotFoundException e){
-                                e.printStackTrace();
-                            }
-                        }else{
-                            futurPlayers.add(proxiedPlayer);
+                    if(waiter.hasParty()) {
+                        try {
+                            final List<ProxiedPlayer> playerStream = new PartyProvider(new AccountProvider(waiter.getPlayerUUID()).getAccount()).getParty().getOnlinePlayers().stream().filter(proxiedPlayers -> !proxiedPlayers.getServer().getInfo().getName().equalsIgnoreCase(message)).toList();
+                            if(maxPlayer < futurPlayers.size()+playerStream.size()) continue;
+                            futurPlayers.addAll(playerStream);
+                        } catch(AccountNotFoundException exception) {
+                            QuillCraftBungee.getInstance().getLogger().log(Level.SEVERE, exception.getMessage(), exception);
                         }
+                    } else {
+                        futurPlayers.add(proxiedPlayer);
+                    }
                     //}
                     toRemove.add(waiter);
                 }

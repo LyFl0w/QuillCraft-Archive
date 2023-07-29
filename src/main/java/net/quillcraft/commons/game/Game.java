@@ -1,7 +1,7 @@
 package net.quillcraft.commons.game;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
-import net.quillcraft.bungee.data.management.redis.RedisManager;
+import net.quillcraft.bungee.data.redis.RedisManager;
 import net.quillcraft.commons.game.properties.GameProperties;
 import net.quillcraft.commons.game.status.GeneralGameStatus;
 import org.redisson.api.RedissonClient;
@@ -9,7 +9,7 @@ import org.redisson.api.RedissonClient;
 import java.util.List;
 import java.util.UUID;
 
-public abstract sealed class Game permits ParkourPvPGame{
+public abstract sealed class Game permits ParkourPvPGame {
 
     @JsonIgnore
     protected final static RedissonClient redissonClient = RedisManager.GAME_SERVER.getRedisAccess().getRedissonClient();
@@ -21,54 +21,54 @@ public abstract sealed class Game permits ParkourPvPGame{
 
     private GeneralGameStatus generalGameStatus;
 
-    protected Game(){
+    protected Game() {
         this.gameEnum = null;
         this.playerList = null;
         this.gameProperties = null;
         this.id = 0;
     }
 
-    public GameProperties getGameProperties(){
+    public GameProperties getGameProperties() {
         return gameProperties;
     }
 
-    public GameEnum getGameEnum(){
+    public GameEnum getGameEnum() {
         return gameEnum;
     }
 
-    public GeneralGameStatus getGeneralGameStatus(){
+    public GeneralGameStatus getGeneralGameStatus() {
         return generalGameStatus;
     }
 
-    public int getId(){
+    public int getId() {
         return id;
     }
 
-    public String getRedisKey(){
+    public String getRedisKey() {
         return gameEnum.name()+":"+id;
     }
 
-    public List<UUID> getPlayerUUIDList(){
+    public List<UUID> getPlayerUUIDList() {
         return playerList;
     }
 
-    public boolean isFullyFilled(){
+    public boolean isFullyFilled() {
         return gameProperties.getMaxPlayer() == playerList.size();
     }
 
-    public void deleteRedisKey(){
+    public void deleteRedisKey() {
         redissonClient.getBucket(getRedisKey()).delete();
     }
 
-    public void searchPlayer(){
+    public void searchPlayer() {
         redissonClient.getTopic("game.searchplayer").publish(getRedisKey());
     }
 
-    public void setGameStatus(GeneralGameStatus generalGameStatus){
+    public void setGameStatus(GeneralGameStatus generalGameStatus) {
         this.generalGameStatus = generalGameStatus;
     }
 
-    public boolean actualGameStatusIs(GeneralGameStatus generalGameStatus){
+    public boolean actualGameStatusIs(GeneralGameStatus generalGameStatus) {
         return this.generalGameStatus == generalGameStatus;
     }
 }

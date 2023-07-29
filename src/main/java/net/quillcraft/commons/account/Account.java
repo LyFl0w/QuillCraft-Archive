@@ -2,13 +2,12 @@ package net.quillcraft.commons.account;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import net.lyflow.sqlrequest.SQLRequest;
-
 import net.md_5.bungee.api.connection.ProxiedPlayer;
-
-import net.quillcraft.bungee.data.management.sql.table.SQLTablesManager;
+import net.quillcraft.bungee.data.sql.table.SQLTablesManager;
 import net.quillcraft.bungee.serialization.ProfileSerializationAccount;
 
-import java.util.*;
+import java.util.HashMap;
+import java.util.UUID;
 
 public class Account {
 
@@ -25,18 +24,17 @@ public class Account {
     private SQLRequest sqlRequest;
 
     //Redis
-    private Account(){}
+    private Account() {}
 
-    public Account(ProxiedPlayer player){
+    public Account(ProxiedPlayer player) {
         this(player.getUniqueId());
     }
 
-    public Account(UUID uuid){
+    public Account(UUID uuid) {
         this(0, uuid, null, 10, (byte) 0, Visibility.EVERYONE, defaultParticles(), "en_us");
     }
 
-    public Account(int id, UUID uuid, UUID partyUUID, int quillCoin, byte rankID, Visibility visibility,
-                   HashMap<Particles, Boolean> particles, String languageISO){
+    public Account(int id, UUID uuid, UUID partyUUID, int quillCoin, byte rankID, Visibility visibility, HashMap<Particles, Boolean> particles, String languageISO) {
         this.id = id;
         this.uuid = uuid;
         this.partyUUID = partyUUID;
@@ -49,91 +47,91 @@ public class Account {
         setSQLRequest();
     }
 
-    public int getId(){
+    private static HashMap<Particles, Boolean> defaultParticles() {
+        HashMap<Particles, Boolean> defaultParticles = new HashMap<>();
+        for(Particles particles : Particles.values()) {
+            defaultParticles.put(particles, false);
+        }
+        return defaultParticles;
+    }
+
+    public int getId() {
         return id;
-    }
-
-    public UUID getUUID(){
-        return uuid;
-    }
-
-    public UUID getPartyUUID(){
-        return partyUUID;
-    }
-
-    public int getQuillCoin(){
-        return quillCoin;
-    }
-
-    public byte getRankID(){
-        return rankID;
-    }
-
-    public Visibility getVisibility(){
-        return visibility;
-    }
-
-    public HashMap<Particles, Boolean> getParticles(){
-        return particles;
-    }
-
-    public String getLanguageISO(){
-        return languageISO;
-    }
-
-    public boolean hasParty(){
-        return getPartyUUID() != null;
-    }
-
-    public void setPartyUUID(UUID partyUUID){
-        this.partyUUID = partyUUID;
-        getSQLRequest().addData("party_uuid", getPartyUUID());
-    }
-
-    public void setQuillCoin(int quillCoin){
-        this.quillCoin = quillCoin;
-        getSQLRequest().addData("quillcoins", quillCoin);
-    }
-
-    public void setRankID(byte rankID){
-        this.rankID = rankID;
-        getSQLRequest().addData("rank_id", rankID);
-    }
-
-    public void setVisibility(Visibility visibility){
-        this.visibility = visibility;
-        getSQLRequest().addData("visibility", getVisibility().name());
-    }
-
-    public void setParticle(HashMap<Particles, Boolean> particles){
-        this.particles = particles;
-        getSQLRequest().addData("json_particles", new ProfileSerializationAccount.Particle().serialize(getParticles()));
     }
 
     protected void setId(int id) {
         this.id = id;
     }
 
-    public void setLanguage(String languageISO){
+    public UUID getUUID() {
+        return uuid;
+    }
+
+    public UUID getPartyUUID() {
+        return partyUUID;
+    }
+
+    public void setPartyUUID(UUID partyUUID) {
+        this.partyUUID = partyUUID;
+        getSQLRequest().addData("party_uuid", getPartyUUID());
+    }
+
+    public int getQuillCoin() {
+        return quillCoin;
+    }
+
+    public void setQuillCoin(int quillCoin) {
+        this.quillCoin = quillCoin;
+        getSQLRequest().addData("quillcoins", quillCoin);
+    }
+
+    public byte getRankID() {
+        return rankID;
+    }
+
+    public void setRankID(byte rankID) {
+        this.rankID = rankID;
+        getSQLRequest().addData("rank_id", rankID);
+    }
+
+    public Visibility getVisibility() {
+        return visibility;
+    }
+
+    public void setVisibility(Visibility visibility) {
+        this.visibility = visibility;
+        getSQLRequest().addData("visibility", getVisibility().name());
+    }
+
+    public HashMap<Particles, Boolean> getParticles() {
+        return particles;
+    }
+
+    public String getLanguageISO() {
+        return languageISO;
+    }
+
+    public boolean hasParty() {
+        return getPartyUUID() != null;
+    }
+
+    public void setParticle(HashMap<Particles, Boolean> particles) {
+        this.particles = particles;
+        getSQLRequest().addData("json_particles", new ProfileSerializationAccount.Particle().serialize(getParticles()));
+    }
+
+    public void setLanguage(String languageISO) {
         this.languageISO = languageISO;
         sqlRequest.addData("language", languageISO);
     }
 
-    public SQLRequest getSQLRequest(){
+    public SQLRequest getSQLRequest() {
         return sqlRequest;
     }
 
-    public void setSQLRequest(){
+    public void setSQLRequest() {
         final SQLTablesManager sqlTablesManager = SQLTablesManager.PLAYER_ACCOUNT;
         this.sqlRequest = new SQLRequest(sqlTablesManager.getTable(), sqlTablesManager.getKeyColumn(), uuid.toString());
-    }
-
-    private static HashMap<Particles, Boolean> defaultParticles(){
-        HashMap<Particles, Boolean> defaultParticles = new HashMap<>();
-        for(Particles particles : Particles.values()){
-            defaultParticles.put(particles, false);
-        }
-        return defaultParticles;
     }
 
     public enum Visibility {
@@ -144,11 +142,12 @@ public class Account {
         FIRE(10), WATER(102), THUNDER(1), SPEED(20), LIGHT(32), EXPLODE(57);
 
         private final int price;
-        Particles(final int price){
+
+        Particles(final int price) {
             this.price = price;
         }
 
-        public int getPrice(){
+        public int getPrice() {
             return price;
         }
     }

@@ -1,5 +1,7 @@
 package net.quillcraft.bungee.utils;
 
+import net.quillcraft.bungee.QuillCraftBungee;
+
 import java.io.File;
 import java.io.FileReader;
 import java.io.IOException;
@@ -8,24 +10,25 @@ import java.util.Locale;
 import java.util.MissingResourceException;
 import java.util.PropertyResourceBundle;
 import java.util.ResourceBundle;
+import java.util.logging.Level;
 
 public class MessagesPropertiesUtils {
 
-    public void generateNewBundleMessagesProperties(boolean generatedWithSpaces){
+    public void generateNewBundleMessagesProperties(boolean generatedWithSpaces) {
         ResourceBundle baseBundle;
-        try{
+        try {
             baseBundle = ResourceBundle.getBundle("messages");
-        }catch(MissingResourceException ex){
+        } catch(MissingResourceException ex) {
             baseBundle = ResourceBundle.getBundle("messages", Locale.ENGLISH);
         }
 
-        try{
+        try {
             final File file = new File("messages.properties");
-            if(!file.isFile()){
+            if(!file.isFile()) {
                 file.createNewFile();
 
                 StringBuilder messages = new StringBuilder();
-                for(String keys : baseBundle.keySet()){
+                for(String keys : baseBundle.keySet()) {
                     messages.append(keys).append(":").append(baseBundle.getString(keys)).append("\n");
                     if(generatedWithSpaces) messages.append("\n");
                 }
@@ -34,8 +37,8 @@ public class MessagesPropertiesUtils {
             }
             new PropertyResourceBundle(new FileReader(file));
 
-        }catch(IOException exception){
-            exception.printStackTrace();
+        } catch(IOException exception) {
+            QuillCraftBungee.getInstance().getLogger().log(Level.SEVERE, exception.getMessage(), exception);
         }
     }
 
