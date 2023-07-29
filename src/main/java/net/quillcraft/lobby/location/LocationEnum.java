@@ -7,7 +7,12 @@ import org.bukkit.configuration.file.FileConfiguration;
 
 public enum LocationEnum {
 
-    LOBBY_SPAWN(new Location(Bukkit.getWorlds().get(0), getFileConfiguration().getDouble("spawn.x"), getFileConfiguration().getDouble("spawn.y"), getFileConfiguration().getDouble("spawn.z"), (float) getFileConfiguration().getDouble("spawn.yaw"), (float) getFileConfiguration().getDouble("spawn.pitch")));
+    LOBBY_SPAWN(new Location(Bukkit.getWorlds().get(0),
+            getFileConfiguration().getDouble("spawn.x"),
+            getFileConfiguration().getDouble("spawn.y"),
+            getFileConfiguration().getDouble("spawn.z"),
+            (float) getFileConfiguration().getDouble("spawn.yaw"),
+            (float) getFileConfiguration().getDouble("spawn.pitch")));
 
     private Location location;
 

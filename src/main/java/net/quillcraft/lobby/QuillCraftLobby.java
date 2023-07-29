@@ -54,7 +54,6 @@ public class QuillCraftLobby extends JavaPlugin implements Listener {
     @Override
     public void onDisable() {
         npcManager.onDisable();
-
     }
 
     public NPCManager getNpcManager() {

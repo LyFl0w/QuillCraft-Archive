@@ -14,7 +14,7 @@ public class LobbyCommand implements CommandExecutor {
 
     @Override
     public boolean onCommand(@Nonnull CommandSender cmds, @Nonnull Command cmd, @Nonnull String label, @Nonnull String[] args) {
-        if(cmds instanceof Player player) {
+        if(cmds instanceof final Player player) {
             player.teleport(LocationEnum.LOBBY_SPAWN.getLocation());
             player.sendMessage(LanguageManager.getLanguage(player).getMessage(Text.COMMAND_LOBBY_SUCCESS));
             return true;

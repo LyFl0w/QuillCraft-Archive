@@ -2,8 +2,9 @@ package net.quillcraft.lobby.subscriber;
 
 // TODO : REWRITE THE ENTIER CORE OF THIS CLASS WITH GENERIC METHOD (LOOK BUNGEECORD SUBRSCRIBER) 💖💝💓
 
-import net.quillcraft.core.data.management.redis.RedisManager;
+import net.quillcraft.core.data.redis.RedisManager;
 import net.quillcraft.lobby.QuillCraftLobby;
+
 import org.redisson.api.RedissonClient;
 
 public class ScoreboardSubscriber {
@@ -18,7 +19,10 @@ public class ScoreboardSubscriber {
     }
 
     private void read() {
-        redissonClient.getTopic("players.size.update").addListener(Integer.class, (channel, message) -> quillCraftLobby.getServer().getScheduler().runTask(quillCraftLobby, () -> quillCraftLobby.getScoreboardManager().getAllScoreboardBuilders().forEach(scoreboardBuilder -> scoreboardBuilder.setLine("Connecté: "+redissonClient.getAtomicLong("players.size").get(), 6))));
+        redissonClient.getTopic("players.size.update").addListener(Integer.class, (channel, message) ->
+                quillCraftLobby.getServer().getScheduler().runTask(quillCraftLobby, () ->
+                        quillCraftLobby.getScoreboardManager().getAllScoreboardBuilders().forEach(scoreboardBuilder ->
+                                scoreboardBuilder.setLine("Connecté: "+redissonClient.getAtomicLong("players.size").get(), 6))));
     }
 
 

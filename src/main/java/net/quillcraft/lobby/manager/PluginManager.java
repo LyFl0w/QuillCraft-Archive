@@ -18,13 +18,10 @@ import org.bukkit.plugin.messaging.Messenger;
 
 public class PluginManager {
 
-    //private final TaskManager taskManager;
     private final QuillCraftLobby quillCraftLobby;
-    private final TaskManager taskManager;
 
     public PluginManager(QuillCraftLobby quillCraftLobby) {
         this.quillCraftLobby = quillCraftLobby;
-        this.taskManager = new TaskManager(quillCraftLobby);
         registerEvents(quillCraftLobby.getServer().getPluginManager());
         registerPluginMessage(quillCraftLobby.getServer().getMessenger());
         registerCommands();
@@ -41,7 +38,6 @@ public class PluginManager {
         pluginManager.registerEvents(new PlayerQuitListener(quillCraftLobby), quillCraftLobby);
         pluginManager.registerEvents(new PlayerItemListener(), quillCraftLobby);
         pluginManager.registerEvents(new PlayerInteractListener(), quillCraftLobby);
-        pluginManager.registerEvents(new PlayerItemHeldListener(), quillCraftLobby);
         pluginManager.registerEvents(new PlayerGameModeChangeListener(), quillCraftLobby);
         pluginManager.registerEvents(new PlayerInteractEntityListener(), quillCraftLobby);
 
@@ -54,7 +50,7 @@ public class PluginManager {
         pluginManager.registerEvents(new WeatherChangeListener(), quillCraftLobby);
         pluginManager.registerEvents(new FoodLevelChangeListener(), quillCraftLobby);
 
-        pluginManager.registerEvents(new PlayerChangeLanguageListener(), quillCraftLobby);
+        pluginManager.registerEvents(new PlayerChangeLanguageListener(quillCraftLobby), quillCraftLobby);
     }
 
     private void registerCommands() {
@@ -62,10 +58,6 @@ public class PluginManager {
         quillCraftLobby.getCommand("setlobby").setExecutor(new SetLobbyCommand());
         quillCraftLobby.getCommand("npc").setExecutor(new NPCCommand(quillCraftLobby));
         quillCraftLobby.getCommand("head").setExecutor(new HeadCommand(quillCraftLobby));
-    }
-
-    public void onDisable() {
-        taskManager.onDisableTasks();
     }
 
 }

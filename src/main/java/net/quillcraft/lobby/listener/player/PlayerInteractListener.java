@@ -5,11 +5,11 @@ import net.quillcraft.commons.exception.AccountNotFoundException;
 import net.quillcraft.core.manager.LanguageManager;
 import net.quillcraft.core.utils.ActionUtils;
 import net.quillcraft.core.utils.builders.ItemBuilder;
+import net.quillcraft.lobby.QuillCraftLobby;
 import net.quillcraft.lobby.inventory.MenuInventory;
 import net.quillcraft.lobby.inventory.VisibilityInventory;
 import net.quillcraft.lobby.manager.ConfigurationBuilderManager;
 import net.quillcraft.lobby.provider.HeadFinderProvider;
-import org.bukkit.Bukkit;
 import org.bukkit.Material;
 import org.bukkit.block.Block;
 import org.bukkit.block.data.type.Door;
@@ -25,6 +25,7 @@ import org.bukkit.inventory.ItemStack;
 import org.lumy.api.text.Text;
 
 import java.util.List;
+import java.util.logging.Level;
 
 public class PlayerInteractListener implements Listener {
 
@@ -101,7 +102,7 @@ public class PlayerInteractListener implements Listener {
                         try {
                             player.openInventory(new VisibilityInventory().getVisibilityInventory(new AccountProvider(player).getAccount()));
                         } catch(AccountNotFoundException exception) {
-                            Bukkit.getLogger().severe(exception.getMessage());
+                            QuillCraftLobby.getInstance().getLogger().log(Level.SEVERE, exception.getMessage(), exception);
                         }
                     }
                 }

@@ -9,7 +9,7 @@ import net.quillcraft.commons.exception.PartyNotFoundException;
 import net.quillcraft.commons.party.PartyProvider;
 import net.quillcraft.core.manager.LanguageManager;
 import net.quillcraft.lobby.QuillCraftLobby;
-import net.quillcraft.lobby.game.GameItemToGameEnum;
+import net.quillcraft.lobby.game.GameItemEnum;
 import net.quillcraft.lobby.inventory.VisibilityInventory;
 import net.quillcraft.lobby.player.PlayerVisibilityChangeEvent;
 import org.bukkit.Material;
@@ -56,7 +56,7 @@ public class InventoryClickListener implements Listener {
                 }
 
                 final ByteArrayDataOutput out = ByteStreams.newDataOutput();
-                out.writeUTF(GameItemToGameEnum.valueOf(item.getType().name()).getGameEnum().name());
+                out.writeUTF(GameItemEnum.valueOf(item.getType().name()).getGameEnum().name());
                 out.writeBoolean(account.hasParty());
 
                 player.sendPluginMessage(quillCraftLobby, "quillcraft:game", out.toByteArray());
@@ -69,7 +69,6 @@ public class InventoryClickListener implements Listener {
                 if(!playerVisibilityChangeEvent.isCancelled()) {
                     player.openInventory(new VisibilityInventory().getVisibilityInventory(account));
                 }
-                return;
             }
 
         } catch(AccountNotFoundException|PartyNotFoundException exception) {

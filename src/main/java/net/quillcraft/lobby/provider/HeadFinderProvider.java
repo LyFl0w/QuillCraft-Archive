@@ -5,9 +5,9 @@ import com.google.gson.GsonBuilder;
 import com.google.gson.reflect.TypeToken;
 import net.quillcraft.commons.account.Account;
 import net.quillcraft.commons.account.AccountProvider;
-import net.quillcraft.core.data.management.redis.RedisManager;
-import net.quillcraft.core.data.management.sql.DatabaseManager;
-import org.bukkit.Bukkit;
+import net.quillcraft.core.data.redis.RedisManager;
+import net.quillcraft.core.data.sql.DatabaseManager;
+import net.quillcraft.lobby.QuillCraftLobby;
 import org.bukkit.entity.Player;
 import org.redisson.api.RBucket;
 import org.redisson.api.RedissonClient;
@@ -18,6 +18,7 @@ import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.logging.Level;
 
 public class HeadFinderProvider {
 
@@ -63,7 +64,7 @@ public class HeadFinderProvider {
             }
 
         } catch(SQLException exception) {
-            Bukkit.getLogger().severe(exception.getMessage());
+            QuillCraftLobby.getInstance().getLogger().log(Level.SEVERE, exception.getMessage(), exception);
         }
         return null;
     }
@@ -81,7 +82,7 @@ public class HeadFinderProvider {
             preparedStatement.execute();    //Execution de la requete
             connection.close();
         } catch(SQLException exception) {
-            Bukkit.getLogger().severe(exception.getMessage());
+            QuillCraftLobby.getInstance().getLogger().log(Level.SEVERE, exception.getMessage(), exception);
         }
     }
 
@@ -95,7 +96,7 @@ public class HeadFinderProvider {
             preparedStatement.executeUpdate();    //Mise à jour de la liste dans la bdd
             connection.close();
         } catch(SQLException exception) {
-            Bukkit.getLogger().severe(exception.getMessage());
+            QuillCraftLobby.getInstance().getLogger().log(Level.SEVERE, exception.getMessage(), exception);
         }
     }
 
@@ -106,7 +107,7 @@ public class HeadFinderProvider {
             account.setQuillCoins(account.getQuillCoins()+quillcoins);
             accountProvider.updateAccount(account);
         } catch(Exception exception) {
-            Bukkit.getLogger().severe(exception.getMessage());
+            QuillCraftLobby.getInstance().getLogger().log(Level.SEVERE, exception.getMessage(), exception);
         }
     }
 

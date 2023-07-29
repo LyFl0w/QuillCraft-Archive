@@ -8,7 +8,7 @@ public class PlayerGameModeChangeListener implements Listener {
 
     @EventHandler
     public void onPlayerGameModeChange(PlayerGameModeChangeEvent event) {
-        //event.setCancelled(true);
+        if(!event.getPlayer().isOp()) event.setCancelled(true);
     }
 
 }

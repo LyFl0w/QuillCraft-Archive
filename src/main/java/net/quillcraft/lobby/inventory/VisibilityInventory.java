@@ -28,7 +28,8 @@ public class VisibilityInventory {
     }
 
     private static ItemBuilder setVisibilityItemBuilderName(final LanguageManager languageManager, final Text text, Account.Visibility visibility) {
-        return new ItemBuilder(visibility.getMaterial()).setName(languageManager.getMessage(Text.ITEMS_INVENTORY_LOBBY_VISIBILITY_NAME).replace("%STATUS%", languageManager.getMessage(text)));
+        return new ItemBuilder(visibility.getMaterial()).setName(languageManager.getMessage(Text.ITEMS_INVENTORY_LOBBY_VISIBILITY_NAME)
+                .replace("%STATUS%", languageManager.getMessage(text)));
     }
 
     public final Inventory getVisibilityInventory(final Account account) {

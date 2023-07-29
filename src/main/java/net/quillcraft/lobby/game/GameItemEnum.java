@@ -2,13 +2,13 @@ package net.quillcraft.lobby.game;
 
 import net.quillcraft.commons.game.GameEnum;
 
-public enum GameItemToGameEnum {
+public enum GameItemEnum {
 
     IRON_BOOTS(GameEnum.PARKOUR_PVP_SOLO);
 
     private final GameEnum gameEnum;
 
-    GameItemToGameEnum(GameEnum gameEnum) {
+    GameItemEnum(GameEnum gameEnum) {
         this.gameEnum = gameEnum;
     }
 

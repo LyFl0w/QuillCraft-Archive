@@ -1,5 +1,5 @@
 name: QuillCraftLobby
-version: 2.0
+version: 2.2.1
 authors: [LyFlow, Finkitpiat]
 main: net.quillcraft.lobby.QuillCraftLobby
 api-version: 1.18

@@ -22,7 +22,9 @@ public class PlayerQuitListener implements Listener {
     public void onPlayerQuit(PlayerQuitEvent event) {
         final Player player = event.getPlayer();
 
-        Bukkit.getOnlinePlayers().stream().parallel().forEach(players -> players.sendMessage(LanguageManager.getLanguage(players).getMessage(Text.LOBBY_PLAYER_LEAVE).replace("%PLAYER%", player.getDisplayName())));
+        Bukkit.getOnlinePlayers().stream().parallel().forEach(players ->
+                players.sendMessage(LanguageManager.getLanguage(players).getMessage(Text.LOBBY_PLAYER_LEAVE)
+                        .replace("%PLAYER%", player.getDisplayName())));
 
         quillCraftLobby.getScoreboardManager().removeScoreboard(player.getUniqueId());
 
