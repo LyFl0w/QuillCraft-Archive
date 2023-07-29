@@ -147,7 +147,14 @@ public class Account {
             case NOBODY -> server.getOnlinePlayers().forEach(players -> player.hidePlayer(quillCraftCore, players));
             case PARTY -> {
                 try {
-                    final List<UUID> playersUUID = new PartyProvider(new AccountProvider(player).getAccount()).getParty().getPlayersUUID();
+                    final Account account = new AccountProvider(player).getAccount();
+
+                    if(!account.hasParty()) {
+                        server.getOnlinePlayers().forEach(players -> player.hidePlayer(quillCraftCore, players));
+                        break;
+                    }
+
+                    final List<UUID> playersUUID = new PartyProvider(account).getParty().getPlayersUUID();
                     playersUUID.remove(player);
                     if(playersUUID.isEmpty()) {
                         server.getOnlinePlayers().forEach(players -> player.hidePlayer(quillCraftCore, players));
