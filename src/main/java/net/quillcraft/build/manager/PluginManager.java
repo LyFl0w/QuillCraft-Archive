@@ -6,6 +6,8 @@ import net.quillcraft.build.command.FlightSpeedCommand;
 import net.quillcraft.build.command.RemoveWarpCommand;
 import net.quillcraft.build.command.WarpCommand;
 import net.quillcraft.build.command.completion.WarpTabCompletion;
+import net.quillcraft.build.listener.player.PlayerJoinListener;
+import net.quillcraft.build.listener.player.PlayerTeleportListener;
 
 import org.bukkit.Server;
 
@@ -19,7 +21,10 @@ public class PluginManager {
         registerCommands();
     }
 
-    private void registerEvents(org.bukkit.plugin.PluginManager pluginManager){}
+    private void registerEvents(org.bukkit.plugin.PluginManager pluginManager){
+        pluginManager.registerEvents(new PlayerJoinListener(main), main);
+        pluginManager.registerEvents(new PlayerTeleportListener(main), main);
+    }
 
     private void registerCommands(){
         main.getCommand("flightspeed").setExecutor(new FlightSpeedCommand());

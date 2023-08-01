@@ -1,8 +1,9 @@
 name: QuillCraftBuild
-version: 1.0
+version: 1.1
 api-version: 1.20
 author: LyFlow
 main: net.quillcraft.build.QuillCraftBuild
+depend: [QuillCraftCore]
 commands:
   flightspeed:
     aliases: ["fl","fls"]

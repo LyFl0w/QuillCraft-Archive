@@ -1,5 +1,6 @@
 package net.quillcraft.build;
 
+import net.quillcraft.build.autosave.SaveTask;
 import net.quillcraft.build.manager.PluginManager;
 
 import org.bukkit.command.PluginCommand;
@@ -12,9 +13,13 @@ public class QuillCraftBuild extends JavaPlugin {
 
     private static QuillCraftBuild INSTANCE;
 
+    public SaveTask saveTask;
+
     @Override
     public void onEnable(){
         INSTANCE = this;
+
+        new SaveTask(this);
 
         new PluginManager(this);
     }
