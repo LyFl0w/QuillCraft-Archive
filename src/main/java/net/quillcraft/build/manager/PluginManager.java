@@ -1,10 +1,7 @@
 package net.quillcraft.build.manager;
 
 import net.quillcraft.build.QuillCraftBuild;
-import net.quillcraft.build.command.CreateWarpCommand;
-import net.quillcraft.build.command.FlightSpeedCommand;
-import net.quillcraft.build.command.RemoveWarpCommand;
-import net.quillcraft.build.command.WarpCommand;
+import net.quillcraft.build.command.*;
 import net.quillcraft.build.command.completion.WarpTabCompletion;
 import net.quillcraft.build.listener.player.PlayerJoinListener;
 import net.quillcraft.build.listener.player.PlayerTeleportListener;
@@ -28,6 +25,8 @@ public class PluginManager {
 
     private void registerCommands(){
         main.getCommand("flightspeed").setExecutor(new FlightSpeedCommand());
+        main.getCommand("inventory").setExecutor(new InventoryCommand());
+
 
         final WarpTabCompletion warpTabCompletion = new WarpTabCompletion();
         main.getCommand("warp").setExecutor(new WarpCommand());

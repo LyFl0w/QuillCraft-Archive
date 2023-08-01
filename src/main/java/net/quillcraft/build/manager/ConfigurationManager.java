@@ -8,7 +8,8 @@ import org.bukkit.configuration.file.FileConfiguration;
 public enum ConfigurationManager{
 
     WARPS(getConfiguration("warps.yml", true)),
-    AUTO_SAVE(getConfiguration("auto_save.yml", true));
+    AUTO_SAVE(getConfiguration("auto_save.yml", true)),
+    INVENTORY(getConfiguration("inventory.yml", true));
 
     private final YamlConfigurationBuilder yamlConfigurationBuilder;
 

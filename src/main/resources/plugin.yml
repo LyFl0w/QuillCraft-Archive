@@ -5,6 +5,11 @@ author: LyFlow
 main: net.quillcraft.build.QuillCraftBuild
 depend: [QuillCraftCore]
 commands:
+  inventory:
+    aliases: ["inv"]
+    description: get or set inventory
+    permission: quillcraft.build.inventory
+    usage: "§c/inventory <get/set/remove> <name>"
   flightspeed:
     aliases: ["fl","fls"]
     description: change your flying speed
