@@ -28,7 +28,7 @@ public class InventoryCommand implements CommandExecutor, TabCompleter {
             final String inventoryName = args[1];
             if(action.equalsIgnoreCase("get")) {
                 final ConfigurationSection configurationSection = ConfigurationManager.INVENTORY.getConfiguration().getConfigurationSection(commandSender.getName());
-                if(!configurationSection.contains(inventoryName)) {
+                if(configurationSection == null || !configurationSection.contains(inventoryName)) {
                     player.sendMessage("§cL'inventaire "+inventoryName+" n'existe pas.\n§bPour le créer faite un /inventory set "+inventoryName);
                     return true;
                 }
