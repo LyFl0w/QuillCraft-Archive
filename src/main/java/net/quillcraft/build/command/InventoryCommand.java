@@ -78,6 +78,8 @@ public class InventoryCommand implements CommandExecutor, TabCompleter {
 
                 fileConfiguration.set(path, null);
 
+                if(fileConfiguration.getConfigurationSection(player.getName()).getKeys(false).isEmpty()) fileConfiguration.set(player.getName(), null);
+
                 configurationManager.saveFile();
 
                 player.sendMessage("§2L'inventaire "+inventoryName+" a bien été supprimé");
