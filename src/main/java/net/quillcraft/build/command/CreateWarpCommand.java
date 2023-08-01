@@ -15,7 +15,8 @@ public final class CreateWarpCommand implements CommandExecutor{
     @Override
     public boolean onCommand(@Nonnull CommandSender commandSender, @Nonnull Command command, @Nonnull String label, @Nonnull String[] args){
         if(args.length == 2 && commandSender instanceof final Player player){
-            final FileConfiguration fileConfiguration = ConfigurationManager.WARPS.getConfiguration();
+            final ConfigurationManager configurationManager = ConfigurationManager.WARPS;
+            final FileConfiguration fileConfiguration = configurationManager.getConfiguration();
             final String path = args[0].toUpperCase()+"."+args[1].toUpperCase();
 
             if(fileConfiguration.contains(path)){
@@ -26,7 +27,7 @@ public final class CreateWarpCommand implements CommandExecutor{
 
             fileConfiguration.set(path, player.getLocation());
 
-            ConfigurationManager.WARPS.saveFile();
+            configurationManager.saveFile();
             return true;
         }
         return false;
