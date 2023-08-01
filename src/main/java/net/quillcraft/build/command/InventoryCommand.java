@@ -1,9 +1,8 @@
 package net.quillcraft.build.command;
 
-import com.google.common.primitives.Bytes;
 import net.quillcraft.build.manager.ConfigurationManager;
 import net.quillcraft.core.utils.CommandUtils;
-import org.apache.commons.lang.ArrayUtils;
+
 import org.bukkit.command.Command;
 import org.bukkit.command.CommandExecutor;
 import org.bukkit.command.CommandSender;
@@ -11,15 +10,10 @@ import org.bukkit.command.TabCompleter;
 import org.bukkit.configuration.ConfigurationSection;
 import org.bukkit.configuration.file.FileConfiguration;
 import org.bukkit.entity.Player;
-import org.bukkit.inventory.Inventory;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.inventory.PlayerInventory;
 
 import javax.annotation.Nonnull;
-import java.io.ByteArrayInputStream;
-import java.io.DataInputStream;
-import java.io.IOException;
-import java.util.Base64;
 import java.util.List;
 
 
