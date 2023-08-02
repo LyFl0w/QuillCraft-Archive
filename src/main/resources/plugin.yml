@@ -4,6 +4,8 @@ api-version: 1.20
 author: LyFlow
 main: net.quillcraft.build.QuillCraftBuild
 depend: [QuillCraftCore]
+load: POSTWORLD
+softdepend: ["Multiverse-Core"]
 commands:
   inventory:
     aliases: ["inv"]
