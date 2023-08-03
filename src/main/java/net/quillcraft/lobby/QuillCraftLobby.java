@@ -7,6 +7,7 @@ import me.arcaniax.hdb.api.HeadDatabaseAPI;
 import net.lyflow.songapi.manager.SongManager;
 import net.quillcraft.core.QuillCraftCore;
 import net.quillcraft.lobby.manager.PluginManager;
+import net.quillcraft.lobby.manager.PluginMessageManager;
 import net.quillcraft.lobby.manager.ScoreboardManager;
 import net.quillcraft.lobby.npc.NPCManager;
 import net.quillcraft.lobby.subscriber.ScoreboardSubscriber;
@@ -42,6 +43,8 @@ public class QuillCraftLobby extends JavaPlugin implements Listener {
         this.npcManager = new NPCManager(this, 120);
         this.songManager = new SongManager(this);
         this.scoreboardManager = new ScoreboardManager();
+
+        new PluginMessageManager(this);
         new ScoreboardSubscriber(this);
 
         QuillCraftCore.getInstance().getCommandManager().registerCommands(this, this.getFile());
