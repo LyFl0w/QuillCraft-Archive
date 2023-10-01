@@ -24,6 +24,7 @@ mvn clean install
 
 To add the SongAPI Plugin to your project, include the following dependency in your pom.xml file:
 
+```mvn
 <dependencies>
     <dependency>
         <groupId>net.quillcraft</groupId>
@@ -32,6 +33,7 @@ To add the SongAPI Plugin to your project, include the following dependency in y
         <scope>provided</scope>
     </dependency>
 </dependencies>
+````
 
 Ensure that you use the correct version of the plugin that matches your project's requirements.
 
