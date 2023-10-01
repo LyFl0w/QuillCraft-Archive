@@ -1,4 +1,4 @@
-# Lumy Program
+# Lumy
 
 The Lumy Program plays a crucial role in the QuillCraft server ecosystem by facilitating the seamless update of text content stored in Redis. It accomplishes this through local or non-local requests combined with a specific port.
 
