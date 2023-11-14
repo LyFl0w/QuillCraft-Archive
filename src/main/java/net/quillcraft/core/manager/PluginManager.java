@@ -4,6 +4,7 @@ import net.quillcraft.core.QuillCraftCore;
 import net.quillcraft.core.command.*;
 import net.quillcraft.core.listener.player.PlayerCommandPreprocessListener;
 import net.quillcraft.core.listener.player.PlayerCommandSendListener;
+import net.quillcraft.core.listener.player.PlayerJoinListener;
 import net.quillcraft.core.listener.player.PlayerMoveListener;
 import org.bukkit.Server;
 import org.bukkit.plugin.messaging.Messenger;
@@ -24,6 +25,7 @@ public class PluginManager {
 
     private void registerEvents(org.bukkit.plugin.PluginManager pluginManager) {
         pluginManager.registerEvents(new PlayerMoveListener(quillCraftCore), quillCraftCore);
+        pluginManager.registerEvents(new PlayerJoinListener(), quillCraftCore);
 
         // Commands
         final List<String> commands = quillCraftCore.getCommandManager().getCommands();
