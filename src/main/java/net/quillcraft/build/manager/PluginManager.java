@@ -4,7 +4,6 @@ import net.quillcraft.build.QuillCraftBuild;
 import net.quillcraft.build.command.*;
 import net.quillcraft.build.command.completion.WarpTabCompletion;
 import net.quillcraft.build.listener.player.PlayerJoinListener;
-import net.quillcraft.build.listener.player.PlayerTeleportListener;
 
 import org.bukkit.Server;
 
@@ -20,7 +19,6 @@ public class PluginManager {
 
     private void registerEvents(org.bukkit.plugin.PluginManager pluginManager){
         pluginManager.registerEvents(new PlayerJoinListener(main), main);
-        pluginManager.registerEvents(new PlayerTeleportListener(main), main);
     }
 
     private void registerCommands(){
