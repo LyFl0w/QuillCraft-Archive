@@ -2,15 +2,16 @@ package com.test.sqlrequest;
 
 import net.lyflow.sqlrequest.SQLRequest;
 
-import java.sql.DriverManager;
-import java.sql.SQLException;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 
 public class Client {
+
+    private final SQLRequest sqlRequest;
     private String name;
     private int age;
-    private final SQLRequest sqlRequest;
 
-    public Client(int id, String name, int age){
+    public Client(int id, String name, int age) {
         this.name = name;
         this.age = age;
 
@@ -18,31 +19,44 @@ public class Client {
         this.sqlRequest = new SQLRequest(sqlTablesManager.getTable(), sqlTablesManager.getKeyColumn(), Integer.toString(id));
     }
 
-    public void setName(String name){
+    public String getName() {
+        return name;
+    }
+
+    public void setName(String name) {
         this.name = name;
         sqlRequest.addData("name", name);
     }
 
-    public void setAge(int age){
+    public int getAge() {
+        return age;
+    }
+
+    public void setAge(int age) {
         this.age = age;
         sqlRequest.addData("age", age);
     }
 
-    public String getName(){
-        return name;
-    }
-
-    public int getAge(){
-        return age;
-    }
-
-    public void updateData(){
-        try{
-            Class.forName("com.mys.jdbc.Driver");
-            sqlRequest.sendUpdateRequest(DriverManager.getConnection("jdbc:mysql://localhost:3306/clientbase", "user", "pass"));
-        }catch(Exception e){
-            e.printStackTrace();
+    public void updateData() {
+        try {
+            sqlRequest.sendUpdateRequest(TestRequest.getConnection());
+        } catch (Exception exception) {
+            Logger.getLogger(Client.class.getName()).log(Level.SEVERE, exception.getMessage(), exception);
         }
+    }
+
+    public void deleteData() {
+        try {
+            sqlRequest.sendDeleteRequest(TestRequest.getConnection());
+        } catch (Exception exception) {
+            Logger.getLogger(Client.class.getName()).log(Level.SEVERE, exception.getMessage(), exception);
+        }
+    }
+
+
+    // note : getSQLRequest function just for test
+    public SQLRequest getSQLRequest() {
+        return sqlRequest;
     }
 
 }

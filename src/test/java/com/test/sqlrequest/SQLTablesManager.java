@@ -6,16 +6,16 @@ public enum SQLTablesManager {
 
     private final String table, keyColumn;
 
-    SQLTablesManager(String table, String keyColumn){
+    SQLTablesManager(String table, String keyColumn) {
         this.table = table;
         this.keyColumn = keyColumn;
     }
 
-    public String getTable(){
+    public String getTable() {
         return table;
     }
 
-    public String getKeyColumn(){
+    public String getKeyColumn() {
         return keyColumn;
     }
 }
