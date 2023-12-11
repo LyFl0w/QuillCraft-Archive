@@ -6,16 +6,19 @@ pipeline {
   }
   
   stages {
-    stage('SCM Checkout') {
+    stage('Build') {
       steps {
         checkout scm
+        script {
+          sh 'mvn clean install'
+        }
       }
     }
 
-    stage('Build') {
+    stage('Test') {
       steps {
         script {
-          sh 'mvn clean install'
+          sh 'mvn test'
         }
       }
     }
@@ -30,7 +33,7 @@ pipeline {
 
     stage('Quality Gate') {
       steps {
-        timeout(time: 1, unit: 'HOURS') {
+        timeout(time: 2, unit: 'MINUTES') {
           script {
             def qg = waitForQualityGate()
             if (qg.status != 'OK') {
