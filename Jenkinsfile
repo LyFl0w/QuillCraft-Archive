@@ -1,12 +1,12 @@
 pipeline {
   agent none
   
-  stage('SCM') {
-    agent any
-    checkout scm
-  }
-  
   stages {
+    stage('SCM') {
+      agent any
+      checkout scm
+    }
+    
     stage("Build") {
       agent any
       steps {
