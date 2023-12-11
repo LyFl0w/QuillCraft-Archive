@@ -6,8 +6,6 @@
     <groupId>net.lyflow</groupId>
     <artifactId>SQLRequest</artifactId>
     <version>1.0.2</version>
-    <packaging>jar</packaging>
-
 
     <name>SQLRequest</name>
     <description>Create SQL Request easily</description>
