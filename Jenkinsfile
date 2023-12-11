@@ -10,8 +10,9 @@ pipeline {
     stage("Build") {
       agent any
       steps {
-        withMaven
-        sh 'mvn clean package'
+        withMaven {
+          sh 'mvn clean package'
+        }
       }
     }
     
