@@ -1,49 +1,42 @@
 pipeline {
-  agent none
+  agent any
 
   tools {
     maven 'Default Maven'
   }
   
   stages {
-    stage('SCM') {
-      agent any
+    stage('SCM Checkout') {
       steps {
         checkout scm
       }
     }
-    
-    stage("Build") {
-      agent any
+
+    stage('Build') {
       steps {
         script {
-          sh 'mvn clean package'
+          sh 'mvn clean install'
         }
       }
     }
-    
-    stage("SonarQube analysis") {
-      agent any
+
+    stage('SonarQube Analysis') {
       steps {
         withSonarQubeEnv('SonarQube') {
           sh 'mvn sonar:sonar'
         }
       }
     }
-    
-    stage("Quality Gate") {
-      agent any
+
+    stage('Quality Gate') {
       steps {
-        script {
-          timeout(time: 1, unit: 'HOURS') {
+        timeout(time: 2, unit: 'MINUTES') {
             def qg = waitForQualityGate()
             if (qg.status != 'OK') {
               error "Pipeline aborted due to quality gate failure: ${qg.status}"
             }
-          }
         }
       }
     }
-
   }
 }
