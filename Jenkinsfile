@@ -2,7 +2,7 @@ pipeline {
   agent none
 
   tools {
-    tool name: 'Default Maven', type: 'maven'
+    maven 'Default Maven'
   }
   
   stages {
@@ -16,7 +16,7 @@ pipeline {
     stage("Build") {
       agent any
       steps {
-        withMaven {
+        script {
           sh 'mvn clean package'
         }
       }
