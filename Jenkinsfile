@@ -6,9 +6,14 @@ pipeline {
   }
   
   stages {
-    stage('Build') {
+    stage('SCM Checkout') {
       steps {
         checkout scm
+      }
+    }
+    
+    stage('Build') {
+      steps {
         script {
           sh 'mvn clean install'
         }
