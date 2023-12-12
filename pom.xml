@@ -6,10 +6,31 @@
 
     <groupId>org.lumy</groupId>
     <artifactId>Lumy</artifactId>
-    <version>1.2.0</version>
+    <version>1.2.1</version>
+
+    <name>Lumy</name>
+    <description>Program for updating messages in Redis via the Lumy API</description>
+    <url>https://github.com/QuillCraftMC/Lumy/</url>
+    <inceptionYear>2021</inceptionYear>
+    <licenses>
+        <license>
+            <name>GNU GENERAL PUBLIC LICENSE Version 3, 29 June 2007</name>
+            <url>https://github.com/LyFl0w/SQLRequest/blob/master/LICENCE</url>
+            <distribution>repo</distribution>
+        </license>
+    </licenses>
+
+    <developers>
+        <developer>
+            <id>LyFl0w</id>
+        </developer>
+    </developers>
 
     <properties>
-        <java.version>19</java.version>
+        <java.version>17</java.version>
+        <maven.compiler.source>${java.version}</maven.compiler.source>
+        <maven.compiler.target>${java.version}</maven.compiler.target>
+
         <file.encoding>UTF-8</file.encoding>
         <project.build.sourceEncoding>${file.encoding}</project.build.sourceEncoding>
         <project.reporting.outputEncoding>${file.encoding}</project.reporting.outputEncoding>
@@ -19,16 +40,12 @@
         <plugins>
             <plugin>
                 <artifactId>maven-compiler-plugin</artifactId>
-                <version>3.9.0</version>
-                <configuration>
-                    <source>${java.version}</source>
-                    <target>${java.version}</target>
-                </configuration>
+                <version>3.11.0</version>
             </plugin>
             <plugin>
                 <groupId>org.apache.maven.plugins</groupId>
                 <artifactId>maven-shade-plugin</artifactId>
-                <version>3.5.0</version>
+                <version>3.5.1</version>
                 <executions>
                     <execution>
                         <phase>package</phase>
@@ -54,7 +71,6 @@
     </build>
 
     <dependencies>
-
         <dependency>
             <groupId>org.slf4j</groupId>
             <artifactId>slf4j-api</artifactId>
@@ -106,9 +122,8 @@
         <dependency>
             <groupId>org.lumy</groupId>
             <artifactId>lumy-api</artifactId>
-            <version>1.2.0</version>
+            <version>1.2.1</version>
         </dependency>
-
     </dependencies>
 
 </project>
