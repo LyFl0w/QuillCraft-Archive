@@ -6,7 +6,43 @@
 
     <groupId>net.quillcraft</groupId>
     <artifactId>SongAPI</artifactId>
-    <version>1.0.1</version>
+    <version>1.0.2</version>
+    <packaging>jar</packaging>
+
+    <name>SongAPI</name>
+    <description>API Spigot to playing song</description>
+    <url>https://github.com/QuillCraftMC/SongAPI/</url>
+    <inceptionYear>2021</inceptionYear>
+    <licenses>
+        <license>
+            <name>GNU GENERAL PUBLIC LICENSE Version 3, 29 June 2007</name>
+            <url>https://github.com/QuillCraftMC/QuillCraftCore/blob/master/LICENSE</url>
+            <distribution>repo</distribution>
+        </license>
+    </licenses>
+
+    <developers>
+        <developer>
+            <id>LyFl0w</id>
+        </developer>
+    </developers>
+
+    <organization>
+        <name>QuillCraft</name>
+        <url>https://github.com/QuillCraftMC</url>
+    </organization>
+
+    <properties>
+        <file.project>dev</file.project>
+
+        <java.version>17</java.version>
+        <maven.compiler.source>${java.version}</maven.compiler.source>
+        <maven.compiler.target>${java.version}</maven.compiler.target>
+
+        <file.encoding>UTF-8</file.encoding>
+        <project.build.sourceEncoding>${file.encoding}</project.build.sourceEncoding>
+        <project.reporting.outputEncoding>${file.encoding}</project.reporting.outputEncoding>
+    </properties>
 
     <repositories>
         <repository>
@@ -26,11 +62,7 @@
         <plugins>
             <plugin>
                 <artifactId>maven-compiler-plugin</artifactId>
-                <version>3.9.0</version>
-                <configuration>
-                    <source>19</source>
-                    <target>19</target>
-                </configuration>
+                <version>3.11.0</version>
             </plugin>
         </plugins>
     </build>
