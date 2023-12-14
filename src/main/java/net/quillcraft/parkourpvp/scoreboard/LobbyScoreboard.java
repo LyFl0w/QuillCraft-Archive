@@ -14,7 +14,10 @@ import org.bukkit.scoreboard.DisplaySlot;
 
 import java.text.DecimalFormat;
 
-public class LobbyScoreboard implements ScoreboardManager{
+public class LobbyScoreboard implements ScoreboardManager {
+
+    // TODO : PUT SCOREBOARD MANAGER FROM QuillCraftLobby INTO QuillCraftCore
+
 
     // FIXME: 20/02/2022 REMOVE LOBBY FOR WAITING SALLE (LOBBY IS JUST FOR THE BETA)
 

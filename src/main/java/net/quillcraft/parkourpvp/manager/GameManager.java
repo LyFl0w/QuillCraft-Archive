@@ -2,7 +2,7 @@ package net.quillcraft.parkourpvp.manager;
 
 import net.quillcraft.commons.game.statistiques.parkourpvp.PlayerParkourPvPData;
 import net.quillcraft.core.utils.builders.YamlConfigurationBuilder;
-import net.quillcraft.core.utils.builders.scoreboard.ScoreboardBuilder;
+import net.quillcraft.core.utils.builders.ScoreboardBuilder;
 import net.quillcraft.parkourpvp.ParkourPvP;
 import net.quillcraft.parkourpvp.game.InGameStatus;
 import net.quillcraft.parkourpvp.game.checkpoint.CheckPoint;

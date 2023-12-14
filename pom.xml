@@ -6,11 +6,39 @@
 
     <groupId>net.quillcraft</groupId>
     <artifactId>ParkourPvP</artifactId>
-    <version>1.1-dev</version>
+    <version>1.1.1-dev</version>
+    <packaging>jar</packaging>
+
+    <name>ParkourPvP</name>
+    <description>ParkourPvP is Spigot Plugin for ParkourPvP game</description>
+    <url>https://github.com/QuillCraftMC/ParkourPvP/</url>
+    <inceptionYear>2021</inceptionYear>
+    <licenses>
+        <license>
+            <name>GNU GENERAL PUBLIC LICENSE Version 3, 29 June 2007</name>
+            <url>https://github.com/QuillCraftMC/ParkourPvP/blob/master/LICENSE</url>
+            <distribution>repo</distribution>
+        </license>
+    </licenses>
+
+    <developers>
+        <developer>
+            <id>LyFl0w</id>
+        </developer>
+    </developers>
+
+    <organization>
+        <name>QuillCraft</name>
+        <url>https://github.com/QuillCraftMC</url>
+    </organization>
 
     <properties>
         <file.project>dev</file.project>
+
         <java.version>17</java.version>
+        <maven.compiler.source>${java.version}</maven.compiler.source>
+        <maven.compiler.target>${java.version}</maven.compiler.target>
+
         <file.encoding>UTF-8</file.encoding>
         <project.build.sourceEncoding>${file.encoding}</project.build.sourceEncoding>
         <project.reporting.outputEncoding>${file.encoding}</project.reporting.outputEncoding>
@@ -35,23 +63,25 @@
     </pluginRepositories>
 
     <build>
-        <pluginManagement>
-            <plugins>
-                <plugin>
-                    <artifactId>maven-compiler-plugin</artifactId>
-                    <version>3.9.0</version>
-                    <configuration>
-                        <source>${java.version}</source>
-                        <target>${java.version}</target>
-                    </configuration>
-                </plugin>
-            </plugins>
-        </pluginManagement>
         <plugins>
+            <plugin>
+                <artifactId>maven-compiler-plugin</artifactId>
+                <version>3.11.0</version>
+            </plugin>
             <plugin>
                 <groupId>org.apache.maven.plugins</groupId>
                 <artifactId>maven-shade-plugin</artifactId>
-                <version>3.2.4</version>
+                <version>3.5.1</version>
+                <configuration>
+                    <filters>
+                        <filter>
+                            <artifact>*:*</artifact>
+                            <excludes>
+                                <exclude>META-INF/**</exclude>
+                            </excludes>
+                        </filter>
+                    </filters>
+                </configuration>
                 <executions>
                     <execution>
                         <phase>package</phase>
@@ -59,15 +89,7 @@
                             <goal>shade</goal>
                         </goals>
                         <configuration>
-                            <filters>
-                                <filter>
-                                    <artifact>*</artifact>
-                                    <excludes>
-                                        <exclude>META-INF/**</exclude>
-                                    </excludes>
-                                </filter>
-                            </filters>
-                            <outputFile>../QuillCraftProjectOutPut/${file.project}/${project.artifactId}-${project.version}.jar</outputFile>
+                            <finalName>${project.artifactId}-${project.version}</finalName>
                         </configuration>
                     </execution>
                 </executions>
@@ -79,14 +101,14 @@
         <dependency>
             <groupId>net.quillcraft</groupId>
             <artifactId>QuillCraftCore</artifactId>
-            <version>2.1-dev</version>
+            <version>2.2.4-dev</version>
             <scope>provided</scope>
         </dependency>
 
         <dependency>
             <groupId>org.spigotmc</groupId>
             <artifactId>spigot</artifactId>
-            <version>1.19.2-R0.1-SNAPSHOT</version>
+            <version>1.20.2-R0.1-SNAPSHOT</version>
             <scope>provided</scope>
         </dependency>
 
@@ -100,63 +122,63 @@
         <dependency>
             <groupId>org.redisson</groupId>
             <artifactId>redisson</artifactId>
-            <version>3.18.0</version>
+            <version>3.23.1</version>
             <scope>provided</scope>
         </dependency>
 
         <dependency>
             <groupId>com.fasterxml.jackson.core</groupId>
             <artifactId>jackson-databind</artifactId>
-            <version>2.14.0</version>
+            <version>2.15.1</version>
             <scope>provided</scope>
         </dependency>
 
         <dependency>
             <groupId>com.fasterxml.jackson.core</groupId>
             <artifactId>jackson-core</artifactId>
-            <version>2.14.0</version>
+            <version>2.15.1</version>
             <scope>provided</scope>
         </dependency>
 
         <dependency>
             <groupId>com.fasterxml.jackson.dataformat</groupId>
             <artifactId>jackson-dataformat-yaml</artifactId>
-            <version>2.14.0</version>
+            <version>2.15.1</version>
             <scope>provided</scope>
         </dependency>
 
         <dependency>
             <groupId>com.fasterxml.jackson.core</groupId>
             <artifactId>jackson-annotations</artifactId>
-            <version>2.14.0</version>
+            <version>2.15.1</version>
             <scope>provided</scope>
         </dependency>
 
         <dependency>
             <groupId>com.google.code.gson</groupId>
             <artifactId>gson</artifactId>
-            <version>2.10</version>
+            <version>2.10.1</version>
             <scope>provided</scope>
         </dependency>
 
         <dependency>
             <groupId>net.lyflow</groupId>
             <artifactId>SQLRequest</artifactId>
-            <version>1.0.1</version>
+            <version>1.0.2</version>
             <scope>provided</scope>
         </dependency>
 
         <dependency>
             <groupId>org.slf4j</groupId>
             <artifactId>slf4j-api</artifactId>
-            <version>2.0.5</version>
+            <version>2.0.7</version>
             <scope>provided</scope>
         </dependency>
 
         <dependency>
             <groupId>org.slf4j</groupId>
             <artifactId>slf4j-simple</artifactId>
-            <version>2.0.5</version>
+            <version>2.0.7</version>
             <scope>provided</scope>
         </dependency>
     </dependencies>
