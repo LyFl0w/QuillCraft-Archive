@@ -1,4 +1,4 @@
-package org.lumy.api.text;
+package net.quillcraft.lumy.api.text;
 
 public sealed interface TextBase permits Text, TextList{
 

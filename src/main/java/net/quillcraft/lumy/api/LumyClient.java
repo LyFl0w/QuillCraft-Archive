@@ -1,6 +1,6 @@
-package org.lumy.api;
+package net.quillcraft.lumy.api;
 
-import org.lumy.api.utils.FileUtils;
+import net.quillcraft.lumy.api.utils.FileUtils;
 
 import java.io.*;
 import java.net.InetAddress;

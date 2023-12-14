@@ -1,4 +1,4 @@
-package org.lumy.api.text;
+package net.quillcraft.lumy.api.text;
 
 public enum TextList implements TextBase{
 

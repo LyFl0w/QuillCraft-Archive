@@ -1,4 +1,4 @@
-package org.lumy.api.utils;
+package net.quillcraft.lumy.api.utils;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.dataformat.yaml.YAMLFactory;
