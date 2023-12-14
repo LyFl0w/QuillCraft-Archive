@@ -1,10 +1,10 @@
-package org.lumy.server;
+package net.quillcraft.lumy.server;
 
+import net.quillcraft.lumy.server.data.RedisManager;
+import net.quillcraft.lumy.server.manager.LanguageManager;
 import org.apache.logging.log4j.Level;
-import org.lumy.Lumy;
+import net.quillcraft.lumy.Lumy;
 import org.lumy.api.utils.FileUtils;
-import org.lumy.server.data.RedisManager;
-import org.lumy.server.manager.LanguageManager;
 import org.apache.logging.log4j.Logger;
 
 import java.io.*;

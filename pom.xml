@@ -4,7 +4,7 @@
          xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
     <modelVersion>4.0.0</modelVersion>
 
-    <groupId>org.lumy</groupId>
+    <groupId>net.quillcraft</groupId>
     <artifactId>Lumy</artifactId>
     <version>1.2.1</version>
     <packaging>jar</packaging>
@@ -61,7 +61,7 @@
                         <configuration>
                             <transformers>
                                 <transformer implementation="org.apache.maven.plugins.shade.resource.ManifestResourceTransformer">
-                                    <mainClass>org.lumy.Lumy</mainClass>
+                                    <mainClass>net.quillcraft.lumy.Lumy</mainClass>
                                 </transformer>
                             </transformers>
                         </configuration>

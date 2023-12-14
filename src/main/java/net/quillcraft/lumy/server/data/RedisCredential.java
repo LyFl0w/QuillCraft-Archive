@@ -1,11 +1,11 @@
-package org.lumy.server.data;
+package net.quillcraft.lumy.server.data;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.dataformat.yaml.YAMLFactory;
 
 import org.apache.logging.log4j.Level;
-import org.lumy.Lumy;
+import net.quillcraft.lumy.Lumy;
 import org.lumy.api.utils.FileUtils;
 
 import reactor.util.annotation.Nullable;

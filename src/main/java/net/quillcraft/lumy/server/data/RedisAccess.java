@@ -1,6 +1,6 @@
-package org.lumy.server.data;
+package net.quillcraft.lumy.server.data;
 
-import org.lumy.Lumy;
+import net.quillcraft.lumy.Lumy;
 import org.redisson.Redisson;
 import org.redisson.api.RedissonClient;
 import org.redisson.codec.JsonJacksonCodec;

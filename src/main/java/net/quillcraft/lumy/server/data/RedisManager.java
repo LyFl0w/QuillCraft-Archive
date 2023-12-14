@@ -1,4 +1,4 @@
-package org.lumy.server.data;
+package net.quillcraft.lumy.server.data;
 
 public enum RedisManager{
 

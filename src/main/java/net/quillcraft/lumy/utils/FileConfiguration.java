@@ -1,6 +1,6 @@
-package org.lumy.utils;
+package net.quillcraft.lumy.utils;
 
-import org.lumy.Lumy;
+import net.quillcraft.lumy.Lumy;
 import org.yaml.snakeyaml.Yaml;
 
 import java.io.InputStream;

@@ -1,10 +1,10 @@
-package org.lumy;
+package net.quillcraft.lumy;
 
+import net.quillcraft.lumy.server.LumyServer;
 import org.apache.logging.log4j.Logger;
 import org.apache.logging.log4j.LogManager;
 
 import org.lumy.api.utils.FileUtils;
-import org.lumy.server.LumyServer;
 
 public class Lumy {
 

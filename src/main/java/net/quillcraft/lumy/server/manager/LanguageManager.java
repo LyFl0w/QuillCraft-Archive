@@ -1,12 +1,12 @@
-package org.lumy.server.manager;
+package net.quillcraft.lumy.server.manager;
 
-import org.lumy.Lumy;
+import net.quillcraft.lumy.Lumy;
 import org.lumy.api.text.Text;
 import org.lumy.api.text.TextBase;
 import org.lumy.api.text.TextList;
 import org.lumy.api.utils.FileUtils;
-import org.lumy.server.data.RedisManager;
-import org.lumy.utils.FileConfiguration;
+import net.quillcraft.lumy.server.data.RedisManager;
+import net.quillcraft.lumy.utils.FileConfiguration;
 import org.apache.logging.log4j.Logger;
 import org.redisson.api.RList;
 import org.redisson.api.RedissonClient;
