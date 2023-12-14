@@ -5,19 +5,22 @@ import com.google.gson.JsonParser;
 import com.mojang.authlib.GameProfile;
 import com.mojang.authlib.properties.Property;
 import net.minecraft.network.protocol.Packet;
+import net.minecraft.network.protocol.common.ServerboundClientInformationPacket;
 import net.minecraft.network.protocol.game.*;
 import net.minecraft.network.syncher.DataWatcher;
 import net.minecraft.network.syncher.DataWatcherObject;
 import net.minecraft.network.syncher.DataWatcherRegistry;
 import net.minecraft.server.MinecraftServer;
+import net.minecraft.server.level.ClientInformation;
 import net.minecraft.server.level.EntityPlayer;
 import net.minecraft.server.level.WorldServer;
 import net.quillcraft.core.utils.PacketUtils;
 import org.bukkit.Bukkit;
 import org.bukkit.Location;
 import org.bukkit.World;
-import org.bukkit.craftbukkit.v1_20_R1.CraftServer;
-import org.bukkit.craftbukkit.v1_20_R1.CraftWorld;
+
+import org.bukkit.craftbukkit.v1_20_R2.CraftServer;
+import org.bukkit.craftbukkit.v1_20_R2.CraftWorld;
 import org.bukkit.entity.Player;
 
 import java.io.InputStreamReader;
@@ -44,7 +47,7 @@ public class NPC {
 
         final MinecraftServer server = ((CraftServer) Bukkit.getServer()).getServer();
         final WorldServer world = ((CraftWorld) location.getWorld()).getHandle();
-        this.npc = new EntityPlayer(server, world, gameProfile);
+        this.npc = new EntityPlayer(server, world, gameProfile, ClientInformation.a());
 
         this.npc.getBukkitEntity().setPlayerListName("§8[NPC] §f"+npc.co());
     }
@@ -80,7 +83,7 @@ public class NPC {
     }
 
     private void setDataWatcher() {
-        dataWatcher = npc.aj();
+        dataWatcher = npc.al();
         dataWatcher.b(new DataWatcherObject<>(17, DataWatcherRegistry.a), (byte) 0xFF);
     }
 
@@ -112,10 +115,8 @@ public class NPC {
         final ArrayList<Packet<?>> packets = new ArrayList<>();
         //packets.add(new PacketPlayOutPlayerInfo(PacketPlayOutPlayerInfo.EnumPlayerInfoAction.a, npc)); //Display NPC
         packets.add(new ClientboundPlayerInfoUpdatePacket(ClientboundPlayerInfoUpdatePacket.a.a, npc)); //Display NPC
+        packets.add(new ServerboundClientInformationPacket(npc.z())); // Display NPC
 
-        packets.add(new PacketPlayOutNamedEntitySpawn(npc)); // Display NPC
-
-        //if(dataWatcher != null) packets.add(new PacketPlayOutEntityMetadata(getId(), dataWatcher, true)); // Display 3D part of the Skin
         if(dataWatcher != null)
             packets.add(new PacketPlayOutEntityMetadata(getId(), dataWatcher.c())); // Display 3D part of the Skin
 
@@ -183,9 +184,8 @@ public class NPC {
     }
 
     public int getId() {
-        // return npc.ae();
         // npc.hashCode() is generally equals to its ID
-        return npc.af();
+        return npc.ah();
     }
 
     public Set<Player> getReceivers() {
