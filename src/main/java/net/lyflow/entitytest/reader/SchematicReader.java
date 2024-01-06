@@ -4,12 +4,10 @@ import com.google.gson.GsonBuilder;
 import com.google.gson.reflect.TypeToken;
 
 import net.lyflow.entitytest.utils.SimpleLocation;
-import net.minecraft.nbt.NBTCompressedStreamTools;
-import net.minecraft.nbt.NBTTagCompound;
 import org.bukkit.Bukkit;
-import org.bukkit.Location;
 import org.bukkit.Material;
 import org.bukkit.block.data.BlockData;
+import org.bukkit.util.Vector;
 
 import java.io.File;
 import java.io.FileInputStream;
@@ -30,7 +28,11 @@ public class SchematicReader {
     }
 
     public SchematicReader(FileInputStream fileInputStream) throws IOException {
-        final NBTTagCompound nbtData = NBTCompressedStreamTools.a(fileInputStream);
+        this(fileInputStream, new Vector());
+    }
+
+    public SchematicReader(FileInputStream fileInputStream, Vector vector) throws IOException {
+        final NBTTagCompound nbtData = NBTCompressedStreamTools.a(fileInputStream, NBTReadLimiter.a());
 
         this.version = nbtData.h("Version");
         this.dataVersion = nbtData.h("DataVersion");
@@ -38,12 +40,12 @@ public class SchematicReader {
         this.height = nbtData.g("Height");
         this.length = nbtData.g("Length");
 
-        this.blocks = getBlocks(nbtData.m("BlockData"), getPalette(nbtData));
+        this.blocks = getBlocks(vector, nbtData.m("BlockData"), getPalette(nbtData));
 
         fileInputStream.close();
     }
 
-    private HashMap<SimpleLocation, BlockData> getBlocks(byte[] data, Map<Integer, String> palette) {
+    private HashMap<SimpleLocation, BlockData> getBlocks(Vector vector, byte[] data, Map<Integer, String> palette) {
 
         final HashMap<SimpleLocation, BlockData> blocks = new HashMap<>();
 
@@ -77,7 +79,7 @@ public class SchematicReader {
             final int z = (index % (width * length)) / width;
             final int x = (index % (width * length)) % width;
 
-            blocks.put(new SimpleLocation(x, y, z), blockData);
+            blocks.put(new SimpleLocation(x, y, z).substractVector(vector), blockData);
 
             index++;
         }
@@ -86,7 +88,7 @@ public class SchematicReader {
     }
 
     private Map<Integer, String> getPalette(NBTTagCompound nbtTagCompound) {
-        final Map<String, Integer> map = new GsonBuilder().create().fromJson(nbtTagCompound.p("Palette").f_(),
+        final Map<String, Integer> map = new GsonBuilder().create().fromJson(nbtTagCompound.p("Palette").t_(),
                 new TypeToken<Map<String, Integer>>(){}.getType());
 
         return map.entrySet().stream().collect(Collectors.toMap(Map.Entry::getValue, Map.Entry::getKey));

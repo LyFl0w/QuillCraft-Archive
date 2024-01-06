@@ -1,9 +1,11 @@
 name: EntityTest
 description: Testing the new Display entities in Minecraft 1.19.4
 version: 1.0
-api-version: 1.19
+api-version: 1.20
 author: LyFlow
 main: net.lyflow.entitytest.EntityTest
 commands:
   mide:
     description: paste moving build
+  ship:
+    description: shipper !!!!
