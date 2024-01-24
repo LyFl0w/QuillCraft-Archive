@@ -12,7 +12,7 @@ import java.util.logging.Logger;
 
 public class LumyClient {
 
-    private final static String NAME_PARSER = "name:";
+    private static final String NAME_PARSER = "name:";
 
     private final LinkedList<String> result;
     private final Logger logger;
@@ -30,38 +30,28 @@ public class LumyClient {
     }
 
     private void start(String name, String[] actions, String ip, int port) {
-        try {
-            logger.info("Attempting to connect to the Lumy server");
+        logger.info("Attempting to connect to the Lumy server");
 
-            if (Arrays.stream(actions).filter(action -> action.startsWith(NAME_PARSER)).count() > 1) {
-                logger.severe("You can't have multiple names");
-                return;
+        if (hasDuplicateName(actions)) {
+            logger.severe("You can't have multiple names");
+            return;
+        }
+
+        try (final Socket socket = new Socket(InetAddress.getByName(ip), port)) {
+            final BufferedReader bufferedReader = new BufferedReader(new InputStreamReader(socket.getInputStream()));
+            final PrintWriter printWriter = new PrintWriter(socket.getOutputStream(), true);
+
+            if (isValidName(name)) {
+                printWriter.println(NAME_PARSER + name);
+                logger.info("Successful connection to Lumy server as " + name);
+            } else {
+                logger.info("Successful connection to Lumy server");
             }
 
+            processAction(actions, printWriter, bufferedReader);
 
-            try (final Socket socket = new Socket(InetAddress.getByName(ip), port)) {
-                try {
-                    final BufferedReader bufferedReader = new BufferedReader(new InputStreamReader(socket.getInputStream()));
-                    final PrintWriter printWriter = new PrintWriter(socket.getOutputStream(), true);
-
-                    if (name != null && !name.isBlank()) {
-                        printWriter.println(NAME_PARSER + name);
-                        logger.info("Successful connection to Lumy server as " + name);
-                    } else {
-                        logger.info("Successful connection to Lumy server");
-                    }
-
-                    processAction(actions, printWriter, bufferedReader);
-
-                    printWriter.close();
-                    bufferedReader.close();
-
-                    socket.close();
-                } catch (IOException e) {
-                    logger.log(Level.WARNING, e.getMessage(), e);
-                }
-            }
-
+            printWriter.close();
+            bufferedReader.close();
         } catch (UnknownHostException e) {
             logger.log(Level.WARNING, "Unknown Host", e);
         } catch (IOException e) {
@@ -70,11 +60,9 @@ public class LumyClient {
     }
 
     public void processAction(String[] actions, PrintWriter printWriter, BufferedReader bufferedReader) throws IOException {
-        loop:
         for (final String action : actions) {
             printWriter.println(action.toLowerCase());
 
-            // obtaining out streams
             logger.info(action + " request sent to Lumy server");
 
             if (action.startsWith(NAME_PARSER)) continue;
@@ -88,9 +76,9 @@ public class LumyClient {
 
                     if (respond.startsWith("error:")) {
                         logger.severe(respond);
-                        break loop;
+                        return;
                     }
-                    if (respond.equals("closed")) break loop;
+                    if (respond.equals("closed")) return;
 
                     result.addLast(respond);
                 }
