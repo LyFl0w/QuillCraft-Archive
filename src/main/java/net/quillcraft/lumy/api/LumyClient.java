@@ -12,25 +12,28 @@ import java.util.logging.Logger;
 
 public class LumyClient {
 
+    private final static String NAME_PARSER = "name:";
+
     private final LinkedList<String> result;
+    private final Logger logger;
 
     public LumyClient(String[] args, Logger logger, File dataFolder) {
         this.result = new LinkedList<>();
-
+        this.logger = logger;
         try {
             final LumyConfiguration lumyConfiguration = FileUtils.getObjectFromYamlFile(
                     FileUtils.getFileFromResource(dataFolder, "config-lumy.yml"), LumyConfiguration.class);
-            start(lumyConfiguration.name(), args, logger, lumyConfiguration.ip(), lumyConfiguration.port());
+            start(lumyConfiguration.name(), args, lumyConfiguration.ip(), lumyConfiguration.port());
         } catch (IOException e) {
             logger.log(Level.SEVERE, e.getMessage(), e);
         }
     }
 
-    private void start(String name, String[] actions, Logger logger, String ip, int port) {
+    private void start(String name, String[] actions, String ip, int port) {
         try {
             logger.info("Attempting to connect to the Lumy server");
 
-            if (Arrays.stream(actions).filter(action -> action.startsWith("name:")).count() > 1) {
+            if (Arrays.stream(actions).filter(action -> action.startsWith(NAME_PARSER)).count() > 1) {
                 logger.severe("You can't have multiple names");
                 return;
             }
@@ -42,38 +45,13 @@ public class LumyClient {
                     final PrintWriter printWriter = new PrintWriter(socket.getOutputStream(), true);
 
                     if (name != null && !name.isBlank()) {
-                        printWriter.println("name:" + name);
+                        printWriter.println(NAME_PARSER + name);
                         logger.info("Successful connection to Lumy server as " + name);
                     } else {
                         logger.info("Successful connection to Lumy server");
                     }
 
-                    loop:
-                    for (final String action : actions) {
-                        printWriter.println(action.toLowerCase());
-
-                        // obtaining out streams
-                        logger.info(action + " request sent to Lumy server");
-
-                        if (action.startsWith("name:")) continue;
-
-                        switch (action.toLowerCase()) {
-                            case "update" -> {
-                            }
-
-                            default -> {
-                                final String respond = bufferedReader.readLine();
-
-                                if (respond.startsWith("error:")) {
-                                    logger.severe(respond);
-                                    break loop;
-                                }
-                                if (respond.equals("closed")) break loop;
-
-                                result.addLast(respond);
-                            }
-                        }
-                    }
+                    processAction(actions, printWriter, bufferedReader);
 
                     printWriter.close();
                     bufferedReader.close();
@@ -89,6 +67,43 @@ public class LumyClient {
         } catch (IOException e) {
             logger.log(Level.WARNING, "Connexion Refused", e);
         }
+    }
+
+    public void processAction(String[] actions, PrintWriter printWriter, BufferedReader bufferedReader) throws IOException {
+        loop:
+        for (final String action : actions) {
+            printWriter.println(action.toLowerCase());
+
+            // obtaining out streams
+            logger.info(action + " request sent to Lumy server");
+
+            if (action.startsWith(NAME_PARSER)) continue;
+
+            switch (action.toLowerCase()) {
+                case "update" -> {
+                }
+
+                default -> {
+                    final String respond = bufferedReader.readLine();
+
+                    if (respond.startsWith("error:")) {
+                        logger.severe(respond);
+                        break loop;
+                    }
+                    if (respond.equals("closed")) break loop;
+
+                    result.addLast(respond);
+                }
+            }
+        }
+    }
+
+    private boolean hasDuplicateName(String[] actions) {
+        return Arrays.stream(actions).filter(action -> action.startsWith(NAME_PARSER)).count() > 1;
+    }
+
+    private boolean isValidName(String name) {
+        return name != null && !name.isBlank();
     }
 
     public int readInt() {
