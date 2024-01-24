@@ -43,7 +43,7 @@ public class LumyClient {
 
             if (isValidName(name)) {
                 printWriter.println(NAME_PARSER + name);
-                logger.info("Successful connection to Lumy server as " + name);
+                logger.info(() -> "Successful connection to Lumy server as " + name);
             } else {
                 logger.info("Successful connection to Lumy server");
             }
@@ -63,12 +63,14 @@ public class LumyClient {
         for (final String action : actions) {
             printWriter.println(action.toLowerCase());
 
-            logger.info(action + " request sent to Lumy server");
+            logger.info(() -> action + " request sent to Lumy server");
 
             if (action.startsWith(NAME_PARSER)) continue;
 
             switch (action.toLowerCase()) {
                 case "update" -> {
+                    // do nothing
+                    break;
                 }
 
                 default -> {

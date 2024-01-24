@@ -12,6 +12,10 @@ import java.util.logging.Logger;
 
 public class FileUtils {
 
+    private FileUtils() {
+        throw new IllegalStateException("Utility class");
+    }
+
     private static final Logger logger = Logger.getLogger(FileUtils.class.getName());
 
     public static File getFileFromResource(File parent, String fileName) {
