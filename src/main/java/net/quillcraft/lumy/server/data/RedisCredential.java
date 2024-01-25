@@ -4,9 +4,9 @@ import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.dataformat.yaml.YAMLFactory;
 
+import net.quillcraft.lumy.api.utils.FileUtils;
 import org.apache.logging.log4j.Level;
 import net.quillcraft.lumy.Lumy;
-import org.lumy.api.utils.FileUtils;
 
 import reactor.util.annotation.Nullable;
 

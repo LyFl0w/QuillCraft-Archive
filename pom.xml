@@ -5,8 +5,8 @@
     <modelVersion>4.0.0</modelVersion>
 
     <groupId>net.quillcraft</groupId>
-    <artifactId>Lumy</artifactId>
-    <version>1.2.1</version>
+    <artifactId>lumy</artifactId>
+    <version>1.2.2</version>
     <packaging>jar</packaging>
 
     <name>Lumy</name>
@@ -85,9 +85,9 @@
         </dependency>
 
         <dependency>
-            <groupId>org.lumy</groupId>
+            <groupId>net.quillcraft</groupId>
             <artifactId>lumy-api</artifactId>
-            <version>1.2.1</version>
+            <version>1.2.2</version>
         </dependency>
     </dependencies>
 
