@@ -20,9 +20,9 @@ import java.util.logging.Logger;
 public class SaveTask extends BukkitRunnable {
 
     private static boolean canSave = false;
-    private static final String name = ChatColor.GOLD + "[" + ChatColor.AQUA + "AutoSave" + ChatColor.GOLD + "]§f ";
-    private static final SimpleDateFormat sdfDate = new SimpleDateFormat("yyyy-MM-dd");
-    private static final SimpleDateFormat sdfTime = new SimpleDateFormat("HH:mm");
+    private static final String NAME = ChatColor.GOLD + "[" + ChatColor.AQUA + "AutoSave" + ChatColor.GOLD + "]§f ";
+    private final SimpleDateFormat sdfDate = new SimpleDateFormat("yyyy-MM-dd");
+    private final SimpleDateFormat sdfTime = new SimpleDateFormat("HH:mm");
 
     private final QuillCraftBuild quillCraftBuild;
     private long deleteAfter;
@@ -78,11 +78,11 @@ public class SaveTask extends BukkitRunnable {
         server.getScheduler().runTaskAsynchronously(quillCraftBuild, () -> {
             canSave = false;
             final long timeCalcul = System.currentTimeMillis();
-            server.broadcastMessage(name + ChatColor.GREEN + "Sauvegade des mondes en cours");
+            server.broadcastMessage(NAME + ChatColor.GREEN + "Sauvegade des mondes en cours");
             new File(path).mkdirs();
             server.getWorlds().stream().parallel().forEach(world ->
                     ZipCompress.zip4j(path + "/" + world.getName() + "_temps", world.getWorldFolder(), quillCraftBuild.getLogger()));
-            server.broadcastMessage(name + ChatColor.GREEN + "Sauvegade des mondes effectué (" + (System.currentTimeMillis() - timeCalcul) / 1000 + "'s)");
+            server.broadcastMessage(NAME + ChatColor.GREEN + "Sauvegade des mondes effectué (" + (System.currentTimeMillis() - timeCalcul) / 1000 + "'s)");
         });
 
     }

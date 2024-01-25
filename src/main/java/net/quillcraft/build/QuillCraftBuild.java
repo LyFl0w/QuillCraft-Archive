@@ -8,30 +8,29 @@ import org.bukkit.plugin.java.JavaPlugin;
 
 import javax.annotation.Nonnull;
 import java.util.Objects;
-import java.util.logging.Level;
 
 public class QuillCraftBuild extends JavaPlugin {
 
-    private static QuillCraftBuild INSTANCE;
+    private static QuillCraftBuild instance;
 
     public SaveTask saveTask;
 
     @Override
     public void onEnable(){
-        INSTANCE = this;
+        instance = this;
 
         new SaveTask(this);
 
         new PluginManager(this);
     }
 
-    @Nonnull
+    @Override @Nonnull
     public PluginCommand getCommand(@Nonnull String name){
         return Objects.requireNonNull(super.getCommand(name));
     }
 
     public static QuillCraftBuild getInstance(){
-        return INSTANCE;
+        return instance;
     }
 
 }
