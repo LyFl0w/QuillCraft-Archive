@@ -2,7 +2,9 @@ package net.lyflow.songapi.song.data;
 
 public class Note{
 
-    private byte instrument, key, velocity;
+    private byte instrument;
+    private byte key;
+    private byte velocity;
     private short pitch;
 
     public Note(byte instrument, byte key, byte velocity, short pitch){

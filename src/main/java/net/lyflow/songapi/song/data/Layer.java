@@ -1,10 +1,11 @@
 package net.lyflow.songapi.song.data;
 
 import java.util.HashMap;
+import java.util.Map;
 
 public class Layer {
 
-    private HashMap<Integer, Note> noteAtTick;
+    private Map<Integer, Note> noteAtTick;
 
     private byte volume;
     private String name;
@@ -22,11 +23,11 @@ public class Layer {
         this.name = name;
     }
 
-    public HashMap<Integer, Note> getNoteAtTick(){
+    public Map<Integer, Note> getNoteAtTick(){
         return noteAtTick;
     }
 
-    public void setNoteAtTick(HashMap<Integer, Note> noteAtTick){
+    public void setNoteAtTick(Map<Integer, Note> noteAtTick){
         this.noteAtTick = noteAtTick;
     }
 

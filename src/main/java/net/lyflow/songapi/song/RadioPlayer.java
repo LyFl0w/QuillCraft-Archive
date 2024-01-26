@@ -23,7 +23,11 @@ public class RadioPlayer{
     private List<Song> playListSongs;
     private final List<Song> songs;
     private final ArrayList<String> players;
-    private boolean loop, random, autoRemove, playing;
+    private boolean loop;
+    private boolean random;
+    private boolean autoRemove;
+    private boolean playing;
+
     private int songIterator;
 
     private SongPlayerScheduler songPlayerScheduler;
@@ -32,7 +36,7 @@ public class RadioPlayer{
         this(javaPlugin, new ArrayList<>(), loop, random, autoRemove, songs);
     }
 
-    public RadioPlayer(JavaPlugin javaPlugin, ArrayList<Player> players, boolean loop, boolean random, boolean autoRemove, Song... songs){
+    public RadioPlayer(JavaPlugin javaPlugin, List<Player> players, boolean loop, boolean random, boolean autoRemove, Song... songs){
         this.javaPlugin = javaPlugin;
         this.songs = Arrays.asList(songs);
         this.players = new ArrayList<>();
@@ -44,7 +48,7 @@ public class RadioPlayer{
         radiosPlayers.add(this);
     }
 
-    public RadioPlayer(JavaPlugin javaPlugin, ArrayList<Player> players, Song... songs){
+    public RadioPlayer(JavaPlugin javaPlugin, List<Player> players, Song... songs){
         this(javaPlugin, players, false, false, true, songs);
     }
 
@@ -53,11 +57,8 @@ public class RadioPlayer{
     }
 
     public void playRadio(){
-        if(isPlaying()) try{
-            throw new Exception("The radio is already on");
-        }catch(Exception e){
-            e.printStackTrace();
-        }
+        if(isPlaying())
+            throw new IllegalStateException("The radio is already on");
 
         if(songPlayerScheduler == null){
             songIterator = 0;
@@ -71,26 +72,19 @@ public class RadioPlayer{
     }
 
     public void stopRadio(){
-        if(songPlayerScheduler == null) try{
-            throw new Exception("The radio is not on");
-        }catch(Exception e){
-            e.printStackTrace();
-        }
-        if(!isPlaying()) try{
-            throw new Exception("The radio is already turned off");
-        }catch(Exception e){
-            e.printStackTrace();
-        }
+        if(songPlayerScheduler == null)
+            throw new IllegalStateException("The radio is not on");
+
+        if(!isPlaying())
+            throw new IllegalStateException("The radio is already turned off");
 
         songPlayerScheduler.stop();
     }
 
     public void pauseRadio(){
-        if(songPlayerScheduler == null) try{
-            throw new Exception("The radio is not on");
-        }catch(Exception e){
-            e.printStackTrace();
-        }
+        if(songPlayerScheduler == null)
+            throw new IllegalStateException("The radio is not on");
+
         songPlayerScheduler.pause();
     }
 
@@ -123,17 +117,15 @@ public class RadioPlayer{
     }
 
     public void addPlayer(Player player){
-        if(playerListenRadio(player)) try{
-            throw new Exception("The player is already listening to a radio");
-        }catch(Exception e){
-            e.printStackTrace();
-        }
+        if(playerListenRadio(player))
+            throw new IllegalStateException("The player is already listening to a radio");
+
         players.add(player.getName());
     }
 
     public void removePlayer(Player player){
         players.remove(player.getName());
-        if(players.size() == 0 && isAutoRemove()){
+        if(players.isEmpty() && isAutoRemove()){
             songPlayerScheduler.stop();
             radiosPlayers.remove(this);
         }
@@ -160,7 +152,7 @@ public class RadioPlayer{
         return radiosPlayers.stream().parallel().filter(radioPlayer -> radioPlayer.containPlayer(player)).findFirst().orElseThrow(() -> new NullPointerException("The player "+player.getName()+" doesn't listen to the radio"));
     }
 
-    private void playNoteAtTick(Song song, int tick){
+    void playNoteAtTick(Song song, int tick){
         song.getLayerHashMap().values().forEach(layer -> {
             final Note note = layer.getNote(tick);
             if(note != null){
@@ -172,7 +164,6 @@ public class RadioPlayer{
                     final Player player = Bukkit.getPlayerExact(playerName);
                     if(player != null && player.isOnline()){
                         player.playSound(player.getLocation(), sound, volume, pitch);
-                        //System.out.println("Play tick "+tick+" for "+playerName);
                     }
                 });
 
@@ -184,7 +175,7 @@ public class RadioPlayer{
         float[] pitches = new float[2401];
 
         for(int i = 0; i < 2401; ++i){
-            pitches[i] = (float) Math.pow(2.0D, ((double) i-1200.0D)/1200.0D);
+            pitches[i] = (float) Math.pow(2.0D, (i-1200.0D)/1200.0D);
         }
 
         key = (byte) (key+pitch/100);

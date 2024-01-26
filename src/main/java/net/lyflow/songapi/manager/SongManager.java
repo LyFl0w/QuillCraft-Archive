@@ -9,20 +9,22 @@ import java.io.File;
 import java.util.Arrays;
 import java.util.HashMap;
 import java.util.Objects;
+import java.util.logging.Level;
 import java.util.logging.Logger;
 
 public class SongManager{
 
     private final HashMap<String, Song> songs;
+    private final Logger logger;
 
     public SongManager(JavaPlugin javaPlugin){
+        logger = javaPlugin.getLogger();
         songs = new HashMap<>();
         loadSongs(javaPlugin);
     }
 
     private void loadSongs(JavaPlugin javaPlugin){
-        final Logger logger = javaPlugin.getLogger();
-        final File folderSongs = new File(javaPlugin.getDataFolder(), "/songs");
+        final File folderSongs = new File(javaPlugin.getDataFolder(), "songs");
         if(!folderSongs.exists()){
             logger.severe("""
                     The songs directory does not exist
@@ -43,7 +45,7 @@ public class SongManager{
                         songs.put(name, song);
                     }
                 }catch(Exception e){
-                    e.printStackTrace();
+                    logger.log(Level.SEVERE, e.getMessage(), e);
                 }
             }else{
                 logger.warning("The file \""+name+"\" is not an NBS file");

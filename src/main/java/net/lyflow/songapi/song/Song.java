@@ -2,16 +2,20 @@ package net.lyflow.songapi.song;
 
 import net.lyflow.songapi.song.data.Layer;
 
-import java.util.HashMap;
+import java.util.Map;
 
 public class Song {
 
-    private final HashMap<Integer, Layer> layerHashMap;
-    private final short songHeight, length;
-    private final String title, description, author;
+    private final Map<Integer, Layer> layerHashMap;
+    private final short songHeight;
+    private final short length;
+    private final String title;
+    private final String description;
+    private final String author;
+
     private final long delay;
 
-    public Song(HashMap<Integer, Layer> layerHashMap, short songHeight, short length, String title, String description,
+    public Song(Map<Integer, Layer> layerHashMap, short songHeight, short length, String title, String description,
                 String author, float speed){
         this.layerHashMap = layerHashMap;
         this.songHeight = songHeight;
@@ -22,7 +26,7 @@ public class Song {
         this.delay = Math.round(20/speed);
     }
 
-    public HashMap<Integer, Layer> getLayerHashMap(){
+    public Map<Integer, Layer> getLayerHashMap(){
         return layerHashMap;
     }
 

@@ -31,7 +31,7 @@ public class SongParser{
 
         readShort();
         final byte version = dataInputStream.readByte();
-        if(version < 5) throw new Exception("""
+        if(version < 5) throw new IllegalStateException("""
                 The NBS version is old for %s
                 The NBS version of the file is %a
                 """.replace("%s", fileName).replace("%a", Integer.toString(version)));
