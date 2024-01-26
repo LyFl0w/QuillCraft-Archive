@@ -9,37 +9,38 @@ public class Layer {
 
     private byte volume;
     private String name;
-    public Layer(){
+
+    public Layer() {
         this.volume = 100;
         this.noteAtTick = new HashMap<>();
         this.name = "";
     }
 
-    public String getName(){
+    public String getName() {
         return name;
     }
 
-    public void setName(String name){
+    public void setName(String name) {
         this.name = name;
     }
 
-    public Map<Integer, Note> getNoteAtTick(){
+    public Map<Integer, Note> getNoteAtTick() {
         return noteAtTick;
     }
 
-    public void setNoteAtTick(Map<Integer, Note> noteAtTick){
+    public void setNoteAtTick(Map<Integer, Note> noteAtTick) {
         this.noteAtTick = noteAtTick;
     }
 
-    public byte getVolume(){
+    public byte getVolume() {
         return volume;
     }
 
-    public void setVolume(byte volume){
+    public void setVolume(byte volume) {
         this.volume = volume;
     }
 
-    public Note getNote(int tick){
+    public Note getNote(int tick) {
         return noteAtTick.get(tick);
     }
 

@@ -9,9 +9,9 @@ import org.bukkit.event.player.PlayerQuitEvent;
 public class PlayerSongQuitListener implements Listener {
 
     @EventHandler(priority = EventPriority.HIGH)
-    private void playerQuitEvent(PlayerQuitEvent event){
+    private void playerQuitEvent(PlayerQuitEvent event) {
         final Player player = event.getPlayer();
-        if(RadioPlayer.playerListenRadio(player)){
+        if (RadioPlayer.playerListenRadio(player)) {
             RadioPlayer.getRadioPlayer(player).removePlayer(player);
         }
     }

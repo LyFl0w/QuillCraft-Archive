@@ -23,14 +23,15 @@ public enum InstrumentNBS {
 
     private final int id;
     private final Sound sound;
-    InstrumentNBS(int id, Sound sound){
+
+    InstrumentNBS(int id, Sound sound) {
         this.id = id;
         this.sound = sound;
     }
 
-    public static Sound getInstrumentSoundByID(int id){
-        for(InstrumentNBS instrumentNBS: values()){
-            if(instrumentNBS.id == id) return instrumentNBS.sound;
+    public static Sound getInstrumentSoundByID(int id) {
+        for (InstrumentNBS instrumentNBS : values()) {
+            if (instrumentNBS.id == id) return instrumentNBS.sound;
         }
         return PIANO.sound;
     }

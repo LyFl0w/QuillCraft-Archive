@@ -1,10 +1,12 @@
 # SongAPI
 
-The SongAPI Plugin is a powerful tool that enables the playback of sounds in Minecraft using the .nbs format. It serves as an essential component for enhancing the auditory experience within the QuillCraft Minecraft servers.
+The SongAPI Plugin is a powerful tool that enables the playback of sounds in Minecraft using the .nbs format. It serves
+as an essential component for enhancing the auditory experience within the QuillCraft Minecraft servers.
 
 ## Key Features
 
-- **Sound Playback:** SongAPI supports the playback of sounds in the .nbs format, allowing for immersive audio experiences within your Minecraft server.
+- **Sound Playback:** SongAPI supports the playback of sounds in the .nbs format, allowing for immersive audio
+  experiences within your Minecraft server.
 
 ## Compilation and Integration
 
@@ -38,4 +40,5 @@ To add the SongAPI Plugin to your project, include the following dependency in y
 Ensure that you use the correct version of the plugin that matches your project's requirements.
 
 Usage
-Once integrated into your server, the SongAPI Plugin allows you to create captivating auditory experiences using the .nbs format. Explore the possibilities of enhancing your server's ambiance and gameplay with immersive sound effects.
+Once integrated into your server, the SongAPI Plugin allows you to create captivating auditory experiences using the
+.nbs format. Explore the possibilities of enhancing your server's ambiance and gameplay with immersive sound effects.

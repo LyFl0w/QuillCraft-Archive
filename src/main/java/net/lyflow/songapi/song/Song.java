@@ -16,41 +16,41 @@ public class Song {
     private final long delay;
 
     public Song(Map<Integer, Layer> layerHashMap, short songHeight, short length, String title, String description,
-                String author, float speed){
+                String author, float speed) {
         this.layerHashMap = layerHashMap;
         this.songHeight = songHeight;
         this.length = length;
         this.title = title;
         this.description = description;
         this.author = author;
-        this.delay = Math.round(20/speed);
+        this.delay = Math.round(20 / speed);
     }
 
-    public Map<Integer, Layer> getLayerHashMap(){
+    public Map<Integer, Layer> getLayerHashMap() {
         return layerHashMap;
     }
 
-    public short getSongHeight(){
+    public short getSongHeight() {
         return songHeight;
     }
 
-    public short getLength(){
+    public short getLength() {
         return length;
     }
 
-    public String getTitle(){
+    public String getTitle() {
         return title;
     }
 
-    public String getDescription(){
+    public String getDescription() {
         return description;
     }
 
-    public String getAuthor(){
+    public String getAuthor() {
         return author;
     }
 
-    public long getDelay(){
+    public long getDelay() {
         return delay;
     }
 
