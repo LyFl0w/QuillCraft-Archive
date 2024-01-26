@@ -10,6 +10,11 @@ import java.util.logging.Logger;
 
 public class ZipCompress {
 
+    private ZipCompress() {
+        throw new IllegalStateException("Utility class");
+    }
+
+
     public static void zip4j(String name, File file, Logger logger){
         //zip file with multiple files
         try(final ZipFile zipFile = new ZipFile(name+".zip")) {

@@ -17,7 +17,7 @@ public class PlayerJoinListener implements Listener {
 
     @EventHandler
     public void onPlayerJoin(PlayerJoinEvent event){
-        final SaveTask saveTask = main.saveTask;
+        final SaveTask saveTask = main.getSaveTask();
 
         if(saveTask.canSave()){
             saveTask.saveAndDelete();

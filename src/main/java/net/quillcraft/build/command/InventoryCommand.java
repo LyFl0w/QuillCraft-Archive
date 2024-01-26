@@ -14,6 +14,7 @@ import org.bukkit.inventory.ItemStack;
 import org.bukkit.inventory.PlayerInventory;
 
 import javax.annotation.Nonnull;
+import java.util.Collections;
 import java.util.List;
 
 
@@ -94,17 +95,17 @@ public class InventoryCommand implements CommandExecutor, TabCompleter {
     public List<String> onTabComplete(@Nonnull CommandSender commandSender, @Nonnull Command command, @Nonnull String label, @Nonnull String[] args){
         if(commandSender instanceof Player){
             if(args.length == 1){
-                if(args[0] == null) return null;
+                if(args[0] == null) return Collections.emptyList();
                 return CommandUtils.completionTable(args[0], COMPLETIONS);
             }
             if(args.length == 2){
-                if(args[1] == null) return null;
+                if(args[1] == null) return Collections.emptyList();
                 final ConfigurationSection configurationSection = ConfigurationManager.INVENTORY.getConfiguration().getConfigurationSection(commandSender.getName());
-                if(configurationSection == null) return null;
+                if(configurationSection == null) return Collections.emptyList();
 
                 return CommandUtils.completionTable(args[1], configurationSection.getKeys(false).stream().toList());
             }
         }
-        return null;
+        return Collections.emptyList();
     }
 }

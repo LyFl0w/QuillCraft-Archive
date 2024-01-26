@@ -13,7 +13,7 @@ public class QuillCraftBuild extends JavaPlugin {
 
     private static QuillCraftBuild instance;
 
-    public SaveTask saveTask;
+    private SaveTask saveTask;
 
     @Override
     public void onEnable(){
@@ -33,4 +33,11 @@ public class QuillCraftBuild extends JavaPlugin {
         return instance;
     }
 
+    public SaveTask getSaveTask() {
+        return saveTask;
+    }
+
+    public void setSaveTask(SaveTask saveTask) {
+        this.saveTask = saveTask;
+    }
 }

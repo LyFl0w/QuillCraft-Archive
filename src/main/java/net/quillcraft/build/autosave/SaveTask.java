@@ -33,10 +33,10 @@ public class SaveTask extends BukkitRunnable {
 
         this.serverPath = quillCraftBuild.getServer().getWorldContainer().getPath();
 
-        final SaveTask oldTask = quillCraftBuild.saveTask;
+        final SaveTask oldTask = quillCraftBuild.getSaveTask();
         if (oldTask != null && oldTask != this && ! oldTask.isCancelled()) oldTask.cancel();
 
-        quillCraftBuild.saveTask = this;
+        quillCraftBuild.setSaveTask(this);
 
         try {
             final long delay = 20L * FormattedNumber.getValueFromFormattedText(
@@ -98,7 +98,7 @@ public class SaveTask extends BukkitRunnable {
                 final String oldSaveName = oldSave.getName();
                 if(sdfDate.parse(oldSaveName).getTime() <= minimumTime) {
                     FileUtils.deleteDirectory(oldSave);
-                    logger.info("Delete "+oldSaveName);
+                    logger.info(() -> "Delete "+oldSaveName);
                 }
             }
         } catch (ParseException | IOException exception) {

@@ -36,12 +36,12 @@ public class FormattedNumber {
     }
 
 
-    public static int getValueFromFormattedText(String text) throws Exception {
+    public static int getValueFromFormattedText(String text) {
         final CastNumber format = getFormat(text);
-        if (format == null) throw new Exception("Malformatted text exception: Invalid format");
+        if (format == null) throw new IllegalArgumentException("Malformatted text exception: Invalid format");
 
         final int value = Integer.parseInt(text.substring(0, text.length() - 1));
-        if (value < 0) throw new Exception("Malformatted text exception: Negative value is not allowed");
+        if (value < 0) throw new IllegalArgumentException("Malformatted text exception: Negative value is not allowed");
 
         return value * format.getSecond();
     }
