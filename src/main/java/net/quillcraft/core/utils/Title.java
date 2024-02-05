@@ -4,7 +4,7 @@ import net.minecraft.network.chat.IChatBaseComponent;
 import net.minecraft.network.protocol.Packet;
 import net.minecraft.network.protocol.game.*;
 import net.minecraft.server.network.PlayerConnection;
-import org.bukkit.craftbukkit.v1_20_R2.entity.CraftPlayer;
+import org.bukkit.craftbukkit.v1_20_R3.entity.CraftPlayer;
 import org.bukkit.entity.Player;
 
 import java.util.List;
@@ -36,13 +36,13 @@ public class Title {
     public Title sendTitle(final int fadeIn, final int stay, int fadeOut, final String title, final String subtitle) {
         final PlayerConnection playerConnection = ((CraftPlayer) player).getHandle().c;
 
-        playerConnection.a(new ClientboundSetTitlesAnimationPacket(fadeIn*20, stay*20, fadeOut*20));
+        playerConnection.a(new ClientboundSetTitlesAnimationPacket(fadeIn * 20, stay * 20, fadeOut * 20));
 
-        if(title != null)
-            playerConnection.a(getTitlePacket(EnumTitleAction.TITLE, getChatSerializer(title.replaceAll("%player%", player.getDisplayName()))));
+        if (title != null)
+            playerConnection.a(getTitlePacket(EnumTitleAction.TITLE, getChatSerializer(title.replace("%player%", player.getDisplayName()))));
 
-        if(subtitle != null)
-            playerConnection.a(getTitlePacket(EnumTitleAction.SUBTITLE, getChatSerializer(subtitle.replaceAll("%player%", player.getDisplayName()))));
+        if (subtitle != null)
+            playerConnection.a(getTitlePacket(EnumTitleAction.SUBTITLE, getChatSerializer(subtitle.replace("%player%", player.getDisplayName()))));
 
         return this;
     }
@@ -63,7 +63,7 @@ public class Title {
     }
 
     private Packet<PacketListenerPlayOut> getTitlePacket(EnumTitleAction enumTitleAction, final IChatBaseComponent title) {
-        if(enumTitleAction == EnumTitleAction.TITLE) return new ClientboundSetTitleTextPacket(title);
+        if (enumTitleAction == EnumTitleAction.TITLE) return new ClientboundSetTitleTextPacket(title);
         return new ClientboundSetSubtitleTextPacket(title);
     }
 
@@ -72,7 +72,7 @@ public class Title {
     }
 
     private IChatBaseComponent getChatSerializer(final String message) {
-        return IChatBaseComponent.ChatSerializer.a("{\"text\": \""+message+"\"}");
+        return IChatBaseComponent.ChatSerializer.a("{\"text\": \"" + message + "\"}");
     }
 
     private enum EnumTitleAction {

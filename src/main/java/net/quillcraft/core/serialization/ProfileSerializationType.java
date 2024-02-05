@@ -40,11 +40,13 @@ public class ProfileSerializationType {
     }
 
     public <T> List<T> deserializeList(String json, Class<T> classOfListT) {
-        return gson.fromJson(json, new TypeToken<List<T>>() {}.getType());
+        return gson.fromJson(json, new TypeToken<List<T>>() {
+        }.getType());
     }
 
     public <K, V> HashMap<K, V> deserializeHashMap(String json, Class<K> classOfKeyT, Class<V> classOfValueT) {
-        return gson.fromJson(json, new TypeToken<HashMap<K, V>>() {}.getType());
+        return gson.fromJson(json, new TypeToken<HashMap<K, V>>() {
+        }.getType());
     }
 
 

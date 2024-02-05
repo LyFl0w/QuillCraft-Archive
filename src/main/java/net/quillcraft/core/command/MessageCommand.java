@@ -29,10 +29,10 @@ public class MessageCommand implements CommandExecutor {
 
     @Override
     public boolean onCommand(@Nonnull CommandSender commandSender, @Nonnull Command command, @Nonnull String label, @Nonnull String[] args) {
-        if(commandSender instanceof Player player && args.length > 1) {
+        if (commandSender instanceof Player player && args.length > 1) {
             String targetPlayerName = args[0];
 
-            if(player.getName().equalsIgnoreCase(targetPlayerName)) {
+            if (player.getName().equalsIgnoreCase(targetPlayerName)) {
                 player.sendMessage("Vous ne pouvez pas vous envoyer un message à vous même !");
                 return true;
             }
@@ -42,23 +42,23 @@ public class MessageCommand implements CommandExecutor {
 
             Arrays.stream(args).skip(1).forEach(secanteMessage -> message.append(" ").append(secanteMessage));
 
-            if(targetPlayer != null && targetPlayer.isOnline()) {
+            if (targetPlayer != null && targetPlayer.isOnline()) {
                 final UUID playerUUID = player.getUniqueId();
                 final UUID targetPlayerUUID = targetPlayer.getUniqueId();
 
                 targetPlayerName = targetPlayer.getName();
-                targetPlayer.sendMessage("["+player.getName()+"->Moi]"+message);
-                player.sendMessage("[Moi->"+targetPlayerName+"]"+message);
+                targetPlayer.sendMessage("[" + player.getName() + "->Moi]" + message);
+                player.sendMessage("[Moi->" + targetPlayerName + "]" + message);
 
                 final RSet<String> rSet = redissonClient.getSet(playerUUID.toString());
-                if(!rSet.contains(targetPlayerUUID.toString())) {
+                if (!rSet.contains(targetPlayerUUID.toString())) {
                     rSet.clear();
                     rSet.add(targetPlayerUUID.toString());
                 }
                 rSet.expire(Duration.ofHours(2));
 
                 final RSet<String> rSetTargetPlayer = redissonClient.getSet(targetPlayer.getUniqueId().toString());
-                if(!rSetTargetPlayer.contains(playerUUID.toString())) {
+                if (!rSetTargetPlayer.contains(playerUUID.toString())) {
                     rSetTargetPlayer.clear();
                     rSetTargetPlayer.add(playerUUID.toString());
                 }

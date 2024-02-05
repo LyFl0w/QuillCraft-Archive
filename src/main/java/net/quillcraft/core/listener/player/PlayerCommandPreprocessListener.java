@@ -18,16 +18,16 @@ public class PlayerCommandPreprocessListener implements Listener {
     @EventHandler
     public void onPlayerCommandPreprocess(PlayerCommandPreprocessEvent event) {
         final Player player = event.getPlayer();
-        if(player.isOp()) return;
+        if (player.isOp()) return;
 
         final String message = event.getMessage().replaceFirst("/", "").split(" ")[0];
-        if(message.equalsIgnoreCase("help")) {
+        if (message.equalsIgnoreCase("help")) {
             player.sendMessage("HELP COMMAND SENT");
             event.setCancelled(true);
             return;
         }
 
-        if(!commands.contains(message)) {
+        if (!commands.contains(message)) {
             player.sendMessage("Unknown command. Type \"/help\" for help");
             event.setCancelled(true);
         }

@@ -10,7 +10,8 @@ public class Waiter {
     private long time;
 
     //For redis
-    private Waiter() {}
+    private Waiter() {
+    }
 
     public Waiter(UUID playerUUID, boolean hasParty) {
         this.playerUUID = playerUUID;
@@ -37,16 +38,16 @@ public class Waiter {
     public int getPower() {
         //TODO : RANKING SYSTEM
         final int playerRank = 0;
-        return playerRank+getWaitingPower();
+        return playerRank + getWaitingPower();
     }
 
     private int getWaitingPower() {
         int power = 5;
-        final long waitTime = TimeUnit.MILLISECONDS.toSeconds(System.currentTimeMillis()-time);
-        if(waitTime < 300) {
-            for(int i = 30; i <= 180; i += 30) {
-                if(waitTime >= i) continue;
-                power = (i-30)/30;
+        final long waitTime = TimeUnit.MILLISECONDS.toSeconds(System.currentTimeMillis() - time);
+        if (waitTime < 300) {
+            for (int i = 30; i <= 180; i += 30) {
+                if (waitTime >= i) continue;
+                power = (i - 30) / 30;
                 break;
             }
             return power;

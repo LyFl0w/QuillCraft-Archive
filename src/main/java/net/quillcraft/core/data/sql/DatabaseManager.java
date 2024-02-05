@@ -19,13 +19,13 @@ public enum DatabaseManager {
     }
 
     public static void initAllDatabaseConnections() {
-        for(DatabaseManager databaseManager : values()) {
+        for (DatabaseManager databaseManager : values()) {
             databaseManager.getDatabaseAccess().initPool();
         }
     }
 
     public static void closeAllDatabaseConnections() {
-        for(DatabaseManager databaseManager : values()) {
+        for (DatabaseManager databaseManager : values()) {
             databaseManager.getDatabaseAccess().closePool();
         }
     }
@@ -38,19 +38,19 @@ public enum DatabaseManager {
         return ConfigurationManager.DATA_ACCESS.getConfiguration();
     }
 
-    public final DatabaseAccess getDatabaseAccess() {
-        return databaseAccess;
+    private static DatabaseCredentials getDatabaseCredentials(String name) {
+        final String path = "mysql." + name + ".";
+        return new DatabaseCredentials(
+                getConfiguration().getString(path + "host"),
+                getConfiguration().getString(path + "user.name"),
+                getConfiguration().getString(path + "user.password"),
+                getConfiguration().getString(path + "database_name"),
+                getConfiguration().getInt(path + "port")
+        );
     }
 
-    private static DatabaseCredentials getDatabaseCredentials(String name) {
-        final String path = "mysql."+name+".";
-        return new DatabaseCredentials(
-                getConfiguration().getString(path+"host"),
-                getConfiguration().getString(path+"user.name"),
-                getConfiguration().getString(path+"user.password"),
-                getConfiguration().getString(path+"database_name"),
-                getConfiguration().getInt(path+"port")
-        );
+    public final DatabaseAccess getDatabaseAccess() {
+        return databaseAccess;
     }
 
 }

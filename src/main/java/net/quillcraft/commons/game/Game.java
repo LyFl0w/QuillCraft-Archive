@@ -13,7 +13,7 @@ import java.util.UUID;
 public abstract sealed class Game permits ParkourPvPGame {
 
     @JsonIgnore
-    protected final static RedissonClient redissonClient = RedisManager.GAME_SERVER.getRedisAccess().getRedissonClient();
+    protected static final RedissonClient redissonClient = RedisManager.GAME_SERVER.getRedisAccess().getRedissonClient();
 
     private final int id;
     private final List<UUID> playerList;
@@ -22,7 +22,7 @@ public abstract sealed class Game permits ParkourPvPGame {
 
     private GeneralGameStatus generalGameStatus;
 
-    public Game(GameEnum gameEnum, int id, GameProperties gameProperties) {
+    protected Game(GameEnum gameEnum, int id, GameProperties gameProperties) {
         this.generalGameStatus = GeneralGameStatus.STARTING_SERVER;
         this.gameEnum = gameEnum;
         this.gameProperties = gameProperties;
@@ -44,7 +44,7 @@ public abstract sealed class Game permits ParkourPvPGame {
     }
 
     public String getRedisKey() {
-        return gameEnum.name()+":"+id;
+        return gameEnum.name() + ":" + id;
     }
 
     public List<UUID> getPlayerUUIDList() {

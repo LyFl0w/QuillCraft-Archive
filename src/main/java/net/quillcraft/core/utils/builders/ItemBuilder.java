@@ -15,7 +15,7 @@ import java.util.Arrays;
 import java.util.List;
 import java.util.Objects;
 
-public class ItemBuilder implements Cloneable {
+public class ItemBuilder {
 
     private final ItemStack itemStack;
 
@@ -50,10 +50,8 @@ public class ItemBuilder implements Cloneable {
         this.itemStack = itemStack;
     }
 
-    @Override
-    protected ItemBuilder clone() throws CloneNotSupportedException {
-        // TODO: copy mutable state here, so the clone can't change the internals of the original
-        return (ItemBuilder) super.clone();
+    protected ItemBuilder(ItemBuilder itemBuilder) {
+        this(itemBuilder.itemStack.getType(), itemBuilder.itemStack.getAmount(), itemBuilder.itemStack.getDurability());
     }
 
     public String getName() {
@@ -107,7 +105,7 @@ public class ItemBuilder implements Cloneable {
     }
 
     public ItemBuilder setPotionData(PotionData potionData) {
-        Validate.isTrue((itemStack.getType() == Material.POTION || itemStack.getType() == Material.SPLASH_POTION || itemStack.getType() == Material.SPLASH_POTION), "The item must be a potion");
+        Validate.isTrue((itemStack.getType() == Material.POTION || itemStack.getType() == Material.SPLASH_POTION || itemStack.getType() == Material.LINGERING_POTION), "The item must be a potion");
         final PotionMeta potionMeta = (PotionMeta) getItemMeta();
         potionMeta.setBasePotionData(potionData);
         itemStack.setItemMeta(potionMeta);
@@ -128,7 +126,7 @@ public class ItemBuilder implements Cloneable {
     public ItemBuilder addTextPage(int page, String text) {
         Validate.isTrue((itemStack.getType() == Material.WRITABLE_BOOK || itemStack.getType() == Material.WRITTEN_BOOK), "The item must be a book");
         final BookMeta bm = (BookMeta) getItemMeta();
-        bm.setPage(page, bm.getPage(page)+text);
+        bm.setPage(page, bm.getPage(page) + text);
         itemStack.setItemMeta(bm);
         return this;
     }
@@ -149,7 +147,7 @@ public class ItemBuilder implements Cloneable {
     }
 
     public boolean isItemDye() {
-        return switch(itemStack.getType()) {
+        return switch (itemStack.getType()) {
             case BLACK_DYE, BLUE_DYE, BROWN_DYE, CYAN_DYE, GRAY_DYE, GREEN_DYE, LIGHT_BLUE_DYE, LIME_DYE, LIGHT_GRAY_DYE, MAGENTA_DYE, ORANGE_DYE, PINK_DYE, PURPLE_DYE, RED_DYE, WHITE_DYE, YELLOW_DYE ->
                     true;
             default -> false;

@@ -8,13 +8,15 @@ import java.util.UUID;
 
 public class Party {
 
-    private UUID partyUUID, ownerUUID;
+    private UUID partyUUID;
+    private UUID ownerUUID;
     private List<UUID> followersUUID;
     private List<String> followersName;
     private String ownerName;
 
     // For Redis
-    private Party() {}
+    private Party() {
+    }
 
     public Party(Player player) {
         this(player.getUniqueId(), player.getName());

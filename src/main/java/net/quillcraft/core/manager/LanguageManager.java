@@ -5,9 +5,9 @@ import net.quillcraft.commons.account.AccountProvider;
 import net.quillcraft.commons.exception.AccountNotFoundException;
 import net.quillcraft.core.QuillCraftCore;
 import net.quillcraft.core.data.redis.RedisManager;
+import net.quillcraft.lumy.api.text.Text;
+import net.quillcraft.lumy.api.text.TextList;
 import org.bukkit.entity.Player;
-import org.lumy.api.text.Text;
-import org.lumy.api.text.TextList;
 import org.redisson.api.RBucket;
 import org.redisson.api.RList;
 import org.redisson.api.RedissonClient;
@@ -22,7 +22,7 @@ public enum LanguageManager {
 
     DEFAULT(ENGLISH_US.getISO());
 
-    private final static RedissonClient redissonClient = RedisManager.TEXT.getRedisAccess().getRedissonClient();
+    private static final RedissonClient redissonClient = RedisManager.TEXT.getRedisAccess().getRedissonClient();
     private final String iso;
 
     LanguageManager(final String isoLanguage) {
@@ -36,7 +36,7 @@ public enum LanguageManager {
     public static LanguageManager getLanguage(final Player player) {
         try {
             return getLanguage(new AccountProvider(player).getAccount());
-        } catch(AccountNotFoundException exception) {
+        } catch (AccountNotFoundException exception) {
             QuillCraftCore.getInstance().getLogger().log(Level.SEVERE, exception.getMessage(), exception);
         }
         return LanguageManager.DEFAULT;
@@ -51,12 +51,12 @@ public enum LanguageManager {
     }
 
     public String getMessage(final Text text) {
-        final RBucket<String> message = redissonClient.getBucket(getISO()+":"+text.getPath());
+        final RBucket<String> message = redissonClient.getBucket(getISO() + ":" + text.getPath());
         return message.get();
     }
 
     public List<String> getMessage(final TextList text) {
-        final RList<String> message = redissonClient.getList(getISO()+":"+text.getPath());
+        final RList<String> message = redissonClient.getList(getISO() + ":" + text.getPath());
         return message.readAll();
     }
 

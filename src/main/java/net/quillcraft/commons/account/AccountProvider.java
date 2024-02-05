@@ -8,21 +8,24 @@ import net.quillcraft.core.data.sql.table.SQLTablesManager;
 import net.quillcraft.core.event.player.PlayerChangeLanguageEvent;
 import net.quillcraft.core.manager.LanguageManager;
 import net.quillcraft.core.serialization.ProfileSerializationAccount;
+import net.quillcraft.lumy.api.text.Text;
 import org.bukkit.entity.Player;
-import org.lumy.api.text.Text;
 import org.redisson.api.RBucket;
 import org.redisson.api.RSet;
 import org.redisson.api.RedissonClient;
 
 import java.sql.*;
 import java.time.Duration;
-import java.util.HashMap;
+import java.util.Map;
 import java.util.UUID;
 import java.util.logging.Level;
 
 public class AccountProvider {
 
-    private final String keyAccount, keyAutoLanguage, keyUpdateLanguage, keyUpdateVisibility;
+    private final String keyAccount;
+    private final String keyAutoLanguage;
+    private final String keyUpdateLanguage;
+    private final String keyUpdateVisibility;
     private final RedissonClient redissonClient;
     private final Player player;
     private final UUID uuid;
@@ -32,17 +35,17 @@ public class AccountProvider {
         this.player = player;
         this.uuid = player.getUniqueId();
         this.redissonClient = RedisManager.ACCOUNT.getRedisAccess().getRedissonClient();
-        this.keyAccount = "account:"+uuid;
-        this.keyAutoLanguage = "autoLanguage:"+uuid;
-        this.keyUpdateLanguage = "updateLanguage:"+uuid;
-        this.keyUpdateVisibility = "updateVisibility:"+uuid;
+        this.keyAccount = "account:" + uuid;
+        this.keyAutoLanguage = "autoLanguage:" + uuid;
+        this.keyUpdateLanguage = "updateLanguage:" + uuid;
+        this.keyUpdateVisibility = "updateVisibility:" + uuid;
         this.sqlTablesManager = SQLTablesManager.PLAYER_ACCOUNT;
     }
 
     public final Account getAccount() throws AccountNotFoundException {
         Account account = getAccountFromRedis();
 
-        if(account == null) {
+        if (account == null) {
             account = getAccountFromDatabase();
             sendAccountToRedis(account);
         } else {
@@ -59,14 +62,13 @@ public class AccountProvider {
     }
 
     public void updateAccount(final Account account) {
-        PreparedStatement updateRequest = null;
-        try {
-            updateRequest = account.getSQLRequest().getUpdateRequest(DatabaseManager.MINECRAFT_SERVER.getDatabaseAccess().getConnection());
-        } catch(Exception exception) {
+        try (final PreparedStatement updateRequest =
+                     account.getSQLRequest().getUpdateRequest(DatabaseManager.MINECRAFT_SERVER.getDatabaseAccess().getConnection())) {
+            sendAccountToRedis(account);
+            sendAccountToDatabase(updateRequest);
+        } catch (Exception exception) {
             QuillCraftCore.getInstance().getLogger().log(Level.SEVERE, exception.getMessage(), exception);
         }
-        sendAccountToRedis(account);
-        sendAccountToDatabase(updateRequest);
     }
 
     private void sendAccountToRedis(final Account account) {
@@ -77,38 +79,39 @@ public class AccountProvider {
     private Account getAccountFromDatabase() throws AccountNotFoundException {
         try {
             final Connection connection = DatabaseManager.MINECRAFT_SERVER.getDatabaseAccess().getConnection();
-            final PreparedStatement preparedStatement = connection.prepareStatement("SELECT * FROM "+sqlTablesManager.getTable()+" WHERE "+sqlTablesManager.getKeyColumn()+" = ?");
+            try (final PreparedStatement preparedStatement =
+                         connection.prepareStatement("SELECT * FROM " + sqlTablesManager.getTable() + " WHERE " + sqlTablesManager.getKeyColumn() + " = ?")) {
 
-            preparedStatement.setString(1, uuid.toString());
-            preparedStatement.executeQuery();
+                preparedStatement.setString(1, uuid.toString());
+                preparedStatement.executeQuery();
 
-            final ResultSet resultSet = preparedStatement.getResultSet();
-            if(resultSet.next()) {
-                final int id = resultSet.getInt("id");
-                final String partyUUID = resultSet.getString("party_uuid");
-                final int quillCoins = resultSet.getInt("quillcoins");
-                final byte rankID = resultSet.getByte("rank_id");
-                final Account.Visibility visibility = Account.Visibility.valueOf(resultSet.getString("visibility"));
+                final ResultSet resultSet = preparedStatement.getResultSet();
+                if (resultSet.next()) {
+                    final int id = resultSet.getInt("id");
+                    final String partyUUID = resultSet.getString("party_uuid");
+                    final int quillCoins = resultSet.getInt("quillcoins");
+                    final byte rankID = resultSet.getByte("rank_id");
+                    final Account.Visibility visibility = Account.Visibility.valueOf(resultSet.getString("visibility"));
 
-                final HashMap<Account.Particles, Boolean> particules = new ProfileSerializationAccount.Particle().deserialize(resultSet.getString("json_particles"));
-                //final HashMap<Account.Particles, Boolean> particules = new ProfileSerializationManager().deserializeParticle(resultSet.getString("json_particles"));
-                final String languageISO = resultSet.getString("language");
+                    final Map<Account.Particles, Boolean> particules = new ProfileSerializationAccount.Particle().deserialize(resultSet.getString("json_particles"));
+                    final String languageISO = resultSet.getString("language");
 
-                connection.close();
+                    connection.close();
 
-                Account account;
-                account = new Account(id, uuid, quillCoins, rankID, visibility, particules, languageISO);
-                if(partyUUID != null) {
-                    account = new Account(id, uuid, UUID.fromString(partyUUID), quillCoins, rankID, visibility, particules, languageISO);
+                    Account account;
+                    account = new Account(id, uuid, quillCoins, rankID, visibility, particules, languageISO);
+                    if (partyUUID != null) {
+                        account = new Account(id, uuid, UUID.fromString(partyUUID), quillCoins, rankID, visibility, particules, languageISO);
+                    }
+
+                    return account;
+                } else {
+                    connection.close();
+                    return createNewAccount();
                 }
-
-                return account;
-            } else {
-                connection.close();
-                return createNewAccount();
             }
 
-        } catch(SQLException exception) {
+        } catch (SQLException exception) {
             QuillCraftCore.getInstance().getLogger().log(Level.SEVERE, exception.getMessage(), exception);
         }
 
@@ -119,7 +122,7 @@ public class AccountProvider {
         try {
             updateRequest.executeUpdate();
             updateRequest.getConnection().close();
-        } catch(Exception exception) {
+        } catch (Exception exception) {
             QuillCraftCore.getInstance().getLogger().log(Level.SEVERE, exception.getMessage(), exception);
         }
     }
@@ -128,24 +131,28 @@ public class AccountProvider {
         final Account account = new Account(player);
         final Connection connection = DatabaseManager.MINECRAFT_SERVER.getDatabaseAccess().getConnection();
 
-        final PreparedStatement preparedStatement = connection.prepareStatement("INSERT INTO "+sqlTablesManager.getTable()+" (uuid, quillcoins, json_particles) VALUES (?, ?, ?)", Statement.RETURN_GENERATED_KEYS);
+        try (final PreparedStatement preparedStatement =
+                     connection.prepareStatement("INSERT INTO " + sqlTablesManager.getTable() + " (uuid, quillcoins, json_particles) VALUES (?, ?, ?)",
+                             Statement.RETURN_GENERATED_KEYS)) {
 
-        preparedStatement.setString(1, uuid.toString());
-        preparedStatement.setInt(2, account.getQuillCoins());
-        preparedStatement.setString(3, new ProfileSerializationAccount.Particle().serialize(account.getParticles()));
+            preparedStatement.setString(1, uuid.toString());
+            preparedStatement.setInt(2, account.getQuillCoins());
+            preparedStatement.setString(3, new ProfileSerializationAccount.Particle().serialize(account.getParticles()));
 
-        final int row = preparedStatement.executeUpdate();
-        final ResultSet resultSet = preparedStatement.getGeneratedKeys();
+            final int row = preparedStatement.executeUpdate();
+            final ResultSet resultSet = preparedStatement.getGeneratedKeys();
 
-        //GET ID
-        if(row > 0 && resultSet.next()) {
-            account.setId(resultSet.getInt(1));
+            //GET ID
+            if (row > 0 && resultSet.next()) {
+                account.setId(resultSet.getInt(1));
+            }
+            connection.close();
+
+            cooldownLanguage();
+
+            return account;
         }
-        connection.close();
 
-        cooldownLanguage();
-
-        return account;
     }
 
     public void setLocaleLanguage(final Account account) {

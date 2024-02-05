@@ -9,7 +9,8 @@ public class Friend {
     private List<String> friendsName;
 
     // For Redis
-    private Friend() {}
+    private Friend() {
+    }
 
     public Friend(List<UUID> friendsUUID, List<String> friendsName) {
         this.friendsUUID = friendsUUID;

@@ -3,7 +3,7 @@ package net.quillcraft.core.manager;
 import net.quillcraft.core.QuillCraftCore;
 import net.quillcraft.core.data.redis.RedisManager;
 import net.quillcraft.core.data.sql.DatabaseManager;
-import org.lumy.api.LumyClient;
+import net.quillcraft.lumy.api.LumyClient;
 
 public class DataManager {
 
@@ -27,7 +27,7 @@ public class DataManager {
             dataAccessPath = "";
 
             DatabaseManager.createAllTable();
-        } catch(Exception exception) {
+        } catch (Exception exception) {
             quillCraftCore.getLogger().severe(exception.getMessage());
             quillCraftCore.getServer().shutdown();
         }

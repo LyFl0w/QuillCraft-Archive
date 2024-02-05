@@ -13,7 +13,7 @@ import java.math.RoundingMode;
 
 public class PlayerMoveListener implements Listener {
 
-    private final static double jumpVelocity = 0.42d;
+    private static final double JUMP_VELOCITY = 0.42d;
 
     private final QuillCraftCore quillCraftCore;
 
@@ -26,14 +26,19 @@ public class PlayerMoveListener implements Listener {
         final Player player = event.getPlayer();
         final double velocityY = player.getVelocity().getY();
 
-        if(velocityY > 0) {
-            final Material blockMaterial = player.getLocation().getBlock().getType();
-            if(!player.isOnGround() && !(blockMaterial == Material.LADDER || blockMaterial == Material.SCAFFOLDING || blockMaterial == Material.WATER || blockMaterial == Material.LAVA)) {
-                if(Double.compare(new BigDecimal(velocityY).setScale(2, RoundingMode.HALF_UP).doubleValue(), jumpVelocity) == 0) {
-                    quillCraftCore.getServer().getPluginManager().callEvent(new PlayerJumpEvent(player, event.getFrom(), event.getTo()));
-                }
-            }
+        if (velocityY > 0 && !isOnGround(player, player.getLocation().getBlock().getType()) && isJumping(velocityY)) {
+            quillCraftCore.getServer().getPluginManager().callEvent(new PlayerJumpEvent(player, event.getFrom(), event.getTo()));
         }
+    }
+
+    private boolean isOnGround(Player player, Material blockMaterial) {
+        return player.isOnGround() &&
+                !(blockMaterial == Material.LADDER || blockMaterial == Material.SCAFFOLDING
+                        || blockMaterial == Material.WATER || blockMaterial == Material.LAVA);
+    }
+
+    private boolean isJumping(double velocityY) {
+        return Double.compare(BigDecimal.valueOf(velocityY).setScale(2, RoundingMode.HALF_UP).doubleValue(), JUMP_VELOCITY) == 0;
     }
 
 }

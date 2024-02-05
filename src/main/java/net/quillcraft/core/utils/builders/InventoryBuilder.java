@@ -5,7 +5,7 @@ import org.bukkit.event.inventory.InventoryType;
 import org.bukkit.inventory.Inventory;
 import org.bukkit.inventory.ItemStack;
 
-public class InventoryBuilder implements Cloneable {
+public class InventoryBuilder {
 
     private Inventory inventory;
 
@@ -27,6 +27,11 @@ public class InventoryBuilder implements Cloneable {
 
     public InventoryBuilder(Inventory inventory) {
         this.inventory = inventory;
+    }
+
+    // FIXME : NOT REAL CLONE
+    public InventoryBuilder(InventoryBuilder inventoryBuilder) {
+        this(inventoryBuilder.inventory, "CLONE IMPLEMENT");
     }
 
     public InventoryBuilder(Inventory inventory, String title) {
@@ -63,9 +68,5 @@ public class InventoryBuilder implements Cloneable {
         return inventory;
     }
 
-    @Override
-    public InventoryBuilder clone() throws CloneNotSupportedException {
-        // TODO: copy mutable state here, so the clone can't change the internals of the original
-        return (InventoryBuilder) super.clone();
-    }
+
 }

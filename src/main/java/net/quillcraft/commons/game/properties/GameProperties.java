@@ -4,9 +4,11 @@ import org.bukkit.configuration.file.FileConfiguration;
 
 public class GameProperties {
 
-    private int maxPlayer, minPlayer;
+    private int maxPlayer;
+    private int minPlayer;
 
-    private GameProperties() {}
+    private GameProperties() {
+    }
 
     public GameProperties(FileConfiguration fileConfiguration) {
         this.maxPlayer = fileConfiguration.getInt("player.max");

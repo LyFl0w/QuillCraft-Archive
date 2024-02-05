@@ -6,11 +6,9 @@ import net.quillcraft.core.data.redis.RedisManager;
 import net.quillcraft.core.data.sql.DatabaseManager;
 import net.quillcraft.core.data.sql.table.SQLTablesManager;
 import net.quillcraft.core.serialization.ProfileSerializationUtils;
-
 import org.bukkit.entity.Player;
 import org.redisson.api.RBucket;
 import org.redisson.api.RedissonClient;
-
 import reactor.util.annotation.Nullable;
 
 import java.sql.Connection;
@@ -32,14 +30,14 @@ public class FriendProvider {
     public FriendProvider(Player player) {
         this.uuid = player.getUniqueId();
         this.redissonClient = RedisManager.FRIEND.getRedisAccess().getRedissonClient();
-        this.keyFriends = "friends:"+uuid;
+        this.keyFriends = "friends:" + uuid;
         this.sqlTablesManager = SQLTablesManager.FRIEND;
     }
 
     public Friend getFriends() throws FriendNotFoundException {
         Friend friends = getFriendsFromRedis();
 
-        if(friends == null) {
+        if (friends == null) {
             friends = getFriendsFromDatabase();
             sendFriendsToRedis(friends);
         }
@@ -56,24 +54,27 @@ public class FriendProvider {
     private Friend getFriendsFromDatabase() throws FriendNotFoundException {
         try {
             final Connection connection = DatabaseManager.MINECRAFT_SERVER.getDatabaseAccess().getConnection();
-            final PreparedStatement preparedStatement = connection.prepareStatement("SELECT * FROM "+sqlTablesManager.getTable()+" WHERE "+sqlTablesManager.getKeyColumn()+" = ?");
+            try (final PreparedStatement preparedStatement
+                         = connection.prepareStatement("SELECT * FROM " + sqlTablesManager.getTable() + " WHERE " + sqlTablesManager.getKeyColumn() + " = ?")) {
 
-            preparedStatement.setString(1, uuid.toString());
-            preparedStatement.executeQuery();
+                preparedStatement.setString(1, uuid.toString());
+                preparedStatement.executeQuery();
 
-            final ResultSet resultSet = preparedStatement.getResultSet();
+                final ResultSet resultSet = preparedStatement.getResultSet();
 
-            if(resultSet.next()) {
-                final List<UUID> friendsUUID = new ProfileSerializationUtils.ListUUID().deserialize(resultSet.getString("friends_uuid"));
-                final List<String> friendsName = new ProfileSerializationUtils.ListString().deserialize(resultSet.getString("friends_name"));
-                connection.close();
+                if (resultSet.next()) {
+                    final List<UUID> friendsUUID = new ProfileSerializationUtils.ListUUID().deserialize(resultSet.getString("friends_uuid"));
+                    final List<String> friendsName = new ProfileSerializationUtils.ListString().deserialize(resultSet.getString("friends_name"));
+                    connection.close();
 
-                return new Friend(friendsUUID, friendsName);
-            } else {
-                connection.close();
-                return createFriendInDatabase();
+                    return new Friend(friendsUUID, friendsName);
+                } else {
+                    connection.close();
+                    return createFriendInDatabase();
+                }
             }
-        } catch(Exception exception) {
+
+        } catch (Exception exception) {
             throw new FriendNotFoundException(uuid);
         }
     }
@@ -86,16 +87,19 @@ public class FriendProvider {
         final Friend friend = new Friend(new ArrayList<>(), new ArrayList<>());
         try {
             final Connection connection = DatabaseManager.MINECRAFT_SERVER.getDatabaseAccess().getConnection();
-            final PreparedStatement preparedStatement = connection.prepareStatement("INSERT INTO "+sqlTablesManager.getTable()+" (uuid, friends_uuid, friends_name) VALUES (?, ?, ?)");
+            try (final PreparedStatement preparedStatement =
+                         connection.prepareStatement("INSERT INTO " + sqlTablesManager.getTable() + " (uuid, friends_uuid, friends_name) VALUES (?, ?, ?)")) {
 
-            preparedStatement.setString(1, uuid.toString());
-            preparedStatement.setString(2, new ProfileSerializationUtils.ListUUID().serialize(friend.getFriendsUUID()));
-            preparedStatement.setString(3, new ProfileSerializationUtils.ListString().serialize(friend.getFriendsName()));
+                preparedStatement.setString(1, uuid.toString());
+                preparedStatement.setString(2, new ProfileSerializationUtils.ListUUID().serialize(friend.getFriendsUUID()));
+                preparedStatement.setString(3, new ProfileSerializationUtils.ListString().serialize(friend.getFriendsName()));
 
-            preparedStatement.execute();
+                preparedStatement.execute();
 
-            connection.close();
-        } catch(SQLException exception) {
+                connection.close();
+            }
+
+        } catch (SQLException exception) {
             QuillCraftCore.getInstance().getLogger().log(Level.SEVERE, exception.getMessage(), exception);
         }
         return friend;

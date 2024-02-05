@@ -10,7 +10,7 @@ public abstract class CustomTaskManager {
     protected CustomTask task;
     protected boolean isRunning;
 
-    public CustomTaskManager(JavaPlugin javaPlugin, Class<? extends CustomTask> taskModel) {
+    protected CustomTaskManager(JavaPlugin javaPlugin, Class<? extends CustomTask> taskModel) {
         this.javaPlugin = javaPlugin;
         this.taskModel = taskModel;
         this.isRunning = false;
@@ -18,13 +18,13 @@ public abstract class CustomTaskManager {
     }
 
     public void runTaskTimer(long start, long delay) throws TaskOverflowException {
-        if(isRunning) throw new TaskOverflowException();
+        if (isRunning) throw new TaskOverflowException();
         task.runTaskTimer(javaPlugin, start, delay);
         isRunning = true;
     }
 
     public void runTaskLater(long delay) throws TaskOverflowException {
-        if(isRunning) throw new TaskOverflowException();
+        if (isRunning) throw new TaskOverflowException();
         task.runTaskLater(javaPlugin, delay);
         isRunning = true;
     }
@@ -32,14 +32,14 @@ public abstract class CustomTaskManager {
     protected void resetTask() {
         try {
             task = taskModel.getConstructor(CustomTaskManager.class).newInstance(this);
-        } catch(Exception exception) {
+        } catch (Exception exception) {
             javaPlugin.getLogger().severe(exception.getMessage());
         }
     }
 
     public void cancel() {
-        if(!isRunning) return;
-        if(!task.isCancelled()) task.cancel();
+        if (!isRunning) return;
+        if (!task.isCancelled()) task.cancel();
     }
 
     public boolean isRunning() {

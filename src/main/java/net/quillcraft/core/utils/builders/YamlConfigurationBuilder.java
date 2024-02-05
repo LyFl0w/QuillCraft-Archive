@@ -17,14 +17,14 @@ public class YamlConfigurationBuilder {
 
     public YamlConfigurationBuilder(JavaPlugin javaPlugin, final String fileName, final boolean isDefault) {
         file = new File(javaPlugin.getDataFolder(), fileName);
-        if(!file.exists()) {
+        if (!file.exists()) {
             file.getParentFile().mkdirs();
             javaPlugin.saveResource(fileName, isDefault);
         }
         yamlConfiguration = new YamlConfiguration();
         try {
             yamlConfiguration.load(file);
-        } catch(IOException|InvalidConfigurationException exception) {
+        } catch (IOException | InvalidConfigurationException exception) {
             javaPlugin.getLogger().severe(exception.getMessage());
         }
     }
@@ -32,17 +32,19 @@ public class YamlConfigurationBuilder {
     public YamlConfigurationBuilder(JavaPlugin javaPlugin, String fileName) {
         file = new File(javaPlugin.getDataFolder(), fileName);
         try {
-            if(!file.exists()) {
+            if (!file.exists()) {
                 file.getParentFile().mkdirs();
-                file.createNewFile();
+                if (!file.createNewFile()) {
+                    throw new IOException("Unable to create file at specified path.");
+                }
             }
-        } catch(IOException exception) {
+        } catch (IOException exception) {
             javaPlugin.getLogger().severe(exception.getMessage());
         }
         yamlConfiguration = new YamlConfiguration();
         try {
             yamlConfiguration.load(file);
-        } catch(IOException|InvalidConfigurationException exception) {
+        } catch (IOException | InvalidConfigurationException exception) {
             javaPlugin.getLogger().severe(exception.getMessage());
         }
     }
@@ -54,7 +56,7 @@ public class YamlConfigurationBuilder {
     public void save() {
         try {
             yamlConfiguration.save(file);
-        } catch(IOException exception) {
+        } catch (IOException exception) {
             QuillCraftCore.getInstance().getLogger().log(Level.SEVERE, exception.getMessage(), exception);
         }
     }

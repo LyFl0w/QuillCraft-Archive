@@ -18,7 +18,7 @@ public class PlayerCommandSendListener implements Listener {
     @EventHandler
     public void onPlayerCommandSend(PlayerCommandSendEvent event) {
         final Collection<String> requestedCommands = event.getCommands();
-        if(!event.getPlayer().isOp()) requestedCommands.clear();
+        if (!event.getPlayer().isOp()) requestedCommands.clear();
         requestedCommands.addAll(commands);
     }
 

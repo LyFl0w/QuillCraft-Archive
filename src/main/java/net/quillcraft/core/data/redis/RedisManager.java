@@ -35,18 +35,18 @@ public enum RedisManager {
         return ConfigurationManager.DATA_ACCESS.getConfiguration();
     }
 
-    public final RedisAccess getRedisAccess() {
-        return redisAccess;
+    private static RedisAccess getRedisAccess(String name) {
+        final String path = "redis." + name + ".";
+        return new RedisAccess(new RedisCredential(
+                getDataConfig().getString(path + "host"),
+                getDataConfig().getString(path + "user.name"),
+                getDataConfig().getString(path + "user.password"),
+                getDataConfig().getInt(path + "database_number"),
+                getDataConfig().getInt(path + "port")));
     }
 
-    private static RedisAccess getRedisAccess(String name) {
-        final String path = "redis."+name+".";
-        return new RedisAccess(new RedisCredential(
-                getDataConfig().getString(path+"host"),
-                getDataConfig().getString(path+"user.name"),
-                getDataConfig().getString(path+"user.password"),
-                getDataConfig().getInt(path+"database_number"),
-                getDataConfig().getInt(path+"port")));
+    public final RedisAccess getRedisAccess() {
+        return redisAccess;
     }
 
 }

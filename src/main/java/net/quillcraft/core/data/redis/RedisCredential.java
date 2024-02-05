@@ -15,7 +15,7 @@ public record RedisCredential(String ip, String clientName, String password, int
     }
 
     public String getAdress() {
-        return "redis://"+ip+":"+port;
+        return "redis://" + ip + ":" + port;
     }
 
 }

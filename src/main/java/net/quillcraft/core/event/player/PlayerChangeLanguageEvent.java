@@ -3,11 +3,12 @@ package net.quillcraft.core.event.player;
 import net.quillcraft.commons.account.Account;
 import net.quillcraft.commons.account.AccountProvider;
 import net.quillcraft.core.manager.LanguageManager;
+import net.quillcraft.lumy.api.text.Text;
 import org.bukkit.entity.Player;
 import org.bukkit.event.Cancellable;
 import org.bukkit.event.HandlerList;
 import org.bukkit.event.player.PlayerEvent;
-import org.lumy.api.text.Text;
+import org.jetbrains.annotations.NotNull;
 
 public class PlayerChangeLanguageEvent extends PlayerEvent implements Cancellable {
 
@@ -24,7 +25,7 @@ public class PlayerChangeLanguageEvent extends PlayerEvent implements Cancellabl
         this.languageISO = languageISO;
         final LanguageManager languageManager = LanguageManager.getLanguageByISO(languageISO);
 
-        if(!languageManager.getISO().equalsIgnoreCase(LanguageManager.getLanguage(account).getISO())) {
+        if (!languageManager.getISO().equalsIgnoreCase(LanguageManager.getLanguage(account).getISO())) {
             this.account.setLanguage(languageManager.getISO());
             this.accountProvider.updateAccount(this.account);
             player.sendMessage(languageManager.getMessage(Text.COMMAND_SETLANGUAGE_SELECTED));
@@ -62,9 +63,10 @@ public class PlayerChangeLanguageEvent extends PlayerEvent implements Cancellabl
         isCancelled = setCancelled;
     }
 
+    @NotNull
     @Override
     public HandlerList getHandlers() {
-        return HANDLERS;
+        return getHandlerList();
     }
 
 }

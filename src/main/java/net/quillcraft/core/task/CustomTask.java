@@ -6,7 +6,7 @@ public abstract class CustomTask extends BukkitRunnable {
 
     private final CustomTaskManager customTaskManager;
 
-    public CustomTask(CustomTaskManager customTaskManager) {
+    protected CustomTask(CustomTaskManager customTaskManager) {
         this.customTaskManager = customTaskManager;
     }
 

@@ -5,6 +5,10 @@ import java.math.RoundingMode;
 
 public class MathUtils {
 
+    private MathUtils() {
+        throw new IllegalStateException("Utility class");
+    }
+
     public static float round(float f, int decimalPlace) {
         return BigDecimal.valueOf(f).setScale(decimalPlace, RoundingMode.HALF_UP).floatValue();
     }

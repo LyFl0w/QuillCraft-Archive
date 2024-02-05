@@ -9,6 +9,10 @@ import java.util.List;
 
 public class CommandUtils {
 
+    private CommandUtils() {
+        throw new IllegalStateException("Utility class");
+    }
+
     public static List<String> completionTable(String arg, List<String> completions) {
         final List<String> completion = new ArrayList<>();
         //Copie les correspondances du premier argument de la liste (ex : si le premier argument est 'm', il retournera juste 'minecraft')
@@ -24,9 +28,7 @@ public class CommandUtils {
 
     public static List<String> completionTable(String arg, Enum[] completions) {
         List<String> enumName = new ArrayList<>();
-        Arrays.stream(completions).parallel().forEach(anEnum -> {
-            enumName.add(anEnum.name());
-        });
+        Arrays.stream(completions).parallel().forEach(anEnum -> enumName.add(anEnum.name()));
         return completionTable(arg, enumName);
     }
 

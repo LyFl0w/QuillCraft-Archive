@@ -11,8 +11,8 @@ import java.util.List;
 
 public class ScoreboardBuilder {
 
-    private final static int maxLine = 15;
-    private final static int maxColorLength = 16;
+    private static final int MAX_LINE = 15;
+    private static final int MAX_COLOR_LENGTH = 16;
 
     private final Scoreboard scoreboard;
     private final ArrayList<Team> teamList;
@@ -24,10 +24,10 @@ public class ScoreboardBuilder {
         this.objective = scoreboard.registerNewObjective(title, Criteria.DUMMY, title);
         this.objective.setDisplaySlot(DisplaySlot.SIDEBAR);
 
-        for(int i = 0; i < maxLine; i++) {
-            String name = generateRandomColor(maxColorLength);
-            while(scoreboard.getTeam(name) != null) {
-                name = generateRandomColor(maxColorLength);
+        for (int i = 0; i < MAX_LINE; i++) {
+            String name = generateRandomColor(MAX_COLOR_LENGTH);
+            while (scoreboard.getTeam(name) != null) {
+                name = generateRandomColor(MAX_COLOR_LENGTH);
             }
 
             final Team team = this.scoreboard.registerNewTeam(name);
@@ -41,23 +41,23 @@ public class ScoreboardBuilder {
         final ChatColor[] chatColors = ChatColor.values();
         final int length = chatColors.length;
 
-        for(int i = 0; i <= colorLength-1; i++) {
-            stringBuilder.append(chatColors[new SecureRandom().nextInt(length-1)]).append(ChatColor.RESET);
+        for (int i = 0; i <= colorLength - 1; i++) {
+            stringBuilder.append(chatColors[new SecureRandom().nextInt(length - 1)]).append(ChatColor.RESET);
         }
 
         return stringBuilder.toString();
     }
 
     public ScoreboardBuilder setLines(String... lines) {
-        if(lines.length > maxLine)
-            throw new RuntimeException("There can be no more than "+maxLine+" lines on a scoreboard.");
+        if (lines.length > MAX_LINE)
+            throw new RuntimeException("There can be no more than " + MAX_LINE + " lines on a scoreboard.");
 
         // Clear lines of score
         this.scoreboard.resetScores(getTitle());
 
-        final int lineSize = lines.length-1;
-        for(int i = 0; i <= lineSize; i++) {
-            final int index = lineSize-i;
+        final int lineSize = lines.length - 1;
+        for (int i = 0; i <= lineSize; i++) {
+            final int index = lineSize - i;
             final Team team = this.teamList.get(index);
             team.setPrefix(lines[i]);
 
@@ -70,24 +70,26 @@ public class ScoreboardBuilder {
     public ScoreboardBuilder setLines(List<String> lines, List<Integer> linesIndex) {
         final int size = lines.size();
 
-        if(size != linesIndex.size())
+        if (size != linesIndex.size())
             throw new RuntimeException("The number of lines doesn't correspond to the number of indexes.");
-        if(size > maxLine) throw new RuntimeException("There can be no more than "+maxLine+" lines on a scoreboard.");
+        if (size > MAX_LINE)
+            throw new RuntimeException("There can be no more than " + MAX_LINE + " lines on a scoreboard.");
 
-        for(int i = 0; i < size; i++) setLine(lines.get(i), linesIndex.get(i));
+        for (int i = 0; i < size; i++) setLine(lines.get(i), linesIndex.get(i));
 
         return this;
     }
 
     public ScoreboardBuilder setLine(String line, int index) {
-        if(index >= maxLine) throw new RuntimeException("There can be no more than "+maxLine+" lines on a scoreboard.");
+        if (index >= MAX_LINE)
+            throw new RuntimeException("There can be no more than " + MAX_LINE + " lines on a scoreboard.");
 
         final Team team = this.teamList.get(index);
         team.setPrefix(line);
 
         // Draw line if not already drawn
         final Score score = objective.getScore(team.getName());
-        if(!score.isScoreSet()) score.setScore(index);
+        if (!score.isScoreSet()) score.setScore(index);
 
         return this;
     }

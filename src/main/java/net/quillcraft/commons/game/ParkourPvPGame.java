@@ -5,7 +5,8 @@ import org.redisson.api.RBucket;
 
 public non-sealed class ParkourPvPGame extends Game {
 
-    private ParkourPvPGame() {}
+    private ParkourPvPGame() {
+    }
 
     public ParkourPvPGame(int id, GameProperties gameProperties) {
         super(GameEnum.PARKOUR_PVP_SOLO, id, gameProperties);

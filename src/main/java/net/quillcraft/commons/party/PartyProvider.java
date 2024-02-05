@@ -8,10 +8,10 @@ import net.quillcraft.core.data.sql.DatabaseManager;
 import net.quillcraft.core.data.sql.table.SQLTablesManager;
 import net.quillcraft.core.manager.LanguageManager;
 import net.quillcraft.core.serialization.ProfileSerializationUtils;
+import net.quillcraft.lumy.api.text.Text;
 import org.bukkit.Bukkit;
 import org.bukkit.entity.Player;
 import org.jetbrains.annotations.Nullable;
-import org.lumy.api.text.Text;
 import org.redisson.api.RBucket;
 import org.redisson.api.RedissonClient;
 
@@ -43,18 +43,17 @@ public class PartyProvider {
 
     @Nullable
     public Party getParty() throws PartyNotFoundException {
-        if(keyParty == null) {
+        if (keyParty == null) {
             player.sendMessage(LanguageManager.getLanguage(player).getMessage(Text.PARTY_NO_PARTY));
             return null;
         }
 
         Party party = getPartyFromRedis();
 
-        if(party == null) {
+        if (party == null) {
             party = getPartyFromDatabase();
             sendPartyToRedis(party);
         } else {
-            //party.setSQLRequest();
             redissonClient.getBucket(keyParty).clearExpire();
         }
 
@@ -70,25 +69,27 @@ public class PartyProvider {
     private Party getPartyFromDatabase() throws PartyNotFoundException {
         try {
             final Connection connection = DatabaseManager.MINECRAFT_SERVER.getDatabaseAccess().getConnection();
-            final PreparedStatement preparedStatement = connection.prepareStatement("SELECT * FROM "+sqlTablesManager.getTable()+" WHERE "+sqlTablesManager.getKeyColumn()+" = ?");
+            try (final PreparedStatement preparedStatement =
+                         connection.prepareStatement("SELECT * FROM " + sqlTablesManager.getTable() + " WHERE " + sqlTablesManager.getKeyColumn() + " = ?")) {
 
-            preparedStatement.setString(1, partyUUID.toString());
-            preparedStatement.executeQuery();
+                preparedStatement.setString(1, partyUUID.toString());
+                preparedStatement.executeQuery();
 
-            final ResultSet resultSet = preparedStatement.getResultSet();
-            if(resultSet.next()) {
-                final UUID ownerUUID = UUID.fromString(resultSet.getString("owner_uuid"));
-                final String ownerName = resultSet.getString("owner_name");
-                final List<UUID> followersUUID = new ProfileSerializationUtils.ListUUID().deserialize(resultSet.getString("followers_uuid"));
-                final List<String> followersName = new ProfileSerializationUtils.ListString().deserialize(resultSet.getString("followers_name"));
+                final ResultSet resultSet = preparedStatement.getResultSet();
+                if (resultSet.next()) {
+                    final UUID ownerUUID = UUID.fromString(resultSet.getString("owner_uuid"));
+                    final String ownerName = resultSet.getString("owner_name");
+                    final List<UUID> followersUUID = new ProfileSerializationUtils.ListUUID().deserialize(resultSet.getString("followers_uuid"));
+                    final List<String> followersName = new ProfileSerializationUtils.ListString().deserialize(resultSet.getString("followers_name"));
 
+                    connection.close();
+
+                    return new Party(partyUUID, ownerUUID, ownerName, followersUUID, followersName);
+                }
                 connection.close();
-
-                return new Party(partyUUID, ownerUUID, ownerName, followersUUID, followersName);
             }
-            connection.close();
 
-        } catch(SQLException exception) {
+        } catch (SQLException exception) {
             QuillCraftCore.getInstance().getLogger().log(Level.SEVERE, exception.getMessage(), exception);
         }
 
@@ -101,9 +102,9 @@ public class PartyProvider {
     }
 
     private void updatePartyKeys(Account account) {
-        if(account.hasParty()) {
+        if (account.hasParty()) {
             this.partyUUID = account.getPartyUUID();
-            this.keyParty = "party:"+partyUUID.toString();
+            this.keyParty = "party:" + partyUUID.toString();
         }
     }
 }

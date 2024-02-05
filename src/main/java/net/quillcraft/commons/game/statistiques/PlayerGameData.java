@@ -4,7 +4,8 @@ import java.util.UUID;
 
 public class PlayerGameData {
 
-    protected final String mapName, playerName;
+    protected final String mapName;
+    protected final String playerName;
     protected final UUID uuid;
     protected boolean hasWin;
 

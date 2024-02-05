@@ -1,7 +1,6 @@
 package net.quillcraft.core.manager;
 
 import net.quillcraft.core.QuillCraftCore;
-
 import org.bukkit.plugin.InvalidDescriptionException;
 import org.bukkit.plugin.Plugin;
 
@@ -18,19 +17,19 @@ public class CommandManager {
 
     public CommandManager(Plugin plugin, File pluginFolder) {
         this.commands = new ArrayList<>(getCommandsOfPlugin(plugin, pluginFolder));
-        if(!commands.contains("help")) commands.add("help");
+        if (!commands.contains("help")) commands.add("help");
     }
 
     private List<String> getCommandsOfPlugin(Plugin plugin, File pluginFolder) {
         try {
-            final Map<String, Map<String, Object>> commands = plugin.getPluginLoader().getPluginDescription(pluginFolder).getCommands();
-            final ArrayList<String> commandsToReturn = new ArrayList<>(commands.keySet());
+            final Map<String, Map<String, Object>> pluginLoaderCommands = plugin.getPluginLoader().getPluginDescription(pluginFolder).getCommands();
+            final ArrayList<String> commandsToReturn = new ArrayList<>(pluginLoaderCommands.keySet());
 
-            commands.values().stream().parallel().filter(stringObjectMap ->
+            pluginLoaderCommands.values().stream().parallel().filter(stringObjectMap ->
                     stringObjectMap.containsKey("aliases")).forEach(stringObjectMap ->
-                    commandsToReturn.addAll((Collection<? extends String>) stringObjectMap.get("aliases")));
+                    commandsToReturn.addAll((Collection<String>) stringObjectMap.get("aliases")));
             return commandsToReturn;
-        } catch(InvalidDescriptionException exception) {
+        } catch (InvalidDescriptionException exception) {
             QuillCraftCore.getInstance().getLogger().log(Level.SEVERE, exception.getMessage(), exception);
         }
         return new ArrayList<>();

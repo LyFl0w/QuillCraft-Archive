@@ -13,19 +13,19 @@ import java.util.Objects;
 
 public class QuillCraftCore extends JavaPlugin {
 
-    private static QuillCraftCore INSTANCE;
+    private static QuillCraftCore instance;
 
     private DataManager dataManager;
     private ProtocolManager protocolManager;
     private CommandManager commandManager;
 
     public static QuillCraftCore getInstance() {
-        return INSTANCE;
+        return instance;
     }
 
     @Override
     public void onEnable() {
-        INSTANCE = this;
+        instance = this;
 
         protocolManager = ProtocolLibrary.getProtocolManager();
 
@@ -33,6 +33,7 @@ public class QuillCraftCore extends JavaPlugin {
         dataManager = new DataManager(this);
 
         dataManager.init();
+
 
         new PluginManager(this);
     }
@@ -55,6 +56,7 @@ public class QuillCraftCore extends JavaPlugin {
     }
 
     @Nonnull
+    @Override
     public PluginCommand getCommand(@Nonnull String name) {
         return Objects.requireNonNull(super.getCommand(name));
     }

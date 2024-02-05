@@ -7,8 +7,15 @@ import java.util.UUID;
 
 public class PlayerParkourPvPData extends PlayerGameData {
 
-    private int checkPointID, jump, kill, respawn, coins;
-    private boolean hasFinishParkour, isDead, isBestKiller, isWorstKiller;
+    private int checkPointID;
+    private int jump;
+    private int kill;
+    private int respawn;
+    private int coins;
+    private boolean hasFinishParkour;
+    private boolean isDead;
+    private boolean isBestKiller;
+    private boolean isWorstKiller;
     private long timeToFinishParkour;
 
     public PlayerParkourPvPData(UUID uuid, String playerName, String mapName) {
@@ -86,10 +93,6 @@ public class PlayerParkourPvPData extends PlayerGameData {
         this.coins -= coins;
     }
 
-    public void setWin() {
-        this.hasWin = true;
-    }
-
     public void setDead() {
         this.isDead = true;
     }
@@ -115,11 +118,11 @@ public class PlayerParkourPvPData extends PlayerGameData {
     }
 
     public StringBuilder getFormatedTimeToFinishParkour(StringBuilder stringBuilder) {
-        final float timeToFinishParkourSeconde = getTimeToFinishParkour()/1000f;
-        final int minute = (int) (timeToFinishParkourSeconde/60);
-        final float seconde = timeToFinishParkourSeconde%60;
+        final float timeToFinishParkourSeconde = getTimeToFinishParkour() / 1000f;
+        final int minute = (int) (timeToFinishParkourSeconde / 60);
+        final float seconde = timeToFinishParkourSeconde % 60;
 
-        if(minute > 0) stringBuilder.append(minute).append(" minute").append((minute > 1) ? "s" : "").append(" et ");
+        if (minute > 0) stringBuilder.append(minute).append(" minute").append((minute > 1) ? "s" : "").append(" et ");
         stringBuilder.append(new DecimalFormat("##.###").format(seconde)).append(" seconde").append((seconde > 1) ? "s" : "");
 
         return stringBuilder;

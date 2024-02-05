@@ -26,7 +26,7 @@ public class LobbyCommand implements CommandExecutor {
 
     @Override
     public boolean onCommand(@Nonnull CommandSender commandSender, @Nonnull Command command, @Nonnull String label, @Nonnull String[] args) {
-        if(commandSender instanceof final Player player) {
+        if (commandSender instanceof final Player player) {
             player.sendMessage("Vous allez être téléporté au lobby");
             player.sendPluginMessage(quillCraftCore, "BungeeCord", bungeeCordMessage);
             return true;

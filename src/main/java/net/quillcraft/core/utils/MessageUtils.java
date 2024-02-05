@@ -6,8 +6,12 @@ import java.util.Arrays;
 
 public class MessageUtils {
 
+    private MessageUtils() {
+        throw new IllegalStateException("Utility class");
+    }
+
     public static String line() {
-        return "§m"+" ".repeat(80)+"§r";
+        return "§m" + " ".repeat(80) + "§r";
     }
 
     public static String compact(final String... strings) {
@@ -18,7 +22,7 @@ public class MessageUtils {
 
     @Deprecated
     public static String motd(final String firstLine, final String secondLine) {
-        return centeredMessage(firstLine, 120)+"\n"+centeredMessage(secondLine, 120);
+        return centeredMessage(firstLine, 120) + "\n" + centeredMessage(secondLine, 120);
     }
 
     public static String chatCenteredMessage(final String message) {
@@ -27,25 +31,25 @@ public class MessageUtils {
 
     public static String chatCenteredMessages(boolean withSpace, final String... messages) {
         final StringBuilder sb = new StringBuilder();
-        for(int i = 0; i <= messages.length; i++) {
+        for (int i = 0; i <= messages.length; i++) {
             sb.append(chatCenteredMessage(messages[i])).append("§r");
-            if(i+1 != messages.length) sb.append((withSpace) ? " " : "\n");
+            if (i + 1 != messages.length) sb.append((withSpace) ? " " : "\n");
         }
         return sb.toString();
     }
 
     private static String centeredMessage(String message, final int center_px) {
-        if(message == null || message.isBlank()) return "";
+        if (message == null || message.isBlank()) return "";
         message = ChatColor.translateAlternateColorCodes('&', message);
 
         int messagePxSize = 0;
         boolean previousCode = false;
         boolean isBold = false;
 
-        for(char c : message.toCharArray()) {
-            if(c == '§') {
+        for (char c : message.toCharArray()) {
+            if (c == '§') {
                 previousCode = true;
-            } else if(previousCode) {
+            } else if (previousCode) {
                 previousCode = false;
                 isBold = c == 'l' || c == 'L';
             } else {
@@ -55,16 +59,16 @@ public class MessageUtils {
             }
         }
 
-        final int halvedMessageSize = messagePxSize/2;
-        final int toCompensate = center_px-halvedMessageSize;
-        final int spaceLength = DefaultFontInfo.SPACE.getLength()+1;
+        final int halvedMessageSize = messagePxSize / 2;
+        final int toCompensate = center_px - halvedMessageSize;
+        final int spaceLength = DefaultFontInfo.SPACE.getLength() + 1;
         int compensated = 0;
         final StringBuilder sb = new StringBuilder();
-        while(compensated < toCompensate) {
+        while (compensated < toCompensate) {
             sb.append(" ");
             compensated += spaceLength;
         }
-        return sb+message;
+        return sb + message;
     }
 
     public enum DefaultFontInfo {
@@ -80,8 +84,8 @@ public class MessageUtils {
         }
 
         public static DefaultFontInfo getDefaultFontInfo(char c) {
-            for(DefaultFontInfo dFI : DefaultFontInfo.values()) {
-                if(dFI.getCharacter() == c) return dFI;
+            for (DefaultFontInfo dFI : DefaultFontInfo.values()) {
+                if (dFI.getCharacter() == c) return dFI;
             }
             return DefaultFontInfo.DEFAULT;
         }
@@ -95,8 +99,8 @@ public class MessageUtils {
         }
 
         public int getBoldLength() {
-            if(this == DefaultFontInfo.SPACE) return this.getLength();
-            return this.length+1;
+            if (this == DefaultFontInfo.SPACE) return this.getLength();
+            return this.length + 1;
         }
     }
 

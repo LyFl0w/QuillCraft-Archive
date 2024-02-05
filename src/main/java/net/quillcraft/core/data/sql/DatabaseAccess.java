@@ -10,9 +10,9 @@ import java.util.logging.Logger;
 
 public class DatabaseAccess {
 
+    private static final String JDBC_DRIVER = "relocated.private.com.mysql.jdbc.Driver";
     private final DatabaseCredentials credentials;
     private final Logger logger = QuillCraftCore.getInstance().getLogger();
-    private final String JDBC_DRIVER = "relocated.private.com.mysql.jdbc.Driver";
     private HikariDataSource hikariDataSource;
 
     public DatabaseAccess(DatabaseCredentials credentials) {
@@ -23,7 +23,7 @@ public class DatabaseAccess {
         final HikariConfig hikariConfig = new HikariConfig();
         try {
             hikariConfig.setDriverClassName(Class.forName(JDBC_DRIVER).getName());
-        } catch(ClassNotFoundException exception) {
+        } catch (ClassNotFoundException exception) {
             logger.warning("Default JDBC driver is used");
         }
         hikariConfig.setMaximumPoolSize(10);
@@ -48,7 +48,7 @@ public class DatabaseAccess {
     }
 
     public Connection getConnection() throws SQLException {
-        if(this.hikariDataSource == null) {
+        if (this.hikariDataSource == null) {
             logger.warning("Not connected to Database");
             initPool();
         }

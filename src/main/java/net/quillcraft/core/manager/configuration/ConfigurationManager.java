@@ -20,10 +20,6 @@ public enum ConfigurationManager {
         this.fileConfiguration = fileConfiguration;
     }
 
-    public FileConfiguration getConfiguration() {
-        return fileConfiguration;
-    }
-
     @Nullable
     private static FileConfiguration getFileConfiguration(String path) {
         try {
@@ -31,11 +27,15 @@ public enum ConfigurationManager {
             yamlConfiguration.load(new File(path));
 
             return yamlConfiguration;
-        } catch(IOException|InvalidConfigurationException e) {
+        } catch (IOException | InvalidConfigurationException e) {
             QuillCraftCore.getInstance().getLogger().log(Level.SEVERE, e.getMessage(), e);
         }
 
         return null;
+    }
+
+    public FileConfiguration getConfiguration() {
+        return fileConfiguration;
     }
 
 }
