@@ -1,14 +1,14 @@
 package net.quillcraft.lumy.api;
 
 import net.quillcraft.lumy.api.utils.FileUtils;
-import org.apache.logging.log4j.Level;
-import org.apache.logging.log4j.Logger;
 
 import java.io.*;
 import java.net.InetAddress;
 import java.net.Socket;
 import java.net.UnknownHostException;
 import java.util.*;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 
 public class LumyClient {
 
@@ -25,7 +25,7 @@ public class LumyClient {
                     FileUtils.getFileFromResource(dataFolder, "config-lumy.yml"), LumyConfiguration.class);
             start(lumyConfiguration.name(), args, lumyConfiguration.ip(), lumyConfiguration.port());
         } catch (IOException e) {
-            logger.log(Level.ERROR, e.getMessage(), e);
+            logger.log(Level.SEVERE, e.getMessage(), e);
         }
     }
 
@@ -33,7 +33,7 @@ public class LumyClient {
         logger.info("Attempting to connect to the Lumy server");
 
         if (hasDuplicateName(actions)) {
-            logger.warn("You can't have multiple names");
+            logger.warning("You can't have multiple names");
             return;
         }
 
@@ -43,7 +43,7 @@ public class LumyClient {
 
             if (isValidName(name)) {
                 printWriter.println(NAME_PARSER + name);
-                logger.info( "Successful connection to Lumy server as {}", name);
+                logger.log(Level.INFO, "Successful connection to Lumy server as {0}", name);
             } else {
                 logger.info("Successful connection to Lumy server");
             }
@@ -53,9 +53,9 @@ public class LumyClient {
             printWriter.close();
             bufferedReader.close();
         } catch (UnknownHostException e) {
-            logger.log(Level.WARN, "Unknown Host", e);
+            logger.log(Level.WARNING, "Unknown Host", e);
         } catch (IOException e) {
-            logger.log(Level.WARN, "Connexion Refused", e);
+            logger.log(Level.WARNING, "Connexion Refused", e);
         }
     }
 
@@ -63,7 +63,7 @@ public class LumyClient {
         for (final String action : actions) {
             printWriter.println(action.toLowerCase());
 
-            logger.info("{} request sent to Lumy server", action);
+            logger.info(() -> action + " request sent to Lumy server");
 
             if (action.startsWith(NAME_PARSER)) continue;
 
@@ -77,7 +77,7 @@ public class LumyClient {
                     final String respond = bufferedReader.readLine();
 
                     if (respond.startsWith("error:")) {
-                        logger.error(respond);
+                        logger.log(Level.SEVERE, respond);
                         return;
                     }
                     if (respond.equals("closed")) return;
@@ -97,7 +97,7 @@ public class LumyClient {
     }
 
     public int readInt() {
-        return Integer.parseInt(result.poll());
+        return Integer.parseInt(Objects.requireNonNull(result.poll()));
     }
 
     public byte[] readBytes() {
