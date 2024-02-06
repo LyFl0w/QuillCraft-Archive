@@ -38,8 +38,11 @@ public class PlayerGameStatistiqueProvider<T extends PlayerGameStatistique> {
     public static void createTableIfNotExist(GameEnum gameEnum) {
         try {
             final Connection connection = DatabaseManager.STATISTIQUES.getDatabaseAccess().getConnection();
-            connection.prepareStatement("CREATE TABLE IF NOT EXISTS " + gameEnum.name().toLowerCase() + " ( uuid VARCHAR(36) NOT NULL , statistique JSON NULL DEFAULT NULL , UNIQUE (uuid))").execute();
-            connection.close();
+            try (final PreparedStatement preparedStatement = connection.prepareStatement("CREATE TABLE IF NOT EXISTS " + gameEnum.name().toLowerCase()
+                    + " ( uuid VARCHAR(36) NOT NULL , statistique JSON NULL DEFAULT NULL , UNIQUE (uuid))")) {
+                preparedStatement.execute();
+                connection.close();
+            }
         } catch (SQLException exception) {
             QuillCraftCore.getInstance().getLogger().log(Level.SEVERE, exception.getMessage(), exception);
         }
@@ -50,14 +53,14 @@ public class PlayerGameStatistiqueProvider<T extends PlayerGameStatistique> {
     }
 
     private T getPlayerDataBDD(Plugin plugin, Class<T> classOfT) {
-        T playerData = getPlayerDataFromRedis();
-        if (playerData == null) {
-            playerData = getPlayerDataFromDatabase(plugin, classOfT);
-            updatePlayerDataInRedis(playerData);
+        T tmpPlayerData = getPlayerDataFromRedis();
+        if (tmpPlayerData == null) {
+            tmpPlayerData = getPlayerDataFromDatabase(plugin, classOfT);
+            updatePlayerDataInRedis(tmpPlayerData);
         } else {
             redissonClient.getBucket(key).clearExpire();
         }
-        return playerData;
+        return tmpPlayerData;
     }
 
     public void updatePlayerData() {
@@ -101,14 +104,14 @@ public class PlayerGameStatistiqueProvider<T extends PlayerGameStatistique> {
                 preparedStatement.setString(1, playerUUID);
                 final ResultSet resultSet = preparedStatement.executeQuery();
                 if (resultSet.next()) {
-                    final T playerData = new ProfileSerializationType().deserialize(resultSet.getString("statistique"), TypeToken.of(classOfT));
+                    final T tmpPlayerData = new ProfileSerializationType().deserialize(resultSet.getString("statistique"), TypeToken.of(classOfT));
                     connection.close();
-                    return playerData;
+                    return tmpPlayerData;
                 } else {
                     connection.close();
-                    final T playerData = classOfT.getConstructor().newInstance();
-                    plugin.getServer().getScheduler().runTaskAsynchronously(plugin, () -> createPlayerDataInDatabase(playerData));
-                    return playerData;
+                    final T tmpPlayerData = classOfT.getConstructor().newInstance();
+                    plugin.getServer().getScheduler().runTaskAsynchronously(plugin, () -> createPlayerDataInDatabase(tmpPlayerData));
+                    return tmpPlayerData;
                 }
             }
         } catch (SQLException | NoSuchMethodException | InstantiationException | IllegalAccessException |
@@ -119,12 +122,12 @@ public class PlayerGameStatistiqueProvider<T extends PlayerGameStatistique> {
         return null;
     }
 
-    private void createPlayerDataInDatabase(T playerData) {
+    private void createPlayerDataInDatabase(T tmpPlayerData) {
         try {
             final Connection connection = DatabaseManager.STATISTIQUES.getDatabaseAccess().getConnection();
             try (final PreparedStatement preparedStatement = connection.prepareStatement("INSERT INTO " + gameName + " (uuid, statistique) VALUES (?, ?)")) {
                 preparedStatement.setString(1, playerUUID);
-                preparedStatement.setString(2, new ProfileSerializationType().serialize(playerData));
+                preparedStatement.setString(2, new ProfileSerializationType().serialize(tmpPlayerData));
                 preparedStatement.execute();
                 connection.close();
             }
