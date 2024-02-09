@@ -5,10 +5,6 @@ import org.bukkit.entity.Player;
 
 public class PlayerUtils {
 
-    private PlayerUtils() {
-        throw new IllegalStateException("Utility class");
-    }
-
     public static void resetDefaultParmetersPlayer(Player player) {
         resetDefaultParmetersPlayer(player, GameMode.ADVENTURE);
     }
