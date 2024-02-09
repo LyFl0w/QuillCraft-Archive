@@ -8,7 +8,7 @@ import org.bukkit.command.Command;
 import org.bukkit.command.CommandExecutor;
 import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
-import org.lumy.api.text.Text;
+import net.quillcraft.lumy.api.text.Text;
 
 import javax.annotation.Nonnull;
 

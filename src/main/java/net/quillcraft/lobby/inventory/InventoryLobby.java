@@ -6,9 +6,13 @@ import net.quillcraft.core.utils.builders.ItemBuilder;
 import org.bukkit.Material;
 import org.bukkit.entity.Player;
 import org.bukkit.inventory.PlayerInventory;
-import org.lumy.api.text.Text;
+import net.quillcraft.lumy.api.text.Text;
 
 public class InventoryLobby {
+
+    private InventoryLobby() {
+        throw new IllegalStateException("Utility class");
+    }
 
     public static void setDefaultInventory(final Player player, final LanguageManager languageManager, final Account.Visibility visibility) {
         final PlayerInventory playerInventory = player.getInventory();

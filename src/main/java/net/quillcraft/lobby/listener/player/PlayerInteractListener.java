@@ -22,7 +22,7 @@ import org.bukkit.event.block.Action;
 import org.bukkit.event.player.PlayerInteractEvent;
 import org.bukkit.inventory.EquipmentSlot;
 import org.bukkit.inventory.ItemStack;
-import org.lumy.api.text.Text;
+import net.quillcraft.lumy.api.text.Text;
 
 import java.util.List;
 import java.util.logging.Level;

@@ -9,7 +9,7 @@ import org.bukkit.entity.Player;
 import org.bukkit.event.Cancellable;
 import org.bukkit.event.Event;
 import org.bukkit.event.HandlerList;
-import org.lumy.api.text.Text;
+import net.quillcraft.lumy.api.text.Text;
 
 import javax.annotation.Nonnull;
 
@@ -85,7 +85,7 @@ public class PlayerVisibilityChangeEvent extends Event implements Cancellable {
 
     @Nonnull
     public HandlerList getHandlers() {
-        return HANDLERS;
+        return getHandlerList();
     }
 
 

@@ -71,7 +71,7 @@ public class NPCCommand implements CommandExecutor {
 
                     final NPCManager npcManager = quillCraftLobby.getNpcManager();
                     if(npcManager.exists(npcName, reference)) {
-                        final NPC npc = npcManager.getNPCList().stream().parallel().filter(npcTarget -> npcTarget.getName().equalsIgnoreCase(npcName) && npcTarget.getReference() == reference).toList().get(0);
+                        final NPC npc = npcManager.getNpcList().stream().parallel().filter(npcTarget -> npcTarget.getName().equalsIgnoreCase(npcName) && npcTarget.getReference() == reference).toList().get(0);
                         final ConfigurationBuilderManager configurationBuilderManager = ConfigurationBuilderManager.NPC;
                         final String path = npcName+"."+reference+".location.yaw."+args[1].toLowerCase();
                         if(args[1].equalsIgnoreCase("head")) {
@@ -99,7 +99,7 @@ public class NPCCommand implements CommandExecutor {
                 }
             } else if(args.length == 1 && args[0].equalsIgnoreCase("list")) {
                 final StringBuilder stringBuilder = new StringBuilder("List des NPCs :");
-                quillCraftLobby.getNpcManager().getNPCList().forEach(npc -> {
+                quillCraftLobby.getNpcManager().getNpcList().forEach(npc -> {
                     final Location location = npc.getLocation();
                     stringBuilder.append("\n").append(npc.getName()).append(":").append(npc.getReference()).append(" (x=").append(location.getBlockX()).append(", ").append("y=").append(location.getBlockY()).append(", ").append("z=").append(location.getBlockZ()).append(", ").append("world:\"").append(location.getWorld().getName()).append("\")");
                 });

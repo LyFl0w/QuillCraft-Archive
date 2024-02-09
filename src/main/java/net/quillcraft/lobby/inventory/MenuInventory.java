@@ -8,18 +8,18 @@ import net.quillcraft.core.manager.LanguageManager;
 import net.quillcraft.core.utils.builders.InventoryBuilder;
 import net.quillcraft.core.utils.builders.ItemBuilder;
 import net.quillcraft.lobby.game.GameItemEnum;
+import net.quillcraft.lumy.api.text.Text;
+import net.quillcraft.lumy.api.text.TextList;
 import org.bukkit.Material;
 import org.bukkit.entity.Player;
 import org.bukkit.inventory.Inventory;
 import org.bukkit.inventory.ItemFlag;
-import org.lumy.api.text.Text;
-import org.lumy.api.text.TextList;
 import org.redisson.api.RBucket;
 import org.redisson.api.RedissonClient;
 
 public class MenuInventory {
 
-    private final static RedissonClient redisClient = RedisManager.GAME_SERVER.getRedisAccess().getRedissonClient();
+    private static final RedissonClient redisClient = RedisManager.GAME_SERVER.getRedisAccess().getRedissonClient();
 
     public final Inventory getMenuInventory(final Player player) {
         return getMenuInventory(LanguageManager.getLanguage(player));

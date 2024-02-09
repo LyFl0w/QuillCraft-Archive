@@ -9,6 +9,7 @@ import org.bukkit.plugin.messaging.Messenger;
 import org.bukkit.plugin.messaging.PluginMessageListener;
 import org.jetbrains.annotations.NotNull;
 
+import java.lang.reflect.InvocationTargetException;
 import java.util.Arrays;
 import java.util.logging.Level;
 
@@ -30,7 +31,7 @@ public class PluginMessageManager implements PluginMessageListener {
 
     // relay data
     @Override
-    public void onPluginMessageReceived(@NotNull String tag, @NotNull Player player, @NotNull byte[] bytes) {
+    public void onPluginMessageReceived(@NotNull String tag, @NotNull Player player, byte @NotNull [] bytes) {
         try {
             relayMessageData(tag, bytes);
         } catch(Exception exception) {
@@ -38,15 +39,19 @@ public class PluginMessageManager implements PluginMessageListener {
         }
     }
 
-    private void relayMessageData(String channel, byte[] bytes) throws Exception {
+    private void relayMessageData(String channel, byte[] bytes) {
         if(!channel.startsWith("quillcraft:")) return;
         for(Channels channels : Channels.values()) {
             if(channels.getChannel().equals(channel)) {
-                channels.getaClass().getConstructor(QuillCraftLobby.class, byte[].class).newInstance(quillCraftLobby, bytes);
+                try {
+                    channels.getaClass().getConstructor(QuillCraftLobby.class, byte[].class).newInstance(quillCraftLobby, bytes);
+                } catch (Exception e) {
+                    throw new IllegalCallerException("QuillCraftLobby constructor is not found !");
+                }
                 return;
             }
         }
-        quillCraftLobby.getLogger().warning("§cRelay was not done properly ! (target_channel : "+channel+")");
+        quillCraftLobby.getLogger().warning(() -> "§cRelay was not done properly ! (target_channel : "+channel+")");
     }
 
 

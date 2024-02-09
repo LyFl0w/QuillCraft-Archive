@@ -15,23 +15,27 @@ import net.minecraft.server.level.ClientInformation;
 import net.minecraft.server.level.EntityPlayer;
 import net.minecraft.server.level.WorldServer;
 import net.quillcraft.core.utils.PacketUtils;
+import net.quillcraft.lobby.QuillCraftLobby;
 import org.bukkit.Bukkit;
 import org.bukkit.Location;
 import org.bukkit.World;
 
-import org.bukkit.craftbukkit.v1_20_R2.CraftServer;
-import org.bukkit.craftbukkit.v1_20_R2.CraftWorld;
+import org.bukkit.craftbukkit.v1_20_R3.CraftServer;
+import org.bukkit.craftbukkit.v1_20_R3.CraftWorld;
 import org.bukkit.entity.Player;
 
 import java.io.InputStreamReader;
 import java.net.URL;
 import java.util.*;
+import java.util.logging.Level;
 
 public class NPC {
 
+    private static final String TEXTURE_FIELD = "textures";
+
     private final Set<Player> receivers;
 
-    private final EntityPlayer npc;
+    private final EntityPlayer npcPlayer;
     private final String name;
     private final int reference;
     private World world;
@@ -46,17 +50,17 @@ public class NPC {
         this.yawHead = yawHead;
 
         final MinecraftServer server = ((CraftServer) Bukkit.getServer()).getServer();
-        final WorldServer world = ((CraftWorld) location.getWorld()).getHandle();
-        this.npc = new EntityPlayer(server, world, gameProfile, ClientInformation.a());
+        final WorldServer worldServer = ((CraftWorld) location.getWorld()).getHandle();
+        this.npcPlayer = new EntityPlayer(server, worldServer, gameProfile, ClientInformation.a());
 
-        this.npc.getBukkitEntity().setPlayerListName("§8[NPC] §f"+npc.co());
+        this.npcPlayer.getBukkitEntity().setPlayerListName("§8[NPC] §f"+ npcPlayer.cy());
     }
 
     protected NPC(String name, List<String> skinPart, int reference, Location location, float yawHead, GameProfile gameProfile) {
         this(name, reference, location, yawHead, gameProfile);
 
         if(skinPart != null && skinPart.size() == 2) {
-            gameProfile.getProperties().put("textures", new Property("textures", skinPart.get(0), skinPart.get(1)));
+            gameProfile.getProperties().put(TEXTURE_FIELD, new Property(TEXTURE_FIELD, skinPart.get(0), skinPart.get(1)));
 
             //DISPLAY 3D PART OF THE SKIN
             setDataWatcher();
@@ -72,7 +76,7 @@ public class NPC {
         if(!skinName.isBlank()) {
             final String[] skinsType = getSkin(skinName);
             if(skinsType != null) {
-                gameProfile.getProperties().put("textures", new Property("textures", skinsType[0], skinsType[1]));
+                gameProfile.getProperties().put(TEXTURE_FIELD, new Property(TEXTURE_FIELD, skinsType[0], skinsType[1]));
 
                 //DISPLAY 3D PART OF THE SKIN
                 setDataWatcher();
@@ -83,7 +87,7 @@ public class NPC {
     }
 
     private void setDataWatcher() {
-        dataWatcher = npc.al();
+        dataWatcher = npcPlayer.an();
         dataWatcher.b(new DataWatcherObject<>(17, DataWatcherRegistry.a), (byte) 0xFF);
     }
 
@@ -114,55 +118,36 @@ public class NPC {
     private ArrayList<Packet<?>> getSpawnPackets() {
         final ArrayList<Packet<?>> packets = new ArrayList<>();
         //packets.add(new PacketPlayOutPlayerInfo(PacketPlayOutPlayerInfo.EnumPlayerInfoAction.a, npc)); //Display NPC
-        packets.add(new ClientboundPlayerInfoUpdatePacket(ClientboundPlayerInfoUpdatePacket.a.a, npc)); //Display NPC
-        packets.add(new ServerboundClientInformationPacket(npc.z())); // Display NPC
+        packets.add(new ClientboundPlayerInfoUpdatePacket(ClientboundPlayerInfoUpdatePacket.a.a, npcPlayer)); //Display NPC
+        packets.add(new ServerboundClientInformationPacket(npcPlayer.B())); // Display NPC
 
         if(dataWatcher != null)
             packets.add(new PacketPlayOutEntityMetadata(getId(), dataWatcher.c())); // Display 3D part of the Skin
 
-        packets.add(new PacketPlayOutAnimation(npc, 0)); // Rotate Correctly the body of NPC with left-click
-        packets.add(new PacketPlayOutEntityHeadRotation(npc, (byte) (yawHead*256/360))); // Rotate head
-        return packets;
-    }
-
-    private ArrayList<Packet<?>> getFullLocationPacket() {
-        final ArrayList<Packet<?>> packets = new ArrayList<>();
-        packets.add(getLocationPacket());
-        packets.add(getHeadPacket());
+        packets.add(new PacketPlayOutAnimation(npcPlayer, 0)); // Rotate Correctly the body of NPC with left-click
+        packets.add(new PacketPlayOutEntityHeadRotation(npcPlayer, (byte) (yawHead*256/360))); // Rotate head
         return packets;
     }
 
     private PacketPlayOutEntityHeadRotation getHeadPacket() {
-        return new PacketPlayOutEntityHeadRotation(npc, (byte) (yawHead*256/360));
+        return new PacketPlayOutEntityHeadRotation(npcPlayer, (byte) (yawHead*256/360));
     }
 
     private PacketPlayOutEntityTeleport getLocationPacket() {
-        return new PacketPlayOutEntityTeleport(npc);
+        return new PacketPlayOutEntityTeleport(npcPlayer);
     }
 
     private ArrayList<Packet<?>> getDestroyPackets() {
         final ArrayList<Packet<?>> packets = new ArrayList<>();
-        //packets.add(new ClientboundPlayerInfoRemovePacket(Collections.singletonList(uuid)));
         packets.add(new PacketPlayOutEntityDestroy(getId()));
 
         return packets;
     }
 
     public void sendSpawnPacket(Player... players) {
-        sendSpawnPacket(2, players);
-    }
-
-    public void sendSpawnPacket(int time, Player... players) {
         final List<Packet<?>> packets = getSpawnPackets();
 
-        Arrays.stream(players).forEach(player -> {
-            PacketUtils.sendPacket(player, packets);
-            /*
-            Bukkit.getScheduler().runTaskLaterAsynchronously(javaPlugin, () -> {
-                    PacketUtils.sendPacket(player, new ClientboundPlayerInfoRemovePacket(Collections.singletonList(uuid)));
-                    player.sendMessage("destroy entity tab");
-            }, time*20L);*/
-        });
+        Arrays.stream(players).forEach(player -> PacketUtils.sendPacket(player, packets));
     }
 
     public void sendDespawnPacket(Player... players) {
@@ -185,15 +170,15 @@ public class NPC {
 
     public int getId() {
         // npc.hashCode() is generally equals to its ID
-        return npc.ah();
+        return npcPlayer.aj();
     }
 
     public Set<Player> getReceivers() {
         return receivers;
     }
 
-    public EntityPlayer getNpc() {
-        return npc;
+    public EntityPlayer getNpcPlayer() {
+        return npcPlayer;
     }
 
     public World getWorld() {
@@ -208,7 +193,7 @@ public class NPC {
         this.location = location;
         this.world = location.getWorld();
 
-        npc.a(location.getX(), location.getY(), location.getZ(), location.getYaw(), location.getPitch());
+        npcPlayer.a(location.getX(), location.getY(), location.getZ(), location.getYaw(), location.getPitch());
         return this;
     }
 
@@ -226,7 +211,7 @@ public class NPC {
 
     public void setBodyRotation(float yaw) {
         this.location.setYaw(yaw);
-        npc.a(location.getX(), location.getY(), location.getZ(), location.getYaw(), location.getPitch());
+        npcPlayer.a(location.getX(), location.getY(), location.getZ(), location.getYaw(), location.getPitch());
     }
 
     public float getYawHead() {
@@ -256,9 +241,10 @@ public class NPC {
             final String signature = property.get("signature").getAsString();
 
             return new String[]{texture, signature};
-        } catch(Exception ignored) {
+        } catch(Exception exception) {
+            QuillCraftLobby.getInstance().getLogger().log(Level.SEVERE, exception.getMessage(), exception);
         }
-        return null;
+        return new String[0];
     }
 
 }

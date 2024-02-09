@@ -17,8 +17,8 @@ import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
 import org.bukkit.event.player.PlayerJoinEvent;
 import org.bukkit.scheduler.BukkitScheduler;
-import org.lumy.api.text.Text;
-import org.lumy.api.text.TextList;
+import net.quillcraft.lumy.api.text.Text;
+import net.quillcraft.lumy.api.text.TextList;
 import org.redisson.api.RedissonClient;
 
 import java.text.DateFormat;

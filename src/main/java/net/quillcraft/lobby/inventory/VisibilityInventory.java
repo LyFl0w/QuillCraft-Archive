@@ -7,7 +7,7 @@ import net.quillcraft.core.utils.builders.ItemBuilder;
 import org.bukkit.enchantments.Enchantment;
 import org.bukkit.inventory.Inventory;
 import org.bukkit.inventory.ItemFlag;
-import org.lumy.api.text.Text;
+import net.quillcraft.lumy.api.text.Text;
 
 import java.util.Arrays;
 

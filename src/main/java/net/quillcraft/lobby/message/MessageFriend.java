@@ -19,60 +19,52 @@ public class MessageFriend extends Message {
     @Override
     protected void onPluginMessageRepPlayer(Player player, String sub, ByteArrayDataInput in) {
         final String targetPlayerName = in.readUTF();
+        try {
 
-        if(sub.equalsIgnoreCase("Show")) {
+            if (sub.equalsIgnoreCase("Show")) {
 
-            try {
                 final Player targetPlayer = quillCraftLobby.getServer().getPlayer(targetPlayerName);
 
-                if(targetPlayer == null) return;
+                if (targetPlayer == null) return;
 
                 final Account account = new AccountProvider(player).getAccount();
 
-                if(account.getVisibility() == Account.Visibility.FRIENDS) {
-                    quillCraftLobby.getServer().getScheduler().runTaskLater(quillCraftLobby, () -> {
-                        player.showPlayer(quillCraftLobby, targetPlayer);
-                    }, 20L);
+                if (account.getVisibility() == Account.Visibility.FRIENDS) {
+                    quillCraftLobby.getServer().getScheduler().runTaskLater(quillCraftLobby, () ->
+                            player.showPlayer(quillCraftLobby, targetPlayer), 20L);
                 }
 
                 final Account targetAccount = new AccountProvider(targetPlayer).getAccount();
-                if(targetAccount.getVisibility() == Account.Visibility.FRIENDS) {
-                    quillCraftLobby.getServer().getScheduler().runTaskLater(quillCraftLobby, () -> {
-                        targetPlayer.showPlayer(quillCraftLobby, player);
-                    }, 20L);
+                if (targetAccount.getVisibility() == Account.Visibility.FRIENDS) {
+                    quillCraftLobby.getServer().getScheduler().runTaskLater(quillCraftLobby, () ->
+                            targetPlayer.showPlayer(quillCraftLobby, player), 20L);
                 }
 
-            } catch(AccountNotFoundException exception) {
-                quillCraftLobby.getLogger().log(Level.SEVERE, exception.getMessage(), exception);
+                return;
             }
 
-            return;
-        }
+            if (sub.equalsIgnoreCase("Hide")) {
 
-        if(sub.equalsIgnoreCase("Hide")) {
-            try {
                 final Player targetPlayer = quillCraftLobby.getServer().getPlayer(targetPlayerName);
 
-                if(targetPlayer == null) return;
+                if (targetPlayer == null) return;
 
                 final Account account = new AccountProvider(player).getAccount();
 
-                if(account.getVisibility() == Account.Visibility.FRIENDS) {
-                    quillCraftLobby.getServer().getScheduler().runTaskLater(quillCraftLobby, () -> {
-                        player.hidePlayer(quillCraftLobby, targetPlayer);
-                    }, 20L);
+                if (account.getVisibility() == Account.Visibility.FRIENDS) {
+                    quillCraftLobby.getServer().getScheduler().runTaskLater(quillCraftLobby, () ->
+                            player.hidePlayer(quillCraftLobby, targetPlayer), 20L);
                 }
 
                 final Account targetAccount = new AccountProvider(targetPlayer).getAccount();
-                if(targetAccount.getVisibility() == Account.Visibility.FRIENDS) {
-                    quillCraftLobby.getServer().getScheduler().runTaskLater(quillCraftLobby, () -> {
-                        targetPlayer.hidePlayer(quillCraftLobby, player);
-                    }, 20L);
+                if (targetAccount.getVisibility() == Account.Visibility.FRIENDS) {
+                    quillCraftLobby.getServer().getScheduler().runTaskLater(quillCraftLobby, () ->
+                            targetPlayer.hidePlayer(quillCraftLobby, player), 20L);
                 }
-
-            } catch(AccountNotFoundException exception) {
-                quillCraftLobby.getLogger().log(Level.SEVERE, exception.getMessage(), exception);
             }
+
+        } catch (AccountNotFoundException exception) {
+            quillCraftLobby.getLogger().log(Level.SEVERE, exception.getMessage(), exception);
         }
 
     }

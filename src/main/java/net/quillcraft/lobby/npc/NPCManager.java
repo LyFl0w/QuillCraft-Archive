@@ -19,20 +19,21 @@ import org.bukkit.plugin.java.JavaPlugin;
 
 import java.util.HashSet;
 import java.util.List;
+import java.util.Set;
 import java.util.UUID;
 
 public class NPCManager implements Listener {
 
-    private final ConfigurationBuilderManager configurationBuilderManager = ConfigurationBuilderManager.NPC;
+    private static final ConfigurationBuilderManager configurationBuilderManager = ConfigurationBuilderManager.NPC;
     private final FileConfiguration fileConfiguration = configurationBuilderManager.getConfiguration();
 
-    private final HashSet<NPC> NPCList;
+    private final HashSet<NPC> npcList;
     private final JavaPlugin javaPlugin;
 
     private int distance;
 
     public NPCManager(JavaPlugin quillCraftLobby, int distance) {
-        this.NPCList = new HashSet<>();
+        this.npcList = new HashSet<>();
         this.javaPlugin = quillCraftLobby;
         this.distance = (int) Math.pow(distance, 2);
 
@@ -58,7 +59,7 @@ public class NPCManager implements Listener {
             final GameProfile gameProfile = new GameProfile(UUID.randomUUID(), name);
             final NPC npc = new NPC(name, skin, Integer.parseInt(reference), new Location(world, x, y, z, yawBody, pitch), yawHead, gameProfile);
 
-            this.NPCList.add(npc);
+            this.npcList.add(npc);
             updateAllPlayersNPC(npc);
         }));
     }
@@ -66,10 +67,10 @@ public class NPCManager implements Listener {
     public NPC createNPC(String name, String skinName, Location location) {
         location = LocationUtils.roundCoordinates(location);
         final GameProfile gameProfile = new GameProfile(UUID.randomUUID(), name);
-        final int reference = (int) NPCList.stream().filter(npcs -> npcs.getName().equalsIgnoreCase(name)).count();
+        final int reference = (int) npcList.stream().filter(npcs -> npcs.getName().equalsIgnoreCase(name)).count();
         final NPC npc = new NPC(name, skinName, reference, location, gameProfile);
 
-        this.NPCList.add(npc);
+        this.npcList.add(npc);
 
         final String path = name+"."+reference;
         final String[] skin = npc.getSkin(skinName);
@@ -91,26 +92,26 @@ public class NPCManager implements Listener {
     }
 
     public boolean exists(String npcName) {
-        return this.NPCList.stream().anyMatch(npc -> npc.getName().equals(npcName));
+        return this.npcList.stream().anyMatch(npc -> npc.getName().equals(npcName));
     }
 
     public boolean exists(String npcName, int reference) {
-        return this.NPCList.stream().anyMatch(npc -> npc.getName().equals(npcName) && npc.getReference() == reference);
+        return this.npcList.stream().anyMatch(npc -> npc.getName().equals(npcName) && npc.getReference() == reference);
     }
 
     public void removeNPC(String name, int reference) {
-        final NPC npc = NPCList.stream().parallel().filter(npcTarget -> npcTarget.getName().equalsIgnoreCase(name) && npcTarget.getReference() == reference).toList().get(0);
+        final NPC npc = npcList.stream().parallel().filter(npcTarget -> npcTarget.getName().equalsIgnoreCase(name) && npcTarget.getReference() == reference).toList().get(0);
         npc.getWorld().getPlayers().forEach(npc::sendDespawnPacket);
         npc.getReceivers().clear();
 
         final StringBuilder pathBuilder = new StringBuilder(npc.getName());
-        if(getNPCList().stream().parallel().filter(npcs -> npcs.getName().equalsIgnoreCase(name)).count() == 1)
+        if(getNpcList().stream().parallel().filter(npcs -> npcs.getName().equalsIgnoreCase(name)).count() == 1)
             pathBuilder.append(".").append(npc.getReference());
 
         fileConfiguration.set(pathBuilder.toString(), null);
 
         configurationBuilderManager.saveFile();
-        NPCList.remove(npc);
+        npcList.remove(npc);
     }
 
     @EventHandler
@@ -127,9 +128,9 @@ public class NPCManager implements Listener {
     private void onPlayerJoin(PlayerJoinEvent event) {
         final Player player = event.getPlayer();
 
-        Bukkit.getScheduler().runTaskLaterAsynchronously(javaPlugin, () -> this.NPCList.stream().parallel().forEach(npc -> {
+        Bukkit.getScheduler().runTaskLaterAsynchronously(javaPlugin, () -> this.npcList.stream().parallel().forEach(npc -> {
             npc.addReceiver(player);
-            npc.sendSpawnPacket(10, player);
+            npc.sendSpawnPacket(player);
         }), 20L);
     }
 
@@ -137,7 +138,7 @@ public class NPCManager implements Listener {
     private void onPlayerQuit(PlayerQuitEvent event) {
         final Player player = event.getPlayer();
 
-        NPCList.stream().parallel().filter(npc -> npc.isReceiver(player)).forEach(npc -> {
+        npcList.stream().parallel().filter(npc -> npc.isReceiver(player)).forEach(npc -> {
             npc.removeReceiver(player);
             npc.sendDespawnPacket(player);
         });
@@ -147,19 +148,19 @@ public class NPCManager implements Listener {
         this.distance = (int) Math.pow(distance, 2);
     }
 
-    public HashSet<NPC> getNPCList() {
-        return NPCList;
+    public Set<NPC> getNpcList() {
+        return npcList;
     }
 
     private void displayNPC(PlayerMoveEvent event) {
         final Player player = event.getPlayer();
 
-        NPCList.stream().parallel().forEach(npc -> {
-            switch(this.canBeDisplayed(player, event.getFrom(), event.getTo(), npc)) {
-                default -> {
-                }
-                case 1 -> npc.sendSpawnPacket(player);
-                case 2 -> npc.sendDespawnPacket(player);
+        npcList.stream().parallel().forEach(npc -> {
+            final int action = this.canBeDisplayed(player, event.getFrom(), event.getTo(), npc);
+            if(action == 1) {
+                npc.sendSpawnPacket(player);
+            } else if (action == 2) {
+                npc.sendDespawnPacket(player);
             }
         });
     }
@@ -178,8 +179,8 @@ public class NPCManager implements Listener {
     }
 
     public void onDisable() {
-        NPCList.forEach(npc -> npc.sendDespawnPacket(npc.getWorld().getPlayers()));
-        NPCList.clear();
+        npcList.forEach(npc -> npc.sendDespawnPacket(npc.getWorld().getPlayers()));
+        npcList.clear();
     }
 
     private void updateAllPlayersNPC(NPC npc) {

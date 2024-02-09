@@ -13,7 +13,7 @@ import net.quillcraft.lobby.inventory.InventoryLobby;
 import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
-import org.lumy.api.text.TextList;
+import net.quillcraft.lumy.api.text.TextList;
 import org.redisson.api.RedissonClient;
 
 import java.text.DateFormat;

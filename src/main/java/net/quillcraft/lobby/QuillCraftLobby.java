@@ -21,7 +21,7 @@ import java.util.Objects;
 
 public class QuillCraftLobby extends JavaPlugin implements Listener {
 
-    private static QuillCraftLobby INSTANCE;
+    private static QuillCraftLobby instance;
 
     private SongManager songManager;
     private NPCManager npcManager;
@@ -30,12 +30,12 @@ public class QuillCraftLobby extends JavaPlugin implements Listener {
     private ScoreboardManager scoreboardManager;
 
     public static QuillCraftLobby getInstance() {
-        return INSTANCE;
+        return instance;
     }
 
     @Override
     public void onEnable() {
-        INSTANCE = this;
+        setInstance(this);
 
         saveDefaultConfig();
 
@@ -76,6 +76,7 @@ public class QuillCraftLobby extends JavaPlugin implements Listener {
     }
 
     @Nonnull
+    @Override
     public PluginCommand getCommand(@Nonnull String name) {
         return Objects.requireNonNull(super.getCommand(name));
     }
@@ -89,4 +90,7 @@ public class QuillCraftLobby extends JavaPlugin implements Listener {
         headDatabaseAPI = new HeadDatabaseAPI();
     }
 
+    private static void setInstance(QuillCraftLobby instance) {
+        QuillCraftLobby.instance = instance;
+    }
 }

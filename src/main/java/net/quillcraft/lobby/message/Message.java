@@ -9,7 +9,7 @@ public abstract class Message {
 
     protected final QuillCraftLobby quillCraftLobby;
 
-    public Message(QuillCraftLobby quillCraftLobby, byte[] data) {
+    protected Message(QuillCraftLobby quillCraftLobby, byte[] data) {
         this.quillCraftLobby = quillCraftLobby;
         onPluginMessagePlayer(data);
     }

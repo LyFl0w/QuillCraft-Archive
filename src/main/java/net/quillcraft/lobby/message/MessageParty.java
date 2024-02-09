@@ -22,56 +22,50 @@ public class MessageParty extends Message {
     protected void onPluginMessageRepPlayer(Player player, String sub, ByteArrayDataInput in) {
         final String targetPlayerName = in.readUTF();
 
-        if(sub.equalsIgnoreCase("Show")) {
+        try {
+            if (sub.equalsIgnoreCase("Show")) {
 
-            try {
+
                 final Account account = new AccountProvider(player).getAccount();
                 final Player targetPlayer = quillCraftLobby.getServer().getPlayer(targetPlayerName);
 
-                if(targetPlayer == null) {
+                if (targetPlayer == null) {
                     quillCraftLobby.getLogger().info("He is not connected to the server !");
                     return;
                 }
 
-                if(account.getVisibility() == Account.Visibility.PARTY) {
-                    quillCraftLobby.getServer().getScheduler().runTaskLater(quillCraftLobby, () -> {
-                        player.showPlayer(quillCraftLobby, targetPlayer);
-                    }, 20L);
+                if (account.getVisibility() == Account.Visibility.PARTY) {
+                    quillCraftLobby.getServer().getScheduler().runTaskLater(quillCraftLobby, () ->
+                            player.showPlayer(quillCraftLobby, targetPlayer), 20L);
                 }
 
                 final Account targetAccount = new AccountProvider(targetPlayer).getAccount();
-                if(targetAccount.getVisibility() == Account.Visibility.PARTY) {
-                    quillCraftLobby.getServer().getScheduler().runTaskLater(quillCraftLobby, () -> {
-                        targetPlayer.showPlayer(quillCraftLobby, player);
-                    }, 20L);
+                if (targetAccount.getVisibility() == Account.Visibility.PARTY) {
+                    quillCraftLobby.getServer().getScheduler().runTaskLater(quillCraftLobby, () ->
+                            targetPlayer.showPlayer(quillCraftLobby, player), 20L);
                 }
 
-            } catch(AccountNotFoundException exception) {
-                quillCraftLobby.getLogger().log(Level.SEVERE, exception.getMessage(), exception);
+                return;
             }
 
-            return;
-        }
-
-        if(sub.equalsIgnoreCase("Hide")) {
-            try {
+            if (sub.equalsIgnoreCase("Hide")) {
                 final Account account = new AccountProvider(player).getAccount();
                 final Player targetPlayer = quillCraftLobby.getServer().getPlayer(targetPlayerName);
 
-                if(targetPlayer == null) return;
+                if (targetPlayer == null) return;
 
-                if(account.getVisibility() == Account.Visibility.PARTY)
+                if (account.getVisibility() == Account.Visibility.PARTY)
                     quillCraftLobby.getServer().getScheduler().runTaskLater(quillCraftLobby, account::playVisibilityEffect, 20L);
 
 
                 final Account targetAccount = new AccountProvider(targetPlayer).getAccount();
-                if(targetAccount.getVisibility() == Account.Visibility.PARTY)
+                if (targetAccount.getVisibility() == Account.Visibility.PARTY)
                     quillCraftLobby.getServer().getScheduler().runTaskLater(quillCraftLobby, targetAccount::playVisibilityEffect, 20L);
 
-
-            } catch(AccountNotFoundException exception) {
-                quillCraftLobby.getLogger().log(Level.SEVERE, exception.getMessage(), exception);
             }
+
+        } catch (AccountNotFoundException exception) {
+            quillCraftLobby.getLogger().log(Level.SEVERE, exception.getMessage(), exception);
         }
 
     }

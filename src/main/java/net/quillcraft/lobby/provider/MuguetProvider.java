@@ -17,8 +17,10 @@ import java.util.logging.Level;
 
 public class MuguetProvider {
 
-    private final static RedissonClient redissonClient = RedisManager.MESSAGE.getRedisAccess().getRedissonClient();
-    private final String uuid, name, keyMuguetCount;
+    private static final RedissonClient redissonClient = RedisManager.MESSAGE.getRedisAccess().getRedissonClient();
+    private final String uuid;
+    private final String name;
+    private final String keyMuguetCount;
 
     public MuguetProvider(Player player) {
         name = player.getName();
@@ -30,14 +32,14 @@ public class MuguetProvider {
         final ArrayList<String> playersName = new ArrayList<>();
         try {
             final Connection connection = DatabaseManager.MINECRAFT_SERVER.getDatabaseAccess().getConnection();
-            final PreparedStatement preparedStatement = connection.prepareStatement("SELECT name FROM muguet ORDER BY muguetCounter DESC LIMIT ?"); // Précontruction d'une requète SQL
-            preparedStatement.setInt(1, maxTop); // Finilisation de la requête
-            final ResultSet resultSet = preparedStatement.executeQuery();    // Recuperation des données
+            try(final PreparedStatement preparedStatement = connection.prepareStatement("SELECT name FROM muguet ORDER BY muguetCounter DESC LIMIT ?")) {
+                preparedStatement.setInt(1, maxTop); // Finilisation de la requête
+                final ResultSet resultSet = preparedStatement.executeQuery();    // Recuperation des données
 
-            while(resultSet.next()) {
-                playersName.add(resultSet.getString("name"));
+                while(resultSet.next()) {
+                    playersName.add(resultSet.getString("name"));
+                }
             }
-
             connection.close();
         } catch(SQLException exception) {
             QuillCraftLobby.getInstance().getLogger().log(Level.SEVERE, exception.getMessage(), exception);
@@ -48,14 +50,15 @@ public class MuguetProvider {
     public static int getSum() {
         try {
             final Connection connection = DatabaseManager.MINECRAFT_SERVER.getDatabaseAccess().getConnection();
-            final PreparedStatement preparedStatement = connection.prepareStatement("SELECT SUM(muguetCounter) as sum from muguet"); // Précontruction d'une requète SQL
-            final ResultSet resultSet = preparedStatement.executeQuery();    // Recuperation des données
+            try(final PreparedStatement preparedStatement = connection.prepareStatement("SELECT SUM(muguetCounter) as sum from muguet")) {
+                final ResultSet resultSet = preparedStatement.executeQuery();    // Recuperation des données
 
-            resultSet.next();
-            final int sum = resultSet.getInt("sum");
-            connection.close();
+                resultSet.next();
+                final int sum = resultSet.getInt("sum");
+                connection.close();
 
-            return sum;
+                return sum;
+            }
         } catch(SQLException exception) {
             QuillCraftLobby.getInstance().getLogger().log(Level.SEVERE, exception.getMessage(), exception);
         }
@@ -74,17 +77,18 @@ public class MuguetProvider {
     private int getMuguetCountFromDatabase() {
         try {
             final Connection connection = DatabaseManager.MINECRAFT_SERVER.getDatabaseAccess().getConnection(); //Ouverture de connection
-            final PreparedStatement preparedStatementCheck = connection.prepareStatement("SELECT muguetCounter FROM muguet WHERE uuid = ?");// Précontruction d'une requète SQL
-            preparedStatementCheck.setObject(1, uuid); // Finilisation de la requête
-            preparedStatementCheck.executeQuery(); // Execute et récupere des données
-            final ResultSet resultSet = preparedStatementCheck.getResultSet(); // Récupere les données de la commande
-            if(resultSet.next()) {
-                int muguetCount = resultSet.getInt("muguetCounter");
+            try (final PreparedStatement preparedStatementCheck = connection.prepareStatement("SELECT muguetCounter FROM muguet WHERE uuid = ?")) {
+                preparedStatementCheck.setObject(1, uuid); // Finilisation de la requête
+                preparedStatementCheck.executeQuery(); // Execute et récupere des données
+                final ResultSet resultSet = preparedStatementCheck.getResultSet(); // Récupere les données de la commande
+                if(resultSet.next()) {
+                    int muguetCount = resultSet.getInt("muguetCounter");
+                    connection.close();
+                    return muguetCount;
+                }
                 connection.close();
-                return muguetCount;
+                createMuguetCountInDatabase();
             }
-            connection.close();
-            createMuguetCountInDatabase();
         } catch(SQLException exception) {
             QuillCraftLobby.getInstance().getLogger().log(Level.SEVERE, exception.getMessage(), exception);
         }
@@ -94,11 +98,12 @@ public class MuguetProvider {
     private void createMuguetCountInDatabase() {
         try {
             final Connection connection = DatabaseManager.MINECRAFT_SERVER.getDatabaseAccess().getConnection(); //Ouverture de connection
-            final PreparedStatement preparedStatement = connection.prepareStatement("INSERT INTO muguet (uuid, name) VALUES (?,?)"); // Précontruction d'une requète SQ
-            preparedStatement.setString(1, uuid); // Finilisation de la requête
-            preparedStatement.setString(2, name); // Finilisation de la requête
-            preparedStatement.execute();    //Execution de la requete
-            connection.close();
+            try (final PreparedStatement preparedStatement = connection.prepareStatement("INSERT INTO muguet (uuid, name) VALUES (?,?)")) {
+                preparedStatement.setString(1, uuid); // Finilisation de la requête
+                preparedStatement.setString(2, name); // Finilisation de la requête
+                preparedStatement.execute();    //Execution de la requete
+                connection.close();
+            }
         } catch(SQLException exception) {
             QuillCraftLobby.getInstance().getLogger().log(Level.SEVERE, exception.getMessage(), exception);
         }
@@ -112,11 +117,12 @@ public class MuguetProvider {
     private void updateMuguetCountDatabase(int muguetCount) {
         try {
             final Connection connection = DatabaseManager.MINECRAFT_SERVER.getDatabaseAccess().getConnection();
-            final PreparedStatement preparedStatement = connection.prepareStatement("UPDATE muguet SET muguetCounter = ? WHERE uuid = ?"); // Précontruction d'une requète SQL
-            preparedStatement.setInt(1, muguetCount); // Finilisation de la requête
-            preparedStatement.setString(2, uuid); // Finilisation de la requête
-            preparedStatement.executeUpdate();    //Mise à jour de la liste dans la bdd
-            connection.close();
+            try (final PreparedStatement preparedStatement = connection.prepareStatement("UPDATE muguet SET muguetCounter = ? WHERE uuid = ?")) {
+                preparedStatement.setInt(1, muguetCount); // Finilisation de la requête
+                preparedStatement.setString(2, uuid); // Finilisation de la requête
+                preparedStatement.executeUpdate();    //Mise à jour de la liste dans la bdd
+                connection.close();
+            }
         } catch(SQLException exception) {
             QuillCraftLobby.getInstance().getLogger().log(Level.SEVERE, exception.getMessage(), exception);
         }
