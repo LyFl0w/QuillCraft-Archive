@@ -13,7 +13,7 @@ import java.util.List;
 public class WaitingList {
 
     @JsonIgnore
-    protected final static RedissonClient redissonClient = RedisManager.GAME_SERVER.getRedisAccess().getRedissonClient();
+    protected static final RedissonClient redissonClient = RedisManager.GAME_SERVER.getRedisAccess().getRedissonClient();
 
     private final List<Waiter> waiters;
     private final GameEnum gameEnum;
@@ -34,7 +34,7 @@ public class WaitingList {
 
     public void updateWaitersListRedis() {
         final RBucket<List<Waiter>> listRBucket = getWaitersListBucket();
-        if(waiters.size() == 0 && listRBucket.isExists()) {
+        if(waiters.isEmpty() && listRBucket.isExists()) {
             listRBucket.delete();
             return;
         }

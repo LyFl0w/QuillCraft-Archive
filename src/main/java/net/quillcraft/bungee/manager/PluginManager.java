@@ -1,6 +1,6 @@
 package net.quillcraft.bungee.manager;
 
-import net.quillcraft.bungee.QuillCraftBungee;
+import net.quillcraft.bungee.serialization.QuillCraftBungee;
 import net.quillcraft.bungee.listeners.player.ChatListener;
 import net.quillcraft.bungee.listeners.player.DisconnectListener;
 import net.quillcraft.bungee.listeners.player.PostLoginListener;

@@ -5,7 +5,7 @@ import net.md_5.bungee.api.chat.ComponentBuilder;
 import net.md_5.bungee.api.chat.HoverEvent;
 import net.md_5.bungee.api.chat.TextComponent;
 import net.md_5.bungee.api.connection.ProxiedPlayer;
-import net.quillcraft.bungee.QuillCraftBungee;
+import net.quillcraft.bungee.serialization.QuillCraftBungee;
 import net.quillcraft.bungee.data.redis.RedisManager;
 import net.quillcraft.bungee.data.sql.DatabaseManager;
 import net.quillcraft.bungee.data.sql.table.SQLTablesManager;
@@ -13,7 +13,7 @@ import net.quillcraft.bungee.manager.LanguageManager;
 import net.quillcraft.bungee.serialization.ProfileSerializationUtils;
 import net.quillcraft.commons.account.Account;
 import net.quillcraft.commons.exception.FriendNotFoundException;
-import org.lumy.api.text.Text;
+import net.quillcraft.lumy.api.text.Text;
 import org.redisson.api.RBucket;
 import org.redisson.api.RSet;
 import org.redisson.api.RedissonClient;
@@ -88,22 +88,22 @@ public class FriendProvider {
     private Friend getFriendsFromDatabase() throws FriendNotFoundException {
         try {
             final Connection connection = DatabaseManager.MINECRAFT_SERVER.getDatabaseAccess().getConnection();
-            final PreparedStatement preparedStatement = connection.prepareStatement("SELECT * FROM "+sqlTablesManager.getTable()+" WHERE "+sqlTablesManager.getKeyColumn()+" = ?");
+            try (final PreparedStatement preparedStatement = connection.prepareStatement("SELECT * FROM "+sqlTablesManager.getTable()+" WHERE "+sqlTablesManager.getKeyColumn()+" = ?")) {
+                preparedStatement.setString(1, uuid.toString());
+                preparedStatement.executeQuery();
 
-            preparedStatement.setString(1, uuid.toString());
-            preparedStatement.executeQuery();
+                final ResultSet resultSet = preparedStatement.getResultSet();
 
-            final ResultSet resultSet = preparedStatement.getResultSet();
+                if(resultSet.next()) {
+                    final List<UUID> friendsUUID = new ProfileSerializationUtils.ListUUID().deserialize(resultSet.getString("friends_uuid"));
+                    final List<String> friendsName = new ProfileSerializationUtils.ListString().deserialize(resultSet.getString("friends_name"));
+                    connection.close();
 
-            if(resultSet.next()) {
-                final List<UUID> friendsUUID = new ProfileSerializationUtils.ListUUID().deserialize(resultSet.getString("friends_uuid"));
-                final List<String> friendsName = new ProfileSerializationUtils.ListString().deserialize(resultSet.getString("friends_name"));
-                connection.close();
-
-                return new Friend(uuid, friendsUUID, friendsName);
-            } else {
-                connection.close();
-                return createFriendInDatabase();
+                    return new Friend(uuid, friendsUUID, friendsName);
+                } else {
+                    connection.close();
+                    return createFriendInDatabase();
+                }
             }
         } catch(Exception exception) {
             throw new FriendNotFoundException(uuid);
@@ -111,14 +111,12 @@ public class FriendProvider {
     }
 
     public void updateFriends(Friend friend) {
-        PreparedStatement updateRequest = null;
-        try {
-            updateRequest = friend.getSQLRequest().getUpdateRequest(DatabaseManager.MINECRAFT_SERVER.getDatabaseAccess().getConnection());
+        try (final PreparedStatement updateRequest = friend.getSQLRequest().getUpdateRequest(DatabaseManager.MINECRAFT_SERVER.getDatabaseAccess().getConnection())){
+            sendFriendsToRedis(friend);
+            updateFriendDatabase(updateRequest);
         } catch(Exception exception) {
             QuillCraftBungee.getInstance().getLogger().log(Level.SEVERE, exception.getMessage(), exception);
         }
-        sendFriendsToRedis(friend);
-        updateFriendDatabase(updateRequest);
     }
 
 
@@ -126,15 +124,15 @@ public class FriendProvider {
         final Friend friend = new Friend(uuid);
         try {
             final Connection connection = DatabaseManager.MINECRAFT_SERVER.getDatabaseAccess().getConnection();
-            final PreparedStatement preparedStatement = connection.prepareStatement("INSERT INTO "+sqlTablesManager.getTable()+" (uuid, friends_uuid, friends_name) VALUES (?, ?, ?)");
+            try (final PreparedStatement preparedStatement = connection.prepareStatement("INSERT INTO "+sqlTablesManager.getTable()+" (uuid, friends_uuid, friends_name) VALUES (?, ?, ?)")) {
+                preparedStatement.setString(1, uuid.toString());
+                preparedStatement.setString(2, new ProfileSerializationUtils.ListUUID().serialize(friend.getFriendsUUID()));
+                preparedStatement.setString(3, new ProfileSerializationUtils.ListString().serialize(friend.getFriendsName()));
 
-            preparedStatement.setString(1, uuid.toString());
-            preparedStatement.setString(2, new ProfileSerializationUtils.ListUUID().serialize(friend.getFriendsUUID()));
-            preparedStatement.setString(3, new ProfileSerializationUtils.ListString().serialize(friend.getFriendsName()));
+                preparedStatement.execute();
 
-            preparedStatement.execute();
-
-            connection.close();
+                connection.close();
+            }
         } catch(SQLException exception) {
             QuillCraftBungee.getInstance().getLogger().log(Level.SEVERE, exception.getMessage(), exception);
         }

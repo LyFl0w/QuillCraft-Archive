@@ -1,4 +1,4 @@
-package net.quillcraft.bungee;
+package net.quillcraft.bungee.serialization;
 
 import net.md_5.bungee.api.plugin.Plugin;
 import net.quillcraft.bungee.listeners.proxy.ProxyPingListener;
@@ -8,17 +8,13 @@ import net.quillcraft.bungee.subscriber.SubscriberManager;
 
 public class QuillCraftBungee extends Plugin {
 
-    private static QuillCraftBungee INSTANCE;
+    private static QuillCraftBungee instance;
 
     private DataManager dataManager;
 
-    public static QuillCraftBungee getInstance() {
-        return INSTANCE;
-    }
-
     @Override
     public void onEnable() {
-        INSTANCE = this;
+        instance = this;
 
         dataManager = new DataManager(this);
         dataManager.init();
@@ -34,6 +30,10 @@ public class QuillCraftBungee extends Plugin {
     public void onDisable() {
         SubscriberManager.removeAllSubscribersData();
         dataManager.close();
+    }
+
+    public static QuillCraftBungee getInstance() {
+        return instance;
     }
 
     public DataManager getDataManager() {

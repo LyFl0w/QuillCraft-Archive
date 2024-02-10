@@ -12,7 +12,7 @@ import java.util.UUID;
 public abstract sealed class Game permits ParkourPvPGame {
 
     @JsonIgnore
-    protected final static RedissonClient redissonClient = RedisManager.GAME_SERVER.getRedisAccess().getRedissonClient();
+    protected static final RedissonClient redissonClient = RedisManager.GAME_SERVER.getRedisAccess().getRedissonClient();
 
     private final int id;
     private final List<UUID> playerList;

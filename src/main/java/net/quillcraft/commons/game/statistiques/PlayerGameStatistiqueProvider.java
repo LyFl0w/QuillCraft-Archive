@@ -2,7 +2,7 @@ package net.quillcraft.commons.game.statistiques;
 
 import com.google.common.reflect.TypeToken;
 import net.md_5.bungee.api.plugin.Plugin;
-import net.quillcraft.bungee.QuillCraftBungee;
+import net.quillcraft.bungee.serialization.QuillCraftBungee;
 import net.quillcraft.bungee.data.redis.RedisManager;
 import net.quillcraft.bungee.data.sql.DatabaseManager;
 import net.quillcraft.bungee.serialization.ProfileSerializationType;
@@ -20,9 +20,11 @@ import java.util.logging.Level;
 
 public class PlayerGameStatistiqueProvider<T extends PlayerGameStatistique> {
 
-    private final static RedissonClient redissonClient = RedisManager.STATISTIQUES.getRedisAccess().getRedissonClient();
+    private static final RedissonClient redissonClient = RedisManager.STATISTIQUES.getRedisAccess().getRedissonClient();
 
-    private final String gameName, playerUUID, key;
+    private final String gameName;
+    private final String playerUUID;
+    private final String key;
     private final T playerData;
 
     public PlayerGameStatistiqueProvider(Plugin plugin, UUID playerUUID, GameEnum gameEnum) {
@@ -37,12 +39,12 @@ public class PlayerGameStatistiqueProvider<T extends PlayerGameStatistique> {
     }
 
     private T getPlayerDataBDD(Plugin plugin, Class<T> classOfT) {
-        T playerData = getPlayerDataFromRedis();
-        if(playerData == null) {
-            playerData = getPlayerDataFromDatabase(plugin, classOfT);
-            updatePlayerDataInRedis(playerData);
+        T tmpPlayerData = getPlayerDataFromRedis();
+        if(tmpPlayerData == null) {
+            tmpPlayerData = getPlayerDataFromDatabase(plugin, classOfT);
+            updatePlayerDataInRedis(tmpPlayerData);
         }
-        return playerData;
+        return tmpPlayerData;
     }
 
     public void updatePlayerData() {
@@ -62,11 +64,12 @@ public class PlayerGameStatistiqueProvider<T extends PlayerGameStatistique> {
     private void updatePlayerDataInDatabase() {
         try {
             final Connection connection = DatabaseManager.STATISTIQUES.getDatabaseAccess().getConnection();
-            final PreparedStatement preparedStatement = connection.prepareStatement("UPDATE "+gameName.toLowerCase()+" SET statistique = ? WHERE uuid = ? ");
-            preparedStatement.setString(1, new ProfileSerializationType().serialize(playerData));
-            preparedStatement.setString(2, playerUUID);
-            preparedStatement.execute();
-            connection.close();
+            try (final PreparedStatement preparedStatement = connection.prepareStatement("UPDATE "+gameName.toLowerCase()+" SET statistique = ? WHERE uuid = ? ")) {
+                preparedStatement.setString(1, new ProfileSerializationType().serialize(playerData));
+                preparedStatement.setString(2, playerUUID);
+                preparedStatement.execute();
+                connection.close();
+            }
         } catch(SQLException exception) {
             QuillCraftBungee.getInstance().getLogger().log(Level.SEVERE, exception.getMessage(), exception);
         }
@@ -80,18 +83,19 @@ public class PlayerGameStatistiqueProvider<T extends PlayerGameStatistique> {
     private T getPlayerDataFromDatabase(Plugin plugin, Class<T> classOfT) {
         try {
             final Connection connection = DatabaseManager.STATISTIQUES.getDatabaseAccess().getConnection();
-            final PreparedStatement preparedStatement = connection.prepareStatement("SELECT statistique FROM "+gameName+" WHERE uuid = ?");
-            preparedStatement.setString(1, playerUUID);
-            final ResultSet resultSet = preparedStatement.executeQuery();
-            if(resultSet.next()) {
-                final T playerData = new ProfileSerializationType().deserialize(resultSet.getString("statistique"), new TypeToken<T>() {});
-                connection.close();
-                return playerData;
-            } else {
-                connection.close();
-                final T playerData = classOfT.getConstructor().newInstance();
-                plugin.getProxy().getScheduler().runAsync(plugin, () -> createPlayerDataInDatabase(playerData));
-                return playerData;
+            try (final PreparedStatement preparedStatement = connection.prepareStatement("SELECT statistique FROM "+gameName+" WHERE uuid = ?")) {
+                preparedStatement.setString(1, playerUUID);
+                final ResultSet resultSet = preparedStatement.executeQuery();
+                if(resultSet.next()) {
+                    final T tmpPlayerData = new ProfileSerializationType().deserialize(resultSet.getString("statistique"), new TypeToken<T>() {});
+                    connection.close();
+                    return tmpPlayerData;
+                } else {
+                    connection.close();
+                    final T tmpPlayerData = classOfT.getConstructor().newInstance();
+                    plugin.getProxy().getScheduler().runAsync(plugin, () -> createPlayerDataInDatabase(tmpPlayerData));
+                    return tmpPlayerData;
+                }
             }
         } catch(SQLException|NoSuchMethodException|InstantiationException|IllegalAccessException|
                 InvocationTargetException exception) {
@@ -104,11 +108,12 @@ public class PlayerGameStatistiqueProvider<T extends PlayerGameStatistique> {
         createTableIfNotExist();
         try {
             final Connection connection = DatabaseManager.STATISTIQUES.getDatabaseAccess().getConnection();
-            final PreparedStatement preparedStatement = connection.prepareStatement("INSERT INTO "+gameName+" (uuid, statistique) VALUES (?, ?)");
-            preparedStatement.setString(1, playerUUID);
-            preparedStatement.setString(2, new ProfileSerializationType().serialize(playerData));
-            preparedStatement.execute();
-            connection.close();
+            try (final PreparedStatement preparedStatement = connection.prepareStatement("INSERT INTO "+gameName+" (uuid, statistique) VALUES (?, ?)")) {
+                preparedStatement.setString(1, playerUUID);
+                preparedStatement.setString(2, new ProfileSerializationType().serialize(playerData));
+                preparedStatement.execute();
+                connection.close();
+            }
         } catch(SQLException exception) {
             QuillCraftBungee.getInstance().getLogger().log(Level.SEVERE, exception.getMessage(), exception);
         }
@@ -117,8 +122,10 @@ public class PlayerGameStatistiqueProvider<T extends PlayerGameStatistique> {
     private void createTableIfNotExist() {
         try {
             final Connection connection = DatabaseManager.STATISTIQUES.getDatabaseAccess().getConnection();
-            connection.prepareStatement("CREATE TABLE IF NOT EXISTS "+gameName+" ( uuid VARCHAR(36) NOT NULL , statistique JSON NULL DEFAULT NULL , UNIQUE (uuid))").execute();
-            connection.close();
+            try(final PreparedStatement preparedStatement = connection.prepareStatement("CREATE TABLE IF NOT EXISTS "+gameName+" ( uuid VARCHAR(36) NOT NULL , statistique JSON NULL DEFAULT NULL , UNIQUE (uuid))")) {
+                preparedStatement.execute();
+                connection.close();
+            }
         } catch(SQLException exception) {
             QuillCraftBungee.getInstance().getLogger().log(Level.SEVERE, exception.getMessage(), exception);
         }

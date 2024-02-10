@@ -4,7 +4,7 @@ import net.md_5.bungee.api.ProxyServer;
 import net.md_5.bungee.api.event.PluginMessageEvent;
 import net.md_5.bungee.api.plugin.Listener;
 import net.md_5.bungee.event.EventHandler;
-import net.quillcraft.bungee.QuillCraftBungee;
+import net.quillcraft.bungee.serialization.QuillCraftBungee;
 import net.quillcraft.bungee.messages.*;
 
 import java.util.Arrays;
@@ -49,15 +49,19 @@ public class PluginMessageManager implements Listener {
             this.aClass = aClass;
         }
 
-        public static void relayMessageData(String channel, ProxyServer proxy, PluginMessageEvent event) throws Exception {
+        public static void relayMessageData(String channel, ProxyServer proxy, PluginMessageEvent event) {
             if(!channel.startsWith("quillcraft:")) return;
             for(Channels channels : values()) {
                 if(channels.getChannel().equals(channel)) {
-                    channels.getaClass().getConstructor(ProxyServer.class, PluginMessageEvent.class).newInstance(proxy, event);
+                    try {
+                        channels.getaClass().getConstructor(ProxyServer.class, PluginMessageEvent.class).newInstance(proxy, event);
+                    } catch (Exception exception) {
+                        proxy.getLogger().log(Level.SEVERE, exception.getMessage(), exception);
+                    }
                     return;
                 }
             }
-            proxy.getLogger().warning("§cRelay was not done properly ! (target_channel : "+channel+")");
+            proxy.getLogger().warning(() -> "§cRelay was not done properly ! (target_channel : "+channel+")");
         }
 
         public String getChannel() {

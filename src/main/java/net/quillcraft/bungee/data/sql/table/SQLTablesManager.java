@@ -7,7 +7,8 @@ public enum SQLTablesManager {
     PARTY("party", "party_uuid"),
     FRIEND("friend", "uuid");
 
-    private final String table, keyColumn;
+    private final String table;
+    private final String keyColumn;
 
     SQLTablesManager(String table, String keyColumn) {
         this.table = table;

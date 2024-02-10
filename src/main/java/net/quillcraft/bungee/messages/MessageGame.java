@@ -6,7 +6,7 @@ import net.md_5.bungee.api.chat.TextComponent;
 import net.md_5.bungee.api.config.ServerInfo;
 import net.md_5.bungee.api.connection.ProxiedPlayer;
 import net.md_5.bungee.api.event.PluginMessageEvent;
-import net.quillcraft.bungee.QuillCraftBungee;
+import net.quillcraft.bungee.serialization.QuillCraftBungee;
 import net.quillcraft.bungee.data.redis.RedisManager;
 import net.quillcraft.bungee.subscriber.SubscriberGame;
 import net.quillcraft.commons.account.AccountProvider;
@@ -28,7 +28,7 @@ import java.util.logging.Level;
 
 public class MessageGame extends Message {
 
-    private final static RedissonClient redissonClient = RedisManager.GAME_SERVER.getRedisAccess().getRedissonClient();
+    private static final RedissonClient redissonClient = RedisManager.GAME_SERVER.getRedisAccess().getRedissonClient();
 
     public MessageGame(ProxyServer proxyServer, PluginMessageEvent event) {
         super(proxyServer, event);

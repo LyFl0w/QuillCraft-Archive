@@ -3,7 +3,7 @@ package net.quillcraft.bungee.utils.builder;
 import net.md_5.bungee.config.Configuration;
 import net.md_5.bungee.config.ConfigurationProvider;
 import net.md_5.bungee.config.YamlConfiguration;
-import net.quillcraft.bungee.QuillCraftBungee;
+import net.quillcraft.bungee.serialization.QuillCraftBungee;
 
 import java.io.File;
 import java.io.IOException;
@@ -41,7 +41,7 @@ public class YamlConfigurationBuilder {
                 return;
             }
             try {
-                file.createNewFile();
+                if (!file.createNewFile()) throw new IllegalCallerException(fileName + " can't be created");
             } catch(IOException exception) {
                 QuillCraftBungee.getInstance().getLogger().log(Level.SEVERE, exception.getMessage(), exception);
             }

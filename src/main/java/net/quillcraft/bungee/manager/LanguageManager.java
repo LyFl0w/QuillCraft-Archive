@@ -2,13 +2,13 @@ package net.quillcraft.bungee.manager;
 
 import net.md_5.bungee.api.chat.TextComponent;
 import net.md_5.bungee.api.connection.ProxiedPlayer;
-import net.quillcraft.bungee.QuillCraftBungee;
+import net.quillcraft.bungee.serialization.QuillCraftBungee;
 import net.quillcraft.bungee.data.redis.RedisManager;
 import net.quillcraft.commons.account.Account;
 import net.quillcraft.commons.account.AccountProvider;
 import net.quillcraft.commons.exception.AccountNotFoundException;
-import org.lumy.api.text.Text;
-import org.lumy.api.text.TextList;
+import net.quillcraft.lumy.api.text.Text;
+import net.quillcraft.lumy.api.text.TextList;
 import org.redisson.api.RBucket;
 import org.redisson.api.RList;
 import org.redisson.api.RedissonClient;
@@ -23,7 +23,7 @@ public enum LanguageManager {
     FRENCH("fr_fr"),
     DEFAULT(ENGLISH_US.getISO());
 
-    private final static RedissonClient redissonClient = RedisManager.TEXT.getRedisAccess().getRedissonClient();
+    private static final RedissonClient redissonClient = RedisManager.TEXT.getRedisAccess().getRedissonClient();
     private final String iso;
 
     LanguageManager(final String isoLanguage) {

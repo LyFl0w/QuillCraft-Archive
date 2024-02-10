@@ -6,6 +6,7 @@ import com.google.gson.GsonBuilder;
 
 import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 public class ProfileSerializationType {
 
@@ -40,11 +41,13 @@ public class ProfileSerializationType {
     }
 
     public <T> List<T> deserializeList(String json, Class<T> classOfListT) {
-        return gson.fromJson(json, new TypeToken<List<T>>() {}.getType());
+        return gson.fromJson(json, new TypeToken<List<T>>() {
+        }.getType());
     }
 
-    public <K, V> HashMap<K, V> deserializeHashMap(String json, Class<K> classOfKeyT, Class<V> classOfValueT) {
-        return gson.fromJson(json, new TypeToken<HashMap<K, V>>() {}.getType());
+    public <K, V> Map<K, V> deserializeHashMap(String json, Class<K> classOfKeyT, Class<V> classOfValueT) {
+        return gson.fromJson(json, new TypeToken<HashMap<K, V>>() {
+        }.getType());
     }
 
 

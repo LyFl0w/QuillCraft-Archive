@@ -6,8 +6,7 @@ import net.md_5.bungee.api.connection.ProxiedPlayer;
 import net.quillcraft.bungee.data.sql.table.SQLTablesManager;
 import net.quillcraft.bungee.serialization.ProfileSerializationAccount;
 
-import java.util.HashMap;
-import java.util.UUID;
+import java.util.*;
 
 public class Account {
 
@@ -17,7 +16,7 @@ public class Account {
     private int quillCoin;
     private byte rankID;
     private Visibility visibility;
-    private HashMap<Particles, Boolean> particles;
+    private Map<Particles, Boolean> particles;
     private String languageISO;
 
     @JsonIgnore
@@ -34,7 +33,7 @@ public class Account {
         this(0, uuid, null, 10, (byte) 0, Visibility.EVERYONE, defaultParticles(), "en_us");
     }
 
-    public Account(int id, UUID uuid, UUID partyUUID, int quillCoin, byte rankID, Visibility visibility, HashMap<Particles, Boolean> particles, String languageISO) {
+    public Account(int id, UUID uuid, UUID partyUUID, int quillCoin, byte rankID, Visibility visibility, Map<Particles, Boolean> particles, String languageISO) {
         this.id = id;
         this.uuid = uuid;
         this.partyUUID = partyUUID;
@@ -47,11 +46,9 @@ public class Account {
         setSQLRequest();
     }
 
-    private static HashMap<Particles, Boolean> defaultParticles() {
-        HashMap<Particles, Boolean> defaultParticles = new HashMap<>();
-        for(Particles particles : Particles.values()) {
-            defaultParticles.put(particles, false);
-        }
+    private static Map<Particles, Boolean> defaultParticles() {
+        final EnumMap<Particles, Boolean> defaultParticles = new EnumMap<>(Particles.class);
+        Arrays.stream(Particles.values()).forEach(particles -> defaultParticles.put(particles, false));
         return defaultParticles;
     }
 
@@ -103,7 +100,7 @@ public class Account {
         getSQLRequest().addData("visibility", getVisibility().name());
     }
 
-    public HashMap<Particles, Boolean> getParticles() {
+    public Map<Particles, Boolean> getParticles() {
         return particles;
     }
 
@@ -115,7 +112,7 @@ public class Account {
         return getPartyUUID() != null;
     }
 
-    public void setParticle(HashMap<Particles, Boolean> particles) {
+    public void setParticle(Map<Particles, Boolean> particles) {
         this.particles = particles;
         getSQLRequest().addData("json_particles", new ProfileSerializationAccount.Particle().serialize(getParticles()));
     }

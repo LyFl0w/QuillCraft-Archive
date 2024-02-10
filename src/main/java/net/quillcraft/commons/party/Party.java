@@ -4,7 +4,7 @@ import com.fasterxml.jackson.annotation.JsonIgnore;
 import net.lyflow.sqlrequest.SQLRequest;
 import net.md_5.bungee.api.ProxyServer;
 import net.md_5.bungee.api.connection.ProxiedPlayer;
-import net.quillcraft.bungee.QuillCraftBungee;
+import net.quillcraft.bungee.serialization.QuillCraftBungee;
 import net.quillcraft.bungee.data.sql.table.SQLTablesManager;
 import net.quillcraft.bungee.serialization.ProfileSerializationUtils;
 import net.quillcraft.bungee.utils.StringUtils;
@@ -18,7 +18,8 @@ import java.util.logging.Level;
 
 public class Party {
 
-    private UUID partyUUID, ownerUUID;
+    private UUID partyUUID;
+    private UUID ownerUUID;
     private List<UUID> followersUUID;
     private List<String> followersName;
     private String ownerName;
@@ -129,8 +130,8 @@ public class Party {
 
     public void setOwner(String name, UUID uuid) {
         try {
-            if(!followersUUID.contains(uuid)) throw new Exception("setOwner uuid isn't contains");
-            if(!followersName.contains(name)) throw new Exception("setOwner name isn't contains");
+            if(!followersUUID.contains(uuid)) throw new IllegalArgumentException("setOwner uuid isn't contains");
+            if(!followersName.contains(name)) throw new IllegalArgumentException("setOwner name isn't contains");
         } catch(Exception exception) {
             QuillCraftBungee.getInstance().getLogger().log(Level.SEVERE, exception.getMessage(), exception);
             return;
@@ -156,12 +157,6 @@ public class Party {
     public UUID getUUIDByFollowerName(String name) {
         final int index = StringUtils.indexOfStringIngoreCase(name, followersName);
         return index == -1 ? null : followersUUID.get(index);
-
-        /* OLD version
-        for(int i = 0; i < followers_name.size(); i++)
-            if(name.equalsIgnoreCase(followers_name.get(i))) return followersUUID.get(i);
-
-        return null;*/
     }
 
     @Nullable

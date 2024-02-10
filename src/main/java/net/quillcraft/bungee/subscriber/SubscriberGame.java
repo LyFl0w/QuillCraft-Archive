@@ -3,7 +3,7 @@ package net.quillcraft.bungee.subscriber;
 import net.md_5.bungee.api.ProxyServer;
 import net.md_5.bungee.api.config.ServerInfo;
 import net.md_5.bungee.api.connection.ProxiedPlayer;
-import net.quillcraft.bungee.QuillCraftBungee;
+import net.quillcraft.bungee.serialization.QuillCraftBungee;
 import net.quillcraft.commons.account.AccountProvider;
 import net.quillcraft.commons.exception.AccountNotFoundException;
 import net.quillcraft.commons.exception.PartyNotFoundException;
@@ -15,18 +15,19 @@ import net.quillcraft.commons.party.PartyProvider;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Objects;
+import java.util.Queue;
 import java.util.concurrent.ConcurrentLinkedQueue;
 import java.util.logging.Level;
 
 public class SubscriberGame extends Subscriber {
 
-    private final static ConcurrentLinkedQueue<String> linkedQueue = new ConcurrentLinkedQueue<>();
+    private static final ConcurrentLinkedQueue<String> linkedQueue = new ConcurrentLinkedQueue<>();
 
     public SubscriberGame(ProxyServer proxyServer) {
         super(proxyServer);
     }
 
-    public static ConcurrentLinkedQueue<String> getPublishGameLinkedQueue() {
+    public static Queue<String> getPublishGameLinkedQueue() {
         return linkedQueue;
     }
 

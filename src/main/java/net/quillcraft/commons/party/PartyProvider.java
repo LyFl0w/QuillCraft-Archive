@@ -6,7 +6,7 @@ import net.md_5.bungee.api.chat.ComponentBuilder;
 import net.md_5.bungee.api.chat.HoverEvent;
 import net.md_5.bungee.api.chat.TextComponent;
 import net.md_5.bungee.api.connection.ProxiedPlayer;
-import net.quillcraft.bungee.QuillCraftBungee;
+import net.quillcraft.bungee.serialization.QuillCraftBungee;
 import net.quillcraft.bungee.data.redis.RedisManager;
 import net.quillcraft.bungee.data.sql.DatabaseAccess;
 import net.quillcraft.bungee.data.sql.DatabaseManager;
@@ -18,8 +18,8 @@ import net.quillcraft.commons.account.AccountProvider;
 import net.quillcraft.commons.exception.AccountNotFoundException;
 import net.quillcraft.commons.exception.PartyNotFoundException;
 import org.jetbrains.annotations.Nullable;
-import org.lumy.api.text.Text;
-import org.lumy.api.text.TextList;
+import net.quillcraft.lumy.api.text.Text;
+import net.quillcraft.lumy.api.text.TextList;
 import org.redisson.api.RBucket;
 import org.redisson.api.RSet;
 import org.redisson.api.RedissonClient;
@@ -119,23 +119,23 @@ public class PartyProvider {
     }
 
     public void sendMessageToPlayers(Party party, TextList textList, String oldChar, String newChar) {
-        party.getOnlinePlayers().stream().parallel().forEach(player -> LanguageManager.getLanguage(player).getMessage(textList).forEach(message -> player.sendMessage(new TextComponent(message.replace(oldChar, newChar)))));
+        party.getOnlinePlayers().stream().parallel().forEach(onlinePlayer -> LanguageManager.getLanguage(onlinePlayer).getMessage(textList).forEach(message -> onlinePlayer.sendMessage(new TextComponent(message.replace(oldChar, newChar)))));
     }
 
     public void sendMessageToPlayers(Party party, TextList textList) {
-        party.getOnlinePlayers().stream().parallel().forEach(player -> LanguageManager.getLanguage(player).getMessage(textList).forEach(message -> player.sendMessage(new TextComponent(message))));
+        party.getOnlinePlayers().stream().parallel().forEach(onlinePlayer -> LanguageManager.getLanguage(onlinePlayer).getMessage(textList).forEach(message -> onlinePlayer.sendMessage(new TextComponent(message))));
     }
 
     public void sendMessageToPlayers(Party party, Text text, String oldChar, String newChar) {
-        party.getOnlinePlayers().stream().parallel().forEach(player -> player.sendMessage(LanguageManager.getLanguage(player).getMessageComponentReplace(text, oldChar, newChar)));
+        party.getOnlinePlayers().stream().parallel().forEach(onlinePlayer -> onlinePlayer.sendMessage(LanguageManager.getLanguage(onlinePlayer).getMessageComponentReplace(text, oldChar, newChar)));
     }
 
     public void sendMessageToPlayers(Party party, Text text) {
-        party.getOnlinePlayers().stream().parallel().forEach(player -> player.sendMessage(LanguageManager.getLanguage(player).getMessageComponent(text)));
+        party.getOnlinePlayers().stream().parallel().forEach(onlinePlayer -> onlinePlayer.sendMessage(LanguageManager.getLanguage(onlinePlayer).getMessageComponent(text)));
     }
 
     public void sendMessageToPlayers(Party party, String message) {
-        party.getOnlinePlayers().stream().parallel().forEach(player -> player.sendMessage(new TextComponent(message)));
+        party.getOnlinePlayers().stream().parallel().forEach(onlinePlayer -> onlinePlayer.sendMessage(new TextComponent(message)));
     }
 
     private Party getPartyFromRedis() {
@@ -147,24 +147,23 @@ public class PartyProvider {
     private Party getPartyFromDatabase() throws PartyNotFoundException {
         try {
             final Connection connection = DatabaseManager.MINECRAFT_SERVER.getDatabaseAccess().getConnection();
-            final PreparedStatement preparedStatement = connection.prepareStatement("SELECT * FROM "+sqlTablesManager.getTable()+" WHERE "+sqlTablesManager.getKeyColumn()+" = ?");
+            try (final PreparedStatement preparedStatement = connection.prepareStatement("SELECT * FROM "+sqlTablesManager.getTable()+" WHERE "+sqlTablesManager.getKeyColumn()+" = ?")) {
+                preparedStatement.setString(1, partyUUID.toString());
+                preparedStatement.executeQuery();
 
-            preparedStatement.setString(1, partyUUID.toString());
-            preparedStatement.executeQuery();
+                final ResultSet resultSet = preparedStatement.getResultSet();
+                if(resultSet.next()) {
+                    final UUID ownerUUID = UUID.fromString(resultSet.getString("owner_uuid"));
+                    final String ownerName = resultSet.getString("owner_name");
+                    final List<UUID> followersUUID = new ProfileSerializationUtils.ListUUID().deserialize(resultSet.getString("followers_uuid"));
+                    final List<String> followersName = new ProfileSerializationUtils.ListString().deserialize(resultSet.getString("followers_name"));
 
-            final ResultSet resultSet = preparedStatement.getResultSet();
-            if(resultSet.next()) {
-                final UUID ownerUUID = UUID.fromString(resultSet.getString("owner_uuid"));
-                final String ownerName = resultSet.getString("owner_name");
-                final List<UUID> followersUUID = new ProfileSerializationUtils.ListUUID().deserialize(resultSet.getString("followers_uuid"));
-                final List<String> followersName = new ProfileSerializationUtils.ListString().deserialize(resultSet.getString("followers_name"));
+                    connection.close();
 
+                    return new Party(partyUUID, ownerUUID, ownerName, followersUUID, followersName);
+                }
                 connection.close();
-
-                return new Party(partyUUID, ownerUUID, ownerName, followersUUID, followersName);
             }
-            connection.close();
-
         } catch(SQLException exception) {
             QuillCraftBungee.getInstance().getLogger().log(Level.SEVERE, exception.getMessage(), exception);
         }
@@ -173,30 +172,29 @@ public class PartyProvider {
     }
 
     public void updateParty(Party party) {
-        PreparedStatement updateRequest = null;
         try {
-            updateRequest = party.getSQLRequest().getUpdateRequest(DatabaseManager.MINECRAFT_SERVER.getDatabaseAccess().getConnection());
+            final PreparedStatement updateRequest = party.getSQLRequest().getUpdateRequest(DatabaseManager.MINECRAFT_SERVER.getDatabaseAccess().getConnection());
+            sendPartyToRedis(party);
+            updatePartyDatabase(updateRequest);
         } catch(Exception exception) {
             QuillCraftBungee.getInstance().getLogger().log(Level.SEVERE, exception.getMessage(), exception);
         }
-        sendPartyToRedis(party);
-        updatePartyDatabase(updateRequest);
     }
 
     private void createPartyInDatabase(Party party) {
         try {
             final Connection connection = DatabaseManager.MINECRAFT_SERVER.getDatabaseAccess().getConnection();
-            final PreparedStatement preparedStatement = connection.prepareStatement("INSERT INTO "+sqlTablesManager.getTable()+" (party_uuid, owner_uuid, owner_name, followers_uuid, followers_name) VALUES (?,?,?,?,?)");
+            try (final PreparedStatement preparedStatement = connection.prepareStatement("INSERT INTO "+sqlTablesManager.getTable()+" (party_uuid, owner_uuid, owner_name, followers_uuid, followers_name) VALUES (?,?,?,?,?)")) {
+                preparedStatement.setString(1, party.getPartyUUID().toString());
+                preparedStatement.setString(2, player.getUniqueId().toString());
+                preparedStatement.setString(3, player.getName());
+                preparedStatement.setString(4, new ProfileSerializationUtils.ListUUID().serialize(party.getFollowersUUID()));
+                preparedStatement.setString(5, new ProfileSerializationUtils.ListString().serialize(party.getFollowersName()));
 
-            preparedStatement.setString(1, party.getPartyUUID().toString());
-            preparedStatement.setString(2, player.getUniqueId().toString());
-            preparedStatement.setString(3, player.getName());
-            preparedStatement.setString(4, new ProfileSerializationUtils.ListUUID().serialize(party.getFollowersUUID()));
-            preparedStatement.setString(5, new ProfileSerializationUtils.ListString().serialize(party.getFollowersName()));
+                preparedStatement.execute();
 
-            preparedStatement.execute();
-
-            connection.close();
+                connection.close();
+            }
         } catch(SQLException exception) {
             QuillCraftBungee.getInstance().getLogger().log(Level.SEVERE, exception.getMessage(), exception);
         }

@@ -1,6 +1,6 @@
 package net.quillcraft.bungee.utils;
 
-import net.quillcraft.bungee.QuillCraftBungee;
+import net.quillcraft.bungee.serialization.QuillCraftBungee;
 
 import java.io.File;
 import java.io.FileReader;
@@ -25,7 +25,7 @@ public class MessagesPropertiesUtils {
         try {
             final File file = new File("messages.properties");
             if(!file.isFile()) {
-                file.createNewFile();
+                if (!file.createNewFile()) throw new IllegalCallerException("messages.properties can't be created");
 
                 StringBuilder messages = new StringBuilder();
                 for(String keys : baseBundle.keySet()) {
@@ -33,7 +33,7 @@ public class MessagesPropertiesUtils {
                     if(generatedWithSpaces) messages.append("\n");
                 }
                 Files.write(file.toPath(), messages.toString().getBytes());
-                System.out.println("The messages.properties file has been successfully written !");
+                QuillCraftBungee.getInstance().getLogger().info("The messages.properties file has been successfully written !");
             }
             new PropertyResourceBundle(new FileReader(file));
 

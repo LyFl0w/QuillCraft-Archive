@@ -1,7 +1,7 @@
 package net.quillcraft.bungee.utils;
 
 import net.md_5.bungee.api.ChatColor;
-import net.quillcraft.bungee.QuillCraftBungee;
+import net.quillcraft.bungee.serialization.QuillCraftBungee;
 
 import java.util.Arrays;
 import java.util.List;

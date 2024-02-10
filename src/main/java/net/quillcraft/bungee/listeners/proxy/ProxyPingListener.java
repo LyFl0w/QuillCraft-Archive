@@ -7,8 +7,8 @@ import net.md_5.bungee.api.plugin.Listener;
 import net.md_5.bungee.event.EventHandler;
 import net.quillcraft.bungee.manager.LanguageManager;
 import net.quillcraft.bungee.utils.MessageUtils;
-import org.lumy.api.text.Text;
-import org.lumy.api.text.TextList;
+import net.quillcraft.lumy.api.text.Text;
+import net.quillcraft.lumy.api.text.TextList;
 
 public class ProxyPingListener implements Listener {
 
@@ -28,7 +28,7 @@ public class ProxyPingListener implements Listener {
         serverPing.setVersion(protocolText);
     }
 
-    private void updateServeurDescription(int protocolInt) {
+    private static void updateServeurDescription(int protocolInt) {
         description = new TextComponent(MessageUtils.motd(languageManger.getMessage(TextList.SERVER_DESCRIPTION)));
         protocolText = new ServerPing.Protocol(languageManger.getMessage(Text.SERVER_VERSION_DOESNT_MATCHED), protocolInt);
     }

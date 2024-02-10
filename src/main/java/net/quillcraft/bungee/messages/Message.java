@@ -9,8 +9,9 @@ import net.md_5.bungee.api.event.PluginMessageEvent;
 public abstract class Message {
 
     protected final ProxyServer proxy;
+    protected static final String PLAYER_PATTER = "%PLAYER%";
 
-    public Message(ProxyServer proxyServer, PluginMessageEvent event) {
+    protected Message(ProxyServer proxyServer, PluginMessageEvent event) {
         this.proxy = proxyServer;
         onPluginMessagePlayer(event);
     }

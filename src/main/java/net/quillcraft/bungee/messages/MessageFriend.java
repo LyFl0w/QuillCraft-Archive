@@ -5,7 +5,7 @@ import net.md_5.bungee.api.ProxyServer;
 import net.md_5.bungee.api.chat.TextComponent;
 import net.md_5.bungee.api.connection.ProxiedPlayer;
 import net.md_5.bungee.api.event.PluginMessageEvent;
-import net.quillcraft.bungee.QuillCraftBungee;
+import net.quillcraft.bungee.serialization.QuillCraftBungee;
 import net.quillcraft.bungee.manager.LanguageManager;
 import net.quillcraft.bungee.utils.StringUtils;
 import net.quillcraft.commons.account.AccountProvider;
@@ -13,7 +13,7 @@ import net.quillcraft.commons.exception.AccountNotFoundException;
 import net.quillcraft.commons.exception.FriendNotFoundException;
 import net.quillcraft.commons.friend.Friend;
 import net.quillcraft.commons.friend.FriendProvider;
-import org.lumy.api.text.Text;
+import net.quillcraft.lumy.api.text.Text;
 
 import java.util.UUID;
 import java.util.logging.Level;
@@ -34,7 +34,7 @@ public class MessageFriend extends Message {
                 final Friend friend = friendProvider.getFriends();
 
                 if(sub.equalsIgnoreCase("List")) {
-                    if(friend.getFriendsUUID().size() == 0) {
+                    if(friend.getFriendsUUID().isEmpty()) {
                         player.sendMessage(languageManager.getMessageComponent(Text.FRIEND_NO_FRIENDS));
                         return;
                     }
@@ -55,7 +55,7 @@ public class MessageFriend extends Message {
 
                 if(sub.equalsIgnoreCase("Remove")) {
                     if(!StringUtils.containsIgnoreCase(friend.getFriendsName(), tempTargetName)) {
-                        player.sendMessage(languageManager.getMessageComponentReplace(Text.FRIEND_PLAYER_IS_NOT_YOUR_FRIEND, "%PLAYER%", tempTargetName));
+                        player.sendMessage(languageManager.getMessageComponentReplace(Text.FRIEND_PLAYER_IS_NOT_YOUR_FRIEND, PLAYER_PATTER, tempTargetName));
                         return;
                     }
 
@@ -75,55 +75,55 @@ public class MessageFriend extends Message {
                     targetFriendProvider.updateFriends(targetFriend);
 
                     if(targetPlayer != null)
-                        targetPlayer.sendMessage(LanguageManager.getLanguage(targetPlayer).getMessageComponentReplace(Text.FRIEND_PLAYER_DELETED_FROM_HIS_FRIEND, "%PLAYER%", player.getName()));
+                        targetPlayer.sendMessage(LanguageManager.getLanguage(targetPlayer).getMessageComponentReplace(Text.FRIEND_PLAYER_DELETED_FROM_HIS_FRIEND, PLAYER_PATTER, player.getName()));
 
-                    player.sendMessage(languageManager.getMessageComponentReplace(Text.FRIEND_DELETED, "%PLAYER%", targetName));
+                    player.sendMessage(languageManager.getMessageComponentReplace(Text.FRIEND_DELETED, PLAYER_PATTER, targetName));
                     return;
                 }
 
                 if(sub.equalsIgnoreCase("Add")) {
                     if(targetPlayer == null) {
-                        player.sendMessage(languageManager.getMessageComponentReplace(Text.FRIEND_PLAYER_IS_OFFLINE, "%PLAYER%", tempTargetName));
+                        player.sendMessage(languageManager.getMessageComponentReplace(Text.FRIEND_PLAYER_IS_OFFLINE, PLAYER_PATTER, tempTargetName));
                         return;
                     }
 
                     final String targetName = targetPlayer.getName();
 
                     if(friendProvider.hasRequested(targetPlayer)) {
-                        player.sendMessage(languageManager.getMessageComponentReplace(Text.FRIEND_PLAYER_ALREADY_RECEIVED_REQUEST, "%PLAYER%", targetName));
+                        player.sendMessage(languageManager.getMessageComponentReplace(Text.FRIEND_PLAYER_ALREADY_RECEIVED_REQUEST, PLAYER_PATTER, targetName));
                         return;
                     }
 
                     if(friend.getOnlineFriends().contains(targetPlayer)) {
-                        player.sendMessage(languageManager.getMessageComponentReplace(Text.FRIEND_PLAYER_IS_ALREADY_YOUR_FRIEND, "%PLAYER%", targetName));
+                        player.sendMessage(languageManager.getMessageComponentReplace(Text.FRIEND_PLAYER_IS_ALREADY_YOUR_FRIEND, PLAYER_PATTER, targetName));
                         return;
                     }
 
                     if(friendProvider.sendAddRequest(targetPlayer, new AccountProvider(targetPlayer).getAccount())) {
-                        player.sendMessage(languageManager.getMessageComponentReplace(Text.FRIEND_SEND_REQUEST, "%PLAYER%", targetName));
+                        player.sendMessage(languageManager.getMessageComponentReplace(Text.FRIEND_SEND_REQUEST, PLAYER_PATTER, targetName));
                     } else {
-                        player.sendMessage(languageManager.getMessageComponentReplace(Text.FRIEND_PLAYER_ALREADY_RECEIVED_REQUEST, "%PLAYER%", targetName));
+                        player.sendMessage(languageManager.getMessageComponentReplace(Text.FRIEND_PLAYER_ALREADY_RECEIVED_REQUEST, PLAYER_PATTER, targetName));
                     }
                     return;
                 }
 
                 if(sub.equalsIgnoreCase("Accept")) {
                     if(targetPlayer == null) {
-                        player.sendMessage(languageManager.getMessageComponentReplace(Text.FRIEND_PLAYER_IS_OFFLINE, "%PLAYER%", tempTargetName));
+                        player.sendMessage(languageManager.getMessageComponentReplace(Text.FRIEND_PLAYER_IS_OFFLINE, PLAYER_PATTER, tempTargetName));
                         return;
                     }
 
                     final FriendProvider targetFriendProvider = new FriendProvider(targetPlayer);
 
                     if(!targetFriendProvider.hasRequested(player)) {
-                        player.sendMessage(languageManager.getMessageComponentReplace(Text.FRIEND_NO_RECEIVED_REQUEST, "%PLAYER%", targetPlayer.getName()));
+                        player.sendMessage(languageManager.getMessageComponentReplace(Text.FRIEND_NO_RECEIVED_REQUEST, PLAYER_PATTER, targetPlayer.getName()));
                         return;
                     }
 
                     final String targetName = targetPlayer.getName();
 
                     if(friend.getFriendsName().contains(targetName)) {
-                        player.sendMessage(languageManager.getMessageComponentReplace(Text.FRIEND_PLAYER_IS_ALREADY_YOUR_FRIEND, "%PLAYER%", targetName));
+                        player.sendMessage(languageManager.getMessageComponentReplace(Text.FRIEND_PLAYER_IS_ALREADY_YOUR_FRIEND, PLAYER_PATTER, targetName));
                         return;
                     }
 
@@ -135,24 +135,24 @@ public class MessageFriend extends Message {
                     friendProvider.updateFriends(friend);
                     targetFriendProvider.updateFriends(targetFriend);
 
-                    player.sendMessage(languageManager.getMessageComponentReplace(Text.FRIEND_PLAYER_ACCEPT_REQUEST, "%PLAYER%", targetName));
-                    targetPlayer.sendMessage(LanguageManager.getLanguage(targetPlayer).getMessageComponentReplace(Text.FRIEND_PLAYER_ACCEPT_YOUR_REQUEST, "%PLAYER%", player.getName()));
+                    player.sendMessage(languageManager.getMessageComponentReplace(Text.FRIEND_PLAYER_ACCEPT_REQUEST, PLAYER_PATTER, targetName));
+                    targetPlayer.sendMessage(LanguageManager.getLanguage(targetPlayer).getMessageComponentReplace(Text.FRIEND_PLAYER_ACCEPT_YOUR_REQUEST, PLAYER_PATTER, player.getName()));
                     return;
                 }
 
                 if(sub.equalsIgnoreCase("Deny")) {
                     if(targetPlayer == null) {
-                        player.sendMessage(languageManager.getMessageComponentReplace(Text.FRIEND_PLAYER_IS_OFFLINE, "%PLAYER%", tempTargetName));
+                        player.sendMessage(languageManager.getMessageComponentReplace(Text.FRIEND_PLAYER_IS_OFFLINE, PLAYER_PATTER, tempTargetName));
                         return;
                     }
 
                     final FriendProvider targetFriendProvider = new FriendProvider(targetPlayer);
 
                     if(!targetFriendProvider.hasRequested(player)) {
-                        player.sendMessage(languageManager.getMessageComponentReplace(Text.FRIEND_NO_RECEIVED_REQUEST, "%PLAYER%", targetPlayer.getName()));
+                        player.sendMessage(languageManager.getMessageComponentReplace(Text.FRIEND_NO_RECEIVED_REQUEST, PLAYER_PATTER, targetPlayer.getName()));
                         return;
                     }
-                    player.sendMessage(languageManager.getMessageComponentReplace(Text.FRIEND_DECLINED_REQUEST, "%PLAYER%", targetPlayer.getName()));
+                    player.sendMessage(languageManager.getMessageComponentReplace(Text.FRIEND_DECLINED_REQUEST, PLAYER_PATTER, targetPlayer.getName()));
                 }
             } catch(FriendNotFoundException|AccountNotFoundException exception) {
                 QuillCraftBungee.getInstance().getLogger().log(Level.SEVERE, exception.getMessage(), exception);
