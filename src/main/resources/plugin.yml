@@ -1,7 +1,7 @@
-name: SkyBlock
-description: Plugin for SkyBlock Server
+name: HighBlock
+description: Plugin for HighBlock Server
 author: LyFlow
-main: net.quillcraft.highblock.SkyBlock
+main: net.quillcraft.highblock.HighBlock
 api-version: 1.19
 version: 1.0.0-beta
 
@@ -19,7 +19,7 @@ commands:
   lobby:
     usage: §c/lobby
     description: command to return to the lobby
-    aliases: [spawn, hub]
+    aliases: [ spawn, hub ]
 
   shop:
     usage: §c/shop

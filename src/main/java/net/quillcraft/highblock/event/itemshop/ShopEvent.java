@@ -2,14 +2,13 @@ package net.quillcraft.highblock.event.itemshop;
 
 import net.quillcraft.highblock.HighBlock;
 import net.quillcraft.highblock.shop.ItemShop;
-
 import org.bukkit.entity.Player;
 import org.bukkit.event.Cancellable;
 import org.bukkit.event.Event;
 
 public abstract class ShopEvent extends Event implements Cancellable {
 
-    protected final HighBlock skyblock;
+    protected final HighBlock highblock;
 
     protected final Player player;
     protected final ItemShop itemShop;
@@ -17,8 +16,8 @@ public abstract class ShopEvent extends Event implements Cancellable {
 
     protected boolean isCancelled = false;
 
-    public ShopEvent(HighBlock skyblock, Player player, ItemShop itemShop, int amount) {
-        this.skyblock = skyblock;
+    protected ShopEvent(HighBlock highblock, Player player, ItemShop itemShop, int amount) {
+        this.highblock = highblock;
         this.player = player;
         this.itemShop = itemShop;
         this.amount = amount;

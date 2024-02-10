@@ -1,10 +1,9 @@
 package net.quillcraft.highblock.event.island;
 
 import net.quillcraft.highblock.HighBlock;
-import net.quillcraft.highblock.island.IslandDifficulty;
 import net.quillcraft.highblock.database.request.island.IslandRequest;
+import net.quillcraft.highblock.island.IslandDifficulty;
 import net.quillcraft.highblock.utils.ResourceUtils;
-
 import org.bukkit.Location;
 import org.bukkit.WorldCreator;
 import org.bukkit.entity.Player;
@@ -15,6 +14,7 @@ import org.jetbrains.annotations.NotNull;
 
 import java.io.File;
 import java.sql.SQLException;
+import java.util.logging.Level;
 
 public class CreateIslandEvent extends Event implements Cancellable {
 
@@ -22,19 +22,19 @@ public class CreateIslandEvent extends Event implements Cancellable {
 
     private boolean isCancelled = false;
 
-    public CreateIslandEvent(HighBlock skyblock, Player player, IslandDifficulty islandDifficulty) {
-        final IslandRequest islandRequest = new IslandRequest(skyblock.getDatabase(), false);
+    public CreateIslandEvent(HighBlock highblock, Player player, IslandDifficulty islandDifficulty) {
+        final IslandRequest islandRequest = new IslandRequest(highblock.getDatabase(), false);
         try {
-            if(islandRequest.hasIsland(player.getUniqueId())) {
+            if (islandRequest.hasIsland(player.getUniqueId())) {
                 player.sendMessage("§cTu ne peux pas avoir plusieurs îles en même temps !");
                 setCancelled(true);
                 return;
             }
 
-            player.sendMessage("§bCréation de votre île en cours §6§o(difficulté : "+islandDifficulty.getName()+")");
+            player.sendMessage("§bCréation de votre île en cours §6§o(difficulté : " + islandDifficulty.getName() + ")");
 
             try {
-                final String startPath = "skyblock-map/";
+                final String startPath = "highblock-map/";
                 final double x = -0.5;
                 final double y = 100;
                 final double z = 0.5;
@@ -46,34 +46,35 @@ public class CreateIslandEvent extends Event implements Cancellable {
                 // Make a copy of  Island World
 
                 // create island in DB
-                final String defaultPath = startPath+id;
-                final File islandWorld = new File(skyblock.getDataFolder(), "../../"+defaultPath);
-                ResourceUtils.saveResourceFolder("maps/skyblock-"+islandDifficulty.name().toLowerCase(), islandWorld, skyblock, false);
+                final String defaultPath = startPath + id;
+                final File islandWorld = new File(highblock.getDataFolder(), "../../" + defaultPath);
+                ResourceUtils.saveResourceFolder("maps/highblock-" + islandDifficulty.name().toLowerCase(), islandWorld, highblock, false);
 
                 // Load World
-                skyblock.getServer().createWorld(new WorldCreator(defaultPath));
-                final Location spawn = new Location(skyblock.getServer().getWorld(defaultPath), x, y, z, yaw, pitch);
+                highblock.getServer().createWorld(new WorldCreator(defaultPath));
+                final Location spawn = new Location(highblock.getServer().getWorld(defaultPath), x, y, z, yaw, pitch);
 
-                skyblock.getDatabase().closeConnection();
+                highblock.getDatabase().closeConnection();
 
                 // Teleport to the world
                 player.sendMessage("§bTéléportation en cours");
                 player.teleport(spawn);
-            } catch(SQLException e) {
-                throw new RuntimeException(e);
+            } catch (SQLException e) {
+                highblock.getLogger().log(Level.SEVERE, e.getMessage(), e);
             }
-        } catch(SQLException e) {
-            throw new RuntimeException("Erreur lors de la récupération de la base lors de la création d'une île", e);
+        } catch (SQLException e) {
+            highblock.getLogger().log(Level.SEVERE, "Erreur lors de la récupération de la base lors de la création d'une île", e);
         }
-    }
-
-    @Override @NotNull
-    public HandlerList getHandlers() {
-        return HANDLERS;
     }
 
     public static HandlerList getHandlerList() {
         return HANDLERS;
+    }
+
+    @Override
+    @NotNull
+    public HandlerList getHandlers() {
+        return getHandlerList();
     }
 
     @Override

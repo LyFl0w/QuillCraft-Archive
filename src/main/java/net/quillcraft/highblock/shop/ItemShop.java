@@ -1,11 +1,11 @@
 package net.quillcraft.highblock.shop;
 
 import net.quillcraft.highblock.utils.builder.ItemBuilder;
-
 import org.bukkit.Material;
 import org.bukkit.inventory.ItemStack;
 
 import java.util.Arrays;
+import java.util.Optional;
 
 public enum ItemShop {
 
@@ -46,7 +46,7 @@ public enum ItemShop {
 
     COBWEB(Material.COBWEB, 20, -1, ShopCategory.BLOCK),
     SCULK_SENSOR(Material.SCULK_SENSOR, 50, -1, ShopCategory.BLOCK),
-    DEAD_HORN_CORAL_FAN(Material.DEAD_HORN_CORAL_FAN,  10_000, 1_000, ShopCategory.BLOCK),
+    DEAD_HORN_CORAL_FAN(Material.DEAD_HORN_CORAL_FAN, 10_000, 1_000, ShopCategory.BLOCK),
 
 
     // ITEM
@@ -250,7 +250,8 @@ public enum ItemShop {
     EMERALD(Material.EMERALD, 50, 40, ShopCategory.ORE);
 
 
-    private final float buyPrice, sellPrice;
+    private final float buyPrice;
+    private final float sellPrice;
     private final Material material;
     private final ShopCategory shopCategory;
 
@@ -262,7 +263,10 @@ public enum ItemShop {
     }
 
     public static ItemShop getItemShopByMaterial(Material material) {
-        return Arrays.stream(values()).parallel().filter(itemShop -> itemShop.getMaterial() == material).findFirst().get();
+        final Optional<ItemShop> optionalItemShop = Arrays.stream(values()).parallel().filter(itemShop -> itemShop.getMaterial() == material).findFirst();
+        if (optionalItemShop.isEmpty())
+            throw new IllegalArgumentException("Aucun item dans le shop fait référence à " + material.name());
+        return optionalItemShop.get();
     }
 
     public ItemBuilder getItemBuilder(int number) {
@@ -270,11 +274,11 @@ public enum ItemShop {
     }
 
     public ItemStack getBuyItemStack(int number) {
-        return getItemBuilder(number).setLore("§a"+buyPrice*number+"$").toItemStack();
+        return getItemBuilder(number).setLore("§a" + buyPrice * number + "$").toItemStack();
     }
 
     public ItemStack getSellItemStack(int number) {
-        return getItemBuilder(number).setLore("§a"+sellPrice*number+"$").toItemStack();
+        return getItemBuilder(number).setLore("§a" + sellPrice * number + "$").toItemStack();
     }
 
     public Material getMaterial() {
