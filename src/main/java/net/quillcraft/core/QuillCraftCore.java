@@ -34,7 +34,6 @@ public class QuillCraftCore extends JavaPlugin {
 
         dataManager.init();
 
-
         new PluginManager(this);
     }
 

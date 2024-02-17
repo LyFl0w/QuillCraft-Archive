@@ -54,26 +54,26 @@ public class FriendProvider {
     private Friend getFriendsFromDatabase() throws FriendNotFoundException {
         try {
             final Connection connection = DatabaseManager.MINECRAFT_SERVER.getDatabaseAccess().getConnection();
+            final ResultSet resultSet;
             try (final PreparedStatement preparedStatement
                          = connection.prepareStatement("SELECT * FROM " + sqlTablesManager.getTable() + " WHERE " + sqlTablesManager.getKeyColumn() + " = ?")) {
 
                 preparedStatement.setString(1, uuid.toString());
                 preparedStatement.executeQuery();
 
-                final ResultSet resultSet = preparedStatement.getResultSet();
-
-                if (resultSet.next()) {
-                    final List<UUID> friendsUUID = new ProfileSerializationUtils.ListUUID().deserialize(resultSet.getString("friends_uuid"));
-                    final List<String> friendsName = new ProfileSerializationUtils.ListString().deserialize(resultSet.getString("friends_name"));
-                    connection.close();
-
-                    return new Friend(friendsUUID, friendsName);
-                } else {
-                    connection.close();
-                    return createFriendInDatabase();
-                }
+                resultSet = preparedStatement.getResultSet();
             }
 
+            if (resultSet.next()) {
+                final List<UUID> friendsUUID = new ProfileSerializationUtils.ListUUID().deserialize(resultSet.getString("friends_uuid"));
+                final List<String> friendsName = new ProfileSerializationUtils.ListString().deserialize(resultSet.getString("friends_name"));
+                connection.close();
+
+                return new Friend(friendsUUID, friendsName);
+            } else {
+                connection.close();
+                return createFriendInDatabase();
+            }
         } catch (Exception exception) {
             throw new FriendNotFoundException(uuid);
         }
@@ -95,10 +95,9 @@ public class FriendProvider {
                 preparedStatement.setString(3, new ProfileSerializationUtils.ListString().serialize(friend.getFriendsName()));
 
                 preparedStatement.execute();
-
-                connection.close();
             }
 
+            connection.close();
         } catch (SQLException exception) {
             QuillCraftCore.getInstance().getLogger().log(Level.SEVERE, exception.getMessage(), exception);
         }
