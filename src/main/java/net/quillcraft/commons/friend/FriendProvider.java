@@ -52,27 +52,21 @@ public class FriendProvider {
     }
 
     private Friend getFriendsFromDatabase() throws FriendNotFoundException {
-        try {
-            final Connection connection = DatabaseManager.MINECRAFT_SERVER.getDatabaseAccess().getConnection();
-            final ResultSet resultSet;
-            try (final PreparedStatement preparedStatement
-                         = connection.prepareStatement("SELECT * FROM " + sqlTablesManager.getTable() + " WHERE " + sqlTablesManager.getKeyColumn() + " = ?")) {
 
-                preparedStatement.setString(1, uuid.toString());
-                preparedStatement.executeQuery();
+        try (final Connection connection = DatabaseManager.MINECRAFT_SERVER.getDatabaseAccess().getConnection();
+             final PreparedStatement preparedStatement
+                     = connection.prepareStatement("SELECT * FROM " + sqlTablesManager.getTable() + " WHERE " + sqlTablesManager.getKeyColumn() + " = ?")) {
 
-                resultSet = preparedStatement.getResultSet();
-            }
+            preparedStatement.setString(1, uuid.toString());
+            try (final ResultSet resultSet = preparedStatement.executeQuery()) {
+                if (resultSet.next()) {
+                    final List<UUID> friendsUUID = new ProfileSerializationUtils.ListUUID().deserialize(resultSet.getString("friends_uuid"));
+                    final List<String> friendsName = new ProfileSerializationUtils.ListString().deserialize(resultSet.getString("friends_name"));
 
-            if (resultSet.next()) {
-                final List<UUID> friendsUUID = new ProfileSerializationUtils.ListUUID().deserialize(resultSet.getString("friends_uuid"));
-                final List<String> friendsName = new ProfileSerializationUtils.ListString().deserialize(resultSet.getString("friends_name"));
-                connection.close();
-
-                return new Friend(friendsUUID, friendsName);
-            } else {
-                connection.close();
-                return createFriendInDatabase();
+                    return new Friend(friendsUUID, friendsName);
+                } else {
+                    return createFriendInDatabase();
+                }
             }
         } catch (Exception exception) {
             throw new FriendNotFoundException(uuid);
@@ -85,19 +79,15 @@ public class FriendProvider {
 
     private Friend createFriendInDatabase() {
         final Friend friend = new Friend(new ArrayList<>(), new ArrayList<>());
-        try {
-            final Connection connection = DatabaseManager.MINECRAFT_SERVER.getDatabaseAccess().getConnection();
-            try (final PreparedStatement preparedStatement =
-                         connection.prepareStatement("INSERT INTO " + sqlTablesManager.getTable() + " (uuid, friends_uuid, friends_name) VALUES (?, ?, ?)")) {
+        try (final Connection connection = DatabaseManager.MINECRAFT_SERVER.getDatabaseAccess().getConnection();
+             final PreparedStatement preparedStatement =
+                     connection.prepareStatement("INSERT INTO " + sqlTablesManager.getTable() + " (uuid, friends_uuid, friends_name) VALUES (?, ?, ?)")) {
 
-                preparedStatement.setString(1, uuid.toString());
-                preparedStatement.setString(2, new ProfileSerializationUtils.ListUUID().serialize(friend.getFriendsUUID()));
-                preparedStatement.setString(3, new ProfileSerializationUtils.ListString().serialize(friend.getFriendsName()));
+            preparedStatement.setString(1, uuid.toString());
+            preparedStatement.setString(2, new ProfileSerializationUtils.ListUUID().serialize(friend.getFriendsUUID()));
+            preparedStatement.setString(3, new ProfileSerializationUtils.ListString().serialize(friend.getFriendsName()));
 
-                preparedStatement.execute();
-            }
-
-            connection.close();
+            preparedStatement.execute();
         } catch (SQLException exception) {
             QuillCraftCore.getInstance().getLogger().log(Level.SEVERE, exception.getMessage(), exception);
         }

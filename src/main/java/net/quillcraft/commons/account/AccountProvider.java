@@ -77,40 +77,26 @@ public class AccountProvider {
     }
 
     private Account getAccountFromDatabase() throws AccountNotFoundException {
-        try {
-            final Connection connection = DatabaseManager.MINECRAFT_SERVER.getDatabaseAccess().getConnection();
-            final ResultSet resultSet;
-            try (final PreparedStatement preparedStatement =
-                         connection.prepareStatement("SELECT * FROM " + sqlTablesManager.getTable() + " WHERE " + sqlTablesManager.getKeyColumn() + " = ?")) {
+        try (final Connection connection = DatabaseManager.MINECRAFT_SERVER.getDatabaseAccess().getConnection();
+             final PreparedStatement preparedStatement =
+                     connection.prepareStatement("SELECT * FROM " + sqlTablesManager.getTable() + " WHERE " + sqlTablesManager.getKeyColumn() + " = ?")) {
 
-                preparedStatement.setString(1, uuid.toString());
-                preparedStatement.executeQuery();
+            preparedStatement.setString(1, uuid.toString());
+            try (final ResultSet resultSet = preparedStatement.executeQuery()) {
+                if (resultSet.next()) {
+                    final int id = resultSet.getInt("id");
+                    final String partyUUID = resultSet.getString("party_uuid");
+                    final int quillCoins = resultSet.getInt("quillcoins");
+                    final byte rankID = resultSet.getByte("rank_id");
+                    final Account.Visibility visibility = Account.Visibility.valueOf(resultSet.getString("visibility"));
 
-                resultSet = preparedStatement.getResultSet();
-            }
+                    final Map<Account.Particles, Boolean> particules = new ProfileSerializationAccount.Particle().deserialize(resultSet.getString("json_particles"));
+                    final String languageISO = resultSet.getString("language");
 
-            if (resultSet.next()) {
-                final int id = resultSet.getInt("id");
-                final String partyUUID = resultSet.getString("party_uuid");
-                final int quillCoins = resultSet.getInt("quillcoins");
-                final byte rankID = resultSet.getByte("rank_id");
-                final Account.Visibility visibility = Account.Visibility.valueOf(resultSet.getString("visibility"));
-
-                final Map<Account.Particles, Boolean> particules = new ProfileSerializationAccount.Particle().deserialize(resultSet.getString("json_particles"));
-                final String languageISO = resultSet.getString("language");
-
-                connection.close();
-
-                Account account;
-                account = new Account(id, uuid, quillCoins, rankID, visibility, particules, languageISO);
-                if (partyUUID != null) {
-                    account = new Account(id, uuid, UUID.fromString(partyUUID), quillCoins, rankID, visibility, particules, languageISO);
+                    return new Account(id, uuid, (partyUUID != null ? UUID.fromString(partyUUID) : null), quillCoins, rankID, visibility, particules, languageISO);
+                } else {
+                    return createNewAccount();
                 }
-
-                return account;
-            } else {
-                connection.close();
-                return createNewAccount();
             }
         } catch (SQLException exception) {
             QuillCraftCore.getInstance().getLogger().log(Level.SEVERE, exception.getMessage(), exception);
@@ -130,10 +116,8 @@ public class AccountProvider {
 
     private Account createNewAccount() throws SQLException {
         final Account account = new Account(player);
-        final Connection connection = DatabaseManager.MINECRAFT_SERVER.getDatabaseAccess().getConnection();
-        final int row;
-        final ResultSet resultSet;
-        try (final PreparedStatement preparedStatement =
+        try (final Connection connection = DatabaseManager.MINECRAFT_SERVER.getDatabaseAccess().getConnection();
+             final PreparedStatement preparedStatement =
                      connection.prepareStatement("INSERT INTO " + sqlTablesManager.getTable() + " (uuid, quillcoins, json_particles) VALUES (?, ?, ?)",
                              Statement.RETURN_GENERATED_KEYS)) {
 
@@ -142,18 +126,17 @@ public class AccountProvider {
             preparedStatement.setString(3, new ProfileSerializationAccount.Particle().serialize(account.getParticles()));
 
             //GET ID
-            row = preparedStatement.executeUpdate();
-            resultSet = preparedStatement.getGeneratedKeys();
+            final int row = preparedStatement.executeUpdate();
+            try (final ResultSet resultSet = preparedStatement.getGeneratedKeys()) {
+                if (row > 0 && resultSet.next()) {
+                    account.setId(resultSet.getInt(1));
+                }
+
+                cooldownLanguage();
+
+                return account;
+            }
         }
-
-        if (row > 0 && resultSet.next()) {
-            account.setId(resultSet.getInt(1));
-        }
-        connection.close();
-
-        cooldownLanguage();
-
-        return account;
     }
 
     public void setLocaleLanguage(final Account account) {
