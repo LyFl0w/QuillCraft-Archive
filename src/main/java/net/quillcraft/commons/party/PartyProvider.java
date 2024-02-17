@@ -147,23 +147,24 @@ public class PartyProvider {
     private Party getPartyFromDatabase() throws PartyNotFoundException {
         try {
             final Connection connection = DatabaseManager.MINECRAFT_SERVER.getDatabaseAccess().getConnection();
+            final ResultSet resultSet;
             try (final PreparedStatement preparedStatement = connection.prepareStatement("SELECT * FROM "+sqlTablesManager.getTable()+" WHERE "+sqlTablesManager.getKeyColumn()+" = ?")) {
                 preparedStatement.setString(1, partyUUID.toString());
                 preparedStatement.executeQuery();
 
-                final ResultSet resultSet = preparedStatement.getResultSet();
-                if(resultSet.next()) {
-                    final UUID ownerUUID = UUID.fromString(resultSet.getString("owner_uuid"));
-                    final String ownerName = resultSet.getString("owner_name");
-                    final List<UUID> followersUUID = new ProfileSerializationUtils.ListUUID().deserialize(resultSet.getString("followers_uuid"));
-                    final List<String> followersName = new ProfileSerializationUtils.ListString().deserialize(resultSet.getString("followers_name"));
-
-                    connection.close();
-
-                    return new Party(partyUUID, ownerUUID, ownerName, followersUUID, followersName);
-                }
-                connection.close();
+                resultSet = preparedStatement.getResultSet();
             }
+            if(resultSet.next()) {
+                final UUID ownerUUID = UUID.fromString(resultSet.getString("owner_uuid"));
+                final String ownerName = resultSet.getString("owner_name");
+                final List<UUID> followersUUID = new ProfileSerializationUtils.ListUUID().deserialize(resultSet.getString("followers_uuid"));
+                final List<String> followersName = new ProfileSerializationUtils.ListString().deserialize(resultSet.getString("followers_name"));
+
+                connection.close();
+
+                return new Party(partyUUID, ownerUUID, ownerName, followersUUID, followersName);
+            }
+            connection.close();
         } catch(SQLException exception) {
             QuillCraftBungee.getInstance().getLogger().log(Level.SEVERE, exception.getMessage(), exception);
         }
@@ -192,9 +193,8 @@ public class PartyProvider {
                 preparedStatement.setString(5, new ProfileSerializationUtils.ListString().serialize(party.getFollowersName()));
 
                 preparedStatement.execute();
-
-                connection.close();
             }
+            connection.close();
         } catch(SQLException exception) {
             QuillCraftBungee.getInstance().getLogger().log(Level.SEVERE, exception.getMessage(), exception);
         }
