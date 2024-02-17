@@ -46,24 +46,26 @@ public class HeadFinderProvider {
     private List<Integer> getHeadListFromDatabase() {
         try {
             final Connection connection = DatabaseManager.MINECRAFT_SERVER.getDatabaseAccess().getConnection(); //Ouverture de connection
+            final ResultSet resultSet;
             try (final PreparedStatement preparedStatementCheck = connection.prepareStatement("SELECT headlist FROM headfinder WHERE uuid = ?")) {
                 preparedStatementCheck.setObject(1, uuid); // Finilisation de la requête
                 preparedStatementCheck.executeQuery(); // Execute et récupere des données
-                final ResultSet resultSet = preparedStatementCheck.getResultSet(); // Récupere les données de la commande
-                final Gson gson = new GsonBuilder().serializeNulls().create();
-                if(resultSet.next()) {
-                    final String headlistBDD = resultSet.getString("headlist");
-                    connection.close();
-                    if(headlistBDD != null) {
-                        return gson.fromJson(headlistBDD, new TypeToken<ArrayList<Integer>>() {}.getType());
-                    } else {
-                        return new ArrayList<>();
-                    }
+                resultSet = preparedStatementCheck.getResultSet(); // Récupere les données de la commande
+            }
+
+            final Gson gson = new GsonBuilder().serializeNulls().create();
+            if(resultSet.next()) {
+                final String headlistBDD = resultSet.getString("headlist");
+                connection.close();
+                if(headlistBDD != null) {
+                    return gson.fromJson(headlistBDD, new TypeToken<ArrayList<Integer>>() {}.getType());
                 } else {
-                    connection.close();
-                    createHeadListInDatabase();
                     return new ArrayList<>();
                 }
+            } else {
+                connection.close();
+                createHeadListInDatabase();
+                return new ArrayList<>();
             }
         } catch(SQLException exception) {
             QuillCraftLobby.getInstance().getLogger().log(Level.SEVERE, exception.getMessage(), exception);
@@ -82,8 +84,8 @@ public class HeadFinderProvider {
             try (final PreparedStatement preparedStatement = connection.prepareStatement("INSERT INTO headfinder (uuid) VALUES (?)")) {
                 preparedStatement.setObject(1, uuid); // Finilisation de la requête
                 preparedStatement.execute();    //Execution de la requete
-                connection.close();
             }
+            connection.close();
         } catch(SQLException exception) {
             QuillCraftLobby.getInstance().getLogger().log(Level.SEVERE, exception.getMessage(), exception);
         }
@@ -97,8 +99,8 @@ public class HeadFinderProvider {
                 preparedStatement.setObject(1, gson.toJson(headlist)); // Finilisation de la requête / Serialise List<Integer> to String (-> Json)
                 preparedStatement.setObject(2, uuid); // Finilisation de la requête
                 preparedStatement.executeUpdate();    //Mise à jour de la liste dans la bdd
-                connection.close();
             }
+            connection.close();
         } catch(SQLException exception) {
             QuillCraftLobby.getInstance().getLogger().log(Level.SEVERE, exception.getMessage(), exception);
         }
