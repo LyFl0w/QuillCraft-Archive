@@ -145,27 +145,21 @@ public class PartyProvider {
     }
 
     private Party getPartyFromDatabase() throws PartyNotFoundException {
-        try {
-            final Connection connection = DatabaseManager.MINECRAFT_SERVER.getDatabaseAccess().getConnection();
-            final ResultSet resultSet;
-            try (final PreparedStatement preparedStatement = connection.prepareStatement("SELECT * FROM "+sqlTablesManager.getTable()+" WHERE "+sqlTablesManager.getKeyColumn()+" = ?")) {
-                preparedStatement.setString(1, partyUUID.toString());
-                preparedStatement.executeQuery();
+        try (final Connection connection = DatabaseManager.MINECRAFT_SERVER.getDatabaseAccess().getConnection();
+             final PreparedStatement preparedStatement = connection.prepareStatement("SELECT * FROM " + sqlTablesManager.getTable() + " WHERE " + sqlTablesManager.getKeyColumn() + " = ?")) {
 
-                resultSet = preparedStatement.getResultSet();
+            preparedStatement.setString(1, partyUUID.toString());
+            try (final ResultSet resultSet = preparedStatement.executeQuery()) {
+                if (resultSet.next()) {
+                    final UUID ownerUUID = UUID.fromString(resultSet.getString("owner_uuid"));
+                    final String ownerName = resultSet.getString("owner_name");
+                    final List<UUID> followersUUID = new ProfileSerializationUtils.ListUUID().deserialize(resultSet.getString("followers_uuid"));
+                    final List<String> followersName = new ProfileSerializationUtils.ListString().deserialize(resultSet.getString("followers_name"));
+
+                    return new Party(partyUUID, ownerUUID, ownerName, followersUUID, followersName);
+                }
             }
-            if(resultSet.next()) {
-                final UUID ownerUUID = UUID.fromString(resultSet.getString("owner_uuid"));
-                final String ownerName = resultSet.getString("owner_name");
-                final List<UUID> followersUUID = new ProfileSerializationUtils.ListUUID().deserialize(resultSet.getString("followers_uuid"));
-                final List<String> followersName = new ProfileSerializationUtils.ListString().deserialize(resultSet.getString("followers_name"));
-
-                connection.close();
-
-                return new Party(partyUUID, ownerUUID, ownerName, followersUUID, followersName);
-            }
-            connection.close();
-        } catch(SQLException exception) {
+        } catch (SQLException exception) {
             QuillCraftBungee.getInstance().getLogger().log(Level.SEVERE, exception.getMessage(), exception);
         }
 
@@ -173,8 +167,7 @@ public class PartyProvider {
     }
 
     public void updateParty(Party party) {
-        try {
-            final PreparedStatement updateRequest = party.getSQLRequest().getUpdateRequest(DatabaseManager.MINECRAFT_SERVER.getDatabaseAccess().getConnection());
+        try (final PreparedStatement updateRequest = party.getSQLRequest().getUpdateRequest(DatabaseManager.MINECRAFT_SERVER.getDatabaseAccess().getConnection())){
             sendPartyToRedis(party);
             updatePartyDatabase(updateRequest);
         } catch(Exception exception) {
@@ -183,19 +176,17 @@ public class PartyProvider {
     }
 
     private void createPartyInDatabase(Party party) {
-        try {
-            final Connection connection = DatabaseManager.MINECRAFT_SERVER.getDatabaseAccess().getConnection();
-            try (final PreparedStatement preparedStatement = connection.prepareStatement("INSERT INTO "+sqlTablesManager.getTable()+" (party_uuid, owner_uuid, owner_name, followers_uuid, followers_name) VALUES (?,?,?,?,?)")) {
-                preparedStatement.setString(1, party.getPartyUUID().toString());
-                preparedStatement.setString(2, player.getUniqueId().toString());
-                preparedStatement.setString(3, player.getName());
-                preparedStatement.setString(4, new ProfileSerializationUtils.ListUUID().serialize(party.getFollowersUUID()));
-                preparedStatement.setString(5, new ProfileSerializationUtils.ListString().serialize(party.getFollowersName()));
+        try (final Connection connection = DatabaseManager.MINECRAFT_SERVER.getDatabaseAccess().getConnection();
+             final PreparedStatement preparedStatement = connection.prepareStatement("INSERT INTO " + sqlTablesManager.getTable() + " (party_uuid, owner_uuid, owner_name, followers_uuid, followers_name) VALUES (?,?,?,?,?)")) {
 
-                preparedStatement.execute();
-            }
-            connection.close();
-        } catch(SQLException exception) {
+            preparedStatement.setString(1, party.getPartyUUID().toString());
+            preparedStatement.setString(2, player.getUniqueId().toString());
+            preparedStatement.setString(3, player.getName());
+            preparedStatement.setString(4, new ProfileSerializationUtils.ListUUID().serialize(party.getFollowersUUID()));
+            preparedStatement.setString(5, new ProfileSerializationUtils.ListString().serialize(party.getFollowersName()));
+
+            preparedStatement.execute();
+        } catch (SQLException exception) {
             QuillCraftBungee.getInstance().getLogger().log(Level.SEVERE, exception.getMessage(), exception);
         }
     }
