@@ -37,9 +37,9 @@ public class LumyClient {
             return;
         }
 
-        try (final Socket socket = new Socket(InetAddress.getByName(ip), port)) {
+        try (final Socket socket = new Socket(InetAddress.getByName(ip), port);
             final BufferedReader bufferedReader = new BufferedReader(new InputStreamReader(socket.getInputStream()));
-            final PrintWriter printWriter = new PrintWriter(socket.getOutputStream(), true);
+            final PrintWriter printWriter = new PrintWriter(socket.getOutputStream(), true)) {
 
             if (isValidName(name)) {
                 printWriter.println(NAME_PARSER + name);
@@ -49,9 +49,6 @@ public class LumyClient {
             }
 
             processAction(actions, printWriter, bufferedReader);
-
-            printWriter.close();
-            bufferedReader.close();
         } catch (UnknownHostException e) {
             logger.log(Level.WARNING, "Unknown Host", e);
         } catch (IOException e) {
