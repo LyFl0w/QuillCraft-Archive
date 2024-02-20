@@ -3,7 +3,7 @@ package net.quillcraft.bungee.subscriber;
 import net.md_5.bungee.api.ProxyServer;
 import net.md_5.bungee.api.config.ServerInfo;
 import net.md_5.bungee.api.connection.ProxiedPlayer;
-import net.quillcraft.bungee.serialization.QuillCraftBungee;
+import net.quillcraft.bungee.QuillCraftBungee;
 import net.quillcraft.commons.account.AccountProvider;
 import net.quillcraft.commons.exception.AccountNotFoundException;
 import net.quillcraft.commons.exception.PartyNotFoundException;

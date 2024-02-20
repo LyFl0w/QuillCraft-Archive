@@ -1,6 +1,6 @@
 package net.quillcraft.bungee.utils;
 
-import net.quillcraft.bungee.serialization.QuillCraftBungee;
+import net.quillcraft.bungee.QuillCraftBungee;
 
 import java.io.File;
 import java.io.FileReader;

@@ -1,6 +1,6 @@
 package net.quillcraft.bungee.subscriber;
 
-import net.quillcraft.bungee.serialization.QuillCraftBungee;
+import net.quillcraft.bungee.QuillCraftBungee;
 import net.quillcraft.commons.game.GameEnum;
 import net.quillcraft.commons.game.waiter.WaitingList;
 

@@ -2,7 +2,7 @@ package net.quillcraft.bungee.manager;
 
 import net.md_5.bungee.api.chat.TextComponent;
 import net.md_5.bungee.api.connection.ProxiedPlayer;
-import net.quillcraft.bungee.serialization.QuillCraftBungee;
+import net.quillcraft.bungee.QuillCraftBungee;
 import net.quillcraft.bungee.data.redis.RedisManager;
 import net.quillcraft.commons.account.Account;
 import net.quillcraft.commons.account.AccountProvider;

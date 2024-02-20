@@ -1,4 +1,4 @@
-package net.quillcraft.bungee.serialization;
+package net.quillcraft.bungee;
 
 import net.md_5.bungee.api.plugin.Plugin;
 import net.quillcraft.bungee.listeners.proxy.ProxyPingListener;

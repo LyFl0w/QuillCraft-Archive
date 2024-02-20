@@ -1,6 +1,6 @@
 package net.quillcraft.bungee.manager;
 
-import net.quillcraft.bungee.serialization.QuillCraftBungee;
+import net.quillcraft.bungee.QuillCraftBungee;
 import net.quillcraft.bungee.data.redis.RedisManager;
 import net.quillcraft.bungee.data.sql.DatabaseManager;
 import net.quillcraft.lumy.api.LumyClient;

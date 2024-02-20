@@ -2,7 +2,7 @@ package net.quillcraft.bungee.data.sql;
 
 import com.zaxxer.hikari.HikariConfig;
 import com.zaxxer.hikari.HikariDataSource;
-import net.quillcraft.bungee.serialization.QuillCraftBungee;
+import net.quillcraft.bungee.QuillCraftBungee;
 
 import java.sql.Connection;
 import java.sql.SQLException;

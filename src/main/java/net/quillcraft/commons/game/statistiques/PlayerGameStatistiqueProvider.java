@@ -2,7 +2,7 @@ package net.quillcraft.commons.game.statistiques;
 
 import com.google.common.reflect.TypeToken;
 import net.md_5.bungee.api.plugin.Plugin;
-import net.quillcraft.bungee.serialization.QuillCraftBungee;
+import net.quillcraft.bungee.QuillCraftBungee;
 import net.quillcraft.bungee.data.redis.RedisManager;
 import net.quillcraft.bungee.data.sql.DatabaseManager;
 import net.quillcraft.bungee.serialization.ProfileSerializationType;

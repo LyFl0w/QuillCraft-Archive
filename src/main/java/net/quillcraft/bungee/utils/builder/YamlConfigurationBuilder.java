@@ -3,7 +3,7 @@ package net.quillcraft.bungee.utils.builder;
 import net.md_5.bungee.config.Configuration;
 import net.md_5.bungee.config.ConfigurationProvider;
 import net.md_5.bungee.config.YamlConfiguration;
-import net.quillcraft.bungee.serialization.QuillCraftBungee;
+import net.quillcraft.bungee.QuillCraftBungee;
 
 import java.io.File;
 import java.io.IOException;

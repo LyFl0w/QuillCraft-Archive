@@ -1,7 +1,7 @@
 package net.quillcraft.commons.account;
 
 import net.md_5.bungee.api.connection.ProxiedPlayer;
-import net.quillcraft.bungee.serialization.QuillCraftBungee;
+import net.quillcraft.bungee.QuillCraftBungee;
 import net.quillcraft.bungee.data.redis.RedisManager;
 import net.quillcraft.bungee.data.sql.DatabaseManager;
 import net.quillcraft.bungee.data.sql.table.SQLTablesManager;
