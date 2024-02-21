@@ -1,7 +1,7 @@
 package net.quillcraft.core.utils;
 
 import net.minecraft.network.protocol.Packet;
-import net.minecraft.server.network.PlayerConnection;
+import net.minecraft.server.network.ServerGamePacketListenerImpl;
 import org.bukkit.craftbukkit.v1_20_R3.entity.CraftPlayer;
 import org.bukkit.entity.Player;
 
@@ -18,7 +18,7 @@ public class PacketUtils {
     }
 
     public static void sendPacket(Player player, Packet<?> packet) {
-        ((CraftPlayer) player).getHandle().c.a(packet);
+        ((CraftPlayer) player).getHandle().connection.send(packet);
     }
 
     public static void sendPacket(List<Player> players, List<Packet<?>> packets) {
@@ -26,9 +26,9 @@ public class PacketUtils {
     }
 
     public static void sendPacket(Player player, List<Packet<?>> packets) {
-        final PlayerConnection playerConnection = ((CraftPlayer) player).getHandle().c;
+        final ServerGamePacketListenerImpl playerConnection = ((CraftPlayer) player).getHandle().connection;
 
-        packets.forEach(playerConnection::a);
+        packets.forEach(playerConnection::send);
     }
 
 }

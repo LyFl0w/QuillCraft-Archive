@@ -17,6 +17,7 @@ public class DataManager {
 
         lumyClient = new LumyClient(new String[]{"update", "absolute_path_data_access"}, quillCraftCore.getLogger(), quillCraftCore.getDataFolder());
         dataAccessPath = lumyClient.read();
+
     }
 
     public void init() {
