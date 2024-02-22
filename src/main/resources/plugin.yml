@@ -1,10 +1,10 @@
-name: QuillCraftLobby
-version: 2.2.1
-authors: [LyFlow, Finkitpiat]
-main: net.quillcraft.lobby.QuillCraftLobby
-api-version: 1.18
+name: ${name}
+version: ${version}
+authors: [ LyFlow, Finkitpiat ]
+main: ${groupId}.lobby.${name}
+api-version: ${spigot.version.main}
 prefix: Lobby
-description: Plugin dedicated to QuillCraft
+description: ${description}
 website: https://quillcraft.fr
 depend: [ QuillCraftCore, HeadDatabase, ProtocolLib ]
 commands:
@@ -15,14 +15,14 @@ commands:
   setlobby:
     description: Cette commande permet de changer l'emplacement du spawn principale
     aliases: [ sethub ]
-    permission: quillcraftlobby.setlobby
+    permission: quillcraft.lobby.setlobby
     permission-message: Unknown command. Type \"/help\" for help.
   npc:
     usage: "§c/npc <add> <displayName> (<skinname>) or /npc <remove> <name> <reference> or /npc <list>"
-    permission: quillcraftlobby.npc
+    permission: quillcraft.lobby.npc
     permission-message: Unknown command. Type "/help" for help.
   head:
     description: Cette commande permet de créer une tete interractive
     usage: "§c/head <YAW> <coins> <ID>"
-    permission: quillcraftlobby.head
+    permission: quillcraft.lobby.head
     permission-message: Unknown command. Type "/help" for help.
