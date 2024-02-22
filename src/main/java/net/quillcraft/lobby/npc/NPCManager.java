@@ -56,8 +56,10 @@ public class NPCManager implements Listener {
             final float yawBody = (float) fileConfiguration.getDouble(path+".location.yaw.body");
             final float pitch = (float) fileConfiguration.getDouble(path+".location.pitch");
 
+            final Location location = new Location(world, x, y, z, yawBody, pitch);
+
             final GameProfile gameProfile = new GameProfile(UUID.randomUUID(), name);
-            final NPC npc = new NPC(name, skin, Integer.parseInt(reference), new Location(world, x, y, z, yawBody, pitch), yawHead, gameProfile);
+            final NPC npc = new NPC(name, skin, Integer.parseInt(reference), location, yawHead, gameProfile);
 
             this.npcList.add(npc);
             updateAllPlayersNPC(npc);
@@ -159,8 +161,10 @@ public class NPCManager implements Listener {
             final int action = this.canBeDisplayed(player, event.getFrom(), event.getTo(), npc);
             if(action == 1) {
                 npc.sendSpawnPacket(player);
+                player.sendMessage("spawn : " + npc.getName());
             } else if (action == 2) {
                 npc.sendDespawnPacket(player);
+                player.sendMessage("despawn : " + npc.getName());
             }
         });
     }

@@ -4,16 +4,22 @@ import com.google.gson.JsonObject;
 import com.google.gson.JsonParser;
 import com.mojang.authlib.GameProfile;
 import com.mojang.authlib.properties.Property;
+import io.netty.channel.embedded.EmbeddedChannel;
+import net.minecraft.network.Connection;
+import net.minecraft.network.ConnectionProtocol;
 import net.minecraft.network.protocol.Packet;
+import net.minecraft.network.protocol.PacketFlow;
 import net.minecraft.network.protocol.common.ServerboundClientInformationPacket;
 import net.minecraft.network.protocol.game.*;
-import net.minecraft.network.syncher.DataWatcher;
-import net.minecraft.network.syncher.DataWatcherObject;
-import net.minecraft.network.syncher.DataWatcherRegistry;
-import net.minecraft.server.MinecraftServer;
+import net.minecraft.network.syncher.EntityDataAccessor;
+import net.minecraft.network.syncher.EntityDataSerializers;
+import net.minecraft.network.syncher.SynchedEntityData;
+import net.minecraft.server.dedicated.DedicatedServer;
 import net.minecraft.server.level.ClientInformation;
-import net.minecraft.server.level.EntityPlayer;
-import net.minecraft.server.level.WorldServer;
+import net.minecraft.server.level.ServerLevel;
+import net.minecraft.server.level.ServerPlayer;
+import net.minecraft.server.network.CommonListenerCookie;
+import net.minecraft.server.network.ServerGamePacketListenerImpl;
 import net.quillcraft.core.utils.PacketUtils;
 import net.quillcraft.lobby.QuillCraftLobby;
 import org.bukkit.Bukkit;
@@ -25,6 +31,7 @@ import org.bukkit.craftbukkit.v1_20_R3.CraftWorld;
 import org.bukkit.entity.Player;
 
 import java.io.InputStreamReader;
+import java.net.InetSocketAddress;
 import java.net.URL;
 import java.util.*;
 import java.util.logging.Level;
@@ -35,12 +42,12 @@ public class NPC {
 
     private final Set<Player> receivers;
 
-    private final EntityPlayer npcPlayer;
+    private final ServerPlayer npcPlayer;
     private final String name;
     private final int reference;
     private World world;
     private Location location;
-    private DataWatcher dataWatcher;
+    private SynchedEntityData dataWatcher;
     private float yawHead;
 
     private NPC(String name, int reference, Location location, float yawHead, GameProfile gameProfile) {
@@ -49,11 +56,22 @@ public class NPC {
         this.reference = reference;
         this.yawHead = yawHead;
 
-        final MinecraftServer server = ((CraftServer) Bukkit.getServer()).getServer();
-        final WorldServer worldServer = ((CraftWorld) location.getWorld()).getHandle();
-        this.npcPlayer = new EntityPlayer(server, worldServer, gameProfile, ClientInformation.a());
+        final DedicatedServer server = ((CraftServer) Bukkit.getServer()).getServer();
+        final ServerLevel worldServer = ((CraftWorld) location.getWorld()).getHandle();
 
-        this.npcPlayer.getBukkitEntity().setPlayerListName("§8[NPC] §f"+ npcPlayer.cy());
+        final ClientInformation info = ClientInformation.createDefault();
+
+        this.npcPlayer = new ServerPlayer(server, worldServer, gameProfile, info);
+
+        final Connection c = new Connection(PacketFlow.SERVERBOUND);
+        c.channel = new EmbeddedChannel();
+        c.channel.attr(Connection.ATTRIBUTE_CLIENTBOUND_PROTOCOL).set(ConnectionProtocol.PLAY.codec(PacketFlow.CLIENTBOUND));
+        c.channel.attr(Connection.ATTRIBUTE_SERVERBOUND_PROTOCOL).set(ConnectionProtocol.PLAY.codec(PacketFlow.SERVERBOUND));
+        c.address = new InetSocketAddress("localhost", 0);
+
+        new ServerGamePacketListenerImpl(server, c, npcPlayer, new CommonListenerCookie(gameProfile, 0, info));
+
+        this.npcPlayer.getBukkitEntity().setPlayerListName("§8[NPC] §f"+ gameProfile.getName());
     }
 
     protected NPC(String name, List<String> skinPart, int reference, Location location, float yawHead, GameProfile gameProfile) {
@@ -87,8 +105,8 @@ public class NPC {
     }
 
     private void setDataWatcher() {
-        dataWatcher = npcPlayer.an();
-        dataWatcher.b(new DataWatcherObject<>(17, DataWatcherRegistry.a), (byte) 0xFF);
+        dataWatcher = npcPlayer.getEntityData();
+        dataWatcher.set(new EntityDataAccessor<>(17, EntityDataSerializers.BYTE), (byte) 0xFF);
     }
 
     public NPC addReceiver(List<Player> players) {
@@ -118,28 +136,31 @@ public class NPC {
     private ArrayList<Packet<?>> getSpawnPackets() {
         final ArrayList<Packet<?>> packets = new ArrayList<>();
         //packets.add(new PacketPlayOutPlayerInfo(PacketPlayOutPlayerInfo.EnumPlayerInfoAction.a, npc)); //Display NPC
-        packets.add(new ClientboundPlayerInfoUpdatePacket(ClientboundPlayerInfoUpdatePacket.a.a, npcPlayer)); //Display NPC
-        packets.add(new ServerboundClientInformationPacket(npcPlayer.B())); // Display NPC
+        packets.add(new ClientboundPlayerInfoUpdatePacket(ClientboundPlayerInfoUpdatePacket.Action.ADD_PLAYER, npcPlayer)); //Display NPC
+        packets.add(new ClientboundAddEntityPacket(npcPlayer)); //Display NPC
+
+        //packets.add(new ServerboundClientInformationPacket(npcPlayer.clientInformation())); // Display NPC
 
         if(dataWatcher != null)
-            packets.add(new PacketPlayOutEntityMetadata(getId(), dataWatcher.c())); // Display 3D part of the Skin
+            packets.add(new ClientboundSetEntityDataPacket(getId(), dataWatcher.getNonDefaultValues())); // Display 3D part of the Skin
 
-        packets.add(new PacketPlayOutAnimation(npcPlayer, 0)); // Rotate Correctly the body of NPC with left-click
-        packets.add(new PacketPlayOutEntityHeadRotation(npcPlayer, (byte) (yawHead*256/360))); // Rotate head
+        packets.add(getHeadPacket()); // Rotate head
+        packets.add(new ClientboundAnimatePacket(npcPlayer, 0)); // Rotate Correctly the body of NPC with left-click
+
         return packets;
     }
 
-    private PacketPlayOutEntityHeadRotation getHeadPacket() {
-        return new PacketPlayOutEntityHeadRotation(npcPlayer, (byte) (yawHead*256/360));
+    private ClientboundRotateHeadPacket getHeadPacket() {
+        return new ClientboundRotateHeadPacket(npcPlayer, (byte) (yawHead*256/360));
     }
 
-    private PacketPlayOutEntityTeleport getLocationPacket() {
-        return new PacketPlayOutEntityTeleport(npcPlayer);
+    private ClientboundTeleportEntityPacket getLocationPacket() {
+        return new ClientboundTeleportEntityPacket(npcPlayer);
     }
 
     private ArrayList<Packet<?>> getDestroyPackets() {
         final ArrayList<Packet<?>> packets = new ArrayList<>();
-        packets.add(new PacketPlayOutEntityDestroy(getId()));
+        packets.add(new ClientboundRemoveEntitiesPacket(getId()));
 
         return packets;
     }
@@ -170,14 +191,14 @@ public class NPC {
 
     public int getId() {
         // npc.hashCode() is generally equals to its ID
-        return npcPlayer.aj();
+        return npcPlayer.getId();
     }
 
     public Set<Player> getReceivers() {
         return receivers;
     }
 
-    public EntityPlayer getNpcPlayer() {
+    public ServerPlayer getNpcPlayer() {
         return npcPlayer;
     }
 
@@ -193,7 +214,8 @@ public class NPC {
         this.location = location;
         this.world = location.getWorld();
 
-        npcPlayer.a(location.getX(), location.getY(), location.getZ(), location.getYaw(), location.getPitch());
+        npcPlayer.forceSetPositionRotation(location.getX(), location.getY(), location.getZ(), location.getYaw(), location.getPitch());
+        npcPlayer.setYHeadRot(location.getYaw());
         return this;
     }
 
@@ -211,7 +233,7 @@ public class NPC {
 
     public void setBodyRotation(float yaw) {
         this.location.setYaw(yaw);
-        npcPlayer.a(location.getX(), location.getY(), location.getZ(), location.getYaw(), location.getPitch());
+        npcPlayer.moveTo(location.getX(), location.getY(), location.getZ(), location.getYaw(), location.getPitch());
     }
 
     public float getYawHead() {
