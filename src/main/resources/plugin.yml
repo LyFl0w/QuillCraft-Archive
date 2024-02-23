@@ -1,8 +1,8 @@
-name: QuillCraftBungee
-version: 2.1
+name: ${name}
+version: ${version}
 author: LyFlow
-main: net.quillcraft.bungee.QuillCraftBungee
-prefix: QuillCraftBungee
-description: Plugin dedicated to the QuillCraf Bungee server
+main: ${groupId}.bungee.${name}
+prefix: ${name}
+description: ${description}
 website: https://quillcraft.fr
-api-version: '1.20'
+api-version: ${bungeecord.version.main}

@@ -10,7 +10,7 @@
     <packaging>jar</packaging>
 
     <name>QuillCraftBungee</name>
-    <description>QuillCraftBungee Minecraft server proxy plugin</description>
+    <description>Plugin dedicated to QuillCraft proxy</description>
     <url>https://github.com/QuillCraftMC/QuillCraftBungee/</url>
     <inceptionYear>2021</inceptionYear>
     <licenses>
@@ -36,7 +36,8 @@
     </organization>
 
     <properties>
-        <file.project>dev</file.project>
+        <bungeecord.version.main>1.20</bungeecord.version.main>
+        <bungeecord.version>${bungeecord.version.main}-R0.1-SNAPSHOT</bungeecord.version>
 
         <java.version>17</java.version>
         <maven.compiler.source>${java.version}</maven.compiler.source>
@@ -87,6 +88,16 @@
                 </executions>
             </plugin>
         </plugins>
+
+        <resources>
+            <resource>
+                <directory>src/main/resources</directory>
+                <filtering>true</filtering>
+                <includes>
+                    <include>plugin.yml</include>
+                </includes>
+            </resource>
+        </resources>
     </build>
 
     <repositories>
@@ -130,7 +141,7 @@
         <dependency>
             <groupId>org.slf4j</groupId>
             <artifactId>slf4j-api</artifactId>
-            <version>2.0.7</version>
+            <version>2.0.11</version>
         </dependency>
 
         <dependency>
@@ -142,7 +153,7 @@
         <dependency>
             <groupId>com.zaxxer</groupId>
             <artifactId>HikariCP</artifactId>
-            <version>5.0.1</version>
+            <version>5.1.0</version>
             <exclusions>
                 <exclusion>
                     <groupId>org.slf4j</groupId>
@@ -176,7 +187,7 @@
         <dependency>
             <groupId>net.md-5</groupId>
             <artifactId>bungeecord-api</artifactId>
-            <version>1.20-R0.1-SNAPSHOT</version>
+            <version>${bungeecord.version}</version>
             <scope>provided</scope>
         </dependency>
 
