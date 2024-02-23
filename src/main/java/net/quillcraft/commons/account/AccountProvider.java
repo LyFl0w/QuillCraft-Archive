@@ -78,21 +78,21 @@ public class AccountProvider {
             preparedStatement.setString(1, uuid.toString());
             preparedStatement.executeQuery();
 
-            try (final ResultSet resultSet = preparedStatement.getResultSet()) {
-                if (resultSet.next()) {
-                    final int id = resultSet.getInt("id");
-                    final String partyUUID = resultSet.getString("party_uuid");
-                    final int quillCoin = resultSet.getInt("quillcoins");
-                    final byte rankID = resultSet.getByte("rank_id");
-                    final Account.Visibility visibility = Account.Visibility.valueOf(resultSet.getString("visibility"));
-                    final Map<Account.Particles, Boolean> particule = new ProfileSerializationAccount.Particle().deserialize(resultSet.getString("json_particles"));
-                    final String languageISO = resultSet.getString("language");
+            final ResultSet resultSet = preparedStatement.getResultSet();
+            if (resultSet.next()) {
+                final int id = resultSet.getInt("id");
+                final String partyUUID = resultSet.getString("party_uuid");
+                final int quillCoin = resultSet.getInt("quillcoins");
+                final byte rankID = resultSet.getByte("rank_id");
+                final Account.Visibility visibility = Account.Visibility.valueOf(resultSet.getString("visibility"));
+                final Map<Account.Particles, Boolean> particule = new ProfileSerializationAccount.Particle().deserialize(resultSet.getString("json_particles"));
+                final String languageISO = resultSet.getString("language");
 
-                    return new Account(id, uuid, ((partyUUID != null) ? UUID.fromString(partyUUID) : null), quillCoin, rankID, visibility, particule, languageISO);
-                } else {
-                    return createAccountInDatabase();
-                }
+                return new Account(id, uuid, ((partyUUID != null) ? UUID.fromString(partyUUID) : null), quillCoin, rankID, visibility, particule, languageISO);
+            } else {
+                return createAccountInDatabase();
             }
+
         } catch (SQLException exception) {
             QuillCraftBungee.getInstance().getLogger().log(Level.SEVERE, exception.getMessage(), exception);
         }
@@ -119,10 +119,10 @@ public class AccountProvider {
 
             // GET ID
             final int row = preparedStatement.executeUpdate();
-            try (final ResultSet resultSet = preparedStatement.getGeneratedKeys()) {
-                if(row > 0 && resultSet.next())
-                    account.setId(resultSet.getInt(1));
-            }
+            final ResultSet resultSet = preparedStatement.getGeneratedKeys();
+            if (row > 0 && resultSet.next())
+                account.setId(resultSet.getInt(1));
+
         }
 
         autoLangue();

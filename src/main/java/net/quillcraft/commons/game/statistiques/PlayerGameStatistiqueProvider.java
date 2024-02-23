@@ -81,17 +81,17 @@ public class PlayerGameStatistiqueProvider<T extends PlayerGameStatistique> {
         try (final Connection connection = DatabaseManager.STATISTIQUES.getDatabaseAccess().getConnection();
              final PreparedStatement preparedStatement = connection.prepareStatement("SELECT statistique FROM " + gameName + " WHERE uuid = ?")) {
             preparedStatement.setString(1, playerUUID);
-            try (final ResultSet resultSet = preparedStatement.executeQuery()) {
-                final T tmpPlayerData;
-                if (resultSet.next()) {
-                    tmpPlayerData = new ProfileSerializationType().deserialize(resultSet.getString("statistique"), new TypeToken<>() {
-                    });
-                } else {
-                    tmpPlayerData = classOfT.getConstructor().newInstance();
-                    plugin.getProxy().getScheduler().runAsync(plugin, () -> createPlayerDataInDatabase(tmpPlayerData));
-                }
-                return tmpPlayerData;
+            final ResultSet resultSet = preparedStatement.executeQuery();
+            final T tmpPlayerData;
+            if (resultSet.next()) {
+                tmpPlayerData = new ProfileSerializationType().deserialize(resultSet.getString("statistique"), new TypeToken<>() {
+                });
+            } else {
+                tmpPlayerData = classOfT.getConstructor().newInstance();
+                plugin.getProxy().getScheduler().runAsync(plugin, () -> createPlayerDataInDatabase(tmpPlayerData));
             }
+            return tmpPlayerData;
+
         } catch (SQLException | NoSuchMethodException | InstantiationException | IllegalAccessException |
                  InvocationTargetException exception) {
             QuillCraftBungee.getInstance().getLogger().log(Level.SEVERE, exception.getMessage(), exception);

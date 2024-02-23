@@ -149,15 +149,14 @@ public class PartyProvider {
              final PreparedStatement preparedStatement = connection.prepareStatement("SELECT * FROM " + sqlTablesManager.getTable() + " WHERE " + sqlTablesManager.getKeyColumn() + " = ?")) {
 
             preparedStatement.setString(1, partyUUID.toString());
-            try (final ResultSet resultSet = preparedStatement.executeQuery()) {
-                if (resultSet.next()) {
-                    final UUID ownerUUID = UUID.fromString(resultSet.getString("owner_uuid"));
-                    final String ownerName = resultSet.getString("owner_name");
-                    final List<UUID> followersUUID = new ProfileSerializationUtils.ListUUID().deserialize(resultSet.getString("followers_uuid"));
-                    final List<String> followersName = new ProfileSerializationUtils.ListString().deserialize(resultSet.getString("followers_name"));
+            final ResultSet resultSet = preparedStatement.executeQuery();
+            if (resultSet.next()) {
+                final UUID ownerUUID = UUID.fromString(resultSet.getString("owner_uuid"));
+                final String ownerName = resultSet.getString("owner_name");
+                final List<UUID> followersUUID = new ProfileSerializationUtils.ListUUID().deserialize(resultSet.getString("followers_uuid"));
+                final List<String> followersName = new ProfileSerializationUtils.ListString().deserialize(resultSet.getString("followers_name"));
 
-                    return new Party(partyUUID, ownerUUID, ownerName, followersUUID, followersName);
-                }
+                return new Party(partyUUID, ownerUUID, ownerName, followersUUID, followersName);
             }
         } catch (SQLException exception) {
             QuillCraftBungee.getInstance().getLogger().log(Level.SEVERE, exception.getMessage(), exception);
