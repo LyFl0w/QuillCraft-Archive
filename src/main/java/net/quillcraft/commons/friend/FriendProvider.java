@@ -58,16 +58,16 @@ public class FriendProvider {
                      = connection.prepareStatement("SELECT * FROM " + sqlTablesManager.getTable() + " WHERE " + sqlTablesManager.getKeyColumn() + " = ?")) {
 
             preparedStatement.setString(1, uuid.toString());
-            try (final ResultSet resultSet = preparedStatement.executeQuery()) {
-                if (resultSet.next()) {
-                    final List<UUID> friendsUUID = new ProfileSerializationUtils.ListUUID().deserialize(resultSet.getString("friends_uuid"));
-                    final List<String> friendsName = new ProfileSerializationUtils.ListString().deserialize(resultSet.getString("friends_name"));
+            final ResultSet resultSet = preparedStatement.executeQuery();
+            if (resultSet.next()) {
+                final List<UUID> friendsUUID = new ProfileSerializationUtils.ListUUID().deserialize(resultSet.getString("friends_uuid"));
+                final List<String> friendsName = new ProfileSerializationUtils.ListString().deserialize(resultSet.getString("friends_name"));
 
-                    return new Friend(friendsUUID, friendsName);
-                } else {
-                    return createFriendInDatabase();
-                }
+                return new Friend(friendsUUID, friendsName);
+            } else {
+                return createFriendInDatabase();
             }
+
         } catch (Exception exception) {
             throw new FriendNotFoundException(uuid);
         }
