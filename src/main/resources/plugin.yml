@@ -1,10 +1,10 @@
-name: QuillCraftCore
-version: 2.1.1-dev
+name: ${name}
+version: ${version}
 author: LyFlow
-main: net.quillcraft.core.QuillCraftCore
-api-version: '1.20'
+main: ${groupId}.core.${name}
+api-version: ${spigot.version.main}
 prefix: Core
-description: Plugin dedicated to QuillCraft
+description: ${description}
 website: https://quillcraft.fr
 depend: [ ProtocolLib ]
 commands:

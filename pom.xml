@@ -10,7 +10,7 @@
     <packaging>jar</packaging>
 
     <name>QuillCraftCore</name>
-    <description>QuillCraft Minecraft server core plugin</description>
+    <description>Plugin dedicated to QuillCraft server</description>
     <url>https://github.com/QuillCraftMC/QuillCraftCore/</url>
     <inceptionYear>2021</inceptionYear>
     <licenses>
@@ -36,8 +36,8 @@
     </organization>
 
     <properties>
-        <file.project>dev</file.project>
-        <spigot.version>1.20.4-R0.1-SNAPSHOT</spigot.version>
+        <spigot.version.main>1.20</spigot.version.main>
+        <spigot.version>${spigot.version.main}.4-R0.1-SNAPSHOT</spigot.version>
 
         <java.version>17</java.version>
         <maven.compiler.source>${java.version}</maven.compiler.source>
@@ -102,10 +102,12 @@
                     </execution>
                 </executions>
             </plugin>
+
             <plugin>
                 <artifactId>maven-compiler-plugin</artifactId>
                 <version>3.11.0</version>
             </plugin>
+
             <plugin>
                 <groupId>org.apache.maven.plugins</groupId>
                 <artifactId>maven-shade-plugin</artifactId>
@@ -133,6 +135,16 @@
                 </executions>
             </plugin>
         </plugins>
+
+        <resources>
+            <resource>
+                <directory>src/main/resources</directory>
+                <filtering>true</filtering>
+                <includes>
+                    <include>plugin.yml</include>
+                </includes>
+            </resource>
+        </resources>
     </build>
 
     <dependencies>
