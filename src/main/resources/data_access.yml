@@ -1,0 +1,92 @@
+mysql:
+
+  minecraft_data:
+    host: "127.0.0.1"
+    user:
+      name: "username"
+      password: "password"
+    database_name: "db_name"
+    port: 3306 #default port
+
+  statistiques:
+    host: "127.0.0.1"
+    user:
+      name: "username"
+      password: "password"
+    database_name: "db_name"
+    port: 3306 #default port
+
+
+redis:
+
+  statistiques:
+    host: "127.0.0.1"
+    user:
+      name: "username"
+      password: "password"
+    database_number: 8
+    port: 6379 #default
+
+  web-api:
+    host: "127.0.0.1"
+    user:
+      name: "username"
+      password: "password"
+    database_number: 7
+    port: 6379 #default
+
+  gameserver:
+    host: "127.0.0.1"
+    user:
+      name: "username"
+      password: "password"
+    database_number: 6
+    port: 6379 #default
+
+  message:
+    host: "127.0.0.1"
+    user:
+      name: "username"
+      password: "password"
+    database_number: 5
+    port: 6379
+
+  rank:
+    host: "127.0.0.1"
+    user:
+      name: "username"
+      password: "password"
+    database_number: 4
+    port: 6379 #default
+
+  friend:
+    host: "127.0.0.1"
+    user:
+      name: "username"
+      password: "password"
+    database_number: 3
+    port: 6379 #default
+
+  party:
+    host: "127.0.0.1"
+    user:
+      name: "username"
+      password: "password"
+    database_number: 2
+    port: 6379 #default
+
+  account:
+    host: "127.0.0.1"
+    user:
+      name: "username"
+      password: "password"
+    database_number: 1
+    port: 6379 #default
+
+  text:
+    host: "127.0.0.1"
+    user:
+      name: "username"
+      password: "password"
+    database_number: 0
+    port: 6379 #default

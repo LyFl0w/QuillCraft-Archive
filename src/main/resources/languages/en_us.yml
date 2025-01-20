@@ -1,0 +1,174 @@
+command:
+
+  setlanguage:
+    selected: "§6Your game has been switched to §eEnglish (US)"
+    auto: "§d>§6Detection of the language of your current game in progress"
+    doesnt_exist: "§cThe selected language does not exist !"
+    same: "§6Your language is already in §eEnglish §6!"
+
+  lobby:
+    success: "§aYou have been teleported to the Lobby"
+
+  setlobby:
+    success: "§aChange of the Lobby's Spawn successfully completed !"
+    error_world: "§cYou are on the wrong world !"
+
+
+inventory_name:
+
+  menu: "§aMenu"
+  visibility: "§dVisibility"
+
+
+tablist:
+
+  default:
+    - "§bYou play on the server §e§lQUILLCRAFT"
+    - "§9§lDiscord: §9§odiscord.gg/GzyZcJn"
+
+
+auto_text:
+
+  lobby:
+    1:
+      text: "§eA new §6grade §eis avaible in §3the shop"
+      over: "§aIt's here to take it !"
+      link: "https://quillcraft.fr/boutique"
+    2:
+      text: "Text #2 \n and yes"
+    3:
+      text: "§eGo check §cthe staff §ehere!"
+      link: "https://quillcraft.fr/staff"
+    4:
+      text: "1st ligne\n2nd ligne"
+
+
+title:
+
+  lobby:
+    join:
+      - "§bWelcome on"
+      - "§6QuillCraft"
+
+
+items_inventory:
+
+  lobby:
+    menu:
+      name: "§aMenu"
+
+    shop:
+      name: "§6Shop"
+
+    account:
+      name: "§aAccount"
+
+    friends:
+      name: "§eFriends"
+
+    particles:
+      name: "§9Particles"
+
+    visibility:
+      name: "§dVisibility §7[%STATUS%§7]"
+      same: "§cYou already have this visibility"
+
+    parameters:
+      name: "§cSettings"
+
+    parkourpvp:
+      name: "§cParkourPvP"
+      lore:
+        - "The goal is simple"
+        - "Finish the jump quickly"
+        - "And stuff yourself"
+
+
+lobby:
+
+  player:
+    join: "§b%PLAYER%§e joined the server"
+    leave: "§b%PLAYER%§e left the server"
+
+
+friend:
+
+  invite_your_self: "§6[Friend] §fYou §ccan't §fadd yourself"
+  remove_your_self: "§6[Friend] §fYou §ccan't §fremove yourself from your friends"
+  accept_your_self: "§6[Friend] §fYou §ccan't §faccept your friend request"
+  deny_your_self: "§6[Friend] §fYou §ccan't §frefuse your friend request"
+  join_server: "§6[Friend] §b%PLAYER% §fis §econnected"
+  left_server: "§6[Friend] §b%PLAYER% §fis §cdisconnected"
+  no_friends: "§6[Friend] §cYou have no friends"
+  friends_list: "§6[Friend] §fYou friends are :\nAmis : %COUNT%"
+  send_request: "§6[Friend] §fYou have §esent §fa friend request to §b%PLAYER%"
+  received_request: "§6[Friend] §fYou have §ereceived §fa friend request from §f%PLAYER%"
+  no_received_request: "§6[Friend] §fYou §chave not §freceived a friend request from §b%PLAYER% §for their friend request has §cexpired"
+  player_is_offline: "6[Friend] §b%PLAYER% §cis not §fconnected"
+  player_already_received_request: "§6[Friend] §b%PLAYER% §chas already received your friend request"
+  player_is_already_your_friend: "§6[Friend] §b%PLAYER% §fis §ealready §fyour friend"
+  player_is_not_your_friend: "§6[Friend] §b%PLAYER% §cis not §fyour friend"
+  player_deleted_from_his_friend: "§6[Friend] §b%PLAYER% §fhas §cdeleted §fyou from their friends"
+  player_accept_your_request: "§6[Friend] §b%PLAYER% §fhas §eaccepted §fyour friend request"
+  player_accept_request: "§6[Friend] §fYou has §eaccepted §b%PLAYER%'s §ffriend request"
+  friend_deleted: "§6[Friend] §b%PLAYER% §fhas been §eremoved §ffrom your friends"
+  declined_request: "§6[Friend] §fYou §erefused §b%PLAYER%'s §ffriend request"
+  hover_request: "§eClick here §fto accept the friend request"
+
+
+party:
+
+  general_join: "[§9Party§f] §b%PLAYER% §ejoined §fthe party"
+  join_server: "[§9Party§f] §b%PLAYER% §fis §econnected"
+  left_server: "[§9Party§f] §b%PLAYER% §fis §cdisconnected"
+  perso_join: "[§9Party§f] You have §ejoined §fthe §b%PLAYER% §fparty"
+  promote_owner: "[§9Party§f] You are the §eOwner §fof the party now"
+  unpromote_owner: "[§9Party§f] You are §cno longer §fthe owner of the party"
+  own_your_self: "[§9Party§f] §cYou can't promote yourself"
+  perso_leave: "[§9Party§f] You have §cleft §fthe party"
+  general_leave: "[§9Party§f] §b%PLAYER% §fhas §cleft §fthe party"
+  general_kick: "[§9Party§f] §b%PLAYER% §fwas §cexcluded §ffrom the party"
+  perso_kick: "[§9Party§f] You have been §cexcluded §ffrom the party"
+  player_not_in_your_party: "[§9Party§f] §b%PLAYER% §cis not in your party"
+  player_is_offline: "[§9Party§f] §b%PLAYER% §cis not §fconnected"
+  player_is_already_in_party: "[§9Party§f] §cYou are already in a party"
+  player_is_already_in_your_party: "[§9Party§f] §b%PLAYER% §cis already in your party"
+  player_is_already_in_another_party: "[§9Party§f] §b%PLAYER% §cis already in another party"
+  members_list: "[§9Party§f] The players in your party are :\nParty Members : %COUNT%"
+  delete: "[§9Party§f] Your partie has been §cdeleted"
+  kick_your_self: "[§9Party§f] §cYou can't kick yourself"
+  accept_your_self: "[§9Party§f] §cYou can't accept yourself"
+  invitation_send: "[§9Party§f] You have §esent §fa party invitation to §b%PLAYER%"
+  invitation_received: "[§9Party§f] §b%PLAYER% §fhas §esent §fyou a party invitation"
+  hover_invitation_received: "§eClick here §fto accept the request"
+  invite_your_self: "[§9Party§f] §cYou can't add yourself"
+  invitation_expired: "[§9Party§f] The invitation has §cexpired §for you have §cnot received anything"
+  not_owner: "[§9Party§f] §cYou must be the owner of the party to be able to execute this command"
+  no_party: "[§9Party§f] §cYou don't have a party"
+
+
+server:
+
+  version_doesnt_matched: "Requires MC 1.18"
+
+  description:
+    - "§7§l»§f§l» §6§lQuillCraft §f§l«§7§l« §r§8- §rBêta  §c[1.18]"
+    - "§eParkourPvP§f, §aPvPBox §f§l► §d§lSoon: §bPractice"
+
+
+status:
+
+  player:
+    owner: "Owner"
+    online: "Online"
+    offline: "Offline"
+
+  visibility:
+    everyone: "Everybody"
+    friends: "Friends"
+    nobody: "Nobody"
+
+
+spam: "§cWait a few seconds"
+
+working_progress: "§cThis feature is not available at the moment !\nPlease excuse us"
