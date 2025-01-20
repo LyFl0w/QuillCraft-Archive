@@ -1,0 +1,8 @@
+name: ${name}
+version: ${version}
+author: LyFlow
+main: ${groupId}.bungee.${name}
+prefix: ${name}
+description: ${description}
+website: https://quillcraft.fr
+api-version: ${bungeecord.version.main}
