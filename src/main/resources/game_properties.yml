@@ -1,0 +1,3 @@
+player:
+  max: 12 # 16 -> Natura / 12 -> Biomia
+  min: 2
